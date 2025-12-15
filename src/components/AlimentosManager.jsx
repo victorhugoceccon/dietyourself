@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
+import { API_URL } from '../config/api'
 import './AlimentosManager.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function AlimentosManager() {
   const [alimentos, setAlimentos] = useState([])

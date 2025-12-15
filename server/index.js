@@ -16,6 +16,7 @@ import exerciciosRoutes from './routes/exercicios.js'
 import divisoesTreinoRoutes from './routes/divisoes-treino.js'
 import prescricoesTreinoRoutes from './routes/prescricoes-treino.js'
 import personalRoutes from './routes/personal.js'
+import adminRoutes from './routes/admin.js'
 
 dotenv.config()
 
@@ -48,6 +49,7 @@ app.use('/api/exercicios', exerciciosRoutes)
 app.use('/api/divisoes-treino', divisoesTreinoRoutes)
 app.use('/api/prescricoes-treino', prescricoesTreinoRoutes)
 app.use('/api/personal', personalRoutes)
+app.use('/api/admin', adminRoutes)
 
 // Rota de teste
 app.get('/api/health', (req, res) => {

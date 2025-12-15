@@ -260,15 +260,27 @@
 .meal-card {
   padding: 0;
   overflow: hidden;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.meal-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-md);
 }
 
 .meal-header-wrapper {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.5rem;
-  cursor: pointer;
+  padding: 0;
   transition: all 0.2s ease;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.meal-header-wrapper.expanded {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .meal-checkbox-label {
@@ -278,8 +290,10 @@
   position: relative;
   cursor: pointer;
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
+  padding: 1.5rem 0 1.5rem 1.5rem;
+  z-index: 10;
 }
 
 .meal-checkbox {
@@ -292,10 +306,10 @@
 }
 
 .meal-checkbox-custom {
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--border-color, #e0e0e0);
-  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  border: 2.5px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
   background: var(--bg-primary, #ffffff);
   transition: all 0.2s ease;
   display: flex;
@@ -322,13 +336,14 @@
 .meal-checkbox:checked + .meal-checkbox-custom::after {
   content: '✓';
   color: white;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1;
 }
 
 .meal-checkbox:focus + .meal-checkbox-custom {
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+  outline: none;
 }
 
 .meal-checkbox-label:hover .meal-checkbox-custom {
@@ -356,7 +371,7 @@
 
 .meal-header {
   width: 100%;
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 1.5rem 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -366,6 +381,7 @@
   cursor: pointer;
   outline: none;
   transition: all 0.2s ease;
+  flex: 1;
 }
 
 .meal-header:hover {
@@ -428,27 +444,36 @@
   gap: 1.25rem;
 }
 
-/* Food Items - Layout linha única clara com hierarquia bem definida */
+/* Food Items - Layout melhorado visualmente */
 .food-item {
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border-color);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.food-item:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .food-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .food-item-main {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
   transition: all 0.2s ease;
-  padding: 0.75rem 0;
 }
 
 .food-info {
@@ -460,18 +485,26 @@
 }
 
 .food-name {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--text-primary);
-  line-height: 1.4;
-  margin: 0;
+  line-height: 1.5;
+  margin: 0 0 0.5rem 0;
 }
 
 .food-portion {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
   font-weight: 500;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.food-portion::before {
+  content: '📏';
+  font-size: 0.875rem;
 }
 
 .food-kcal {

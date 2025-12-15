@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './FoodSwapModal.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function FoodSwapModal({ isOpen, onClose, foodItem, mealName, mealIndex, itemIndex, onConfirm, dieta }) {
   const [inputMessage, setInputMessage] = useState('')

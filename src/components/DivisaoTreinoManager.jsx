@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './DivisaoTreinoManager.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function DivisaoTreinoManager() {
   const [divisoes, setDivisoes] = useState([])

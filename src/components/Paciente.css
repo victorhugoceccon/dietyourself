@@ -116,7 +116,21 @@
 }
 
 .profile-section {
+  margin-bottom: 2rem;
+}
+
+.adherence-section {
+  margin-bottom: 2rem;
+}
+
+.profile-section {
   width: 100%;
+  margin-bottom: 2.5rem;
+}
+
+.adherence-section {
+  width: 100%;
+  margin-bottom: 2rem;
 }
 
 .section-header {

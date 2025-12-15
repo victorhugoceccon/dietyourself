@@ -232,20 +232,26 @@ router.get('/stats', authenticate, async (req, res) => {
             let itemCarbs = 0
             let itemFat = 0
             
-            // Opção 1: _alimentoData com valores por 100g
-            if (item._alimentoData) {
+            // Opção 1: Novo formato com macros.proteina_g, macros.carbo_g, macros.gordura_g
+            if (item.macros && typeof item.macros === 'object') {
+              itemProtein = item.macros.proteina_g || item.macros.proteina || 0
+              itemCarbs = item.macros.carbo_g || item.macros.carboidrato || item.macros.carbo || 0
+              itemFat = item.macros.gordura_g || item.macros.gordura || 0
+            }
+            // Opção 2: _alimentoData com valores por 100g
+            else if (item._alimentoData) {
               const fator = pesoG / 100 // Converter para gramas do item
               itemProtein = (item._alimentoData.proteina || 0) * fator
               itemCarbs = (item._alimentoData.carboidrato || 0) * fator
               itemFat = (item._alimentoData.lipideos || item._alimentoData.gordura || 0) * fator
             }
-            // Opção 2: macros diretos no item
+            // Opção 3: macros diretos no item (formato antigo)
             else if (item.proteina !== undefined || item.carboidrato !== undefined || item.gordura !== undefined) {
               itemProtein = item.proteina || 0
               itemCarbs = item.carboidrato || 0
               itemFat = item.gordura || item.lipideos || 0
             }
-            // Opção 3: calcular proporcionalmente baseado nas kcal (aproximação)
+            // Opção 4: calcular proporcionalmente baseado nas kcal (aproximação)
             else if (itemKcal > 0 && pesoG > 0) {
               // Aproximação: usar proporções médias típicas
               // Isso é uma estimativa, não ideal mas melhor que zero

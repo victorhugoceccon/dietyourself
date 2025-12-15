@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './ChatWidget.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)

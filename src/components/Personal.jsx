@@ -9,8 +9,6 @@ import PrescricaoTreino from './PrescricaoTreino'
 import LoadingBar from './LoadingBar'
 import './Personal.css'
 
-const API_URL = 'http://localhost:5000/api'
-
 function Personal() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)

@@ -1,9 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../config/api'
 import './Questionnaire.css'
 
-const API_URL = 'http://localhost:5000/api'
-
 function Questionnaire({ onComplete }) {
+  const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -130,6 +131,12 @@ function Questionnaire({ onComplete }) {
       setCurrentStep(prev => prev - 1)
       setError('')
     }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    navigate('/login')
   }
 
   const handleSubmit = async () => {
@@ -420,6 +427,22 @@ function Questionnaire({ onComplete }) {
 
   return (
     <div className="questionnaire-container">
+      <div className="questionnaire-header">
+        <h1 className="questionnaire-title">DietYourself</h1>
+        <button
+          onClick={handleLogout}
+          className="questionnaire-logout-btn"
+          type="button"
+          disabled={loading}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M16 17L21 12L16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 12H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Sair
+        </button>
+      </div>
       <div className="questionnaire-card">
         <div className="progress-bar">
           <div 

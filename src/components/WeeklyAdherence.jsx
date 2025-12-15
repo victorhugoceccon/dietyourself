@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './WeeklyAdherence.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function WeeklyAdherence({ refreshTrigger }) {
   const [stats, setStats] = useState(null)
@@ -71,7 +70,7 @@ function WeeklyAdherence({ refreshTrigger }) {
   const getAdherenceMessage = (percentage) => {
     if (percentage >= 80) {
       return {
-        message: 'Excelente adesão! Você está no caminho certo para alcançar seus objetivos.',
+        message: 'Você está no caminho certo para alcançar seus objetivos!',
         emoji: '🎯',
         color: '#4CAF50'
       }
@@ -282,12 +281,20 @@ function WeeklyAdherence({ refreshTrigger }) {
 
       {insights.length > 0 && (
         <div className="adherence-insights">
-          {insights.map((insight, index) => (
-            <div key={index} className={`insight-item insight-${insight.type}`}>
-              <span className="insight-emoji">{insight.emoji}</span>
-              <span className="insight-message">{insight.message}</span>
-            </div>
-          ))}
+          {insights
+            // Filtrar insights duplicados - se a mensagem principal já foi mostrada, não repetir
+            .filter(insight => {
+              // Se for mensagem de "excelente adesão" e já foi mostrada na seção impact, remover
+              const isDuplicated = insight.message?.toLowerCase().includes('excelente adesão') && 
+                                  adherenceMessage.message.toLowerCase().includes('excelente adesão')
+              return !isDuplicated
+            })
+            .map((insight, index) => (
+              <div key={index} className={`insight-item insight-${insight.type}`}>
+                <span className="insight-emoji">{insight.emoji}</span>
+                <span className="insight-message">{insight.message}</span>
+              </div>
+            ))}
         </div>
       )}
     </div>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './EditDietModal.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function EditDietModal({ isOpen, onClose, dieta, pacienteId, onSave }) {
   const [editedDieta, setEditedDieta] = useState(null)

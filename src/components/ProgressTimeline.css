@@ -1,7 +1,7 @@
 .progress-timeline-card {
   background: var(--bg-primary, #ffffff);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
   border: 1px solid var(--border-color, #e8e8e8);
 }
@@ -12,11 +12,11 @@
 }
 
 .timeline-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .timeline-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary, #1a1a1a);
   margin: 0 0 0.25rem 0;
@@ -38,7 +38,7 @@
 
 .timeline-empty {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 2.5rem 1rem;
   color: var(--text-secondary, #666);
 }
 
@@ -50,42 +50,49 @@
 
 .timeline-container {
   position: relative;
-  padding-left: 2rem;
+  padding-left: 2.25rem;
 }
 
 .timeline-item {
   position: relative;
-  padding-bottom: 2rem;
+  padding-bottom: 1.5rem;
   display: flex;
   align-items: flex-start;
   gap: 1rem;
 }
 
+.timeline-item:first-child .timeline-dot {
+  top: 0;
+}
+
 .timeline-dot {
   position: absolute;
-  left: -1.75rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  left: -2rem;
+  top: 0.125rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 2;
   flex-shrink: 0;
+  border: 2px solid var(--bg-primary, #ffffff);
 }
 
 .timeline-emoji {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
 }
 
 .timeline-line {
   position: absolute;
-  left: -1.25rem;
-  top: 2.5rem;
-  width: 2px;
-  height: calc(100% - 0.5rem);
+  left: -1.8875rem;
+  top: 2.375rem;
+  width: 3px;
+  height: calc(100% - 0.25rem);
   z-index: 1;
+  border-radius: 2px;
 }
 
 .timeline-item:last-child .timeline-line {
@@ -94,14 +101,15 @@
 
 .timeline-content {
   flex: 1;
-  padding-top: 0.25rem;
+  padding-top: 0;
+  padding-left: 15px;
 }
 
 .timeline-date {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--text-primary, #1a1a1a);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.375rem;
   text-transform: capitalize;
 }
 
@@ -110,10 +118,11 @@
 }
 
 .timeline-adherence {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.0625rem;
+  font-weight: 700;
   color: var(--text-primary, #1a1a1a);
   margin-bottom: 0.5rem;
+  letter-spacing: -0.3px;
 }
 
 .dark-mode .timeline-adherence {
@@ -123,7 +132,8 @@
 .timeline-weight {
   font-size: 0.875rem;
   color: var(--text-secondary, #666);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.625rem;
+  font-weight: 500;
 }
 
 .dark-mode .timeline-weight {
@@ -134,11 +144,12 @@
   font-size: 0.875rem;
   color: var(--text-secondary, #666);
   font-style: italic;
-  padding: 0.75rem;
+  padding: 0.875rem 1rem;
   background: var(--bg-secondary, #f9f9f9);
-  border-radius: 8px;
-  border-left: 3px solid var(--accent-color, #4CAF50);
+  border-radius: 10px;
+  border-left: 4px solid var(--accent-color, #4CAF50);
   margin-top: 0.5rem;
+  line-height: 1.5;
 }
 
 .dark-mode .timeline-note {
@@ -171,4 +182,5 @@
     left: -1rem;
   }
 }
+
 

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './DailyCheckInModal.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function DailyCheckInModal({ onClose, onCheckInComplete }) {
   const [adherence, setAdherence] = useState(null)
@@ -157,4 +156,5 @@ function DailyCheckInModal({ onClose, onCheckInComplete }) {
 }
 
 export default DailyCheckInModal
+
 

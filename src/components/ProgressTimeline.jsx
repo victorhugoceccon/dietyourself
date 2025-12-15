@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './ProgressTimeline.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function ProgressTimeline({ refreshTrigger }) {
   const [checkIns, setCheckIns] = useState([])
@@ -106,7 +105,7 @@ function ProgressTimeline({ refreshTrigger }) {
               {index < checkIns.length - 1 && (
                 <div 
                   className="timeline-line" 
-                  style={{ backgroundColor: getAdherenceColor(checkIns[index + 1]?.adherence || '#ccc') }}
+                  style={{ backgroundColor: getAdherenceColor(checkIn.adherence) }}
                 />
               )}
               <div className="timeline-content">
@@ -132,4 +131,5 @@ function ProgressTimeline({ refreshTrigger }) {
 }
 
 export default ProgressTimeline
+
 

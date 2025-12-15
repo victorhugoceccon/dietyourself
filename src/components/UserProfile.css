@@ -1,13 +1,29 @@
 .user-profile-card {
   background: var(--bg-primary, #ffffff);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 2.5rem;
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color, #e0e0e0);
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4CAF50 0%, #66bb6a 100%);
+}
+
+.dark-mode .user-profile-card::before {
+  background: linear-gradient(90deg, #66bb6a 0%, #81c784 100%);
 }
 
 .dark-mode .user-profile-card {
@@ -22,6 +38,42 @@
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.profile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-collapse-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-secondary, #f5f5f5);
+  color: var(--text-secondary, #666);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.profile-collapse-btn:hover {
+  background: var(--bg-tertiary, #e8e8e8);
+  color: var(--text-primary, #333);
+  transform: scale(1.1);
+}
+
+.dark-mode .profile-collapse-btn {
+  background: var(--bg-secondary, #2a2a2a);
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.dark-mode .profile-collapse-btn:hover {
+  background: var(--bg-tertiary, #333);
+  color: var(--text-primary, #e0e0e0);
 }
 
 .profile-title {
@@ -88,12 +140,19 @@
 
 .profile-photo,
 .profile-photo-placeholder {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--accent-color, #4CAF50);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  border: 4px solid var(--accent-color, #4CAF50);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.25);
+  transition: all 0.3s ease;
+}
+
+.profile-photo:hover,
+.profile-photo-placeholder:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.35);
 }
 
 .profile-photo-placeholder {
@@ -141,11 +200,12 @@
 }
 
 .profile-name {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary, #1a1a1a);
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
   word-break: break-word;
+  letter-spacing: -0.5px;
 }
 
 .profile-email {
@@ -172,9 +232,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  border-bottom: 2px solid var(--border-color, #e0e0e0);
 }
 
 .dark-mode .info-section-header {
@@ -182,10 +242,11 @@
 }
 
 .info-section-title {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary, #1a1a1a);
   margin: 0;
+  letter-spacing: -0.3px;
 }
 
 .info-edit-btn {
@@ -219,15 +280,30 @@
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
   margin-bottom: 1rem;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--bg-primary, #ffffff);
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #e8e8e8);
+  transition: all 0.2s ease;
+}
+
+.dark-mode .info-item {
+  background: var(--bg-secondary, #242424);
+}
+
+.info-item:hover {
+  border-color: var(--accent-color, #4CAF50);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .info-item-weight {
@@ -240,12 +316,16 @@
   color: var(--text-secondary, #666);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .info-value {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary, #1a1a1a);
+  letter-spacing: -0.3px;
 }
 
 .info-value.weight-updated {

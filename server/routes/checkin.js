@@ -116,7 +116,27 @@ router.get('/today', authenticate, async (req, res) => {
       }
     })
 
-    res.json({ checkIn })
+    // Verificar se o usuário já tem uma dieta gerada
+    const dieta = await prisma.dieta.findUnique({
+      where: { userId },
+      select: { createdAt: true }
+    })
+
+    let shouldShowCheckIn = false
+
+    if (dieta) {
+      // Só exibir o check-in a partir do dia seguinte à geração da dieta
+      const dietCreationDate = new Date(dieta.createdAt)
+      dietCreationDate.setHours(0, 0, 0, 0)
+
+      // Se hoje é depois do dia da criação da dieta E ainda não existe check-in hoje,
+      // então devemos mostrar o modal de check-in
+      if (today.getTime() > dietCreationDate.getTime() && !checkIn) {
+        shouldShowCheckIn = true
+      }
+    }
+
+    res.json({ checkIn, hasDiet: !!dieta, shouldShowCheckIn })
   } catch (error) {
     console.error('Erro ao buscar check-in de hoje:', error)
     res.status(500).json({ error: 'Erro ao buscar check-in de hoje' })

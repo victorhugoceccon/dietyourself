@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './PrescricaoTreino.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function PrescricaoTreino() {
   const [prescricoes, setPrescricoes] = useState([])

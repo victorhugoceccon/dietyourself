@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
+import { API_URL } from '../config/api'
 import './UserProfile.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 // Mensagens motivacionais pré-definidas
 const MOTIVATIONAL_MESSAGES = [
@@ -35,6 +34,7 @@ function UserProfile({ userId, userName, userEmail, onWeightUpdate, refreshTrigg
   const [editingFormData, setEditingFormData] = useState({})
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const fileInputRef = useRef(null)
 
   useEffect(() => {
@@ -323,23 +323,41 @@ function UserProfile({ userId, userName, userEmail, onWeightUpdate, refreshTrigg
     <div className="user-profile-card">
       <div className="profile-header">
         <h3 className="profile-title">Meu Perfil</h3>
-        {!isEditing && (
+        <div className="profile-header-actions">
+          {!isEditing && (
+            <button
+              className="profile-edit-btn"
+              onClick={() => setIsEditing(true)}
+              aria-label="Editar perfil"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M18.5 2.5C18.8978 2.10218 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10218 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10218 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          )}
           <button
-            className="profile-edit-btn"
-            onClick={() => setIsEditing(true)}
-            aria-label="Editar perfil"
+            className="profile-collapse-btn"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            aria-label={isCollapsed ? "Expandir perfil" : "Colapsar perfil"}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M18.5 2.5C18.8978 2.10218 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10218 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10218 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none"
+              style={{ transform: isCollapsed ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
+            >
+              <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-        )}
+        </div>
       </div>
 
-      <div className="profile-content">
-        {/* Photo Section */}
-        <div className="profile-photo-section">
+      {!isCollapsed && (
+        <div className="profile-content">
+          {/* Photo Section */}
+          <div className="profile-photo-section">
           <div className="profile-photo-container">
             {profilePhoto ? (
               <img
@@ -584,7 +602,8 @@ function UserProfile({ userId, userName, userEmail, onWeightUpdate, refreshTrigg
             </button>
           </div>
         )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

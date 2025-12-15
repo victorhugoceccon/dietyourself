@@ -82,7 +82,8 @@ router.get('/', authenticate, async (req, res) => {
                     id: true,
                     nome: true,
                     categoria: true,
-                    videoUrl: true
+                    videoUrl: true,
+                    descricao: true
                   }
                 }
               },

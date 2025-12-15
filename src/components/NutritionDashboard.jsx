@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../config/api'
 import './NutritionDashboard.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 // Tooltips educativos sobre macronutrientes
 const MACRO_TOOLTIPS = {
@@ -61,22 +60,7 @@ function NutritionDashboard({ refreshTrigger }) {
     try {
       const token = localStorage.getItem('token')
       
-      // Primeiro, tentar buscar do localStorage (dados salvos da geração de dieta)
-      const savedNutritionalNeeds = localStorage.getItem('nutritionalNeeds')
-      if (savedNutritionalNeeds) {
-        try {
-          const parsed = JSON.parse(savedNutritionalNeeds)
-          if (parsed && parsed.calorias && parsed.macros) {
-            setNutritionData(parsed)
-            setLoading(false)
-            return
-          }
-        } catch (e) {
-          console.error('Erro ao parsear nutritionalNeeds do localStorage:', e)
-        }
-      }
-      
-      // Se não tiver no localStorage, tentar buscar da dieta gerada (que vem do N8N)
+      // Buscar da API primeiro (fonte de verdade - só mostra se dieta foi gerada)
       const dietResponse = await fetch(`${API_URL}/diet`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -86,19 +70,24 @@ function NutritionDashboard({ refreshTrigger }) {
       if (dietResponse.ok) {
         const dietData = await dietResponse.json()
         
-        // Se a dieta tiver nutritionalNeeds (gerada pelo N8N), usar
-        if (dietData.nutritionalNeeds) {
+        // Só mostrar necessidades nutricionais se existir uma dieta gerada
+        if (dietData.dieta && dietData.nutritionalNeeds) {
           setNutritionData(dietData.nutritionalNeeds)
-          // Salvar no localStorage para próxima vez
+          // Salvar no localStorage para cache (opcional)
           localStorage.setItem('nutritionalNeeds', JSON.stringify(dietData.nutritionalNeeds))
           setLoading(false)
           return
         }
       }
       
+      // Se não tiver dieta gerada, limpar localStorage e não mostrar nada
+      localStorage.removeItem('nutritionalNeeds')
       setNutritionData(null)
     } catch (error) {
       console.error('Erro ao carregar dados nutricionais:', error)
+      // Em caso de erro, limpar localStorage também
+      localStorage.removeItem('nutritionalNeeds')
+      setNutritionData(null)
     } finally {
       setLoading(false)
     }

@@ -4,6 +4,7 @@ import Login from './components/Login'
 import Paciente from './components/Paciente'
 import Nutricionista from './components/Nutricionista'
 import Personal from './components/Personal'
+import Admin from './components/Admin'
 import { getRoleRedirect } from './utils/roleRedirect'
 import './App.css'
 
@@ -64,6 +65,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Personal />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <Admin />
               </ProtectedRoute>
             } 
           />

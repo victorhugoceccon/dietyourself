@@ -6,8 +6,7 @@ import EditPatientDietModal from './EditPatientDietModal'
 import LoadingBar from './LoadingBar'
 import AlimentosManager from './AlimentosManager'
 import './Nutricionista.css'
-
-const API_URL = 'http://localhost:5000/api'
+import { API_URL } from '../config/api'
 
 function Nutricionista() {
   const [user, setUser] = useState(null)

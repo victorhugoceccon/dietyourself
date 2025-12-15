@@ -1,8 +1,17 @@
 import express from 'express'
+import { z } from 'zod'
 import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
+import { hashPassword } from '../utils/hash.js'
 
 const router = express.Router()
+
+// Schema para criar paciente
+const createPacienteSchema = z.object({
+  email: z.string().email('Email inválido'),
+  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+  name: z.string().optional()
+})
 
 // GET /api/personal/pacientes - Listar pacientes do personal
 router.get('/pacientes', authenticate, async (req, res) => {
@@ -102,6 +111,62 @@ router.post('/pacientes', authenticate, async (req, res) => {
   }
 })
 
+// POST /api/personal/pacientes/create - Criar novo paciente vinculado ao personal
+router.post('/pacientes/create', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const role = req.user.role?.toUpperCase()
+
+    // Verificar se é personal trainer
+    if (role !== 'PERSONAL' && role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Acesso negado. Apenas personal trainers podem criar pacientes.' })
+    }
+
+    const validatedData = createPacienteSchema.parse(req.body)
+
+    // Verificar se o email já existe
+    const existingUser = await prisma.user.findUnique({
+      where: { email: validatedData.email }
+    })
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email já cadastrado' })
+    }
+
+    // Hash da senha
+    const hashedPassword = await hashPassword(validatedData.password)
+
+    // Criar paciente vinculado ao personal
+    const paciente = await prisma.user.create({
+      data: {
+        email: validatedData.email,
+        password: hashedPassword,
+        name: validatedData.name,
+        role: 'PACIENTE',
+        personalId: userId
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true
+      }
+    })
+
+    res.status(201).json({
+      message: 'Paciente criado e vinculado com sucesso',
+      paciente
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'Dados inválidos', details: error.errors })
+    }
+    console.error('Erro ao criar paciente:', error)
+    res.status(500).json({ error: 'Erro ao criar paciente' })
+  }
+})
+
 // DELETE /api/personal/pacientes/:pacienteId - Desvincular paciente
 router.delete('/pacientes/:pacienteId', authenticate, async (req, res) => {
   try {
@@ -145,4 +210,5 @@ router.delete('/pacientes/:pacienteId', authenticate, async (req, res) => {
 })
 
 export default router
+
 

@@ -11,9 +11,8 @@ import DailyCheckInModal from './DailyCheckInModal'
 import ProgressTimeline from './ProgressTimeline'
 import WeeklyAdherence from './WeeklyAdherence'
 import PacienteTreinos from './PacienteTreinos'
+import { API_URL } from '../config/api'
 import './Paciente.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function Paciente() {
   const [user, setUser] = useState(null)
@@ -66,8 +65,11 @@ function Paciente() {
 
       if (response.ok) {
         const data = await response.json()
-        // Se não tiver check-in de hoje, mostrar o modal
-        if (!data.checkIn) {
+        // A lógica do backend já decide se deve mostrar o check-in:
+        // - Só após existir uma dieta
+        // - A partir do dia seguinte à criação da dieta
+        // - Apenas se ainda não houver check-in hoje
+        if (data.shouldShowCheckIn) {
           setShowCheckInModal(true)
         }
       }
@@ -117,6 +119,10 @@ function Paciente() {
     setGeneratingDiet(true)
     setDietError('')
 
+    // Timeout de 11 minutos (660 segundos) - um pouco mais que o backend (10 min padrão)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 660000) // 11 minutos
+
     try {
       const token = localStorage.getItem('token')
       
@@ -125,13 +131,33 @@ function Paciente() {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
+        },
+        signal: controller.signal
       })
+      
+      clearTimeout(timeoutId)
 
-      const data = await response.json()
+      // Tentar ler a resposta como JSON, mas se falhar, usar texto
+      let data
+      try {
+        const responseText = await response.text()
+        data = responseText ? JSON.parse(responseText) : {}
+      } catch (parseError) {
+        console.error('Erro ao parsear resposta:', parseError)
+        throw new Error('Resposta inválida do servidor')
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erro ao gerar dieta')
+        // Incluir detalhes do erro se disponíveis
+        const errorMessage = data.error || 'Erro ao gerar dieta'
+        const errorDetails = data.details ? `: ${data.details}` : ''
+        console.error('❌ Erro do servidor:', {
+          status: response.status,
+          error: errorMessage,
+          details: data.details,
+          fullResponse: data
+        })
+        throw new Error(`${errorMessage}${errorDetails}`)
       }
 
       console.log('✅ Dieta gerada com sucesso!')
@@ -155,9 +181,17 @@ function Paciente() {
       return true
     } catch (error) {
       console.error('Erro ao gerar dieta:', error)
-      setDietError(error.message || 'Erro ao gerar dieta. Tente novamente.')
+      
+      // Verificar se é um erro de timeout
+          if (error.name === 'AbortError') {
+            setDietError('Tempo limite de 11 minutos excedido. A geração da dieta está demorando mais que o esperado. Por favor, otimize o prompt do agente N8N (veja PROMPT_OTIMIZADO_N8N.md) ou tente novamente.')
+          } else {
+        setDietError(error.message || 'Erro ao gerar dieta. Tente novamente.')
+      }
+      
       return false
     } finally {
+      clearTimeout(timeoutId) // Garantir que o timeout seja limpo mesmo em caso de erro
       setGeneratingDiet(false)
     }
   }
@@ -211,8 +245,10 @@ function Paciente() {
               onWeightUpdate={handleWeightUpdate}
               refreshTrigger={profileRefreshTrigger}
             />
-            
-            {/* Aderência Semanal */}
+          </section>
+
+          {/* Aderência Semanal */}
+          <section className="adherence-section">
             <WeeklyAdherence refreshTrigger={dietRefreshTrigger} />
           </section>
 
@@ -243,7 +279,23 @@ function Paciente() {
             )}
 
             {generatingDiet ? (
-              <LoadingBar message="Gerando sua dieta personalizada..." />
+              <div>
+                <LoadingBar message="Gerando sua dieta personalizada..." />
+                <div className="diet-generation-info" style={{ 
+                  marginTop: '1rem', 
+                  padding: '1rem', 
+                  backgroundColor: '#f0f7ff', 
+                  borderRadius: '8px', 
+                  border: '1px solid #b3d9ff',
+                  textAlign: 'center',
+                  color: '#0066cc'
+                }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                    ⏱️ A geração da dieta pode levar até <strong>10 minutos</strong> para ser concluída. Se demorar mais, otimize o prompt do agente N8N. 
+                    Por favor, aguarde...
+                  </p>
+                </div>
+              </div>
             ) : (
               <DietDisplay 
                 onGenerateDiet={handleGenerateDiet} 
@@ -257,47 +309,6 @@ function Paciente() {
 
           {/* Treinos do Personal (se existirem) */}
           <PacienteTreinos refreshTrigger={treinosRefreshTrigger} />
-
-          <section className="info-section">
-            <div className="info-cards">
-              <div className="info-card">
-                <div className="info-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M2 17L12 22L22 17" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M2 12L12 17L22 12" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <h3>Refeições</h3>
-                <p>Visualize suas refeições planejadas</p>
-                <span className="info-value">Em breve</span>
-              </div>
-
-              <div className="info-card">
-                <div className="info-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <h3>Progresso</h3>
-                <p>Acompanhe seu progresso</p>
-                <span className="info-value">Em breve</span>
-              </div>
-
-              <div className="info-card">
-                <div className="info-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M7 10L12 15L17 10" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12 15V3" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <h3>Solicitar Mudanças</h3>
-                <p>Peça alterações na sua dieta</p>
-                <span className="info-value">Em breve</span>
-              </div>
-            </div>
-          </section>
 
           {/* Linha do Tempo de Progresso */}
           <section className="timeline-section">

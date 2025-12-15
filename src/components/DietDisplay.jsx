@@ -3,9 +3,8 @@ import Card from './ui/Card'
 import Badge from './ui/Badge'
 import Chip from './ui/Chip'
 import FoodSwapModal from './FoodSwapModal'
+import { API_URL } from '../config/api'
 import './DietDisplay.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
   const [dieta, setDieta] = useState(null)
@@ -46,7 +45,13 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
   }
 
   const handleMealToggle = async (mealIndex, mealName, e) => {
+    e.preventDefault() // Prevenir comportamento padrão
     e.stopPropagation() // Evitar expandir/colapsar a refeição
+    
+    // Garantir que não expande a refeição ao clicar no checkbox
+    if (expandedMeals.has(mealIndex)) {
+      // Se está expandida, não fazer nada além de marcar/desmarcar
+    }
     
     setTogglingMeal(mealIndex)
     try {
@@ -119,8 +124,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
         console.log('📥 Dieta carregada do servidor:', data.dieta ? 'presente' : 'ausente')
         if (data.dieta) {
           setDieta(data.dieta)
-          // Expandir primeira refeição por padrão
-          setExpandedMeals(new Set([0]))
+          // Não expandir nenhuma refeição por padrão - deixar usuário escolher
+          setExpandedMeals(new Set())
         } else {
           console.warn('⚠️ Nenhuma dieta encontrada na resposta')
           setDieta(null)
@@ -183,7 +188,10 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
           newItem: {
             alimento: newItem.alimento,
             porcao: newItem.porcao || newItem.porcaoEquivalente || '',
-            kcal: newItem.kcal || newItem.kcalAproximada || 0
+            kcal: newItem.kcal || newItem.kcalAproximada || 0,
+            // Incluir macros se disponíveis (novo formato)
+            macros: newItem.macros || null,
+            macrosAproximados: newItem.macrosAproximados || null
           }
         })
       })
@@ -245,11 +253,18 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
         {dieta.refeicoes && dieta.refeicoes.map((refeicao, mealIndex) => (
           <Card key={mealIndex} className="meal-card" hoverable>
             <div className={`meal-header-wrapper ${isExpanded(mealIndex) ? 'expanded' : ''}`}>
-              <label className="meal-checkbox-label" onClick={(e) => e.stopPropagation()}>
+              <label 
+                className="meal-checkbox-label" 
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
                 <input
                   type="checkbox"
                   checked={consumedMeals.includes(mealIndex)}
                   onChange={(e) => handleMealToggle(mealIndex, refeicao.nome, e)}
+                  onClick={(e) => e.stopPropagation()}
                   disabled={togglingMeal === mealIndex}
                   className="meal-checkbox"
                 />

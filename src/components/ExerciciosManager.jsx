@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
+import { API_URL } from '../config/api'
 import './ExerciciosManager.css'
-
-const API_URL = 'http://localhost:5000/api'
 
 const CATEGORIAS = [
   'Peito',
@@ -395,4 +394,5 @@ function ExerciciosManager() {
 }
 
 export default ExerciciosManager
+
 

@@ -1,0 +1,302 @@
+.checkin-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.checkin-modal {
+  background: var(--bg-primary, #ffffff);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.dark-mode .checkin-modal {
+  background: var(--bg-secondary, #242424);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.checkin-modal-header {
+  padding: 2rem 2rem 1.5rem 2rem;
+  border-bottom: 1px solid var(--border-color, #e8e8e8);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.dark-mode .checkin-modal-header {
+  border-color: var(--border-color, #333);
+}
+
+.checkin-modal-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.3px;
+}
+
+.dark-mode .checkin-modal-title {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.checkin-modal-date {
+  font-size: 0.9375rem;
+  color: var(--text-secondary, #666);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.dark-mode .checkin-modal-date {
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.checkin-modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-secondary, #f5f5f5);
+  color: var(--text-secondary, #666);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.dark-mode .checkin-modal-close {
+  background: var(--bg-tertiary, #2a2a2a);
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.checkin-modal-close:hover {
+  background: var(--bg-tertiary, #e8e8e8);
+  color: var(--text-primary, #333);
+  transform: scale(1.1);
+}
+
+.dark-mode .checkin-modal-close:hover {
+  background: var(--bg-tertiary, #333);
+  color: var(--text-primary, #e0e0e0);
+}
+
+.checkin-modal-form {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.checkin-modal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkin-modal-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.dark-mode .checkin-modal-label {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.optional-label {
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--text-tertiary, #999);
+}
+
+.adherence-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.adherence-btn {
+  padding: 1rem 0.75rem;
+  border: 2px solid var(--border-color, #e0e0e0);
+  border-radius: 12px;
+  background: var(--bg-secondary, #f9f9f9);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+}
+
+.dark-mode .adherence-btn {
+  background: var(--bg-tertiary, #2a2a2a);
+  border-color: var(--border-color, #333);
+}
+
+.adherence-btn:hover {
+  border-color: var(--accent-color, #4CAF50);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.adherence-btn.selected {
+  border-color: var(--accent-color, #4CAF50);
+  background: rgba(76, 175, 80, 0.1);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.dark-mode .adherence-btn.selected {
+  background: rgba(102, 187, 106, 0.2);
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.4);
+}
+
+.adherence-emoji {
+  font-size: 1.75rem;
+}
+
+.adherence-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  text-align: center;
+}
+
+.dark-mode .adherence-label {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.checkin-modal-input,
+.checkin-modal-textarea {
+  padding: 0.875rem 1.25rem;
+  border: 2px solid var(--border-color, #e0e0e0);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #333);
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dark-mode .checkin-modal-input,
+.dark-mode .checkin-modal-textarea {
+  background: var(--bg-primary, #1a1a1a);
+  color: var(--text-primary, #e0e0e0);
+  border-color: var(--border-color, #333);
+}
+
+.checkin-modal-input:focus,
+.checkin-modal-textarea:focus {
+  border-color: var(--accent-color, #4CAF50);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.dark-mode .checkin-modal-input:focus,
+.dark-mode .checkin-modal-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+}
+
+.checkin-modal-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.char-counter {
+  font-size: 0.75rem;
+  color: var(--text-tertiary, #999);
+  text-align: right;
+  margin-top: -0.5rem;
+}
+
+.checkin-modal-footer {
+  padding-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+.checkin-modal-submit-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #4CAF50 0%, #66bb6a 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.dark-mode .checkin-modal-submit-btn {
+  background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.4);
+}
+
+.checkin-modal-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.checkin-modal-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .checkin-modal {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+
+  .checkin-modal-header,
+  .checkin-modal-form {
+    padding: 1.5rem;
+  }
+
+  .adherence-options {
+    grid-template-columns: 1fr;
+  }
+}
+

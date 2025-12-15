@@ -1,0 +1,314 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String   @id @default(uuid())
+  email               String   @unique
+  password            String
+  name                String?
+  role                String   @default("PACIENTE") // ADMIN, NUTRICIONISTA, PERSONAL ou PACIENTE
+  profilePhoto        String? // URL ou base64 da foto de perfil
+  motivationalMessage String? // Mensagem motivacional personalizada
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relacionamento com dados do questionário
+  questionnaireData QuestionnaireData?
+  dieta             Dieta?
+
+  // Relacionamento nutricionista-paciente
+  nutricionistaId        String? // ID do nutricionista responsável (null se for nutricionista ou admin)
+  nutricionista          User?   @relation("NutricionistaPaciente", fields: [nutricionistaId], references: [id], onDelete: SetNull)
+  pacientesNutricionista User[]  @relation("NutricionistaPaciente") // Lista de pacientes deste nutricionista
+
+  // Relacionamento personal-paciente
+  personalId        String? // ID do personal trainer responsável (null se for personal ou admin)
+  personal          User?   @relation("PersonalPaciente", fields: [personalId], references: [id], onDelete: SetNull)
+  pacientesPersonal User[]  @relation("PersonalPaciente") // Lista de pacientes deste personal
+
+  // Relacionamento nutricionista-alimentos
+  alimentos Alimento[] @relation("NutricionistaAlimentos") // Alimentos criados por este nutricionista
+
+  // Relacionamento personal-exercicios
+  exercicios     Exercicio[]     @relation("PersonalExercicios") // Exercícios criados por este personal
+  divisoesTreino DivisaoTreino[] @relation("PersonalDivisoes") // Divisões de treino criadas por este personal
+
+  // Relacionamento check-ins diários
+  dailyCheckIns DailyCheckIn[] // Check-ins diários do paciente
+
+  // Relacionamento refeições consumidas
+  consumedMeals ConsumedMeal[] // Refeições consumidas pelo paciente
+
+  // Relacionamento prescrições de treino (como personal trainer)
+  prescricoesPersonal PrescricaoTreino[] @relation("PersonalPrescricoes")
+
+  // Relacionamento prescrições de treino (como paciente)
+  prescricoesPaciente PrescricaoTreino[] @relation("PacientePrescricoes")
+
+  @@index([nutricionistaId])
+  @@index([personalId])
+  @@map("users")
+}
+
+model QuestionnaireData {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Etapa 1 - Dados básicos
+  idade     Int?
+  sexo      String? // Masculino / Feminino
+  altura    Float? // em cm
+  pesoAtual Float? // em kg
+
+  // Etapa 2 - Objetivo e rotina
+  objetivo       String? // Emagrecer, Manter peso, Ganhar massa muscular
+  nivelAtividade String? // Sedentário, Levemente ativo, Moderadamente ativo, Muito ativo
+  refeicoesDia   Int? // 3, 4, 5, 6
+
+  // Etapa 3 - Alimentação e restrições
+  restricoes             String? // JSON array: ["Lactose", "Glúten", etc]
+  alimentosNaoGosta      String? // Textarea
+  preferenciaAlimentacao String? // Simples e rápida, Caseira tradicional, Mais fitness, Tanto faz
+
+  // Etapa 4
+  costumaCozinhar String? // Sim quase sempre, Às vezes, Quase nunca
+  observacoes     String? // Textarea
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("questionnaire_data")
+}
+
+model Dieta {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Dados da dieta em JSON
+  dietaData String // JSON completo da dieta gerada
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("dietas")
+}
+
+model Alimento {
+  id             String  @id @default(uuid())
+  numero         Int? // Número do alimento no CSV
+  categoria      String? // Categoria do alimento
+  descricao      String // Descrição do alimento
+  umidade        Float?
+  energiaKcal    Float // Energia em kcal por 100g
+  energiaKj      Float?
+  proteina       Float // Proteína em g por 100g
+  lipideos       Float // Lipídios (gordura) em g por 100g
+  colesterol     Float?
+  carboidrato    Float // Carboidrato em g por 100g
+  fibraAlimentar Float?
+  cinzas         Float?
+
+  // Criado por (nutricionista)
+  nutricionistaId String? // ID do nutricionista que criou (null se importado do CSV)
+  nutricionista   User?   @relation("NutricionistaAlimentos", fields: [nutricionistaId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([nutricionistaId])
+  @@map("alimentos")
+}
+
+model DailyCheckIn {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Dados do check-in
+  adherence   String // "TOTAL", "PARCIAL", "NAO_SEGUIU"
+  pesoAtual   Float? // Peso atual em kg (opcional)
+  observacao  String? // Observação curta do dia (opcional, máximo 500 caracteres)
+  checkInDate DateTime @default(now()) // Data do check-in (apenas data, sem hora)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Refeições consumidas hoje (array de índices das refeições: [0, 1, 2, ...])
+  refeicoesConsumidas String? // JSON array: "[0, 1]" indica que consumiu refeição índice 0 e 1
+
+  @@unique([userId, checkInDate]) // Um check-in por dia por usuário
+  @@index([userId])
+  @@index([checkInDate])
+  @@map("daily_check_ins")
+}
+
+model ConsumedMeal {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Dados da refeição consumida
+  mealIndex    Int // Índice da refeição na dieta (0, 1, 2, ...)
+  mealName     String // Nome da refeição
+  consumedDate DateTime @default(now()) // Data do consumo (apenas data, sem hora)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, mealIndex, consumedDate]) // Uma refeição por dia por usuário
+  @@index([userId])
+  @@index([consumedDate])
+  @@map("consumed_meals")
+}
+
+model Exercicio {
+  id          String  @id @default(uuid())
+  nome        String // Nome do exercício
+  descricao   String? // Descrição/instruções do exercício
+  categoria   String? // Categoria (Peito, Costas, Pernas, etc)
+  videoUrl    String? // URL do vídeo do exercício (base64 ou URL)
+  observacoes String? // Observações adicionais
+
+  // Criado por (personal trainer)
+  personalId String // ID do personal trainer que criou
+  personal   User   @relation("PersonalExercicios", fields: [personalId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento com prescrições
+  prescricoes       PrescricaoTreinoItem[]
+  DivisaoTreinoItem DivisaoTreinoItem[]
+
+  @@index([personalId])
+  @@index([categoria])
+  @@map("exercicios")
+}
+
+model DivisaoTreino {
+  id         String  @id @default(uuid())
+  nome       String // Nome da divisão (ex: "A - Peito e Tríceps")
+  descricao  String? // Descrição da divisão
+  diasSemana String? // Dias da semana que deve ser executada (JSON array)
+
+  // Criado por (personal trainer)
+  personalId String // ID do personal trainer que criou
+  personal   User   @relation("PersonalDivisoes", fields: [personalId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento com prescrições
+  prescricoes PrescricaoTreinoDivisao[]
+
+  // Itens padrão (exercícios) desta divisão
+  itens DivisaoTreinoItem[]
+
+  @@index([personalId])
+  @@map("divisoes_treino")
+}
+
+model DivisaoTreinoItem {
+  id              String        @id @default(uuid())
+  divisaoTreinoId String
+  divisaoTreino   DivisaoTreino @relation(fields: [divisaoTreinoId], references: [id], onDelete: Cascade)
+
+  exercicioId String
+  exercicio   Exercicio @relation(fields: [exercicioId], references: [id], onDelete: Cascade)
+
+  series      Int
+  repeticoes  String?
+  carga       String?
+  descanso    String?
+  observacoes String?
+  ordem       Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([divisaoTreinoId])
+  @@index([exercicioId])
+  @@map("divisoes_treino_itens")
+}
+
+model PrescricaoTreino {
+  id         String @id @default(uuid())
+  pacienteId String // ID do paciente
+  paciente   User   @relation("PacientePrescricoes", fields: [pacienteId], references: [id], onDelete: Cascade)
+
+  personalId String // ID do personal trainer que prescreveu
+  personal   User   @relation("PersonalPrescricoes", fields: [personalId], references: [id], onDelete: Cascade)
+
+  nome        String // Nome do treino (ex: "Treino A/B/C")
+  observacoes String? // Observações gerais do treino
+  dataInicio  DateTime? // Data de início do treino
+  dataFim     DateTime? // Data de término do treino (opcional)
+  ativo       Boolean   @default(true) // Se o treino está ativo
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  divisoes PrescricaoTreinoDivisao[]
+
+  @@index([pacienteId])
+  @@index([personalId])
+  @@index([ativo])
+  @@map("prescricoes_treino")
+}
+
+model PrescricaoTreinoDivisao {
+  id           String           @id @default(uuid())
+  prescricaoId String // ID da prescrição
+  prescricao   PrescricaoTreino @relation(fields: [prescricaoId], references: [id], onDelete: Cascade)
+
+  divisaoTreinoId String? // ID da divisão de treino (opcional, pode criar divisão customizada)
+  divisaoTreino   DivisaoTreino? @relation(fields: [divisaoTreinoId], references: [id], onDelete: SetNull)
+
+  nome  String // Nome da divisão nesta prescrição
+  ordem Int // Ordem da divisão no treino (1, 2, 3...)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Itens (exercícios) desta divisão
+  itens PrescricaoTreinoItem[]
+
+  @@index([prescricaoId])
+  @@index([divisaoTreinoId])
+  @@map("prescricoes_treino_divisoes")
+}
+
+model PrescricaoTreinoItem {
+  id        String                  @id @default(uuid())
+  divisaoId String // ID da divisão
+  divisao   PrescricaoTreinoDivisao @relation(fields: [divisaoId], references: [id], onDelete: Cascade)
+
+  exercicioId String // ID do exercício
+  exercicio   Exercicio @relation(fields: [exercicioId], references: [id], onDelete: Cascade)
+
+  series      Int // Número de séries
+  repeticoes  String? // Repetições (ex: "10-12", "até a falha")
+  carga       String? // Carga (ex: "20kg", "60% 1RM")
+  descanso    String? // Tempo de descanso (ex: "60s", "2min")
+  observacoes String? // Observações específicas deste exercício na prescrição
+  ordem       Int // Ordem do exercício na divisão
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([divisaoId])
+  @@index([exercicioId])
+  @@map("prescricoes_treino_itens")
+}

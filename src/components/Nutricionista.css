@@ -1,0 +1,1081 @@
+/* Tabs */
+.nutricionista-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border-color, #e0e0e0);
+}
+
+.tab-btn {
+  padding: 0.875rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #666);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary, #1a1a1a);
+  background: var(--bg-secondary, #f5f5f5);
+}
+
+.tab-btn.active {
+  color: #4CAF50;
+  border-bottom-color: #4CAF50;
+}
+
+.dark-mode .tab-btn:hover {
+  background: var(--bg-tertiary, #2a2a2a);
+}
+
+.alimentos-section {
+  grid-column: 1 / -1; /* Ocupa todas as colunas do grid */
+  width: 100%;
+  min-width: 0;
+}
+
+.nutricionista-container {
+  min-height: 100vh;
+  background: var(--gradient-bg, linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%));
+  transition: background 0.3s ease;
+}
+
+.nutricionista-header {
+  background: var(--bg-primary, #ffffff);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.header-content {
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: var(--gradient-primary, linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.welcome-text {
+  font-size: 1rem;
+  color: var(--text-secondary, #666);
+  margin: 0;
+  font-weight: 500;
+}
+
+.role-badge {
+  padding: 0.375rem 1rem;
+  background: linear-gradient(135deg, #2196F3 0%, #42a5f5 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logout-btn {
+  padding: 0.6rem 1.5rem;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.logout-btn:hover {
+  background: #d32f2f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+.nutricionista-main {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.nutricionista-content {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Sidebar de pacientes */
+.pacientes-sidebar {
+  background: var(--bg-primary, #ffffff);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md, 0 4px 20px rgba(0, 0, 0, 0.12));
+  border: 1px solid var(--border-color, #e8e8e8);
+  max-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color, #e8e8e8);
+}
+
+.sidebar-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0;
+}
+
+.add-paciente-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.add-paciente-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.pacientes-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary, #666);
+}
+
+.empty-state svg {
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.empty-hint {
+  font-size: 0.85rem;
+  color: var(--text-tertiary, #999);
+}
+
+.paciente-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  background: var(--bg-secondary, #f9f9f9);
+}
+
+.paciente-item:hover {
+  background: var(--bg-tertiary, #f0f0f0);
+  border-color: var(--border-color, #e0e0e0);
+  transform: translateX(4px);
+}
+
+.paciente-item.active {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.1) 100%);
+  border-color: var(--accent-color, #4CAF50);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+}
+
+.dark-mode .paciente-item.active {
+  background: rgba(102, 187, 106, 0.15);
+  border-color: var(--accent-color, #66bb6a);
+}
+
+.paciente-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.paciente-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.paciente-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.paciente-email {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #666);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.paciente-meta {
+  font-size: 0.8rem;
+  color: var(--text-tertiary, #999);
+  margin-top: 0.25rem;
+}
+
+.paciente-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.paciente-badge.dieta {
+  background: rgba(76, 175, 80, 0.1);
+  color: var(--accent-color, #4CAF50);
+}
+
+/* Área de detalhes */
+.paciente-details {
+  background: var(--bg-primary, #ffffff);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md, 0 4px 20px rgba(0, 0, 0, 0.12));
+  border: 1px solid var(--border-color, #e8e8e8);
+  min-height: 600px;
+}
+
+.empty-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  color: var(--text-secondary, #666);
+}
+
+.empty-selection svg {
+  margin-bottom: 1.5rem;
+  opacity: 0.3;
+}
+
+.empty-selection h3 {
+  font-size: 1.5rem;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-selection p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Detail View */
+.paciente-detail-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.detail-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color, #e0e0e0);
+  border-top-color: var(--accent-color, #4CAF50);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border-color, #e8e8e8);
+}
+
+.detail-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 0.5rem 0;
+}
+
+.edit-diet-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #2196F3 0%, #42a5f5 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.edit-diet-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.edit-diet-btn svg {
+  flex-shrink: 0;
+}
+
+.detail-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary, #666);
+  margin: 0 0 1rem 0;
+}
+
+.detail-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.detail-meta span {
+  padding: 0.375rem 0.75rem;
+  background: var(--bg-secondary, #f9f9f9);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #666);
+  font-weight: 500;
+}
+
+.no-dieta-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary, #666);
+}
+
+.no-dieta-state svg {
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.no-dieta-state h3 {
+  font-size: 1.5rem;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 0.5rem 0;
+}
+
+.no-dieta-state p {
+  margin: 0 0 1.5rem 0;
+  font-size: 1rem;
+}
+
+.generate-diet-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.generate-diet-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.generate-diet-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading-spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-message-diet {
+  padding: 1rem;
+  background: rgba(244, 67, 54, 0.1);
+  color: #c62828;
+  border-radius: 12px;
+  border: 1px solid #ef5350;
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+}
+
+.dark-mode .error-message-diet {
+  background: rgba(244, 67, 54, 0.2);
+  color: #ff6b6b;
+  border-color: #e57373;
+}
+
+/* Estilos reutilizados de DietDisplay */
+.dieta-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dieta-summary-section {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  margin-bottom: 0;
+}
+
+.summary-card-primary {
+  background: linear-gradient(135deg, #4CAF50 0%, #66bb6a 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: var(--shadow-md, 0 4px 20px rgba(0, 0, 0, 0.12));
+}
+
+.dark-mode .summary-card-primary {
+  background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
+}
+
+.summary-card-primary .summary-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.summary-card-primary .summary-value-large {
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  letter-spacing: -1px;
+}
+
+.summary-card-primary .summary-unit {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.summary-cards-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 160px;
+}
+
+.summary-card-secondary {
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-secondary, #f9f9f9);
+  border-radius: 16px;
+  border: 1px solid var(--border-color, #e8e8e8);
+  transition: all 0.2s ease;
+}
+
+.summary-card-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.summary-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summary-icon.protein {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196F3;
+}
+
+.summary-icon.carbs {
+  background: rgba(255, 152, 0, 0.1);
+  color: #FF9800;
+}
+
+.summary-icon.fat {
+  background: rgba(156, 39, 176, 0.1);
+  color: #9C27B0;
+}
+
+.summary-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-label-small {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.summary-value-medium {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.diet-meals {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.meal-card {
+  background: var(--bg-primary, #ffffff);
+  border: 2px solid var(--border-color, #e8e8e8);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.04));
+}
+
+.dark-mode .meal-card {
+  background: var(--bg-secondary, #242424);
+}
+
+.meal-card:hover {
+  border-color: var(--accent-color, #4CAF50);
+  box-shadow: var(--shadow-md, 0 4px 20px rgba(0, 0, 0, 0.12));
+}
+
+.meal-header {
+  width: 100%;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.meal-header:hover {
+  background: var(--bg-tertiary, #f0f0f0);
+}
+
+.meal-header.expanded {
+  border-bottom: 1px solid var(--border-color, #e8e8e8);
+}
+
+.meal-header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.meal-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0;
+}
+
+.meal-badge {
+  padding: 0.375rem 1rem;
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+}
+
+.meal-expand-icon {
+  flex-shrink: 0;
+  color: var(--text-secondary, #666);
+  transition: transform 0.3s ease;
+}
+
+.meal-expand-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.meal-content {
+  padding: 1.5rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.meal-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.food-item {
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--bg-primary, #ffffff);
+  border: 1px solid var(--border-color, #e8e8e8);
+  transition: all 0.2s ease;
+  margin-bottom: 0.75rem;
+}
+
+.dark-mode .food-item {
+  background: var(--bg-tertiary, #2a2a2a);
+}
+
+.food-item:last-child {
+  margin-bottom: 0;
+}
+
+.food-item:hover {
+  border-color: var(--accent-color, #4CAF50);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
+}
+
+.food-item-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.food-info {
+  flex: 1;
+}
+
+.food-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  margin-bottom: 0.25rem;
+}
+
+.food-portion {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #666);
+}
+
+.food-kcal {
+  padding: 0.375rem 0.875rem;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent-color, #4CAF50);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dark-mode .food-kcal {
+  background: rgba(102, 187, 106, 0.15);
+  border-color: rgba(102, 187, 106, 0.3);
+}
+
+.substitutions-section {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-color, #e0e0e0);
+}
+
+.substitutions-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary, #999);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.substitutions-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.substitution-chip {
+  padding: 0.375rem 0.75rem;
+  background: var(--bg-primary, #ffffff);
+  border: 1px solid var(--border-color, #e8e8e8);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #666);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--bg-primary, #ffffff);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border-color, #e8e8e8);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0;
+}
+
+.modal-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-secondary, #f5f5f5);
+  color: var(--text-secondary, #666);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: var(--bg-tertiary, #e8e8e8);
+  transform: scale(1.1);
+}
+
+.create-paciente-form {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.form-group input {
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-color, #e0e0e0);
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s ease;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #333);
+  font-family: inherit;
+}
+
+.form-group input:focus {
+  border-color: var(--accent-color, #4CAF50);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.modal-footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.cancel-btn {
+  background: var(--bg-secondary, #f5f5f5);
+  color: var(--text-primary, #333);
+}
+
+.cancel-btn:hover {
+  background: var(--bg-tertiary, #e8e8e8);
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .nutricionista-content {
+    grid-template-columns: 1fr;
+  }
+
+  .pacientes-sidebar {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dieta-summary-section {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .summary-cards-secondary {
+    flex-direction: row;
+    overflow-x: auto;
+    min-width: 0;
+  }
+
+  .summary-card-secondary {
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+  .summary-card-primary .summary-value-large {
+    font-size: 2.5rem;
+  }
+
+  .meal-header {
+    padding: 1.25rem;
+  }
+
+  .meal-content {
+    padding: 1.25rem;
+  }
+
+  .meal-name {
+    font-size: 1.125rem;
+  }
+
+  .food-item-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .nutricionista-main {
+    padding: 0 1rem 1rem;
+  }
+
+  .nutricionista-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .paciente-details {
+    padding: 1.5rem;
+  }
+
+  .dieta-summary-section {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .summary-cards-secondary {
+    flex-direction: row;
+    overflow-x: auto;
+    min-width: 0;
+  }
+
+  .summary-card-secondary {
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+  .summary-card-primary .summary-value-large {
+    font-size: 2.5rem;
+  }
+
+  .meal-header {
+    padding: 1.25rem;
+  }
+
+  .meal-content {
+    padding: 1.25rem;
+  }
+
+  .meal-name {
+    font-size: 1.125rem;
+  }
+
+  .food-item-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+

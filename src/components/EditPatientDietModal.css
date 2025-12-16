@@ -11,8 +11,9 @@
   align-items: center;
   justify-content: center;
   z-index: 3000;
-  padding: 1rem;
+  padding: 2rem;
   animation: fadeIn 0.2s ease;
+  box-sizing: border-box;
 }
 
 @keyframes fadeIn {
@@ -23,10 +24,10 @@
 .edit-patient-diet-modal {
   background: var(--bg-primary, #ffffff);
   border-radius: 24px;
-  width: 100%;
-  max-width: 1000px;
-  height: 90vh;
-  max-height: 90vh;
+  width: 95vw;
+  max-width: 1600px;
+  height: 95vh;
+  max-height: 95vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
@@ -53,25 +54,28 @@
 
 /* Header */
 .modal-header {
-  padding: 1.5rem 2rem;
+  padding: 2rem 3rem;
   border-bottom: 1px solid var(--border-color, #e8e8e8);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-shrink: 0;
+  gap: 2rem;
 }
 
 .modal-header h2 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--text-primary, #1a1a1a);
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
 }
 
 .modal-subtitle {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--text-secondary, #666);
   margin: 0;
+  line-height: 1.4;
 }
 
 .modal-close-btn {
@@ -100,39 +104,23 @@
   color: var(--text-secondary, #b0b0b0);
 }
 
-/* Content */
+/* Content - RECRIADO SEM WRAPPER */
 .modal-content {
-  padding: 0;
-  margin: 0;
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  flex: 1 1 auto;
-  min-height: 0;
-  max-height: 100%;
-  box-sizing: border-box;
+  padding: 2.5rem 3rem;
   width: 100%;
-  min-width: 100%;
-  max-width: 100%;
+  box-sizing: border-box;
   position: relative;
-}
-
-/* Wrapper interno para o padding */
-.modal-content-wrapper {
-  padding: 2rem;
-  padding-right: calc(2rem + 8px); /* Adiciona espaço para o scrollbar */
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  margin: 0;
 }
 
 /* Summary Section */
 .summary-section {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .summary-card {
@@ -350,19 +338,20 @@
 
 /* Meal Items */
 .meal-items {
-  padding: 1.5rem;
+  padding: 2rem;
   padding-top: 0;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .food-item {
   background: var(--bg-primary, #ffffff);
   border: 1px solid var(--border-color, #e8e8e8);
   border-radius: 12px;
-  padding: 1rem;
+  padding: 1.25rem;
   transition: all 0.2s ease;
+  min-width: 0;
 }
 
 .dark-mode .food-item {
@@ -376,10 +365,11 @@
 
 .food-item-content {
   display: grid;
-  grid-template-columns: 2fr 1.5fr 100px 40px 40px;
-  gap: 0.75rem;
+  grid-template-columns: 2.5fr 1.5fr 1fr auto;
+  gap: 1.5rem;
   align-items: center;
   position: relative;
+  min-width: 0;
 }
 
 .alimento-input-wrapper {
@@ -387,10 +377,10 @@
 }
 
 .food-input {
-  padding: 0.625rem 0.875rem;
+  padding: 0.75rem 1rem;
   border: 2px solid var(--border-color, #e0e0e0);
   border-radius: 8px;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   outline: none;
   transition: all 0.2s ease;
   background: var(--bg-secondary, #f9f9f9);
@@ -398,8 +388,11 @@
   font-family: inherit;
   width: 100%;
   box-sizing: border-box;
-  min-height: 40px;
-  height: 40px;
+  min-height: 48px;
+  height: 48px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dark-mode .food-input {
@@ -421,19 +414,42 @@
 
 .food-input.alimento {
   font-weight: 600;
+  font-size: 1rem;
+  min-width: 0;
 }
 
 .food-input.porcao {
-  font-size: 0.875rem;
+  font-size: 0.95rem;
+  min-width: 140px;
 }
 
 .food-input.kcal {
   font-weight: 600;
   color: var(--accent-color, #4CAF50);
   text-align: center;
-  width: 100px;
-  min-width: 100px;
-  max-width: 100px;
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+  font-size: 0.95rem;
+}
+
+.food-input.kcal.readonly {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary, #f5f5f5);
+  color: var(--text-primary, #1a1a1a);
+  cursor: default;
+  border: 1px solid var(--border-color, #e8e8e8);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+}
+
+.dark-mode .food-input.kcal.readonly {
+  background: var(--bg-tertiary, #2a2a2a);
+  color: var(--text-primary, #e0e0e0);
+  border-color: var(--border-color, #404040);
 }
 
 .remove-item-btn {
@@ -482,11 +498,11 @@
 
 /* Footer */
 .modal-footer {
-  padding: 1.5rem 2rem;
+  padding: 2rem 3rem;
   border-top: 1px solid var(--border-color, #e8e8e8);
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-shrink: 0;
 }
 
@@ -631,7 +647,6 @@
 
   .modal-content-wrapper {
     padding: 1.5rem;
-    padding-right: calc(1.5rem + 8px);
   }
 
   .item-fields {
@@ -732,6 +747,22 @@
   color: var(--text-secondary, #b0b0b0);
 }
 
+.alimento-search-equivalente {
+  font-size: 0.7rem;
+  color: var(--accent-color, #4CAF50);
+  margin-top: 0.5rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.dark-mode .alimento-search-equivalente {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--accent-color, #66bb6a);
+}
+
 .alimento-search-loading,
 .alimento-search-empty {
   padding: 1.5rem;
@@ -752,5 +783,243 @@
   .modal-footer {
     padding: 1.25rem 1.5rem;
   }
+}
+
+/* Botão Novo Alimento no Header */
+.btn-add-food-modal {
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.btn-add-food-modal:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.btn-add-food-modal:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Modal aninhado para criar alimento */
+.modal-overlay-nested {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content-nested {
+  background: var(--bg-primary, #ffffff);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark-mode .modal-content-nested {
+  background: var(--bg-secondary, #2a2a2a);
+}
+
+.alimento-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.dark-mode .alimento-modal .modal-header {
+  border-color: var(--border-color, #404040);
+}
+
+.alimento-modal .modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0;
+}
+
+.dark-mode .alimento-modal .modal-header h2 {
+  color: var(--text-primary, #ffffff);
+}
+
+.alimento-modal .modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary, #666);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.alimento-modal .modal-close-btn:hover {
+  background: var(--bg-secondary, #f8f9fa);
+  color: var(--text-primary, #1a1a1a);
+}
+
+.dark-mode .alimento-modal .modal-close-btn:hover {
+  background: var(--bg-secondary, #2a2a2a);
+  color: var(--text-primary, #ffffff);
+}
+
+.alimento-form {
+  padding: 1.5rem;
+}
+
+.alimento-form .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.alimento-form .form-group label {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  margin-bottom: 0.5rem;
+}
+
+.dark-mode .alimento-form .form-group label {
+  color: var(--text-primary, #ffffff);
+}
+
+.alimento-form .form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  color: var(--text-primary, #1a1a1a);
+  background: var(--bg-primary, #ffffff);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.dark-mode .alimento-form .form-group input {
+  background: var(--bg-secondary, #242424);
+  border-color: var(--border-color, #404040);
+  color: var(--text-primary, #ffffff);
+}
+
+.alimento-form .form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color, #667eea);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.alimento-form .form-group small {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--text-secondary, #666);
+  margin-top: 0.25rem;
+}
+
+.dark-mode .alimento-form .form-group small {
+  color: var(--text-secondary, #999);
+}
+
+.alimento-modal .modal-footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+  margin-top: 0;
+}
+
+.dark-mode .alimento-modal .modal-footer {
+  border-color: var(--border-color, #404040);
+}
+
+.alimento-modal .cancel-btn,
+.alimento-modal .submit-btn {
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alimento-modal .cancel-btn {
+  background: var(--bg-secondary, #f8f9fa);
+  color: var(--text-primary, #1a1a1a);
+}
+
+.dark-mode .alimento-modal .cancel-btn {
+  background: var(--bg-secondary, #2a2a2a);
+  color: var(--text-primary, #ffffff);
+}
+
+.alimento-modal .cancel-btn:hover:not(:disabled) {
+  background: var(--bg-secondary, #e9ecef);
+}
+
+.dark-mode .alimento-modal .cancel-btn:hover:not(:disabled) {
+  background: var(--bg-secondary, #3a3a3a);
+}
+
+.alimento-modal .submit-btn {
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.alimento-modal .submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049 0%, #7cb342 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.alimento-modal .cancel-btn:disabled,
+.alimento-modal .submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-alert {
+  padding: 1rem;
+  background: rgba(244, 67, 54, 0.1);
+  color: #c62828;
+  border-radius: 8px;
+  border: 1px solid #ef5350;
+  font-size: 0.875rem;
+}
+
+.dark-mode .error-alert {
+  background: rgba(244, 67, 54, 0.2);
+  color: #ff6b6b;
+  border-color: #e57373;
 }
 

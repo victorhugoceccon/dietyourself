@@ -3,19 +3,19 @@ import { API_URL } from '../config/api'
 import './PersonalPacientes.css'
 
 function PersonalPacientes() {
-  const [pacientes, setPacientes] = useState([])
+  const [alunos, setAlunos] = useState([])
   const [loading, setLoading] = useState(true)
-  const [selectedPaciente, setSelectedPaciente] = useState(null)
+  const [selectedAluno, setSelectedAluno] = useState(null)
   const [error, setError] = useState('')
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const [newPaciente, setNewPaciente] = useState({ email: '', password: '', name: '' })
+  const [newAluno, setNewAluno] = useState({ email: '', password: '', name: '' })
   const [creating, setCreating] = useState(false)
 
   useEffect(() => {
-    loadPacientes()
+    loadAlunos()
   }, [])
 
-  const loadPacientes = async () => {
+  const loadAlunos = async () => {
     setLoading(true)
     try {
       const token = localStorage.getItem('token')
@@ -27,28 +27,28 @@ function PersonalPacientes() {
 
       if (response.ok) {
         const data = await response.json()
-        setPacientes(data.pacientes || [])
+        setAlunos(data.pacientes || [])
       } else {
         const errorData = await response.json()
-        setError(errorData.error || 'Erro ao carregar pacientes')
+        setError(errorData.error || 'Erro ao carregar alunos')
       }
     } catch (error) {
-      console.error('Erro ao carregar pacientes:', error)
-      setError('Erro ao carregar pacientes')
+      console.error('Erro ao carregar alunos:', error)
+      setError('Erro ao carregar alunos')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleCreatePaciente = async (e) => {
+  const handleCreateAluno = async (e) => {
     e.preventDefault()
     
-    if (!newPaciente.email || !newPaciente.password || !newPaciente.name) {
+    if (!newAluno.email || !newAluno.password || !newAluno.name) {
       alert('Preencha todos os campos obrigatórios')
       return
     }
 
-    if (newPaciente.password.length < 6) {
+    if (newAluno.password.length < 6) {
       alert('A senha deve ter no mínimo 6 caracteres')
       return
     }
@@ -62,24 +62,24 @@ function PersonalPacientes() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newPaciente)
+        body: JSON.stringify(newAluno)
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erro ao criar paciente')
+        throw new Error(data.error || 'Erro ao criar aluno')
       }
 
       // Recarregar lista
-      await loadPacientes()
+      await loadAlunos()
       
       // Fechar modal e limpar formulário
       setShowCreateModal(false)
-      setNewPaciente({ email: '', password: '', name: '' })
-      alert('Paciente criado e vinculado com sucesso!')
+      setNewAluno({ email: '', password: '', name: '' })
+      alert('Aluno criado e vinculado com sucesso!')
     } catch (error) {
-      alert(error.message || 'Erro ao criar paciente')
+      alert(error.message || 'Erro ao criar aluno')
     } finally {
       setCreating(false)
     }
@@ -88,7 +88,7 @@ function PersonalPacientes() {
   if (loading) {
     return (
       <div className="personal-pacientes">
-        <div className="loading">Carregando pacientes...</div>
+        <div className="loading">Carregando alunos...</div>
       </div>
     )
   }
@@ -97,17 +97,17 @@ function PersonalPacientes() {
     <div className="personal-pacientes">
       <div className="pacientes-header">
         <div>
-          <h2>Meus Pacientes</h2>
+          <h2>Meus Alunos</h2>
           <p className="subtitle">
-            {pacientes.length} {pacientes.length === 1 ? 'paciente vinculado' : 'pacientes vinculados'}
+            {alunos.length} {alunos.length === 1 ? 'aluno vinculado' : 'alunos vinculados'}
           </p>
         </div>
-        {pacientes.length === 0 && (
+        {alunos.length === 0 && (
           <button
             className="btn-create-paciente"
             onClick={() => setShowCreateModal(true)}
           >
-            + Criar Primeiro Paciente
+            + Criar Primeiro Aluno
           </button>
         )}
       </div>
@@ -116,48 +116,42 @@ function PersonalPacientes() {
         <div className="alert alert-error">{error}</div>
       )}
 
-      {pacientes.length === 0 ? (
+      {alunos.length === 0 ? (
         <div className="empty-state">
-          <p>Você ainda não tem pacientes vinculados.</p>
-          <p>Os pacientes serão vinculados a você quando você prescrever treinos para eles ou você pode criar um novo paciente.</p>
-          <button
-            className="btn-create-paciente-empty"
-            onClick={() => setShowCreateModal(true)}
-          >
-            + Criar Primeiro Paciente
-          </button>
+          <p>Você ainda não tem alunos vinculados.</p>
+          <p>Os alunos serão vinculados a você quando você prescrever treinos para eles ou você pode criar um novo aluno.</p>
         </div>
       ) : (
         <div className="pacientes-list">
-          {pacientes.map(paciente => (
+          {alunos.map(aluno => (
             <div
-              key={paciente.id}
-              className={`paciente-card ${selectedPaciente?.id === paciente.id ? 'selected' : ''}`}
-              onClick={() => setSelectedPaciente(paciente)}
+              key={aluno.id}
+              className={`paciente-card ${selectedAluno?.id === aluno.id ? 'selected' : ''}`}
+              onClick={() => setSelectedAluno(aluno)}
             >
               <div className="paciente-info">
-                <h3>{paciente.name || paciente.email}</h3>
-                <p className="paciente-email">{paciente.email}</p>
-                {paciente.questionnaireData && (
+                <h3>{aluno.name || aluno.email}</h3>
+                <p className="paciente-email">{aluno.email}</p>
+                {aluno.questionnaireData && (
                   <div className="paciente-data">
-                    {paciente.questionnaireData.idade && (
+                    {aluno.questionnaireData.idade && (
                       <span className="data-item">
-                        <strong>Idade:</strong> {paciente.questionnaireData.idade} anos
+                        <strong>Idade:</strong> {aluno.questionnaireData.idade} anos
                       </span>
                     )}
-                    {paciente.questionnaireData.pesoAtual && (
+                    {aluno.questionnaireData.pesoAtual && (
                       <span className="data-item">
-                        <strong>Peso:</strong> {paciente.questionnaireData.pesoAtual} kg
+                        <strong>Peso:</strong> {aluno.questionnaireData.pesoAtual} kg
                       </span>
                     )}
-                    {paciente.questionnaireData.altura && (
+                    {aluno.questionnaireData.altura && (
                       <span className="data-item">
-                        <strong>Altura:</strong> {paciente.questionnaireData.altura} cm
+                        <strong>Altura:</strong> {aluno.questionnaireData.altura} cm
                       </span>
                     )}
-                    {paciente.questionnaireData.objetivo && (
+                    {aluno.questionnaireData.objetivo && (
                       <span className="data-item">
-                        <strong>Objetivo:</strong> {paciente.questionnaireData.objetivo}
+                        <strong>Objetivo:</strong> {aluno.questionnaireData.objetivo}
                       </span>
                     )}
                   </div>
@@ -168,27 +162,27 @@ function PersonalPacientes() {
         </div>
       )}
 
-      {selectedPaciente && (
+      {selectedAluno && (
         <div className="paciente-detail">
-          <h3>Detalhes do Paciente</h3>
-          <p><strong>Nome:</strong> {selectedPaciente.name || 'Não informado'}</p>
-          <p><strong>Email:</strong> {selectedPaciente.email}</p>
-          {selectedPaciente.questionnaireData && (
+          <h3>Detalhes do Aluno</h3>
+          <p><strong>Nome:</strong> {selectedAluno.name || 'Não informado'}</p>
+          <p><strong>Email:</strong> {selectedAluno.email}</p>
+          {selectedAluno.questionnaireData && (
             <>
-              {selectedPaciente.questionnaireData.idade && (
-                <p><strong>Idade:</strong> {selectedPaciente.questionnaireData.idade} anos</p>
+              {selectedAluno.questionnaireData.idade && (
+                <p><strong>Idade:</strong> {selectedAluno.questionnaireData.idade} anos</p>
               )}
-              {selectedPaciente.questionnaireData.sexo && (
-                <p><strong>Sexo:</strong> {selectedPaciente.questionnaireData.sexo}</p>
+              {selectedAluno.questionnaireData.sexo && (
+                <p><strong>Sexo:</strong> {selectedAluno.questionnaireData.sexo}</p>
               )}
-              {selectedPaciente.questionnaireData.pesoAtual && (
-                <p><strong>Peso:</strong> {selectedPaciente.questionnaireData.pesoAtual} kg</p>
+              {selectedAluno.questionnaireData.pesoAtual && (
+                <p><strong>Peso:</strong> {selectedAluno.questionnaireData.pesoAtual} kg</p>
               )}
-              {selectedPaciente.questionnaireData.altura && (
-                <p><strong>Altura:</strong> {selectedPaciente.questionnaireData.altura} cm</p>
+              {selectedAluno.questionnaireData.altura && (
+                <p><strong>Altura:</strong> {selectedAluno.questionnaireData.altura} cm</p>
               )}
-              {selectedPaciente.questionnaireData.objetivo && (
-                <p><strong>Objetivo:</strong> {selectedPaciente.questionnaireData.objetivo}</p>
+              {selectedAluno.questionnaireData.objetivo && (
+                <p><strong>Objetivo:</strong> {selectedAluno.questionnaireData.objetivo}</p>
               )}
             </>
           )}
@@ -199,16 +193,16 @@ function PersonalPacientes() {
       {showCreateModal && (
         <div className="modal-overlay" onClick={() => {
           setShowCreateModal(false)
-          setNewPaciente({ email: '', password: '', name: '' })
+          setNewAluno({ email: '', password: '', name: '' })
         }}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Criar Novo Paciente</h3>
+              <h3>Criar Novo Aluno</h3>
               <button
                 className="modal-close"
                 onClick={() => {
                   setShowCreateModal(false)
-                  setNewPaciente({ email: '', password: '', name: '' })
+                  setNewAluno({ email: '', password: '', name: '' })
                 }}
               >
                 ✕
@@ -216,14 +210,14 @@ function PersonalPacientes() {
             </div>
 
             <div className="modal-body">
-              <form onSubmit={handleCreatePaciente} className="create-paciente-form">
+              <form onSubmit={handleCreateAluno} className="create-paciente-form">
                 <div className="form-group">
                   <label>Email: *</label>
                   <input
                     type="email"
-                    value={newPaciente.email}
-                    onChange={(e) => setNewPaciente({ ...newPaciente, email: e.target.value })}
-                    placeholder="paciente@exemplo.com"
+                    value={newAluno.email}
+                    onChange={(e) => setNewAluno({ ...newAluno, email: e.target.value })}
+                    placeholder="aluno@exemplo.com"
                     required
                   />
                 </div>
@@ -231,8 +225,8 @@ function PersonalPacientes() {
                   <label>Nome: *</label>
                   <input
                     type="text"
-                    value={newPaciente.name}
-                    onChange={(e) => setNewPaciente({ ...newPaciente, name: e.target.value })}
+                    value={newAluno.name}
+                    onChange={(e) => setNewAluno({ ...newAluno, name: e.target.value })}
                     placeholder="Nome completo"
                     required
                   />
@@ -241,8 +235,8 @@ function PersonalPacientes() {
                   <label>Senha: *</label>
                   <input
                     type="password"
-                    value={newPaciente.password}
-                    onChange={(e) => setNewPaciente({ ...newPaciente, password: e.target.value })}
+                    value={newAluno.password}
+                    onChange={(e) => setNewAluno({ ...newAluno, password: e.target.value })}
                     placeholder="Mínimo 6 caracteres"
                     required
                     minLength={6}
@@ -254,14 +248,14 @@ function PersonalPacientes() {
                     className="btn-primary"
                     disabled={creating}
                   >
-                    {creating ? 'Criando...' : 'Criar Paciente'}
+                    {creating ? 'Criando...' : 'Criar Aluno'}
                   </button>
                   <button
                     type="button"
                     className="btn-cancel"
                     onClick={() => {
                       setShowCreateModal(false)
-                      setNewPaciente({ email: '', password: '', name: '' })
+                      setNewAluno({ email: '', password: '', name: '' })
                     }}
                     disabled={creating}
                   >

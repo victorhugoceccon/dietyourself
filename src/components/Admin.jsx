@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config/api'
+import RoleSelector from './RoleSelector'
+import { hasAnyRole } from '../utils/roleUtils'
 import './Admin.css'
 
 function Admin() {
@@ -13,6 +15,12 @@ function Admin() {
   const [showUserModal, setShowUserModal] = useState(false)
   const [editingUser, setEditingUser] = useState(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showLinkModal, setShowLinkModal] = useState(false)
+  const [linkUserData, setLinkUserData] = useState({
+    userId: '',
+    nutricionistaId: '',
+    personalId: ''
+  })
   const [newUser, setNewUser] = useState({
     email: '',
     password: '',
@@ -58,9 +66,8 @@ function Admin() {
 
     try {
       const parsedUser = JSON.parse(userData)
-      const role = parsedUser.role?.toUpperCase()
 
-      if (role !== 'ADMIN') {
+      if (!hasAnyRole(parsedUser, ['ADMIN'])) {
         navigate('/login')
         return
       }
@@ -189,8 +196,19 @@ function Admin() {
 
       if (response.ok) {
         const userData = await response.json()
+        // Parse roles se existir
+        let roles = null
+        if (userData.roles) {
+          try {
+            roles = typeof userData.roles === 'string' ? JSON.parse(userData.roles) : userData.roles
+          } catch (e) {
+            console.warn('Erro ao parsear roles:', e)
+          }
+        }
+
         setEditingUser({
           ...userData,
+          roles: roles || [],
           nutricionistaId: userData.nutricionistaId || '',
           personalId: userData.personalId || ''
         })
@@ -220,6 +238,7 @@ function Admin() {
         },
         body: JSON.stringify({
           role: editingUser.role,
+          roles: editingUser.roles || [],
           name: editingUser.name,
           email: editingUser.email,
           nutricionistaId: editingUser.nutricionistaId || null,
@@ -393,9 +412,9 @@ function Admin() {
           <div className="header-left">
             <h1 className="logo">DietYourself</h1>
             <p className="welcome-text">Painel Administrativo</p>
+            <RoleSelector user={user} />
           </div>
           <div className="header-actions">
-            <span className="admin-badge">Administrador</span>
             <button className="logout-btn" onClick={handleLogout}>
               Sair
             </button>
@@ -480,6 +499,13 @@ function Admin() {
               <span className="users-count">
                 {pagination.total} {pagination.total === 1 ? 'usuário' : 'usuários'}
               </span>
+              <button
+                className="btn-secondary"
+                onClick={() => setShowLinkModal(true)}
+                style={{ marginRight: '0.5rem' }}
+              >
+                🔗 Vincular Usuário
+              </button>
               <button
                 className="btn-create-user"
                 onClick={() => setShowCreateModal(true)}
@@ -617,7 +643,7 @@ function Admin() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Role:</label>
+                    <label>Role Principal:</label>
                     <select
                       value={editingUser.role || 'PACIENTE'}
                       onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })}
@@ -629,8 +655,31 @@ function Admin() {
                     </select>
                   </div>
                   
-                  {/* Vínculos - apenas para pacientes */}
-                  {editingUser.role === 'PACIENTE' && (
+                  <div className="form-group">
+                    <label>Roles Múltiplas:</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {['ADMIN', 'NUTRICIONISTA', 'PERSONAL', 'PACIENTE'].map(role => (
+                        <label key={role} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <input
+                            type="checkbox"
+                            checked={(editingUser.roles || []).includes(role)}
+                            onChange={(e) => {
+                              const currentRoles = editingUser.roles || []
+                              if (e.target.checked) {
+                                setEditingUser({ ...editingUser, roles: [...currentRoles, role] })
+                              } else {
+                                setEditingUser({ ...editingUser, roles: currentRoles.filter(r => r !== role) })
+                              }
+                            }}
+                          />
+                          <span>{role}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Vínculos - para pacientes */}
+                  {(editingUser.role === 'PACIENTE' || (editingUser.roles || []).includes('PACIENTE')) && (
                     <>
                       <div className="form-group">
                         <label>Nutricionista:</label>
@@ -835,6 +884,99 @@ function Admin() {
                     Cancelar
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Vincular Usuário */}
+      {showLinkModal && (
+        <div className="modal-overlay" onClick={() => {
+          setShowLinkModal(false)
+          setLinkUserData({
+            userId: '',
+            nutricionistaId: '',
+            personalId: ''
+          })
+        }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Vincular Usuário Existente</h3>
+              <button
+                className="modal-close"
+                onClick={() => {
+                  setShowLinkModal(false)
+                  setLinkUserData({
+                    userId: '',
+                    nutricionistaId: '',
+                    personalId: ''
+                  })
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Usuário (Paciente/Aluno):</label>
+                <select
+                  value={linkUserData.userId}
+                  onChange={(e) => setLinkUserData({ ...linkUserData, userId: e.target.value })}
+                >
+                  <option value="">Selecione um usuário</option>
+                  {users.filter(u => u.role === 'PACIENTE').map(u => (
+                    <option key={u.id} value={u.id}>
+                      {u.name || u.email}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Nutricionista:</label>
+                <select
+                  value={linkUserData.nutricionistaId}
+                  onChange={(e) => setLinkUserData({ ...linkUserData, nutricionistaId: e.target.value })}
+                >
+                  <option value="">Nenhum</option>
+                  {nutricionistas.map(nutri => (
+                    <option key={nutri.id} value={nutri.id}>
+                      {nutri.name || nutri.email}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Personal Trainer:</label>
+                <select
+                  value={linkUserData.personalId}
+                  onChange={(e) => setLinkUserData({ ...linkUserData, personalId: e.target.value })}
+                >
+                  <option value="">Nenhum</option>
+                  {personals.map(personal => (
+                    <option key={personal.id} value={personal.id}>
+                      {personal.name || personal.email}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-actions">
+                <button className="btn-primary" onClick={handleLinkUser}>
+                  Vincular
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => {
+                    setShowLinkModal(false)
+                    setLinkUserData({
+                      userId: '',
+                      nutricionistaId: '',
+                      personalId: ''
+                    })
+                  }}
+                >
+                  Cancelar
+                </button>
               </div>
             </div>
           </div>

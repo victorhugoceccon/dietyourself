@@ -11,6 +11,8 @@ import DailyCheckInModal from './DailyCheckInModal'
 import ProgressTimeline from './ProgressTimeline'
 import WeeklyAdherence from './WeeklyAdherence'
 import PacienteTreinos from './PacienteTreinos'
+import RoleSelector from './RoleSelector'
+import { hasAnyRole } from '../utils/roleUtils'
 import { API_URL } from '../config/api'
 import './Paciente.css'
 
@@ -39,9 +41,8 @@ function Paciente() {
 
     const userData = JSON.parse(storedUser)
     
-    // Se não for paciente (ou USUARIO, para compatibilidade), redirecionar
-    const role = userData.role?.toUpperCase()
-    if (role !== 'PACIENTE' && role !== 'USUARIO') {
+    // Verificar se tem acesso de paciente
+    if (!hasAnyRole(userData, ['PACIENTE', 'USUARIO'])) {
       navigate('/login')
       return
     }
@@ -141,10 +142,36 @@ function Paciente() {
       let data
       try {
         const responseText = await response.text()
-        data = responseText ? JSON.parse(responseText) : {}
-      } catch (parseError) {
-        console.error('Erro ao parsear resposta:', parseError)
-        throw new Error('Resposta inválida do servidor')
+        if (!responseText) {
+          throw new Error('Resposta vazia do servidor')
+        }
+        
+        try {
+          data = JSON.parse(responseText)
+        } catch (parseError) {
+          console.error('❌ Erro ao parsear JSON:', parseError)
+          console.error('   Mensagem:', parseError.message)
+          console.error('   Posição do erro:', parseError.message.match(/position (\d+)/)?.[1] || 'desconhecida')
+          console.error('   Primeiros 1000 caracteres da resposta:', responseText.substring(0, 1000))
+          
+          // Tentar encontrar onde está o erro
+          const errorPosition = parseError.message.match(/position (\d+)/)?.[1]
+          if (errorPosition) {
+            const pos = parseInt(errorPosition)
+            const start = Math.max(0, pos - 100)
+            const end = Math.min(responseText.length, pos + 100)
+            console.error('   Contexto do erro (posição ' + pos + '):', responseText.substring(start, end))
+          }
+          
+          throw new Error(`Erro ao processar resposta do servidor: ${parseError.message}. Verifique os logs do console para mais detalhes.`)
+        }
+      } catch (error) {
+        // Se já é um erro de parse, re-lançar
+        if (error.message.includes('Erro ao processar')) {
+          throw error
+        }
+        console.error('Erro ao ler resposta:', error)
+        throw new Error('Erro ao ler resposta do servidor: ' + error.message)
       }
 
       if (!response.ok) {
@@ -224,6 +251,7 @@ function Paciente() {
             <p className="welcome-text">
               Olá, {user?.name || user?.email}! 👋
             </p>
+            <RoleSelector user={user} />
           </div>
           <div className="header-actions">
             <ThemeToggle />

@@ -257,3 +257,4 @@ Certifique-se de que o agente retorna no formato exato:
 - **RESPEITE** exatamente os valores enviados em `nutritionalNeeds`
 - O backend corrigirá automaticamente se houver diferença, mas isso indica que o agente não está seguindo as instruções corretamente
 
+

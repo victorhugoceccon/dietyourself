@@ -87,6 +87,64 @@ router.post('/', authenticate, async (req, res) => {
   }
 })
 
+// PUT /api/nutricionista/alimentos/:id - Atualizar alimento
+router.put('/:id', authenticate, async (req, res) => {
+  try {
+    const nutricionistaId = req.user.userId
+    const role = req.user.role?.toUpperCase()
+    const alimentoId = req.params.id
+
+    if (role !== 'NUTRICIONISTA' && role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Acesso negado' })
+    }
+
+    // Buscar o alimento
+    const alimentoExistente = await prisma.alimento.findUnique({
+      where: { id: alimentoId }
+    })
+
+    if (!alimentoExistente) {
+      return res.status(404).json({ error: 'Alimento não encontrado' })
+    }
+
+    // Verificar se o alimento foi criado pelo nutricionista ou se é do CSV (pode atualizar se for do CSV)
+    if (alimentoExistente.nutricionistaId && alimentoExistente.nutricionistaId !== nutricionistaId) {
+      return res.status(403).json({ error: 'Você não tem permissão para atualizar este alimento' })
+    }
+
+    // Validar dados (usar schema parcial para atualização)
+    const updateData = {}
+    if (req.body.energiaKcal !== undefined) updateData.energiaKcal = z.number().min(0).parse(req.body.energiaKcal)
+    if (req.body.proteina !== undefined) updateData.proteina = z.number().min(0).parse(req.body.proteina)
+    if (req.body.lipideos !== undefined) updateData.lipideos = z.number().min(0).parse(req.body.lipideos)
+    if (req.body.carboidrato !== undefined) updateData.carboidrato = z.number().min(0).parse(req.body.carboidrato)
+    if (req.body.descricao !== undefined) updateData.descricao = z.string().min(1).parse(req.body.descricao)
+    if (req.body.categoria !== undefined) updateData.categoria = req.body.categoria || null
+    if (req.body.umidade !== undefined) updateData.umidade = req.body.umidade !== null ? z.number().parse(req.body.umidade) : null
+    if (req.body.energiaKj !== undefined) updateData.energiaKj = req.body.energiaKj !== null ? z.number().parse(req.body.energiaKj) : null
+    if (req.body.colesterol !== undefined) updateData.colesterol = req.body.colesterol !== null ? z.number().parse(req.body.colesterol) : null
+    if (req.body.fibraAlimentar !== undefined) updateData.fibraAlimentar = req.body.fibraAlimentar !== null ? z.number().parse(req.body.fibraAlimentar) : null
+    if (req.body.cinzas !== undefined) updateData.cinzas = req.body.cinzas !== null ? z.number().parse(req.body.cinzas) : null
+
+    // Atualizar alimento
+    const alimento = await prisma.alimento.update({
+      where: { id: alimentoId },
+      data: updateData
+    })
+
+    res.json({ alimento })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: 'Dados inválidos',
+        details: error.errors
+      })
+    }
+    console.error('Erro ao atualizar alimento:', error)
+    res.status(500).json({ error: 'Erro ao atualizar alimento' })
+  }
+})
+
 // POST /api/nutricionista/alimentos/calcular - Calcular valores para um peso específico
 router.post('/calcular', authenticate, async (req, res) => {
   try {

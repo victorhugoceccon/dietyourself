@@ -354,17 +354,17 @@ function DivisaoTreinoManager() {
               </div>
 
               <div className="form-group">
-                <label>Dias da Semana (JSON array ou texto livre)</label>
+                <label>Dias da Semana</label>
                 <input
                   type="text"
                   value={newDivisao.diasSemana}
                   onChange={(e) => setNewDivisao(prev => ({ ...prev, diasSemana: e.target.value }))}
-                  placeholder='Ex: ["Segunda", "Quarta", "Sexta"] ou Segunda, Quarta, Sexta'
+                  placeholder='Ex: Segunda, Quarta, Sexta'
                 />
               </div>
 
               {/* Exercícios da divisão */}
-              <div className="form-group">
+              <div className="form-group exercicios-group">
                 <label>Exercícios da divisão (modelo)</label>
                 {(!newDivisao.itens || newDivisao.itens.length === 0) && (
                   <p className="hint-text">
@@ -422,11 +422,13 @@ function DivisaoTreinoManager() {
                             handleUpdateItem(index, 'descanso', e.target.value)
                           }
                           placeholder="Descanso (ex: 60s)"
+                          style={{ minWidth: '140px', fontSize: '0.9375rem' }}
                         />
                         <button
                           type="button"
                           className="btn-delete-small"
                           onClick={() => handleRemoveItem(index)}
+                          style={{ width: '36px', height: '36px', flexShrink: 0 }}
                         >
                           ×
                         </button>

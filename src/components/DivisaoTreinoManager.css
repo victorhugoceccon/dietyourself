@@ -208,8 +208,8 @@
 }
 
 .btn-delete-small {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
   background: #ffebee;
@@ -217,9 +217,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .btn-delete-small:hover {
@@ -279,12 +280,23 @@
 .modal-content {
   background: var(--bg-primary, #ffffff);
   border-radius: 20px;
-  padding: 2rem;
-  max-width: 600px;
-  width: 100%;
-  max-height: 90vh;
+  padding: 0;
+  max-width: 1200px;
+  width: 95%;
+  height: auto;
+  min-height: 80vh;
+  max-height: 95vh;
   overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Esconder scrollbar do modal mas manter scroll funcional */
+.modal-content::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
 }
 
 .dark-mode .modal-content {
@@ -295,7 +307,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  flex-shrink: 0;
+}
+
+.dark-mode .modal-header {
+  border-bottom-color: var(--border-color, #333);
 }
 
 .modal-header h3 {
@@ -336,8 +354,27 @@
   color: var(--text-primary, #e0e0e0);
 }
 
+.modal-content form {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(95vh - 80px);
+  overflow: visible;
+}
+
 .form-group {
   margin-bottom: 1.5rem;
+  flex-shrink: 0;
+}
+
+/* Grupo de exercícios deve crescer para mostrar todo conteúdo */
+.form-group.exercicios-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 400px;
+  margin-bottom: 1rem;
+  overflow: visible;
 }
 
 .form-group label {
@@ -381,23 +418,47 @@
   flex-direction: column;
   gap: 0.75rem;
   margin-top: 0.5rem;
+  flex: 1;
+  overflow: visible;
+  min-height: 300px;
 }
 
 .divisao-item-row {
   display: grid;
-  grid-template-columns: minmax(0, 2.5fr) 70px minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(0, 1.2fr) auto;
-  gap: 0.5rem;
+  grid-template-columns: minmax(250px, 3fr) minmax(90px, 110px) minmax(140px, 1.5fr) minmax(140px, 1.5fr) minmax(160px, 2fr) 50px;
+  gap: 1.25rem;
   align-items: center;
 }
 
 .divisao-item-row select,
 .divisao-item-row input {
-  padding: 0.6rem 0.75rem;
+  padding: 0.75rem;
   border: 1px solid var(--border-color, #e0e0e0);
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
   background: var(--bg-primary, #ffffff);
   color: var(--text-primary, #1a1a1a);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.divisao-item-row input::placeholder {
+  font-size: 0.9375rem;
+  opacity: 0.7;
+}
+
+/* Garantir que o campo Descanso tenha espaço adequado */
+.divisao-item-row input[placeholder*="Descanso"] {
+  min-width: 140px;
+  font-size: 0.9375rem;
+}
+
+/* Botão de exclusão com tamanho fixo e espaçamento */
+.divisao-item-row .btn-delete-small {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
 }
 
 .dark-mode .divisao-item-row select,
@@ -442,9 +503,10 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-  margin-top: 2rem;
+  margin-top: auto;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border-color, #e0e0e0);
+  flex-shrink: 0;
 }
 
 .dark-mode .modal-actions {
@@ -479,7 +541,28 @@
   }
 
   .modal-content {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .modal-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .modal-content form {
     padding: 1.5rem;
+  }
+
+  .divisao-item-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .divisao-item-row .btn-delete-small {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
   }
 }
 

@@ -15,6 +15,8 @@ import mealsRoutes from './routes/meals.js'
 import exerciciosRoutes from './routes/exercicios.js'
 import divisoesTreinoRoutes from './routes/divisoes-treino.js'
 import prescricoesTreinoRoutes from './routes/prescricoes-treino.js'
+import treinosExecutadosRoutes from './routes/treinos-executados.js'
+import solicitacoesMudancaRoutes from './routes/solicitacoes-mudanca.js'
 import personalRoutes from './routes/personal.js'
 import adminRoutes from './routes/admin.js'
 
@@ -48,6 +50,8 @@ app.use('/api/meals', mealsRoutes)
 app.use('/api/exercicios', exerciciosRoutes)
 app.use('/api/divisoes-treino', divisoesTreinoRoutes)
 app.use('/api/prescricoes-treino', prescricoesTreinoRoutes)
+app.use('/api/treinos-executados', treinosExecutadosRoutes)
+app.use('/api/solicitacoes-mudanca', solicitacoesMudancaRoutes)
 app.use('/api/personal', personalRoutes)
 app.use('/api/admin', adminRoutes)
 

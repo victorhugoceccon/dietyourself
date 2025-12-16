@@ -3,6 +3,7 @@ import { z } from 'zod'
 import prisma from '../config/database.js'
 import { verifyToken } from '../utils/jwt.js'
 import { hashPassword } from '../utils/hash.js'
+import { ensureDefaultExercicios, ensureDefaultDivisoes } from '../utils/personalDefaults.js'
 
 const router = express.Router()
 
@@ -124,6 +125,7 @@ router.get('/users/:id', authenticate, async (req, res) => {
         email: true,
         name: true,
         role: true,
+        roles: true,
         profilePhoto: true,
         motivationalMessage: true,
         createdAt: true,
@@ -169,6 +171,15 @@ router.get('/users/:id', authenticate, async (req, res) => {
       return res.status(404).json({ error: 'Usuário não encontrado' })
     }
 
+    // Parse roles se existir
+    if (user.roles) {
+      try {
+        user.roles = typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles
+      } catch (e) {
+        console.warn('Erro ao parsear roles:', e)
+      }
+    }
+
     res.json(user)
   } catch (error) {
     console.error('Erro ao obter usuário:', error)
@@ -182,6 +193,7 @@ router.patch('/users/:id', authenticate, async (req, res) => {
     const { id } = req.params
     const updateSchema = z.object({
       role: z.enum(['ADMIN', 'NUTRICIONISTA', 'PERSONAL', 'PACIENTE']).optional(),
+      roles: z.array(z.enum(['ADMIN', 'NUTRICIONISTA', 'PERSONAL', 'PACIENTE'])).optional(),
       name: z.string().optional(),
       email: z.string().email().optional(),
       nutricionistaId: z.string().uuid().nullable().optional(),
@@ -224,20 +236,49 @@ router.patch('/users/:id', authenticate, async (req, res) => {
       }
     }
 
+    // Preparar dados para atualização
+    const updateData = { ...validatedData }
+    
+    // Se roles foi fornecido, converter para JSON string
+    if (updateData.roles !== undefined) {
+      updateData.roles = JSON.stringify(updateData.roles)
+    }
+
     // Atualizar usuário
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: validatedData,
+      data: updateData,
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
+        roles: true,
         nutricionistaId: true,
         personalId: true,
         updatedAt: true
       }
     })
+
+    // Parse roles se existir
+    if (updatedUser.roles) {
+      try {
+        updatedUser.roles = JSON.parse(updatedUser.roles)
+      } catch (e) {
+        // Se não for JSON válido, manter como está
+      }
+    }
+
+    // Se o usuário foi atualizado para Personal e não tinha exercícios/divisões, criar padrões
+    if (validatedData.role === 'PERSONAL' && existingUser.role !== 'PERSONAL') {
+      try {
+        await ensureDefaultExercicios(updatedUser.id)
+        await ensureDefaultDivisoes(updatedUser.id)
+      } catch (error) {
+        console.error('Erro ao criar exercícios/divisões padrões para Personal:', error)
+        // Não falhar a atualização se houver erro ao criar padrões
+      }
+    }
 
     res.json({
       message: 'Usuário atualizado com sucesso',
@@ -358,6 +399,17 @@ router.post('/users', authenticate, async (req, res) => {
         createdAt: true
       }
     })
+
+    // Se for Personal, criar exercícios e divisões padrões
+    if (validatedData.role === 'PERSONAL') {
+      try {
+        await ensureDefaultExercicios(user.id)
+        await ensureDefaultDivisoes(user.id)
+      } catch (error) {
+        console.error('Erro ao criar exercícios/divisões padrões para Personal:', error)
+        // Não falhar a criação do usuário se houver erro ao criar padrões
+      }
+    }
 
     res.status(201).json({
       message: 'Usuário criado com sucesso',

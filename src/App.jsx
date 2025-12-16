@@ -5,6 +5,7 @@ import Paciente from './components/Paciente'
 import Nutricionista from './components/Nutricionista'
 import Personal from './components/Personal'
 import Admin from './components/Admin'
+import EditPatientDietPage from './components/EditPatientDietPage'
 import { getRoleRedirect } from './utils/roleRedirect'
 import './App.css'
 
@@ -30,7 +31,7 @@ const RoleRedirect = () => {
 
   try {
     const userData = JSON.parse(user)
-    const redirectPath = getRoleRedirect(userData.role)
+    const redirectPath = getRoleRedirect(userData)
     return <Navigate to={redirectPath} replace />
   } catch (error) {
     return <Navigate to="/login" replace />
@@ -57,6 +58,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Nutricionista />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/nutricionista/pacientes/:pacienteId/editar-dieta" 
+            element={
+              <ProtectedRoute>
+                <EditPatientDietPage />
               </ProtectedRoute>
             } 
           />

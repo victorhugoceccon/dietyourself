@@ -342,14 +342,40 @@ function ExerciciosManager() {
 
               <div className="form-group">
                 <label>Vídeo do Exercício</label>
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={handleVideoUpload}
-                />
+                <div style={{ 
+                  padding: '0.75rem',
+                  border: '1px solid var(--border-color, #e0e0e0)',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--bg-secondary, #f5f5f5)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoUpload}
+                    style={{ 
+                      width: '100%',
+                      cursor: 'pointer',
+                      border: 'none',
+                      background: 'transparent',
+                      padding: 0,
+                      fontSize: '0.9375rem'
+                    }}
+                  />
+                </div>
                 {newExercicio.videoUrl && (
-                  <div className="video-preview">
-                    <video src={newExercicio.videoUrl} controls style={{ maxWidth: '100%', marginTop: '10px' }} />
+                  <div className="video-preview" style={{ marginTop: '1rem' }}>
+                    <video 
+                      src={newExercicio.videoUrl} 
+                      controls 
+                      style={{ 
+                        maxWidth: '100%', 
+                        borderRadius: '8px',
+                        backgroundColor: '#000',
+                        display: 'block'
+                      }} 
+                    />
                   </div>
                 )}
               </div>

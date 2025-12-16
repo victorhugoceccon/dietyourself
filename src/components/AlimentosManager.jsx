@@ -18,6 +18,7 @@ function AlimentosManager() {
   const [newAlimento, setNewAlimento] = useState({
     descricao: '',
     categoria: '',
+    porcaoBase: '100',
     energiaKcal: '',
     proteina: '',
     lipideos: '',
@@ -88,6 +89,16 @@ function AlimentosManager() {
     setError('')
 
     try {
+      // Converter valores da porção base para valores por 100g
+      const porcaoBase = parseFloat(newAlimento.porcaoBase) || 100
+      const fator = porcaoBase > 0 ? 100 / porcaoBase : 1
+
+      const energiaKcal = parseFloat(newAlimento.energiaKcal) || 0
+      const proteina = parseFloat(newAlimento.proteina) || 0
+      const lipideos = parseFloat(newAlimento.lipideos) || 0
+      const carboidrato = parseFloat(newAlimento.carboidrato) || 0
+      const umidade = newAlimento.umidade ? parseFloat(newAlimento.umidade) : null
+
       const token = localStorage.getItem('token')
       const response = await fetch(`${API_URL}/nutricionista/alimentos`, {
         method: 'POST',
@@ -98,11 +109,11 @@ function AlimentosManager() {
         body: JSON.stringify({
           descricao: newAlimento.descricao,
           categoria: newAlimento.categoria || null,
-          energiaKcal: parseFloat(newAlimento.energiaKcal) || 0,
-          proteina: parseFloat(newAlimento.proteina) || 0,
-          lipideos: parseFloat(newAlimento.lipideos) || 0,
-          carboidrato: parseFloat(newAlimento.carboidrato) || 0,
-          umidade: newAlimento.umidade ? parseFloat(newAlimento.umidade) : null
+          energiaKcal: Math.round(energiaKcal * fator * 10) / 10,
+          proteina: Math.round(proteina * fator * 10) / 10,
+          lipideos: Math.round(lipideos * fator * 10) / 10,
+          carboidrato: Math.round(carboidrato * fator * 10) / 10,
+          umidade: umidade ? Math.round(umidade * fator * 10) / 10 : null
         })
       })
 
@@ -112,6 +123,7 @@ function AlimentosManager() {
         setNewAlimento({
           descricao: '',
           categoria: '',
+          porcaoBase: '100',
           energiaKcal: '',
           proteina: '',
           lipideos: '',
@@ -452,9 +464,24 @@ function AlimentosManager() {
                   placeholder="Ex: Cereais e derivados"
                 />
               </div>
+              <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                <label>Porção Base (g) *</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={newAlimento.porcaoBase}
+                  onChange={(e) => setNewAlimento({ ...newAlimento, porcaoBase: e.target.value })}
+                  required
+                  min="0.1"
+                  placeholder="Ex: 100 (padrão), 32 (whey protein)"
+                />
+                <small className="form-hint" style={{ display: 'block', marginTop: '0.25rem', color: '#666', fontSize: '0.875rem' }}>
+                  Informe os valores nutricionais para esta porção. O sistema calculará automaticamente os valores por 100g.
+                </small>
+              </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Energia (kcal por 100g) *</label>
+                  <label>Energia (kcal por {newAlimento.porcaoBase || '100'}g) *</label>
                   <input
                     type="number"
                     step="0.1"
@@ -465,7 +492,7 @@ function AlimentosManager() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Proteína (g por 100g) *</label>
+                  <label>Proteína (g por {newAlimento.porcaoBase || '100'}g) *</label>
                   <input
                     type="number"
                     step="0.1"
@@ -478,7 +505,7 @@ function AlimentosManager() {
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Lipídios (g por 100g) *</label>
+                  <label>Lipídios (g por {newAlimento.porcaoBase || '100'}g) *</label>
                   <input
                     type="number"
                     step="0.1"
@@ -489,7 +516,7 @@ function AlimentosManager() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Carboidrato (g por 100g) *</label>
+                  <label>Carboidrato (g por {newAlimento.porcaoBase || '100'}g) *</label>
                   <input
                     type="number"
                     step="0.1"

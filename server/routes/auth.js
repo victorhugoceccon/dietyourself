@@ -82,7 +82,15 @@ router.post('/login', async (req, res) => {
 
     // Buscar usuário
     const user = await prisma.user.findUnique({
-      where: { email: validatedData.email }
+      where: { email: validatedData.email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        roles: true,
+        password: true
+      }
     })
 
     if (!user) {
@@ -99,13 +107,24 @@ router.post('/login', async (req, res) => {
     // Gerar token
     const token = generateToken(user.id, user.email, user.role)
 
+    // Parse roles se existir
+    let roles = null
+    if (user.roles) {
+      try {
+        roles = typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles
+      } catch (e) {
+        console.warn('Erro ao parsear roles:', e)
+      }
+    }
+
     res.json({
       message: 'Login realizado com sucesso',
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role
+        role: user.role,
+        roles: roles
       },
       token
     })
@@ -144,6 +163,7 @@ router.get('/me', async (req, res) => {
         email: true,
         name: true,
         role: true,
+        roles: true,
         createdAt: true
       }
     })
@@ -152,7 +172,22 @@ router.get('/me', async (req, res) => {
       return res.status(404).json({ error: 'Usuário não encontrado' })
     }
 
-    res.json({ user })
+    // Parse roles se existir
+    let roles = null
+    if (user.roles) {
+      try {
+        roles = typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles
+      } catch (e) {
+        console.warn('Erro ao parsear roles:', e)
+      }
+    }
+
+    res.json({ 
+      user: {
+        ...user,
+        roles: roles
+      }
+    })
   } catch (error) {
     console.error('Erro ao verificar token:', error)
     res.status(500).json({ error: 'Erro ao verificar token' })

@@ -6,13 +6,16 @@ import ExerciciosManager from './ExerciciosManager'
 import DivisaoTreinoManager from './DivisaoTreinoManager'
 import PersonalPacientes from './PersonalPacientes'
 import PrescricaoTreino from './PrescricaoTreino'
+import PersonalFeedbackSolicitacoes from './PersonalFeedbackSolicitacoes'
 import LoadingBar from './LoadingBar'
+import RoleSelector from './RoleSelector'
+import { hasAnyRole } from '../utils/roleUtils'
 import './Personal.css'
 
 function Personal() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('exercicios') // 'exercicios', 'divisoes', 'prescricoes', 'pacientes'
+  const [activeTab, setActiveTab] = useState('exercicios') // 'exercicios', 'divisoes', 'prescricoes', 'pacientes', 'feedbacks'
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -27,9 +30,8 @@ function Personal() {
 
     const userData = JSON.parse(storedUser)
     
-    // Verificar se é personal trainer
-    const role = userData.role?.toUpperCase()
-    if (role !== 'PERSONAL' && role !== 'ADMIN') {
+    // Verificar se tem acesso de personal ou admin
+    if (!hasAnyRole(userData, ['PERSONAL', 'ADMIN'])) {
       navigate('/login')
       return
     }
@@ -61,7 +63,7 @@ function Personal() {
             <p className="welcome-text">
               Olá, {user?.name || 'Personal Trainer'}! 💪
             </p>
-            <span className="role-badge">Personal Trainer</span>
+            <RoleSelector user={user} />
           </div>
           <div className="header-actions">
             <ThemeToggle />
@@ -99,6 +101,12 @@ function Personal() {
           >
             Meus Pacientes
           </button>
+          <button
+            className={`tab-btn ${activeTab === 'feedbacks' ? 'active' : ''}`}
+            onClick={() => setActiveTab('feedbacks')}
+          >
+            Feedbacks e Solicitações
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -107,6 +115,7 @@ function Personal() {
           {activeTab === 'divisoes' && <DivisaoTreinoManager />}
           {activeTab === 'prescricoes' && <PrescricaoTreino />}
           {activeTab === 'pacientes' && <PersonalPacientes />}
+          {activeTab === 'feedbacks' && <PersonalFeedbackSolicitacoes />}
         </div>
       </main>
 

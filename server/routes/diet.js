@@ -202,19 +202,91 @@ router.post('/generate', authenticate, async (req, res) => {
           cleanedText = cleanedText.replace(/\\n/g, '\n').replace(/\\"/g, '"')
         }
         
+        // Função auxiliar para limpar e validar JSON
+        const cleanAndParseJSON = (jsonString) => {
+          try {
+            // Remover caracteres de controle e BOM se existirem
+            let cleaned = jsonString.trim()
+            if (cleaned.charCodeAt(0) === 0xFEFF) {
+              cleaned = cleaned.slice(1)
+            }
+            
+            // Remover caracteres de escape problemáticos
+            cleaned = cleaned
+              .replace(/\\n/g, '\n')
+              .replace(/\\r/g, '\r')
+              .replace(/\\t/g, '\t')
+              .replace(/\\"/g, '"')
+              .replace(/\\\\/g, '\\')
+            
+            // Tentar encontrar JSON válido (pode estar dentro de markdown code blocks)
+            const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
+            if (jsonMatch) {
+              const jsonCandidate = jsonMatch[0]
+              // Validar se é JSON válido tentando parsear
+              try {
+                return JSON.parse(jsonCandidate)
+              } catch (e) {
+                // Se falhar, tentar corrigir problemas comuns
+                // Remover vírgulas finais antes de }
+                let fixed = jsonCandidate.replace(/,(\s*[}\]])/g, '$1')
+                // Remover vírgulas duplas
+                fixed = fixed.replace(/,,+/g, ',')
+                // Tentar parsear novamente
+                return JSON.parse(fixed)
+              }
+            }
+            
+            // Se não encontrou match, tentar parsear a string inteira
+            return JSON.parse(cleaned)
+          } catch (e) {
+            console.error('❌ Erro ao limpar JSON:', e.message)
+            console.error('   Posição do erro:', e.message.match(/position (\d+)/)?.[1])
+            // Tentar extrair JSON mesmo com erros
+            const jsonMatch = jsonString.match(/\{[\s\S]{0,10000}\}/)
+            if (jsonMatch) {
+              try {
+                // Remover caracteres problemáticos e tentar novamente
+                let fixed = jsonMatch[0]
+                  .replace(/,\s*}/g, '}')
+                  .replace(/,\s*]/g, ']')
+                  .replace(/,\s*,/g, ',')
+                  .replace(/:\s*,/g, ': null,')
+                return JSON.parse(fixed)
+              } catch (e2) {
+                throw new Error(`JSON inválido: ${e.message}. Posição aproximada: ${e.message.match(/position (\d+)/)?.[1] || 'desconhecida'}`)
+              }
+            }
+            throw e
+          }
+        }
+        
         // Tentar encontrar JSON na string
         const jsonMatch = cleanedText.match(/\{[\s\S]*\}/)
         if (jsonMatch) {
-          responseData = JSON.parse(jsonMatch[0])
-          console.log('✅ JSON extraído e parseado com sucesso')
+          try {
+            responseData = cleanAndParseJSON(jsonMatch[0])
+            console.log('✅ JSON extraído e parseado com sucesso')
+          } catch (e3) {
+            console.error('❌ Erro ao parsear JSON extraído:', e3.message)
+            // Tentar parsear a string inteira após limpeza
+            try {
+              responseData = cleanAndParseJSON(cleanedText)
+              console.log('✅ JSON parseado após limpeza completa')
+            } catch (e4) {
+              console.error('❌ Erro ao parsear após limpeza completa:', e4.message)
+              console.error('   Primeiros 500 chars da resposta:', cleanedText.substring(0, 500))
+              throw new Error(`Resposta do N8N não contém JSON válido: ${e4.message}`)
+            }
+          }
         } else {
           // Tentar parsear a string inteira após limpeza
           try {
-            responseData = JSON.parse(cleanedText)
+            responseData = cleanAndParseJSON(cleanedText)
             console.log('✅ JSON parseado após limpeza')
           } catch (e3) {
             console.error('❌ Erro ao parsear após limpeza:', e3.message)
-            throw new Error('Resposta do N8N não contém JSON válido')
+            throw new Error(`Resposta do N8N não contém JSON válido: ${e3.message}`)
           }
         }
       } catch (e2) {
@@ -1102,6 +1174,25 @@ router.post('/swap-food', authenticate, async (req, res) => {
       where: { userId }
     })
 
+    // Buscar alimentos customizados do nutricionista para incluir nas sugestões da IA
+    const alimentosCustomizados = await prisma.alimento.findMany({
+      where: {
+        nutricionistaId: userId // Alimentos criados por este nutricionista
+      },
+      select: {
+        id: true,
+        descricao: true,
+        categoria: true,
+        energiaKcal: true,
+        proteina: true,
+        lipideos: true,
+        carboidrato: true
+      },
+      orderBy: {
+        descricao: 'asc'
+      }
+    })
+
     const refeicao = dieta.refeicoes[mealIndex]
     const itemOriginal = refeicao.itens[itemIndex]
 
@@ -1134,7 +1225,7 @@ router.post('/swap-food', authenticate, async (req, res) => {
       }
     }
 
-    // Preparar payload para N8N
+    // Preparar payload para N8N incluindo alimentos customizados
     const payload = {
       swapRequest: {
         mealName: refeicao.nome,
@@ -1144,7 +1235,16 @@ router.post('/swap-food', authenticate, async (req, res) => {
       },
       userContext: {
         questionnaire: questionnaireContext
-      }
+      },
+      // Incluir alimentos customizados para que a IA possa considerá-los
+      customFoods: alimentosCustomizados.map(alimento => ({
+        descricao: alimento.descricao,
+        categoria: alimento.categoria || 'Customizado',
+        energiaKcal: alimento.energiaKcal, // por 100g
+        proteina: alimento.proteina, // por 100g
+        lipideos: alimento.lipideos, // por 100g
+        carboidrato: alimento.carboidrato // por 100g
+      }))
     }
 
     console.log('\n📤 ===== ENVIANDO REQUEST PARA SWAP-FOOD =====')

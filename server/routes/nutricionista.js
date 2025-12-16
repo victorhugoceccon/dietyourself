@@ -187,13 +187,72 @@ router.get('/pacientes/:pacienteId/dieta', authenticate, async (req, res) => {
       return res.status(500).json({ error: 'Erro ao processar dieta salva' })
     }
 
+    // Garantir que totalDiaKcal e macrosDia existam, calculando se necessário
+    if (!dietaData.totalDiaKcal && dietaData.refeicoes) {
+      dietaData.totalDiaKcal = dietaData.refeicoes.reduce((sum, r) => sum + (r.totalRefeicaoKcal || 0), 0)
+    }
+
+    if (!dietaData.macrosDia && dietaData.refeicoes) {
+      let totalProteina = 0
+      let totalCarbo = 0
+      let totalGordura = 0
+
+      dietaData.refeicoes.forEach(refeicao => {
+        if (refeicao.itens) {
+          refeicao.itens.forEach(item => {
+            if (item.macros) {
+              totalProteina += item.macros.proteina_g || 0
+              totalCarbo += item.macros.carbo_g || 0
+              totalGordura += item.macros.gordura_g || 0
+            }
+          })
+        }
+      })
+
+      dietaData.macrosDia = {
+        proteina_g: Math.round(totalProteina * 10) / 10,
+        carbo_g: Math.round(totalCarbo * 10) / 10,
+        gordura_g: Math.round(totalGordura * 10) / 10
+      }
+    }
+
+    // Buscar dados completos do paciente incluindo questionnaireData completo
+    const pacienteCompleto = await prisma.user.findUnique({
+      where: { id: pacienteId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        questionnaireData: {
+          select: {
+            idade: true,
+            sexo: true,
+            altura: true,
+            pesoAtual: true,
+            objetivo: true,
+            nivelAtividade: true,
+            refeicoesDia: true,
+            preferenciaAlimentacao: true,
+            costumaCozinhar: true,
+            restricoes: true,
+            alimentosNaoGosta: true,
+            observacoes: true
+          }
+        }
+      }
+    })
+
+    // Calcular necessidades nutricionais do paciente
+    let nutritionalNeeds = null
+    if (pacienteCompleto?.questionnaireData) {
+      const { calcularNutricao } = await import('../utils/nutrition.js')
+      nutritionalNeeds = calcularNutricao(pacienteCompleto.questionnaireData)
+    }
+
     res.json({
       dieta: dietaData,
-      paciente: {
-        id: paciente.id,
-        email: paciente.email,
-        name: paciente.name
-      }
+      paciente: pacienteCompleto,
+      nutritionalNeeds: nutritionalNeeds
     })
   } catch (error) {
     console.error('Erro ao buscar dieta do paciente:', error)
@@ -253,6 +312,78 @@ router.patch('/pacientes/:pacienteId/dieta', authenticate, async (req, res) => {
     console.error('Erro ao atualizar dieta do paciente:', error)
     res.status(500).json({
       error: 'Erro ao atualizar dieta do paciente',
+      details: error.message
+    })
+  }
+})
+
+// Atualizar necessidades nutricionais de um paciente
+router.patch('/pacientes/:pacienteId/necessidades', authenticate, async (req, res) => {
+  try {
+    const nutricionistaId = req.user.userId
+    const { pacienteId } = req.params
+    const { nutritionalNeeds } = req.body
+    const role = req.user.role?.toUpperCase()
+
+    // Verificar se é nutricionista
+    if (role !== 'NUTRICIONISTA' && role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Acesso negado.' })
+    }
+
+    // Verificar se o paciente pertence ao nutricionista
+    const paciente = await prisma.user.findFirst({
+      where: {
+        id: pacienteId,
+        nutricionistaId: nutricionistaId
+      }
+    })
+
+    if (!paciente) {
+      return res.status(404).json({ error: 'Paciente não encontrado ou não está vinculado a você' })
+    }
+
+    if (!nutritionalNeeds) {
+      return res.status(400).json({ error: 'Necessidades nutricionais são obrigatórias' })
+    }
+
+    // Buscar dieta atual
+    const dieta = await prisma.dieta.findUnique({
+      where: { userId: pacienteId }
+    })
+
+    let dietaDataParsed = {}
+    if (dieta && dieta.dietaData) {
+      try {
+        dietaDataParsed = JSON.parse(dieta.dietaData)
+      } catch (e) {
+        console.error('Erro ao parsear dieta:', e)
+      }
+    }
+
+    // Atualizar nutritionalNeeds na estrutura da dieta
+    dietaDataParsed.nutritionalNeeds = nutritionalNeeds
+    const dietaString = JSON.stringify(dietaDataParsed)
+
+    // Salvar/atualizar dieta com as novas necessidades
+    await prisma.dieta.upsert({
+      where: { userId: pacienteId },
+      update: {
+        dietaData: dietaString
+      },
+      create: {
+        userId: pacienteId,
+        dietaData: dietaString
+      }
+    })
+
+    res.json({
+      message: 'Necessidades nutricionais atualizadas com sucesso',
+      nutritionalNeeds
+    })
+  } catch (error) {
+    console.error('Erro ao atualizar necessidades nutricionais:', error)
+    res.status(500).json({
+      error: 'Erro ao atualizar necessidades nutricionais',
       details: error.message
     })
   }

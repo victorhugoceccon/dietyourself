@@ -15,7 +15,8 @@ model User {
   email               String   @unique
   password            String
   name                String?
-  role                String   @default("PACIENTE") // ADMIN, NUTRICIONISTA, PERSONAL ou PACIENTE
+  role                String   @default("PACIENTE") // ADMIN, NUTRICIONISTA, PERSONAL ou PACIENTE (role principal para compatibilidade)
+  roles               String? // JSON array de roles: ["ADMIN", "NUTRICIONISTA", "PERSONAL", "PACIENTE"]
   profilePhoto        String? // URL ou base64 da foto de perfil
   motivationalMessage String? // Mensagem motivacional personalizada
   createdAt           DateTime @default(now())
@@ -53,6 +54,15 @@ model User {
 
   // Relacionamento prescrições de treino (como paciente)
   prescricoesPaciente PrescricaoTreino[] @relation("PacientePrescricoes")
+
+  // Relacionamento treinos executados (como paciente)
+  treinosExecutados TreinoExecutado[] @relation("PacienteTreinosExecutados")
+
+  // Relacionamento solicitações de mudança (como paciente)
+  solicitacoesPaciente SolicitacaoMudanca[] @relation("PacienteSolicitacoes")
+
+  // Relacionamento solicitações de mudança (como personal)
+  solicitacoesPersonal SolicitacaoMudanca[] @relation("PersonalSolicitacoes")
 
   @@index([nutricionistaId])
   @@index([personalId])
@@ -260,7 +270,9 @@ model PrescricaoTreino {
   updatedAt DateTime @updatedAt
 
   // Relacionamentos
-  divisoes PrescricaoTreinoDivisao[]
+  divisoes          PrescricaoTreinoDivisao[]
+  treinosExecutados TreinoExecutado[]
+  solicitacoes      SolicitacaoMudanca[]
 
   @@index([pacienteId])
   @@index([personalId])
@@ -283,7 +295,8 @@ model PrescricaoTreinoDivisao {
   updatedAt DateTime @updatedAt
 
   // Itens (exercícios) desta divisão
-  itens PrescricaoTreinoItem[]
+  itens             PrescricaoTreinoItem[]
+  treinosExecutados TreinoExecutado[]
 
   @@index([prescricaoId])
   @@index([divisaoTreinoId])
@@ -311,4 +324,77 @@ model PrescricaoTreinoItem {
   @@index([divisaoId])
   @@index([exercicioId])
   @@map("prescricoes_treino_itens")
+}
+
+model TreinoExecutado {
+  id         String @id @default(uuid())
+  pacienteId String // ID do paciente que executou
+  paciente   User   @relation("PacienteTreinosExecutados", fields: [pacienteId], references: [id], onDelete: Cascade)
+
+  prescricaoId String // ID da prescrição de treino
+  prescricao   PrescricaoTreino @relation(fields: [prescricaoId], references: [id], onDelete: Cascade)
+
+  divisaoId String // ID da divisão executada
+  divisao   PrescricaoTreinoDivisao @relation(fields: [divisaoId], references: [id], onDelete: Cascade)
+
+  dataExecucao DateTime @default(now()) // Data e hora da execução
+  diaSemana    String // Dia da semana: "SEGUNDA", "TERCA", "QUARTA", "QUINTA", "SEXTA", "SABADO", "DOMINGO"
+  finalizado   Boolean  @default(false) // Se o treino foi finalizado
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento com feedback
+  feedback FeedbackTreino?
+
+  @@unique([pacienteId, prescricaoId, divisaoId, dataExecucao]) // Um treino por dia por divisão
+  @@index([pacienteId])
+  @@index([prescricaoId])
+  @@index([dataExecucao])
+  @@index([diaSemana])
+  @@map("treinos_executados")
+}
+
+model FeedbackTreino {
+  id                String          @id @default(uuid())
+  treinoExecutadoId String          @unique // ID do treino executado
+  treinoExecutado   TreinoExecutado @relation(fields: [treinoExecutadoId], references: [id], onDelete: Cascade)
+
+  observacao       String? // Observação livre sobre o treino
+  intensidade      Int? // Intensidade percebida (1-10)
+  dificuldade      Int? // Dificuldade percebida (1-10)
+  satisfacao       Int? // Satisfação com o treino (1-10)
+  completouTreino  Boolean @default(true) // Se completou todo o treino
+  motivoIncompleto String? // Se não completou, motivo
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([treinoExecutadoId])
+  @@map("feedback_treinos")
+}
+
+model SolicitacaoMudanca {
+  id         String @id @default(uuid())
+  pacienteId String // ID do paciente que solicitou
+  paciente   User   @relation("PacienteSolicitacoes", fields: [pacienteId], references: [id], onDelete: Cascade)
+
+  personalId String // ID do personal trainer
+  personal   User   @relation("PersonalSolicitacoes", fields: [personalId], references: [id], onDelete: Cascade)
+
+  prescricaoId String? // ID da prescrição relacionada (opcional)
+  prescricao   PrescricaoTreino? @relation(fields: [prescricaoId], references: [id], onDelete: SetNull)
+
+  titulo   String // Título da solicitação
+  mensagem String // Mensagem detalhada da solicitação
+  status   String  @default("PENDENTE") // PENDENTE, EM_ANALISE, RESOLVIDA, REJEITADA
+  resposta String? // Resposta do personal (opcional)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([pacienteId])
+  @@index([personalId])
+  @@index([status])
+  @@map("solicitacoes_mudanca")
 }

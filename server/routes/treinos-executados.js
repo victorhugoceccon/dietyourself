@@ -1,6 +1,7 @@
 import express from 'express'
 import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
+import { hasRole, hasAnyRole } from '../utils/roleUtils.js'
 import { z } from 'zod'
 
 const router = express.Router()
@@ -31,10 +32,10 @@ router.post('/iniciar', authenticate, async (req, res) => {
     // Verificar se é paciente
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true }
+      select: { role: true, roles: true }
     })
     
-    if (user?.role !== 'PACIENTE' && user?.role !== 'ADMIN') {
+    if (!hasAnyRole(user, ['PACIENTE', 'ADMIN'])) {
       return res.status(403).json({ error: 'Apenas pacientes podem iniciar treinos' })
     }
     
@@ -54,7 +55,7 @@ router.post('/iniciar', authenticate, async (req, res) => {
       return res.status(404).json({ error: 'Prescrição não encontrada' })
     }
     
-    if (prescricao.pacienteId !== userId && user?.role !== 'ADMIN') {
+    if (prescricao.pacienteId !== userId && !hasRole(user, 'ADMIN')) {
       return res.status(403).json({ error: 'Esta prescrição não pertence a você' })
     }
     
@@ -135,10 +136,10 @@ router.post('/finalizar', authenticate, async (req, res) => {
     // Verificar se é paciente
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true }
+      select: { role: true, roles: true }
     })
     
-    if (user?.role !== 'PACIENTE' && user?.role !== 'ADMIN') {
+    if (!hasAnyRole(user, ['PACIENTE', 'ADMIN'])) {
       return res.status(403).json({ error: 'Apenas pacientes podem finalizar treinos' })
     }
     
@@ -157,7 +158,7 @@ router.post('/finalizar', authenticate, async (req, res) => {
       return res.status(404).json({ error: 'Treino executado não encontrado' })
     }
     
-    if (treinoExecutado.pacienteId !== userId && user?.role !== 'ADMIN') {
+    if (treinoExecutado.pacienteId !== userId && !hasRole(user, 'ADMIN')) {
       return res.status(403).json({ error: 'Este treino não pertence a você' })
     }
     
@@ -209,21 +210,21 @@ router.get('/', authenticate, async (req, res) => {
     
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true }
+      select: { role: true, roles: true }
     })
     
     let whereClause = {}
     
-    if (user?.role === 'PACIENTE') {
+    if (hasRole(user, 'PACIENTE')) {
       whereClause.pacienteId = userId
-    } else if (user?.role === 'PERSONAL') {
+    } else if (hasRole(user, 'PERSONAL')) {
       // Personal vê treinos executados de seus pacientes
       const pacientes = await prisma.user.findMany({
         where: { personalId: userId },
         select: { id: true }
       })
       whereClause.pacienteId = { in: pacientes.map(p => p.id) }
-    } else if (user?.role !== 'ADMIN') {
+    } else if (!hasRole(user, 'ADMIN')) {
       return res.status(403).json({ error: 'Acesso negado' })
     }
     
@@ -293,7 +294,7 @@ router.get('/semana/:data', authenticate, async (req, res) => {
     
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true }
+      select: { role: true, roles: true }
     })
     
     let whereClause = {
@@ -303,15 +304,15 @@ router.get('/semana/:data', authenticate, async (req, res) => {
       }
     }
     
-    if (user?.role === 'PACIENTE') {
+    if (hasRole(user, 'PACIENTE')) {
       whereClause.pacienteId = userId
-    } else if (user?.role === 'PERSONAL') {
+    } else if (hasRole(user, 'PERSONAL')) {
       const pacientes = await prisma.user.findMany({
         where: { personalId: userId },
         select: { id: true }
       })
       whereClause.pacienteId = { in: pacientes.map(p => p.id) }
-    } else if (user?.role !== 'ADMIN') {
+    } else if (!hasRole(user, 'ADMIN')) {
       return res.status(403).json({ error: 'Acesso negado' })
     }
     

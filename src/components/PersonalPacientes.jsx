@@ -102,14 +102,12 @@ function PersonalPacientes() {
             {alunos.length} {alunos.length === 1 ? 'aluno vinculado' : 'alunos vinculados'}
           </p>
         </div>
-        {alunos.length === 0 && (
-          <button
-            className="btn-create-paciente"
-            onClick={() => setShowCreateModal(true)}
-          >
-            + Criar Primeiro Aluno
-          </button>
-        )}
+        <button
+          className="btn-create-paciente"
+          onClick={() => setShowCreateModal(true)}
+        >
+          + Criar Novo Aluno
+        </button>
       </div>
 
       {error && (

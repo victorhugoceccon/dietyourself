@@ -14,10 +14,10 @@ cd /opt/dietyourself/dietyourself
 # 1. Parar o servidor
 pm2 stop all
 
-# 2. Remover COMPLETAMENTE o Prisma Client
+# 2. Remover COMPLETAMENTE o Prisma Client (mas manter @prisma/engines)
 rm -rf node_modules/.prisma
 rm -rf node_modules/@prisma/client
-rm -rf node_modules/@prisma
+# NÃO remover node_modules/@prisma (contém engines necessários)
 
 # 3. Verificar se o schema.prisma está correto (não deve ter nivelAtividade)
 grep -n "nivelAtividade" prisma/schema.prisma

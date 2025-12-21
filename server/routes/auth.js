@@ -108,6 +108,12 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Email ou senha inválidos' })
     }
 
+    // Verificar se a senha existe
+    if (!user.password) {
+      console.error('Usuário sem senha:', user.email)
+      return res.status(500).json({ error: 'Erro de configuração: usuário sem senha' })
+    }
+
     // Verificar senha
     const isPasswordValid = await comparePassword(validatedData.password, user.password)
 
@@ -125,6 +131,7 @@ router.post('/login', async (req, res) => {
         roles = typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles
       } catch (e) {
         console.warn('Erro ao parsear roles:', e)
+        roles = null
       }
     }
 
@@ -147,8 +154,18 @@ router.post('/login', async (req, res) => {
       })
     }
     
-    console.error('Erro ao fazer login:', error)
-    res.status(500).json({ error: 'Erro ao fazer login' })
+    // Log detalhado do erro
+    console.error('Erro ao fazer login:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      body: req.body
+    })
+    
+    res.status(500).json({ 
+      error: 'Erro ao fazer login',
+      message: process.env.NODE_ENV === 'development' ? error.message : undefined
+    })
   }
 })
 

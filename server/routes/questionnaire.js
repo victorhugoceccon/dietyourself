@@ -159,6 +159,8 @@ router.post('/', authenticate, async (req, res) => {
       console.log('📋 Questionário existente:', existing ? 'Sim' : 'Não')
     } catch (findError) {
       console.error('❌ Erro ao verificar questionário existente:', findError)
+      console.error('❌ Código do erro:', findError.code)
+      console.error('❌ Mensagem do erro:', findError.message)
       throw findError
     }
 
@@ -247,6 +249,13 @@ router.post('/', authenticate, async (req, res) => {
             refeicoesLivres: validatedData.refeicoesLivres
           }
         })
+    } catch (saveError) {
+      console.error('❌ Erro ao salvar questionário no banco:', saveError)
+      console.error('❌ Código do erro:', saveError.code)
+      console.error('❌ Mensagem do erro:', saveError.message)
+      console.error('❌ Stack trace:', saveError.stack)
+      throw saveError
+    }
 
     console.log('✅ Questionário salvo com sucesso!')
     res.json({

@@ -9,6 +9,7 @@ function DivisaoTreinoManager() {
   const [showModal, setShowModal] = useState(false)
   const [editingDivisao, setEditingDivisao] = useState(null)
   const [error, setError] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [newDivisao, setNewDivisao] = useState({
     nome: '',
     descricao: '',
@@ -231,6 +232,13 @@ function DivisaoTreinoManager() {
     }
   }
 
+  const filteredDivisoes = divisoes.filter(divisao => {
+    const matchesSearch = divisao.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (divisao.descricao && divisao.descricao.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                         (divisao.diasSemana && divisao.diasSemana.toLowerCase().includes(searchQuery.toLowerCase()))
+    return matchesSearch
+  })
+
   if (loading) {
     return (
       <div className="divisoes-manager">
@@ -251,6 +259,18 @@ function DivisaoTreinoManager() {
         </button>
       </div>
 
+      <div className="divisoes-filters">
+        <div className="search-input-container">
+          <input
+            type="text"
+            placeholder="Buscar divisão..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+        </div>
+      </div>
+
       {error && (
         <div className="alert alert-error">{error}</div>
       )}
@@ -261,8 +281,19 @@ function DivisaoTreinoManager() {
             <p>Nenhuma divisão criada ainda.</p>
             <p>Crie sua primeira divisão de treino!</p>
           </div>
+        ) : filteredDivisoes.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
+            <h3>Nenhuma divisão encontrada</h3>
+            <p>Tente ajustar sua busca ou criar uma nova divisão.</p>
+          </div>
         ) : (
-          divisoes.map(divisao => (
+          filteredDivisoes.map(divisao => (
             <div key={divisao.id} className="divisao-card">
               <div className="divisao-content">
                 <h3>{divisao.nome}</h3>

@@ -1,7 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './contexts/ThemeContext'
 import Login from './components/Login'
-import Paciente from './components/Paciente'
+import ResetPassword from './components/ResetPassword'
+import PacienteLayout from './components/PacienteLayout'
+import PacienteDashboard from './components/PacienteDashboard'
+import PacienteDieta from './components/PacienteDieta'
+import PacienteTreino from './components/PacienteTreino'
+import PacientePerfil from './components/PacientePerfil'
 import Nutricionista from './components/Nutricionista'
 import Personal from './components/Personal'
 import Admin from './components/Admin'
@@ -45,14 +50,21 @@ function App() {
         <div className="App">
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route 
             path="/paciente" 
             element={
               <ProtectedRoute>
-                <Paciente />
+                <PacienteLayout />
               </ProtectedRoute>
-            } 
-          />
+            }
+          >
+            <Route index element={<Navigate to="/paciente/perfil" replace />} />
+            <Route path="dashboard" element={<PacienteDashboard />} />
+            <Route path="dieta" element={<PacienteDieta />} />
+            <Route path="treino" element={<PacienteTreino />} />
+            <Route path="perfil" element={<PacientePerfil />} />
+          </Route>
           <Route 
             path="/nutricionista" 
             element={

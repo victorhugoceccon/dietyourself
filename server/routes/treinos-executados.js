@@ -22,7 +22,7 @@ const feedbackSchema = z.object({
   satisfacao: z.number().int().min(1).max(10).optional().nullable(),
   completouTreino: z.boolean().default(true),
   motivoIncompleto: z.string().optional().nullable()
-})
+}).passthrough() // Permitir campos extras sem erro
 
 // POST /api/treinos-executados/iniciar - Iniciar um treino
 router.post('/iniciar', authenticate, async (req, res) => {
@@ -63,28 +63,7 @@ router.post('/iniciar', authenticate, async (req, res) => {
       return res.status(404).json({ error: 'Divisão não encontrada' })
     }
     
-    // Verificar se já existe um treino iniciado hoje para esta divisão
-    const hoje = new Date()
-    hoje.setHours(0, 0, 0, 0)
-    const amanha = new Date(hoje)
-    amanha.setDate(amanha.getDate() + 1)
-    
-    const treinoExistente = await prisma.treinoExecutado.findFirst({
-      where: {
-        pacienteId: userId,
-        prescricaoId: validatedData.prescricaoId,
-        divisaoId: validatedData.divisaoId,
-        dataExecucao: {
-          gte: hoje,
-          lt: amanha
-        }
-      }
-    })
-    
-    if (treinoExistente) {
-      return res.status(400).json({ error: 'Você já iniciou este treino hoje' })
-    }
-    
+    // Permitir iniciar treino mesmo se já foi executado, pois pode fazer mais de 1x na semana
     // Criar treino executado
     const treinoExecutado = await prisma.treinoExecutado.create({
       data: {
@@ -166,24 +145,72 @@ router.post('/finalizar', authenticate, async (req, res) => {
       return res.status(400).json({ error: 'Este treino já foi finalizado' })
     }
     
-    // Atualizar treino como finalizado e criar feedback
-    const [treinoAtualizado, feedback] = await prisma.$transaction([
-      prisma.treinoExecutado.update({
-        where: { id: validatedData.treinoExecutadoId },
-        data: { finalizado: true }
-      }),
-      prisma.feedbackTreino.create({
-        data: {
-          treinoExecutadoId: validatedData.treinoExecutadoId,
-          observacao: validatedData.observacao,
-          intensidade: validatedData.intensidade,
-          dificuldade: validatedData.dificuldade,
-          satisfacao: validatedData.satisfacao,
-          completouTreino: validatedData.completouTreino,
-          motivoIncompleto: validatedData.motivoIncompleto
+    // Verificar se já finalizou algum treino hoje (limite de 1 treino por dia)
+    const hoje = new Date()
+    hoje.setHours(0, 0, 0, 0)
+    const amanha = new Date(hoje)
+    amanha.setDate(amanha.getDate() + 1)
+    
+    const treinoFinalizadoHoje = await prisma.treinoExecutado.findFirst({
+      where: {
+        pacienteId: userId,
+        finalizado: true,
+        updatedAt: {
+          gte: hoje,
+          lt: amanha
         }
+      }
+    })
+    
+    if (treinoFinalizadoHoje) {
+      return res.status(400).json({ 
+        error: 'Você já finalizou um treino hoje',
+        message: 'Limite de 1 treino por dia atingido. Tente novamente amanhã.'
       })
-    ])
+    }
+    
+    // Calcular duração do treino (do momento que iniciou até agora)
+    const dataInicio = new Date(treinoExecutado.dataExecucao)
+    const dataFim = new Date()
+    const duracaoMinutos = Math.max(1, Math.round((dataFim - dataInicio) / 1000 / 60))
+    
+    // Verificar se já existe feedback para este treino
+    const feedbackExistente = await prisma.feedbackTreino.findUnique({
+      where: { treinoExecutadoId: validatedData.treinoExecutadoId }
+    })
+    
+    // Preparar dados do feedback (garantir que valores opcionais sejam null se não fornecidos)
+    const feedbackData = {
+      treinoExecutadoId: validatedData.treinoExecutadoId,
+      observacao: validatedData.observacao && validatedData.observacao.trim() !== '' ? validatedData.observacao.trim() : null,
+      intensidade: validatedData.intensidade != null ? validatedData.intensidade : null,
+      dificuldade: validatedData.dificuldade != null ? validatedData.dificuldade : null,
+      satisfacao: validatedData.satisfacao != null ? validatedData.satisfacao : null,
+      completouTreino: validatedData.completouTreino !== undefined ? validatedData.completouTreino : true,
+      motivoIncompleto: validatedData.motivoIncompleto && validatedData.motivoIncompleto.trim() !== '' ? validatedData.motivoIncompleto.trim() : null
+    }
+    
+    console.log('Dados do feedback preparados:', feedbackData)
+    console.log('Duração calculada:', duracaoMinutos, 'minutos')
+    
+    // Atualizar treino como finalizado usando SQL raw para incluir duracaoMinutos
+    // (o Prisma Client pode não ter o campo ainda se não foi regenerado)
+    await prisma.$executeRaw`UPDATE treinos_executados SET finalizado = true, "duracaoMinutos" = ${duracaoMinutos}, "updatedAt" = NOW() WHERE id = ${validatedData.treinoExecutadoId}`
+    
+    // Criar ou atualizar feedback
+    const feedback = feedbackExistente 
+      ? await prisma.feedbackTreino.update({
+          where: { treinoExecutadoId: validatedData.treinoExecutadoId },
+          data: feedbackData
+        })
+      : await prisma.feedbackTreino.create({
+          data: feedbackData
+        })
+    
+    // Buscar o treino atualizado
+    const treinoAtualizado = await prisma.treinoExecutado.findUnique({
+      where: { id: validatedData.treinoExecutadoId }
+    })
     
     res.json({
       message: 'Treino finalizado com sucesso',
@@ -198,7 +225,13 @@ router.post('/finalizar', authenticate, async (req, res) => {
       })
     }
     console.error('Erro ao finalizar treino:', error)
-    res.status(500).json({ error: 'Erro ao finalizar treino' })
+    console.error('Stack trace:', error.stack)
+    console.error('Request body:', req.body)
+    res.status(500).json({ 
+      error: 'Erro ao finalizar treino',
+      message: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    })
   }
 })
 
@@ -279,6 +312,7 @@ router.get('/', authenticate, async (req, res) => {
 })
 
 // GET /api/treinos-executados/semana/:data - Listar treinos executados da semana
+// IMPORTANTE: Esta rota deve vir ANTES de /:id para evitar conflitos
 router.get('/semana/:data', authenticate, async (req, res) => {
   try {
     const userId = req.user.userId
@@ -287,7 +321,10 @@ router.get('/semana/:data', authenticate, async (req, res) => {
     const dataRef = new Date(data)
     const diaSemana = dataRef.getDay() // 0 = Domingo, 1 = Segunda, etc.
     const inicioSemana = new Date(dataRef)
-    inicioSemana.setDate(dataRef.getDate() - diaSemana + 1) // Segunda-feira
+    // Calcular início da semana (segunda-feira)
+    // Se for domingo (0), voltar 6 dias; caso contrário, voltar (diaSemana - 1) dias
+    const diasParaVoltar = diaSemana === 0 ? 6 : diaSemana - 1
+    inicioSemana.setDate(dataRef.getDate() - diasParaVoltar)
     inicioSemana.setHours(0, 0, 0, 0)
     const fimSemana = new Date(inicioSemana)
     fimSemana.setDate(inicioSemana.getDate() + 7)
@@ -318,7 +355,16 @@ router.get('/semana/:data', authenticate, async (req, res) => {
     
     const treinosExecutados = await prisma.treinoExecutado.findMany({
       where: whereClause,
-      include: {
+      select: {
+        id: true,
+        pacienteId: true,
+        prescricaoId: true,
+        divisaoId: true,
+        dataExecucao: true,
+        diaSemana: true,
+        finalizado: true,
+        createdAt: true,
+        updatedAt: true,
         prescricao: {
           select: {
             id: true,
@@ -337,6 +383,22 @@ router.get('/semana/:data', authenticate, async (req, res) => {
       orderBy: { dataExecucao: 'asc' }
     })
     
+    // Buscar duracaoMinutos via SQL raw para cada treino
+    const treinoIds = treinosExecutados.map(t => t.id)
+    let duracoesMap = {}
+    if (treinoIds.length > 0) {
+      try {
+        const duracoes = await prisma.$queryRawUnsafe(`SELECT id, "duracaoMinutos" FROM treinos_executados WHERE id IN (${treinoIds.map(id => `'${id}'`).join(',')})`)
+        duracoes.forEach(d => {
+          if (d.duracaoMinutos) {
+            duracoesMap[d.id] = d.duracaoMinutos
+          }
+        })
+      } catch (e) {
+        console.log('Campo duracaoMinutos não disponível:', e.message)
+      }
+    }
+    
     // Agrupar por dia da semana
     const treinosPorDia = {
       SEGUNDA: [],
@@ -349,6 +411,10 @@ router.get('/semana/:data', authenticate, async (req, res) => {
     }
     
     treinosExecutados.forEach(treino => {
+      // Adicionar duracaoMinutos se disponível
+      if (duracoesMap[treino.id]) {
+        treino.duracaoMinutos = duracoesMap[treino.id]
+      }
       if (treinosPorDia[treino.diaSemana]) {
         treinosPorDia[treino.diaSemana].push(treino)
       }
@@ -358,6 +424,90 @@ router.get('/semana/:data', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Erro ao listar treinos da semana:', error)
     res.status(500).json({ error: 'Erro ao listar treinos da semana' })
+  }
+})
+
+// GET /api/treinos-executados/:id - Buscar treino executado específico
+// IMPORTANTE: Esta rota deve vir DEPOIS de rotas mais específicas como /semana/:data
+router.get('/:id', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const { id } = req.params
+    
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true, roles: true }
+    })
+    
+    const treinoExecutado = await prisma.treinoExecutado.findUnique({
+      where: { id },
+      include: {
+        prescricao: {
+          select: {
+            id: true,
+            nome: true
+          }
+        },
+        divisao: {
+          select: {
+            id: true,
+            nome: true,
+            ordem: true,
+            itens: {
+              select: {
+                id: true,
+                exercicio: {
+                  select: {
+                    id: true,
+                    nome: true,
+                    categoria: true
+                  }
+                },
+                series: true,
+                repeticoes: true,
+                ordem: true
+              },
+              orderBy: { ordem: 'asc' }
+            }
+          }
+        },
+        feedback: true
+      }
+    })
+    
+    if (!treinoExecutado) {
+      return res.status(404).json({ error: 'Treino não encontrado' })
+    }
+    
+    // Verificar permissão
+    if (hasRole(user, 'PACIENTE') && treinoExecutado.pacienteId !== userId) {
+      return res.status(403).json({ error: 'Acesso negado' })
+    }
+    
+    if (hasRole(user, 'PERSONAL')) {
+      const pacientes = await prisma.user.findMany({
+        where: { personalId: userId },
+        select: { id: true }
+      })
+      if (!pacientes.some(p => p.id === treinoExecutado.pacienteId) && !hasRole(user, 'ADMIN')) {
+        return res.status(403).json({ error: 'Acesso negado' })
+      }
+    }
+    
+    // Buscar duracaoMinutos via SQL raw (caso o Prisma Client não tenha o campo ainda)
+    try {
+      const duracaoResult = await prisma.$queryRaw`SELECT "duracaoMinutos" FROM treinos_executados WHERE id = ${id}`
+      if (duracaoResult && duracaoResult[0] && duracaoResult[0].duracaoMinutos) {
+        treinoExecutado.duracaoMinutos = duracaoResult[0].duracaoMinutos
+      }
+    } catch (e) {
+      console.log('Campo duracaoMinutos não disponível ainda:', e.message)
+    }
+    
+    res.json({ treinoExecutado })
+  } catch (error) {
+    console.error('Erro ao buscar treino executado:', error)
+    res.status(500).json({ error: 'Erro ao buscar treino executado' })
   }
 })
 

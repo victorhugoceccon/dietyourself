@@ -1,0 +1,150 @@
+/* ============================================
+   LifeFit - Dark Mode Global Fixes
+   Correções globais para legibilidade e harmonia
+   ============================================ */
+
+/* Garantir que TODOS os textos sejam BRANCOS no dark mode */
+.dark-mode {
+  /* Textos base - todos brancos */
+  body,
+  p, span, div, label, li, td, th,
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+  }
+  
+  /* Exceções apenas para elementos que devem ter cores específicas */
+  svg {
+    color: inherit;
+  }
+  
+  /* Inputs e elementos interativos mantêm cor branca */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    color: var(--text-primary) !important;
+  }
+  
+  /* Cards e containers - fundos escuros, textos brancos */
+  .card,
+  [class*="card"],
+  [class*="Card"] {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  /* Headers e títulos - sempre brancos */
+  h1, h2, h3, h4, h5, h6,
+  p, span, div, label, li {
+    color: var(--text-primary) !important;
+  }
+  
+  /* Links - verde claro mas legível */
+  a {
+    color: #90c22c !important;
+  }
+  
+  a:hover {
+    color: var(--lifefit-green-olive) !important;
+  }
+  
+  /* Botões com gradientes - texto branco */
+  button,
+  .btn,
+  [class*="button"] {
+    color: var(--text-primary) !important;
+  }
+  
+  button[class*="gradient"],
+  .btn-gradient,
+  [style*="gradient"] button {
+    /* No tema Ultra, o gradiente é neon (melhor com texto escuro) */
+    color: var(--on-primary, #0B0F14) !important;
+  }
+  
+  /* Inputs e formulários */
+  input,
+  textarea,
+  select {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+  }
+  
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-tertiary) !important;
+  }
+  
+  /* Badges e chips - texto branco quando em fundo escuro */
+  [class*="badge"]:not([class*="primary"]):not([class*="calories"]),
+  [class*="Badge"]:not([class*="primary"]):not([class*="calories"]),
+  [class*="chip"],
+  [class*="Chip"] {
+    color: var(--text-primary) !important;
+  }
+  
+  /* Modais */
+  [class*="modal"],
+  [class*="Modal"] {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  /* Tables */
+  table {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  th, td {
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  /* Scrollbars */
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+}
+
+/* Correções específicas para componentes com gradientes problemáticos */
+.dark-mode .meal-card,
+.dark-mode [class*="meal"] {
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark-mode .no-diet,
+.dark-mode [class*="empty"] {
+  background: var(--gradient-subtle) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Remover gradientes brancos e substituir por gradientes escuros */
+.dark-mode [style*="gradient"]:not([style*="green"]):not([style*="blue"]):not([style*="warning"]):not([style*="error"]) {
+  background: var(--gradient-subtle) !important;
+}
+
+.dark-mode [class*="gradient"]:not([class*="primary"]):not([class*="green"]) {
+  background: var(--gradient-subtle) !important;
+}
+
+/* Garantir que ícones tenham contraste */
+.dark-mode svg {
+  color: inherit;
+}
+
+.dark-mode [class*="icon"] {
+  color: var(--text-primary) !important;
+}
+
+.dark-mode [class*="icon"]:hover {
+  color: #90c22c !important;
+}
+
+
+

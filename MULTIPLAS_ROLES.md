@@ -57,3 +57,9 @@ model User {
 - Visualização unificada de todas as funcionalidades
 
 
+
+
+
+
+
+

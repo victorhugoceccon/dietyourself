@@ -64,6 +64,15 @@ model User {
   // Relacionamento solicitações de mudança (como personal)
   solicitacoesPersonal SolicitacaoMudanca[] @relation("PersonalSolicitacoes")
 
+  // Relacionamento branding settings
+  brandingSettings BrandingSettings? @relation("UserBranding")
+
+  // Relacionamento password reset tokens
+  passwordResetTokens PasswordResetToken[] @relation("UserPasswordReset")
+
+  // Relacionamento notificações
+  notifications Notification[] @relation("UserNotifications")
+
   @@index([nutricionistaId])
   @@index([personalId])
   @@map("users")
@@ -74,25 +83,39 @@ model QuestionnaireData {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Etapa 1 - Dados básicos
-  idade     Int?
-  sexo      String? // Masculino / Feminino
-  altura    Float? // em cm
-  pesoAtual Float? // em kg
+  // Bloco 1: Dados Básicos
+  idade     Int
+  sexo      String // Masculino / Feminino
+  altura    Float // em cm
+  pesoAtual Float // em kg
+  objetivo  String // Emagrecer, Manter o peso, Ganhar massa muscular, Ganhar peso de forma geral
 
-  // Etapa 2 - Objetivo e rotina
-  objetivo       String? // Emagrecer, Manter peso, Ganhar massa muscular
-  nivelAtividade String? // Sedentário, Levemente ativo, Moderadamente ativo, Muito ativo
-  refeicoesDia   Int? // 3, 4, 5, 6
+  // Bloco 2: Rotina e Atividade
+  frequenciaAtividade String // Não pratico, Sim 1-2x, Sim 3-4x, Sim 5x ou mais
+  tipoAtividade       String // Musculação, Cardio, Ambos, Outro
+  horarioTreino       String // Manhã, Tarde, Noite, Varia muito
+  rotinaDiaria        String // Sedentária, Moderada, Ativa
 
-  // Etapa 3 - Alimentação e restrições
-  restricoes             String? // JSON array: ["Lactose", "Glúten", etc]
-  alimentosNaoGosta      String? // Textarea
-  preferenciaAlimentacao String? // Simples e rápida, Caseira tradicional, Mais fitness, Tanto faz
+  // Bloco 3: Estrutura da Dieta
+  quantidadeRefeicoes  String // 3 refeições, 4 refeições, 5 refeições, Mais de 5
+  preferenciaRefeicoes String // Mais simples, Um equilíbrio, Mais completas
 
-  // Etapa 4
-  costumaCozinhar String? // Sim quase sempre, Às vezes, Quase nunca
-  observacoes     String? // Textarea
+  // Bloco 4: Complexidade e Adesão
+  confortoPesar      String // Sim sem problemas, Às vezes, Prefiro medidas caseiras
+  tempoPreparacao    String // Muito pouco, Médio, Tenho tempo
+  preferenciaVariacao String // Prefiro repetir, Um pouco de repetição, Prefiro variedade
+
+  // Bloco 5: Alimentos do Dia a Dia (JSON)
+  alimentosDoDiaADia String? // JSON: { carboidratos: [], proteinas: [], gorduras: [], frutas: [] }
+
+  // Bloco 6: Restrições
+  restricaoAlimentar String // Nenhuma, Intolerância à lactose, Glúten, Outra
+  outraRestricao     String? // Se selecionou "Outra"
+  alimentosEvita     String? // Textarea - alimentos que não gosta
+
+  // Bloco 7: Flexibilidade Real
+  opcoesSubstituicao String // Sim gosto, Algumas opções, Prefiro fixo
+  refeicoesLivres    String // Sim, Talvez, Não
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -340,6 +363,7 @@ model TreinoExecutado {
   dataExecucao DateTime @default(now()) // Data e hora da execução
   diaSemana    String // Dia da semana: "SEGUNDA", "TERCA", "QUARTA", "QUINTA", "SEXTA", "SABADO", "DOMINGO"
   finalizado   Boolean  @default(false) // Se o treino foi finalizado
+  duracaoMinutos Int? // Duração do treino em minutos (salvo quando finalizado)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -397,4 +421,185 @@ model SolicitacaoMudanca {
   @@index([personalId])
   @@index([status])
   @@map("solicitacoes_mudanca")
+}
+
+model BrandingSettings {
+  id String @id @default(uuid())
+
+  // Usuário que possui essas configurações (Personal ou Nutricionista)
+  userId String @unique
+  user   User   @relation("UserBranding", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Logo (URL ou base64)
+  logoUrl String?
+
+  // Banner (URL ou base64)
+  bannerUrl String?
+
+  // Cores personalizadas
+  primaryColor   String? // Cor primária (hex)
+  secondaryColor String? // Cor secundária (hex)
+  accentColor    String? // Cor de destaque (hex)
+
+  // Nome da marca (opcional, se não usar logo)
+  brandName String?
+
+  // Configurações específicas para área do profissional
+  professionalSettings String? // JSON com configurações específicas da área do profissional
+
+  // Configurações específicas para área dos pacientes
+  patientSettings String? // JSON com configurações específicas da área dos pacientes
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("branding_settings")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation("UserPasswordReset", fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  type      String   @default("default") // diet, checkin, workout, feedback, default
+  message   String
+  read      Boolean  @default(false)
+  metadata  String?  // JSON para dados extras (ex: link, pacienteId)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model DietTemplate {
+  id             String   @id @default(uuid())
+  nutricionistaId String
+  name           String
+  description    String?
+  objetivo       String?   // Emagrecer, Manter, Ganhar massa, etc.
+  kcalRange      String?   // Ex: "1500-1800"
+  templateData   String    // JSON com estrutura completa da dieta (refeições, alimentos)
+  isPublic       Boolean   @default(false)  // Se pode ser compartilhado com outros nutricionistas
+  usageCount     Int       @default(0)      // Quantas vezes foi usado
+  
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([nutricionistaId])
+  @@index([objetivo])
+  @@map("diet_templates")
+}
+
+model BodyMeasurement {
+  id                String   @id @default(uuid())
+  userId            String
+  
+  // Peso e composição
+  peso              Float?   // kg
+  percentualGordura Float?   // %
+  massaMagra        Float?   // kg
+  
+  // Circunferências (cm)
+  cintura           Float?
+  quadril           Float?
+  bracoEsquerdo     Float?
+  bracoDireito      Float?
+  coxaEsquerda      Float?
+  coxaDireita       Float?
+  panturrilhaEsq    Float?
+  panturrilhaDir    Float?
+  peitoral          Float?
+  
+  // Extras
+  imc               Float?   // Calculado
+  rcq               Float?   // Relação cintura/quadril
+  notas             String?  // Observações do profissional
+  
+  // Foto de progresso (base64 ou URL)
+  fotoFrente        String?
+  fotoLateral       String?
+  fotoCostas        String?
+  
+  dataRegistro      DateTime @default(now())
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId])
+  @@index([dataRegistro])
+  @@map("body_measurements")
+}
+
+model Recipe {
+  id              String   @id @default(uuid())
+  authorId        String?  // Nutricionista que criou (null = sistema)
+  name            String
+  description     String?
+  category        String   // Café da Manhã, Almoço, Lanche, Jantar, Sobremesa
+  difficulty      String   @default("Fácil")  // Fácil, Médio, Difícil
+  prepTime        Int?     // Tempo de preparo em minutos
+  cookTime        Int?     // Tempo de cozimento em minutos
+  servings        Int      @default(1)  // Porções
+  
+  // Valores nutricionais por porção
+  kcal            Int?
+  proteina_g      Float?
+  carbo_g         Float?
+  gordura_g       Float?
+  fibra_g         Float?
+  
+  // Conteúdo
+  ingredients     String   // JSON array de ingredientes
+  steps           String   // JSON array de passos
+  tips            String?  // Dicas opcionais
+  imageUrl        String?  // URL da foto da receita
+  
+  // Tags para filtragem
+  tags            String?  // JSON array: ["low-carb", "high-protein", "vegano", etc]
+  
+  // Estatísticas
+  viewCount       Int      @default(0)
+  favoriteCount   Int      @default(0)
+  
+  isPublic        Boolean  @default(true)
+  isApproved      Boolean  @default(true)  // Para moderação futura
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+  @@index([authorId])
+  @@index([tags])
+  @@map("recipes")
+}
+
+model RecipeFavorite {
+  id        String   @id @default(uuid())
+  userId    String
+  recipeId  String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, recipeId])
+  @@index([userId])
+  @@map("recipe_favorites")
 }

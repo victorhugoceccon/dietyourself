@@ -184,20 +184,26 @@ router.get('/pacientes/:pacienteId/dieta', authenticate, async (req, res) => {
     try {
       dietaData = JSON.parse(dieta.dietaData)
     } catch (e) {
+      console.error('❌ Erro ao parsear dietaData:', e)
       return res.status(500).json({ error: 'Erro ao processar dieta salva' })
     }
 
+    // Extrair dieta e nutritionalNeeds do objeto salvo
+    // O formato salvo é: { nutritionalNeeds: {...}, dieta: {...} }
+    let dietaFinal = dietaData.dieta || dietaData
+    let nutritionalNeeds = dietaData.nutritionalNeeds || null
+
     // Garantir que totalDiaKcal e macrosDia existam, calculando se necessário
-    if (!dietaData.totalDiaKcal && dietaData.refeicoes) {
-      dietaData.totalDiaKcal = dietaData.refeicoes.reduce((sum, r) => sum + (r.totalRefeicaoKcal || 0), 0)
+    if (!dietaFinal.totalDiaKcal && dietaFinal.refeicoes) {
+      dietaFinal.totalDiaKcal = dietaFinal.refeicoes.reduce((sum, r) => sum + (r.totalRefeicaoKcal || 0), 0)
     }
 
-    if (!dietaData.macrosDia && dietaData.refeicoes) {
+    if (!dietaFinal.macrosDia && dietaFinal.refeicoes) {
       let totalProteina = 0
       let totalCarbo = 0
       let totalGordura = 0
 
-      dietaData.refeicoes.forEach(refeicao => {
+      dietaFinal.refeicoes.forEach(refeicao => {
         if (refeicao.itens) {
           refeicao.itens.forEach(item => {
             if (item.macros) {
@@ -209,14 +215,14 @@ router.get('/pacientes/:pacienteId/dieta', authenticate, async (req, res) => {
         }
       })
 
-      dietaData.macrosDia = {
+      dietaFinal.macrosDia = {
         proteina_g: Math.round(totalProteina * 10) / 10,
         carbo_g: Math.round(totalCarbo * 10) / 10,
         gordura_g: Math.round(totalGordura * 10) / 10
       }
     }
 
-    // Buscar dados completos do paciente incluindo questionnaireData completo
+    // Buscar dados completos do paciente incluindo questionnaireData completo (novo formato 7 blocos)
     const pacienteCompleto = await prisma.user.findUnique({
       where: { id: pacienteId },
       select: {
@@ -230,33 +236,53 @@ router.get('/pacientes/:pacienteId/dieta', authenticate, async (req, res) => {
             altura: true,
             pesoAtual: true,
             objetivo: true,
-            nivelAtividade: true,
-            refeicoesDia: true,
-            preferenciaAlimentacao: true,
-            costumaCozinhar: true,
-            restricoes: true,
-            alimentosNaoGosta: true,
-            observacoes: true
+            frequenciaAtividade: true,
+            tipoAtividade: true,
+            horarioTreino: true,
+            rotinaDiaria: true,
+            quantidadeRefeicoes: true,
+            preferenciaRefeicoes: true,
+            confortoPesar: true,
+            tempoPreparacao: true,
+            preferenciaVariacao: true,
+            alimentosDoDiaADia: true,
+            restricaoAlimentar: true,
+            outraRestricao: true,
+            alimentosEvita: true,
+            opcoesSubstituicao: true,
+            refeicoesLivres: true
           }
         }
       }
     })
 
-    // Calcular necessidades nutricionais do paciente
-    let nutritionalNeeds = null
-    if (pacienteCompleto?.questionnaireData) {
+    // Parse alimentosDoDiaADia se for string JSON
+    if (pacienteCompleto?.questionnaireData?.alimentosDoDiaADia) {
+      try {
+        if (typeof pacienteCompleto.questionnaireData.alimentosDoDiaADia === 'string') {
+          pacienteCompleto.questionnaireData.alimentosDoDiaADia = JSON.parse(pacienteCompleto.questionnaireData.alimentosDoDiaADia)
+        }
+      } catch (e) {
+        console.error('Erro ao fazer parse dos alimentos do dia a dia:', e)
+      }
+    }
+
+    // Calcular necessidades nutricionais do paciente se não vierem na dieta
+    if (!nutritionalNeeds && pacienteCompleto?.questionnaireData) {
       const { calcularNutricao } = await import('../utils/nutrition.js')
       nutritionalNeeds = calcularNutricao(pacienteCompleto.questionnaireData)
     }
 
     res.json({
-      dieta: dietaData,
+      dieta: dietaFinal,
       paciente: pacienteCompleto,
       nutritionalNeeds: nutritionalNeeds
     })
   } catch (error) {
-    console.error('Erro ao buscar dieta do paciente:', error)
-    res.status(500).json({ error: 'Erro ao buscar dieta do paciente' })
+    console.error('❌ Erro ao buscar dieta do paciente:', error)
+    console.error('   - Stack:', error.stack)
+    console.error('   - Message:', error.message)
+    res.status(500).json({ error: 'Erro ao buscar dieta do paciente', details: error.message })
   }
 })
 

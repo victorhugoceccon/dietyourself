@@ -16,7 +16,9 @@ router.get('/profile', authenticate, async (req, res) => {
         email: true,
         name: true,
         profilePhoto: true,
-        motivationalMessage: true
+        motivationalMessage: true,
+        personalId: true,
+        nutricionistaId: true
       }
     })
 
@@ -25,6 +27,15 @@ router.get('/profile', authenticate, async (req, res) => {
     }
 
     res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        profilePhoto: user.profilePhoto,
+        motivationalMessage: user.motivationalMessage,
+        personalId: user.personalId,
+        nutricionistaId: user.nutricionistaId
+      },
       profilePhoto: user.profilePhoto,
       motivationalMessage: user.motivationalMessage
     })
@@ -39,12 +50,13 @@ router.get('/profile', authenticate, async (req, res) => {
 router.patch('/profile', authenticate, async (req, res) => {
   try {
     const userId = req.user.userId
-    const { profilePhoto, motivationalMessage } = req.body
+    const { profilePhoto, motivationalMessage, name } = req.body
 
     console.log('📝 PATCH /api/user/profile - Atualizando perfil:', {
       userId,
       hasProfilePhoto: !!profilePhoto,
-      hasMotivationalMessage: !!motivationalMessage
+      hasMotivationalMessage: !!motivationalMessage,
+      hasName: !!name
     })
 
     // Validar dados
@@ -54,6 +66,10 @@ router.patch('/profile', authenticate, async (req, res) => {
 
     if (motivationalMessage !== undefined && motivationalMessage !== null && typeof motivationalMessage !== 'string') {
       return res.status(400).json({ error: 'motivationalMessage deve ser uma string' })
+    }
+
+    if (name !== undefined && name !== null && typeof name !== 'string') {
+      return res.status(400).json({ error: 'name deve ser uma string' })
     }
 
     // Validar tamanho da foto (se for base64, limitar a ~2MB)
@@ -73,6 +89,9 @@ router.patch('/profile', authenticate, async (req, res) => {
     }
     if (motivationalMessage !== undefined) {
       updateData.motivationalMessage = motivationalMessage === null || motivationalMessage === '' ? null : motivationalMessage.trim()
+    }
+    if (name !== undefined) {
+      updateData.name = name === null || name === '' ? null : name.trim()
     }
 
     // Se não houver dados para atualizar, retornar sucesso sem fazer update
@@ -105,6 +124,7 @@ router.patch('/profile', authenticate, async (req, res) => {
 
       res.json({
         message: 'Perfil atualizado com sucesso',
+        user: updatedUser,
         profilePhoto: updatedUser.profilePhoto,
         motivationalMessage: updatedUser.motivationalMessage
       })
@@ -136,5 +156,69 @@ router.patch('/profile', authenticate, async (req, res) => {
   }
 })
 
-export default router
+// POST /api/user/reset - Resetar dieta e questionário do usuário
+router.post('/reset', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
 
+    console.log('🔄 POST /api/user/reset - Resetando dieta e questionário para userId:', userId)
+
+    // Deletar dieta
+    try {
+      await prisma.dieta.deleteMany({
+        where: { userId }
+      })
+      console.log('✅ Dieta deletada')
+    } catch (error) {
+      // Se não existir dieta, não é erro
+      if (error.code !== 'P2025') {
+        console.error('Erro ao deletar dieta:', error)
+      }
+    }
+
+    // Deletar questionário
+    try {
+      await prisma.questionnaireData.deleteMany({
+        where: { userId }
+      })
+      console.log('✅ Questionário deletado')
+    } catch (error) {
+      // Se não existir questionário, não é erro
+      if (error.code !== 'P2025') {
+        console.error('Erro ao deletar questionário:', error)
+      }
+    }
+
+    // Deletar check-ins
+    try {
+      await prisma.dailyCheckIn.deleteMany({
+        where: { userId }
+      })
+      console.log('✅ Check-ins deletados')
+    } catch (error) {
+      console.error('Erro ao deletar check-ins:', error)
+    }
+
+    // Deletar refeições consumidas
+    try {
+      await prisma.consumedMeal.deleteMany({
+        where: { userId }
+      })
+      console.log('✅ Refeições consumidas deletadas')
+    } catch (error) {
+      console.error('Erro ao deletar refeições consumidas:', error)
+    }
+
+    res.json({
+      message: 'Dieta e questionário resetados com sucesso'
+    })
+  } catch (error) {
+    console.error('❌ Erro ao resetar:', error)
+    res.status(500).json({ 
+      error: 'Erro ao resetar dieta e questionário',
+      details: error.message || 'Erro desconhecido'
+    })
+  }
+})
+
+export default router

@@ -1,365 +1,275 @@
+/* ============================================
+   LifeFit - Nutrition Dashboard
+   Painel de controle visual
+   ============================================ */
+
 .nutrition-dashboard {
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 }
 
 .dashboard-header {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-2xl);
 }
 
 .dashboard-header h2 {
-  font-size: 1.8rem;
-  color: var(--text-primary, #333);
-  margin: 0 0 0.5rem 0;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-}
-
-.dark-mode .dashboard-header h2 {
-  color: var(--text-primary, #e0e0e0);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xs) 0;
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
 }
 
 .dashboard-header .subtitle {
-  color: var(--text-secondary, #666);
-  font-size: 1rem;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
   margin: 0;
-  font-weight: 500;
+  font-weight: var(--font-weight-regular);
 }
 
-.dark-mode .dashboard-header .subtitle {
-  color: var(--text-secondary, #b0b0b0);
-}
-
-.nutrition-cards {
+/* Row horizontal com 4 cards */
+.nutrition-cards-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  width: 100%;
 }
 
+/* Card padrão */
 .nutrition-card {
-  background: var(--bg-primary, #ffffff);
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: var(--shadow-md, 0 4px 20px rgba(0, 0, 0, 0.08));
-  transition: all 0.3s ease;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+  border: 1px solid var(--border-color-light);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 280px;
   position: relative;
-  overflow: visible;
-  border: 1px solid var(--border-color, #e8e8e8);
+  overflow: hidden;
 }
 
-.dark-mode .nutrition-card {
-  background: var(--bg-secondary, #242424);
-  border-color: var(--border-color, #333);
+.nutrition-card:hover {
+  border-color: var(--lifefit-green-soft);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 
-.nutrition-card::before {
+/* Ícone circular no topo */
+.card-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid;
+  margin-bottom: var(--space-xl);
+  transition: all var(--transition-base);
+  flex-shrink: 0;
+}
+
+.nutrition-card:hover .card-icon-wrapper {
+  transform: scale(1.05);
+  border-width: 3px;
+}
+
+.card-icon-emoji {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+/* Conteúdo do card */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  flex: 1;
+  width: 100%;
+}
+
+/* Número grande */
+.card-value {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin: 0;
+}
+
+/* Label da métrica */
+.card-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+/* Wrapper de progresso */
+.card-progress-wrapper {
+  width: 100%;
+  margin-top: auto;
+  padding-top: var(--space-lg);
+}
+
+/* Barra de progresso horizontal fina */
+.card-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-sm);
+  transition: all var(--transition-base);
+}
+
+.nutrition-card:hover .card-progress-bar {
+  height: 5px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.card-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow), background-color var(--transition-base);
+  position: relative;
+}
+
+.card-progress-fill::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--card-color), var(--card-color-light));
-  border-radius: 20px 20px 0 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  border-radius: var(--radius-full);
+  opacity: 0;
+  transition: opacity var(--transition-base);
 }
 
-.nutrition-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg, 0 8px 30px rgba(0, 0, 0, 0.15));
-  border-color: var(--accent-color, #4CAF50);
+.nutrition-card:hover .card-progress-fill::after {
+  opacity: 1;
 }
 
-.nutrition-card.calories {
-  --card-color: #4CAF50;
-  --card-color-light: #8BC34A;
-}
-
-.nutrition-card.protein {
-  --card-color: #2196F3;
-  --card-color-light: #64B5F6;
-}
-
-.nutrition-card.carbs {
-  --card-color: #FF9800;
-  --card-color-light: #FFB74D;
-}
-
-.nutrition-card.fat {
-  --card-color: #9C27B0;
-  --card-color-light: #BA68C8;
-}
-
-.card-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.card-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, var(--card-color-light), var(--card-color));
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.card-title-wrapper {
-  flex: 1;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.card-title-wrapper h3 {
-  font-size: 0.9rem;
-  color: var(--text-secondary, #666);
-  margin: 0;
-  font-weight: 700;
+/* Status microcopy */
+.card-status {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.dark-mode .card-title-wrapper h3 {
-  color: var(--text-secondary, #b0b0b0);
-}
-
-.tooltip-trigger {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: none;
-  background: var(--bg-secondary, #f5f5f5);
-  color: var(--text-secondary, #666);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  padding: 0;
-}
-
-.dark-mode .tooltip-trigger {
-  background: var(--bg-tertiary, #2a2a2a);
-  color: var(--text-secondary, #b0b0b0);
-}
-
-.tooltip-trigger:hover {
-  background: var(--accent-color, #4CAF50);
-  color: white;
-  transform: scale(1.1);
-}
-
-.tooltip {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: var(--bg-primary, #ffffff);
-  border: 1px solid var(--border-color, #e0e0e0);
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 0.2s ease;
-}
-
-.dark-mode .tooltip {
-  background: var(--bg-secondary, #242424);
-  border-color: var(--border-color, #333);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.tooltip-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.tooltip-icon {
-  font-size: 1.25rem;
-}
-
-.tooltip-title {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text-primary, #1a1a1a);
-}
-
-.dark-mode .tooltip-title {
-  color: var(--text-primary, #e0e0e0);
-}
-
-.tooltip-description {
+  letter-spacing: 0.05em;
   margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--text-secondary, #666);
+  transition: all var(--transition-base);
 }
 
-.dark-mode .tooltip-description {
-  color: var(--text-secondary, #b0b0b0);
+.nutrition-card:hover .card-status {
+  font-weight: var(--font-weight-semibold);
 }
 
-.card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.card-value {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary, #333);
-  margin: 0;
-  line-height: 1.2;
-  letter-spacing: -1px;
-}
-
-.dark-mode .card-value {
-  color: var(--text-primary, #e0e0e0);
-}
-
-.card-unit {
-  font-size: 0.9rem;
-  color: var(--text-tertiary, #999);
-  font-weight: 500;
-}
-
-.card-progress {
-  margin-top: 1.5rem;
-  width: 100%;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 10px;
-  background: var(--bg-secondary, #f5f5f5);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 0.75rem;
-}
-
-.dark-mode .progress-bar {
-  background: var(--bg-tertiary, #2a2a2a);
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 8px;
-  transition: width 0.5s ease, background-color 0.3s ease;
-}
-
-.progress-comparison {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
-}
-
-.progress-consumed {
-  font-weight: 700;
-  color: var(--text-primary, #1a1a1a);
-}
-
-.dark-mode .progress-consumed {
-  color: var(--text-primary, #e0e0e0);
-}
-
-.progress-separator {
-  color: var(--text-tertiary, #999);
-  font-weight: 500;
-}
-
-.progress-total {
-  font-weight: 600;
-  color: var(--text-secondary, #666);
-}
-
-.dark-mode .progress-total {
-  color: var(--text-secondary, #b0b0b0);
-}
-
-.progress-remaining {
-  font-size: 0.8125rem;
-}
-
-.remaining-text {
-  color: var(--text-secondary, #666);
-  font-weight: 500;
-}
-
-.dark-mode .remaining-text {
-  color: var(--text-secondary, #b0b0b0);
-}
-
-.over-limit-text {
-  color: var(--accent-color, #4CAF50);
-  font-weight: 600;
-}
-
+/* Estados vazios */
 .loading,
 .no-data {
   text-align: center;
-  padding: 3rem 2rem;
-  background: var(--bg-primary, #ffffff);
-  border-radius: 20px;
-  box-shadow: var(--shadow-md, 0 4px 20px rgba(0, 0, 0, 0.08));
-  color: var(--text-secondary, #666);
-  border: 1px solid var(--border-color, #e8e8e8);
+  padding: var(--space-4xl) var(--space-2xl);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color-light);
 }
 
-.dark-mode .loading,
-.dark-mode .no-data {
-  background: var(--bg-secondary, #242424);
-  border-color: var(--border-color, #333);
+.no-data .empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-lg);
+  opacity: 0.6;
+}
+
+.no-data .empty-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .no-data p {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-relaxed);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .nutrition-cards-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
 }
 
 @media (max-width: 768px) {
-  .nutrition-cards {
+  .nutrition-cards-row {
     grid-template-columns: 1fr;
-  }
-
-  .card-value {
-    font-size: 2rem;
+    gap: var(--space-md);
   }
   
   .nutrition-card {
-    padding: 1.5rem;
+    padding: var(--space-xl);
+    min-height: 240px;
   }
 
-  .tooltip {
-    position: fixed;
-    top: auto;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    max-width: calc(100vw - 40px);
+  .card-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .card-icon-emoji {
+    font-size: 1.75rem;
+  }
+
+  .card-value {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .nutrition-card {
+    padding: var(--space-lg);
+    min-height: 220px;
+  }
+
+  .card-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--space-md);
+  }
+
+  .card-icon-emoji {
+    font-size: 1.5rem;
+  }
+
+  .card-value {
+    font-size: var(--font-size-2xl);
+  }
+
+  .card-label {
+    font-size: 0.65rem;
+  }
+
+  .card-status {
+    font-size: 0.65rem;
   }
 }

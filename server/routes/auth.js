@@ -20,6 +20,17 @@ const loginSchema = z.object({
   password: z.string().min(1, 'Senha é obrigatória')
 })
 
+// Schema de validação para solicitar reset de senha
+const forgotPasswordSchema = z.object({
+  email: z.string().email('Email inválido')
+})
+
+// Schema de validação para resetar senha
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Token é obrigatório'),
+  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres')
+})
+
 // Rota de registro
 router.post('/register', async (req, res) => {
   try {
@@ -191,6 +202,125 @@ router.get('/me', async (req, res) => {
   } catch (error) {
     console.error('Erro ao verificar token:', error)
     res.status(500).json({ error: 'Erro ao verificar token' })
+  }
+})
+
+// Rota para solicitar recuperação de senha
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const validatedData = forgotPasswordSchema.parse(req.body)
+
+    // Buscar usuário
+    const user = await prisma.user.findUnique({
+      where: { email: validatedData.email }
+    })
+
+    // Sempre retornar sucesso para evitar enumeração de emails
+    if (!user) {
+      return res.json({ 
+        message: 'Se o email existir, você receberá instruções de recuperação' 
+      })
+    }
+
+    // Gerar token único
+    const resetToken = crypto.randomBytes(32).toString('hex')
+    const expiresAt = new Date()
+    expiresAt.setHours(expiresAt.getHours() + 1) // Expira em 1 hora
+
+    // Invalidar tokens anteriores do usuário
+    await prisma.passwordResetToken.updateMany({
+      where: {
+        userId: user.id,
+        used: false
+      },
+      data: {
+        used: true
+      }
+    })
+
+    // Criar novo token de reset
+    await prisma.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        token: resetToken,
+        expiresAt
+      }
+    })
+
+    // Enviar email de recuperação
+    try {
+      await sendPasswordResetEmail(user.email, resetToken)
+    } catch (emailError) {
+      console.error('Erro ao enviar email:', emailError)
+      // Não falhar a requisição se o email não for enviado
+      // Em produção, você pode querer usar um serviço de fila
+    }
+
+    res.json({ 
+      message: 'Se o email existir, você receberá instruções de recuperação' 
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ 
+        error: 'Dados inválidos',
+        details: error.errors
+      })
+    }
+    
+    console.error('Erro ao solicitar recuperação:', error)
+    res.status(500).json({ error: 'Erro ao processar solicitação' })
+  }
+})
+
+// Rota para resetar senha com token
+router.post('/reset-password', async (req, res) => {
+  try {
+    const validatedData = resetPasswordSchema.parse(req.body)
+
+    // Buscar token válido
+    const resetToken = await prisma.passwordResetToken.findUnique({
+      where: { token: validatedData.token },
+      include: { user: true }
+    })
+
+    if (!resetToken) {
+      return res.status(400).json({ error: 'Token inválido ou expirado' })
+    }
+
+    if (resetToken.used) {
+      return res.status(400).json({ error: 'Token já foi utilizado' })
+    }
+
+    if (resetToken.expiresAt < new Date()) {
+      return res.status(400).json({ error: 'Token expirado' })
+    }
+
+    // Hash da nova senha
+    const hashedPassword = await hashPassword(validatedData.password)
+
+    // Atualizar senha do usuário
+    await prisma.user.update({
+      where: { id: resetToken.userId },
+      data: { password: hashedPassword }
+    })
+
+    // Marcar token como usado
+    await prisma.passwordResetToken.update({
+      where: { id: resetToken.id },
+      data: { used: true }
+    })
+
+    res.json({ message: 'Senha redefinida com sucesso' })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ 
+        error: 'Dados inválidos',
+        details: error.errors
+      })
+    }
+    
+    console.error('Erro ao resetar senha:', error)
+    res.status(500).json({ error: 'Erro ao resetar senha' })
   }
 })
 

@@ -466,6 +466,9 @@
   z-index: 3000;
   padding: 1rem;
   animation: fadeIn 0.2s ease;
+  /* Prevenir scroll no overlay - o scroll deve ser apenas no modal-content */
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .modal-content {
@@ -476,8 +479,12 @@
   min-width: 400px;
   max-height: 85vh;
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Prevenir que o scroll "vaze" para a página de fundo */
+  overscroll-behavior: contain;
 }
 
 @keyframes slideUp {
@@ -693,6 +700,52 @@
 
   .result-cards {
     grid-template-columns: 1fr;
+  }
+
+  /* Mobile: 2 cards por linha com mesma largura/altura e texto legível */
+  .alimentos-grid-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .alimento-card-compact {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .alimento-name-compact {
+    /* remover clamp e permitir texto completo */
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+    font-size: 0.85rem;
+    line-height: 1.25;
+  }
+
+  .alimento-categoria-compact {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
+  }
+
+  .alimento-kcal-compact {
+    margin-top: auto;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .pagination-info {
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -1057,7 +1110,7 @@
 }
 
 .card-icon-base.fat {
-  background: linear-gradient(135deg, #9C27B0, #ba68c8);
+  background: linear-gradient(135deg, var(--lifefit-green-olive), var(--lifefit-blue-gray-dark));
   color: white;
 }
 
@@ -1232,6 +1285,130 @@
   background: var(--text-tertiary);
 }
 
+/* ============================
+   Mobile: Modal de detalhes do alimento
+   ============================ */
+@media (max-width: 768px) {
+  .alimento-detail-modal-overlay {
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.75rem, env(safe-area-inset-bottom)) 0.75rem;
+    align-items: flex-start;
+  }
+
+  .alimento-detail-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 1.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-radius: 18px;
+  }
+
+  .modal-detail-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(14px);
+  }
+
+  .dark-mode .modal-detail-header {
+    background: rgba(15, 20, 27, 0.78);
+  }
+
+  .modal-detail-header h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .modal-detail-close {
+    width: 36px;
+    height: 36px;
+  }
+
+  .modal-detail-content {
+    padding: 1.25rem;
+  }
+
+  .nutrition-cards-base {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .nutrition-card-base {
+    padding: 1rem;
+    border-radius: 14px;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .card-icon-base {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+
+  .card-label {
+    font-size: 0.8rem;
+  }
+
+  .card-value {
+    font-size: 1.25rem;
+  }
+
+  .calculo-section-detail {
+    padding: 1.25rem;
+    border-radius: 14px;
+  }
+
+  .calculo-input-detail {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .calculo-input-detail input,
+  .calculo-input-detail .peso-input {
+    font-size: 16px; /* evita zoom no iOS */
+  }
+
+  .btn-calcular-detail {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .result-cards-detail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .result-card-detail {
+    padding: 1rem;
+  }
+
+  .result-value-detail {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .alimento-detail-modal-overlay {
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.6rem max(0.75rem, env(safe-area-inset-bottom)) 0.6rem;
+  }
+
+  .modal-detail-header {
+    padding: 1rem;
+  }
+
+  .modal-detail-content {
+    padding: 1rem;
+  }
+
+  .nutrition-cards-base {
+    grid-template-columns: 1fr;
+  }
+
+  .result-cards-detail {
+    grid-template-columns: 1fr;
+  }
+}
 /* Scrollbar para sidebar */
 .alimentos-scroll-container::-webkit-scrollbar {
   width: 8px;
@@ -1281,13 +1458,31 @@
 }
 
 @media (max-width: 768px) {
+  /* Tablet/Mobile: não “esmagar” a lista; deixa a página respirar */
+  .alimentos-manager {
+    min-height: 100dvh;
+  }
+
   .alimentos-manager-content {
-    grid-template-columns: 1fr;
     height: auto;
-    min-height: 1600px;
+    min-height: 0;
+    padding: 1rem;
+    overflow: visible; /* evita cortar a lista no mobile */
   }
 
   .alimentos-sidebar {
-    max-height: 400px;
+    height: auto;
+    max-height: none; /* remove limite que escondia a lista */
+    padding: 1rem;
+    overflow: hidden; /* scroll fica no container interno */
+  }
+
+  .alimentos-scroll-container {
+    /* garante área útil para ver a lista no mobile */
+    max-height: 60dvh;
+  }
+
+  .alimentos-grid-compact {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

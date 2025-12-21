@@ -1,0 +1,435 @@
+/* ============================================
+   LifeFit - Professional Dark Mode Fixes
+   Correções AGGRESSIVAS para áreas profissionais
+   Garantir que TODOS os backgrounds sejam ESCUROS e textos BRANCOS
+   ============================================ */
+
+.dark-mode {
+  /* ===== NUTRICIONISTA ===== */
+  .nutricionista-content-wrapper,
+  .nutricionista-main-content,
+  .nutricionista-nav {
+    background: var(--bg-primary) !important;
+  }
+
+  /* ===== PERSONAL ===== */
+  .personal-content-wrapper,
+  .personal-main-content,
+  .personal-nav {
+    background: var(--bg-primary) !important;
+  }
+
+  /* ===== ADMIN ===== */
+  .admin-content-wrapper,
+  .admin-main {
+    background: var(--bg-secondary) !important;
+  }
+
+  /* ===== TODOS OS CARDS E CONTAINERS ===== */
+  .pacientes-sidebar,
+  .paciente-details,
+  .stat-card,
+  .filters-section,
+  .users-section,
+  .modal-content,
+  .alimentos-manager-content,
+  .calculo-section,
+  .alimentos-list,
+  .alimento-card,
+  .alimento-card-compact,
+  [class*="card"],
+  [class*="Card"],
+  [class*="section"],
+  [class*="Section"] {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  /* ===== TODOS OS INPUTS E SELECTS ===== */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select,
+  .search-input,
+  .filter-group input,
+  .filter-group select,
+  .form-group input,
+  .form-group select,
+  .form-group textarea,
+  .calculo-input input,
+  .peso-input {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus,
+  .search-input:focus,
+  .filter-group input:focus,
+  .filter-group select:focus,
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus,
+  .calculo-input input:focus,
+  .peso-input:focus {
+    background: var(--bg-elevated) !important;
+    border-color: var(--lifefit-green-soft) !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder,
+  .search-input::placeholder {
+    color: var(--text-tertiary) !important;
+  }
+
+  /* ===== TODOS OS BOTÕES (exceto primários com gradiente) ===== */
+  button:not(.btn-primary):not([class*="gradient"]):not(.logout-btn),
+  .btn-secondary,
+  .btn-cancel,
+  .cancel-btn,
+  .pagination-btn,
+  .add-paciente-btn:not([class*="gradient"]),
+  .btn-action,
+  .modal-close-btn {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  button:hover:not(.btn-primary):not([class*="gradient"]):not(.logout-btn),
+  .btn-secondary:hover,
+  .btn-cancel:hover,
+  .cancel-btn:hover,
+  .pagination-btn:hover:not(:disabled),
+  .btn-action:hover {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--lifefit-green-soft) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* ===== TODOS OS TEXTOS ===== */
+  h1, h2, h3, h4, h5, h6,
+  p, span, div, label, li, td, th,
+  .sidebar-title,
+  .section-header h2,
+  .stat-value,
+  .stat-label,
+  .paciente-name,
+  .paciente-email,
+  .paciente-meta,
+  .empty-selection h3,
+  .empty-selection p,
+  .empty-state p,
+  .alimentos-header h2,
+  .subtitle,
+  .alimento-header h4,
+  .alimento-name-compact,
+  .detail-label,
+  .detail-value,
+  .users-count,
+  .pagination-info,
+  .search-results-count {
+    color: var(--text-primary) !important;
+  }
+
+  /* ===== TABELAS ===== */
+  table,
+  .users-table,
+  .users-table-wrapper {
+    background: var(--bg-elevated) !important;
+  }
+
+  .users-table thead {
+    background: var(--bg-tertiary) !important;
+  }
+
+  .users-table tbody tr {
+    background: var(--bg-elevated) !important;
+  }
+
+  .users-table tbody tr:hover {
+    background: var(--bg-tertiary) !important;
+  }
+
+  .users-table th,
+  .users-table td {
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  /* ===== ITENS DE LISTA ===== */
+  .paciente-item,
+  .alimento-card,
+  .alimento-card-compact {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .paciente-item:hover,
+  .alimento-card:hover,
+  .alimento-card-compact:hover {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--lifefit-green-soft) !important;
+  }
+
+  .paciente-item.active {
+    background: var(--lifefit-green-light) !important;
+  }
+
+  .paciente-item.active .paciente-name,
+  .paciente-item.active .paciente-email,
+  .paciente-item.active .paciente-meta {
+    color: var(--text-primary) !important;
+  }
+
+  /* ===== MODAIS ===== */
+  .modal-overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .modal-content,
+  .modal-header,
+  .modal-body,
+  .alimento-detail-modal {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .modal-header h2,
+  .modal-header h3 {
+    color: var(--text-primary) !important;
+  }
+
+  /* ===== BADGES E CHIPS ===== */
+  .paciente-badge,
+  .role-badge,
+  [class*="badge"],
+  [class*="Badge"] {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* ===== ESTADOS VAZIOS ===== */
+  .empty-selection,
+  .empty-state {
+    color: var(--text-secondary) !important;
+  }
+
+  .empty-selection svg,
+  .empty-state svg {
+    color: var(--text-tertiary) !important;
+    opacity: 0.5;
+  }
+
+  /* ===== ÍCONES ===== */
+  .search-icon,
+  .search-clear-btn,
+  svg:not([class*="gradient"]) {
+    color: var(--text-tertiary) !important;
+  }
+
+  .search-clear-btn:hover {
+    color: var(--text-primary) !important;
+    background: var(--bg-tertiary) !important;
+  }
+
+  /* ===== DETALHES ===== */
+  .detail-row {
+    background: var(--bg-tertiary) !important;
+  }
+
+  /* ===== NAVEGAÇÃO ===== */
+  .nav-item {
+    color: var(--text-primary) !important;
+  }
+
+  .nav-item:hover {
+    background: var(--bg-tertiary) !important;
+    color: #90c22c !important;
+  }
+
+  .nav-item.active {
+    color: #90c22c !important;
+  }
+
+  /* ===== COMPONENTES ESPECÍFICOS DO PERSONAL ===== */
+  .exercicios-manager,
+  .divisoes-manager,
+  .prescricao-treino,
+  .personal-pacientes,
+  .personal-feedback-solicitacoes {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .exercicio-card,
+  .divisao-card,
+  .prescricao-card,
+  .paciente-card,
+  .feedback-card,
+  .solicitacao-card {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .exercicio-card:hover,
+  .divisao-card:hover,
+  .prescricao-card:hover,
+  .paciente-card:hover {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--lifefit-green-soft) !important;
+  }
+
+  .exercicios-header h2,
+  .divisoes-header h2,
+  .prescricao-header h2,
+  .pacientes-header h2,
+  .divisao-content h3,
+  .prescricao-header-card h3,
+  .paciente-info h3 {
+    color: var(--text-primary) !important;
+  }
+
+  .search-input,
+  .filter-select {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .search-input:focus,
+  .filter-select:focus {
+    background: var(--bg-elevated) !important;
+    border-color: var(--lifefit-green-soft) !important;
+  }
+
+  .tab-btn {
+    color: var(--text-primary) !important;
+  }
+
+  .tab-btn.active {
+    color: #90c22c !important;
+    border-bottom-color: var(--lifefit-green-soft) !important;
+  }
+
+  .tab-btn:hover {
+    color: #90c22c !important;
+  }
+
+  /* Garantir que TODOS os textos sejam brancos */
+  .exercicios-manager *,
+  .divisoes-manager *,
+  .prescricao-treino *,
+  .personal-pacientes *,
+  .personal-feedback-solicitacoes *,
+  .alimentos-manager * {
+    color: inherit;
+  }
+
+  /* Forçar textos específicos a serem brancos */
+  .divisao-descricao,
+  .divisao-dias,
+  .prescricao-paciente,
+  .paciente-email,
+  .subtitle {
+    color: var(--text-secondary) !important;
+  }
+}
+
+/* ===== RESPONSIVIDADE MOBILE ===== */
+@media (max-width: 480px) {
+  .dark-mode {
+    /* Ajustar padding para mobile */
+    .nutricionista-content-wrapper,
+    .personal-content-wrapper,
+    .admin-content-wrapper {
+      padding: 0 !important;
+    }
+
+    /* Garantir que cards não tenham muito padding no mobile */
+    .pacientes-sidebar,
+    .paciente-details,
+    .stat-card,
+    .filters-section,
+    .users-section,
+    .exercicios-manager,
+    .divisoes-manager,
+    .prescricao-treino,
+    .personal-pacientes,
+    .personal-feedback-solicitacoes {
+      padding: var(--space-md) !important;
+    }
+
+    /* Ajustar tamanhos de fonte para mobile */
+    .alimentos-header h2,
+    .section-header h2,
+    .sidebar-title,
+    .exercicios-header h2,
+    .divisoes-header h2,
+    .prescricao-header h2,
+    .pacientes-header h2 {
+      font-size: var(--font-size-lg) !important;
+      color: var(--text-primary) !important;
+    }
+
+    /* Garantir que tabelas sejam scrolláveis */
+    .users-table-wrapper {
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* Ajustar modais para mobile */
+    .modal-content {
+      max-width: calc(100vw - 2rem) !important;
+      margin: 1rem !important;
+      background: var(--bg-elevated) !important;
+    }
+
+    /* Garantir que inputs sejam legíveis no mobile */
+    input,
+    textarea,
+    select,
+    .search-input,
+    .filter-select {
+      font-size: 16px !important; /* Evita zoom no iOS */
+      padding: var(--space-md) !important;
+      background: var(--bg-elevated) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border-color) !important;
+    }
+
+    /* Garantir que todos os cards sejam escuros */
+    .exercicio-card,
+    .divisao-card,
+    .prescricao-card,
+    .paciente-card,
+    .feedback-card,
+    .solicitacao-card {
+      background: var(--bg-elevated) !important;
+      border-color: var(--border-color) !important;
+    }
+
+    /* Garantir que todos os textos sejam brancos */
+    .exercicio-card *,
+    .divisao-card *,
+    .prescricao-card *,
+    .paciente-card *,
+    .feedback-card *,
+    .solicitacao-card * {
+      color: var(--text-primary) !important;
+    }
+
+    /* Ajustar grids para mobile */
+    .exercicios-grid,
+    .pacientes-list,
+    .prescricoes-list {
+      grid-template-columns: 1fr !important;
+      gap: var(--space-md) !important;
+    }
+  }
+}
+
+
+

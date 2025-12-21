@@ -1,0 +1,1047 @@
+/* ============================================
+   LifeFit Design System
+   Wellness moderno com toque fitness
+   ============================================ */
+
+/* Tipografia */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* ===== CORES PRINCIPAIS - LifeFit (ULTRA) ===== */
+  
+  /* Acentos “Ultra” (inspirado no Monster Ultra branco) */
+  --lifefit-green-soft: #B9FF2C;        /* Neon lime (primary) */
+  --lifefit-green-olive: #36D7FF;       /* Cyan neon (secondary) */
+  --lifefit-green-light: rgba(185, 255, 44, 0.18);
+  --lifefit-green-lighter: rgba(54, 215, 255, 0.10);
+  --lifefit-green-dark: #8EEA00;        /* Hover do neon */
+  
+  /* Neutros - Metal branco / organização */
+  --lifefit-white: #FFFFFF;
+  --lifefit-gray-light: #F2F4F8;
+  --lifefit-gray-medium: #E3E8F0;
+  --lifefit-gray-dark: #667085;
+  --lifefit-gray-graphite: #0B0F14;
+  
+  /* Azul acinzentado (mantido como “cyan tech”) */
+  --lifefit-blue-gray: #36D7FF;
+  --lifefit-blue-gray-light: rgba(54, 215, 255, 0.14);
+  --lifefit-blue-gray-dark: #00B7E6;
+  
+  /* Estados e Feedback */
+  --lifefit-success: #18E6A0;
+  --lifefit-success-light: rgba(24, 230, 160, 0.16);
+  --lifefit-info: #36D7FF;
+  --lifefit-info-light: rgba(54, 215, 255, 0.14);
+  --lifefit-warning: #D4A574;
+  --lifefit-warning-light: #F5EDE3;
+  --lifefit-error: #C97A7A;
+  --lifefit-error-light: #F5E8E8;
+  
+  /* ===== BACKGROUNDS ===== */
+  --bg-primary: var(--lifefit-white);
+  --bg-secondary: var(--lifefit-gray-light);
+  --bg-tertiary: rgba(255, 255, 255, 0.72);
+  --bg-elevated: var(--lifefit-white);
+  
+  /* ===== TEXTOS ===== */
+  --text-primary: var(--lifefit-gray-graphite);
+  --text-secondary: var(--lifefit-gray-dark);
+  --text-tertiary: #9B9B9B;
+  /* Texto “em cima do neon” precisa ser escuro */
+  --text-inverse: var(--lifefit-gray-graphite);
+  --on-primary: var(--lifefit-gray-graphite);
+  --on-accent: var(--lifefit-gray-graphite);
+  
+  /* ===== BORDAS ===== */
+  --border-color: var(--lifefit-gray-medium);
+  --border-color-light: var(--lifefit-gray-light);
+  --border-color-focus: var(--lifefit-green-soft);
+  
+  /* ===== SOMBRAS ===== */
+  --shadow-xs: 0 1px 2px rgba(11, 15, 20, 0.05);
+  --shadow-sm: 0 6px 18px rgba(11, 15, 20, 0.08);
+  --shadow-md: 0 12px 30px rgba(11, 15, 20, 0.10);
+  --shadow-lg: 0 20px 50px rgba(11, 15, 20, 0.12);
+  --shadow-xl: 0 30px 80px rgba(11, 15, 20, 0.14);
+  
+  /* ===== ESPAÇAMENTOS ===== */
+  --space-xs: 0.5rem;    /* 8px */
+  --space-sm: 0.75rem;   /* 12px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
+  --space-4xl: 5rem;     /* 80px */
+  
+  /* ===== BORDAS ARREDONDADAS ===== */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+  
+  /* ===== TRANSIÇÕES ===== */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* ===== GRADIENTES ===== */
+  --gradient-primary: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-olive) 100%);
+  --gradient-subtle: linear-gradient(135deg, #FFFFFF 0%, #EEF2F7 40%, #FFFFFF 100%);
+  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(242, 244, 248, 1) 100%);
+}
+
+/* ===== DARK MODE ===== */
+.dark-mode {
+  /* Backgrounds - Tons escuros harmoniosos sem branco */
+  --bg-primary: #0B0F14;
+  --bg-secondary: #0F141B;
+  --bg-tertiary: #111A24;
+  --bg-elevated: #121A24;
+  
+  /* Textos - TODOS BRANCOS para máximo contraste */
+  --text-primary: #FFFFFF;
+  --text-secondary: #FFFFFF;
+  --text-tertiary: #E0E0E0;
+  /* Em cima do neon, continua melhor com texto escuro */
+  --text-inverse: #0B0F14;
+  --on-primary: #0B0F14;
+  --on-accent: #0B0F14;
+  
+  /* Bordas - Visíveis mas sutis */
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-color-light: rgba(255, 255, 255, 0.06);
+  --border-color-focus: #B9FF2C;
+  
+  /* Cores ajustadas para dark - Mais vibrantes para contraste */
+  --lifefit-green-soft: #B9FF2C;
+  --lifefit-green-olive: #36D7FF;
+  --lifefit-green-light: rgba(185, 255, 44, 0.18);
+  --lifefit-green-lighter: rgba(54, 215, 255, 0.10);
+  --lifefit-green-dark: #8EEA00;
+  
+  --lifefit-blue-gray: #36D7FF;
+  --lifefit-blue-gray-light: rgba(54, 215, 255, 0.14);
+  --lifefit-blue-gray-dark: #00B7E6;
+  
+  /* Estados ajustados para dark */
+  --lifefit-success: #8BAB8F;
+  --lifefit-success-light: rgba(139, 171, 143, 0.15);
+  --lifefit-info: #7A9FAF;
+  --lifefit-info-light: rgba(122, 159, 175, 0.15);
+  --lifefit-warning: #D4A574;
+  --lifefit-warning-light: rgba(212, 165, 116, 0.15);
+  --lifefit-error: #E89A9A;
+  --lifefit-error-light: rgba(232, 154, 154, 0.15);
+  
+  /* Sombras mais suaves no dark */
+  --shadow-xs: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.55);
+  --shadow-md: 0 18px 48px rgba(0, 0, 0, 0.62);
+  --shadow-lg: 0 26px 70px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 34px 90px rgba(0, 0, 0, 0.78);
+  
+  /* Gradientes harmoniosos para dark - SEM BRANCO, apenas tons escuros */
+  --gradient-primary: linear-gradient(135deg, rgba(185, 255, 44, 0.95) 0%, rgba(54, 215, 255, 0.95) 100%);
+  --gradient-subtle: linear-gradient(135deg, #0F141B 0%, #111A24 100%);
+  --gradient-card: linear-gradient(135deg, #121A24 0%, #0F141B 100%);
+}
+
+/* ===== TIPOGRAFIA ===== */
+:root {
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Tamanhos */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem;  /* 36px */
+  
+  /* Line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* Letter spacing */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+}
+
+/* ===== COMPONENTES BASE ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  background-image:
+    radial-gradient(900px 600px at 12% 12%, rgba(54, 215, 255, 0.18), rgba(255, 255, 255, 0) 60%),
+    radial-gradient(900px 600px at 88% 18%, rgba(185, 255, 44, 0.14), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(135deg, #FFFFFF 0%, #EEF2F7 38%, #FFFFFF 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+.dark-mode body {
+  background-color: var(--bg-secondary);
+  background-image:
+    radial-gradient(900px 600px at 12% 12%, rgba(54, 215, 255, 0.12), rgba(0, 0, 0, 0) 60%),
+    radial-gradient(900px 600px at 88% 18%, rgba(185, 255, 44, 0.10), rgba(0, 0, 0, 0) 60%),
+    linear-gradient(135deg, #0B0F14 0%, #0F141B 45%, #0B0F14 100%);
+  color: var(--text-primary);
+}
+
+/* ===== UTILITÁRIOS ===== */
+.lifefit-card {
+  background: var(--gradient-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(11, 15, 20, 0.08);
+  transition: all var(--transition-base);
+}
+
+.lifefit-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.lifefit-button-primary {
+  background: var(--gradient-primary);
+  color: var(--lifefit-gray-graphite);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-md) var(--space-2xl);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: none;
+  letter-spacing: 0.02em;
+}
+
+.lifefit-button-primary:hover {
+  filter: brightness(1.02);
+  box-shadow: var(--shadow-sm);
+}
+
+.lifefit-button-primary:active {
+  transform: scale(0.98);
+}
+
+.lifefit-button-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md) var(--space-2xl);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.lifefit-button-secondary:hover {
+  background: var(--bg-secondary);
+  border-color: var(--lifefit-green-soft);
+  color: #90c22c;
+}
+
+/* ===== LEGACY COMPATIBILITY ===== */
+/* Mantém compatibilidade com variáveis antigas */
+:root {
+  --accent-color: var(--lifefit-green-soft);
+  --accent-hover: var(--lifefit-green-dark);
+  --accent-light: var(--lifefit-green-light);
+}
+
+/* =========================================================
+   PADRÃO GLOBAL DE BOTÕES (CORES/CONTRASTE)
+   ---------------------------------------------------------
+   Objetivo: botões com semântica consistente em todo app.
+   - primary/success: ação principal / adicionar / salvar
+   - secondary: ação neutra / cancelar / voltar
+   - danger: excluir / remover / ação destrutiva
+   ========================================================= */
+
+/* Base (não força padding/tamanho — só cores/contraste) */
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btn-success,
+.btn-warning,
+.btn-info,
+.btn-icon {
+  font-family: var(--font-family-base);
+}
+
+.btn-primary,
+.btn-success {
+  background: var(--gradient-primary) !important;
+  color: var(--on-primary) !important;
+  border: 1px solid rgba(11, 15, 20, 0.10) !important;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark-mode .btn-secondary {
+  background: rgba(15, 20, 27, 0.72) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.btn-danger {
+  background: var(--lifefit-error) !important;
+  color: var(--lifefit-white) !important;
+  border: 1px solid rgba(11, 15, 20, 0.10) !important;
+}
+
+.btn-warning {
+  background: var(--lifefit-warning) !important;
+  color: var(--lifefit-gray-graphite) !important;
+  border: 1px solid rgba(11, 15, 20, 0.10) !important;
+}
+
+.btn-info {
+  background: var(--lifefit-info) !important;
+  color: var(--lifefit-gray-graphite) !important;
+  border: 1px solid rgba(11, 15, 20, 0.10) !important;
+}
+
+/* Ícones (botões quadrados) */
+.btn-icon {
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark-mode .btn-icon {
+  background: rgba(15, 20, 27, 0.72) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-icon.primary,
+.btn-icon.success {
+  background: var(--gradient-primary) !important;
+  color: var(--on-primary) !important;
+  border-color: rgba(11, 15, 20, 0.10) !important;
+}
+
+.btn-icon.danger {
+  background: var(--lifefit-error) !important;
+  color: var(--lifefit-white) !important;
+  border-color: rgba(11, 15, 20, 0.10) !important;
+}
+
+/* Focus visível (acessibilidade) */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-danger:focus-visible,
+.btn-success:focus-visible,
+.btn-warning:focus-visible,
+.btn-info:focus-visible,
+.btn-icon:focus-visible {
+  outline: 3px solid rgba(185, 255, 44, 0.35);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   SISTEMA DE MODAL BASE
+   ---------------------------------------------------------
+   Modais consistentes em todo o app.
+   Uso: .lifefit-modal-overlay > .lifefit-modal > header/body/footer
+   ========================================================= */
+
+.lifefit-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+  background: rgba(11, 15, 20, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: lifefit-fade-in 0.2s ease-out;
+  /* Prevenir scroll no overlay - o scroll deve ser apenas no modal */
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.dark-mode .lifefit-modal-overlay {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+@keyframes lifefit-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lifefit-slide-up {
+  from { 
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.lifefit-modal {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  /* O scroll deve estar no modal, não no overlay */
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  animation: lifefit-slide-up 0.25s ease-out;
+  /* Prevenir que o scroll "vaze" para a página de fundo */
+  overscroll-behavior: contain;
+}
+
+.dark-mode .lifefit-modal {
+  background: var(--gradient-card);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Variantes de tamanho */
+.lifefit-modal--sm { max-width: 400px; }
+.lifefit-modal--lg { max-width: 720px; }
+.lifefit-modal--xl { max-width: 960px; }
+.lifefit-modal--full { 
+  max-width: calc(100vw - 2rem); 
+  max-height: calc(100dvh - 2rem);
+}
+
+/* Header do Modal */
+.lifefit-modal__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color-light);
+  flex-shrink: 0;
+}
+
+.dark-mode .lifefit-modal__header {
+  background: rgba(15, 20, 27, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.lifefit-modal__header-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.lifefit-modal__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: #90c22c;
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.lifefit-modal__subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: var(--space-xs) 0 0;
+}
+
+.lifefit-modal__close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lifefit-modal__close:hover {
+  background: var(--lifefit-error-light);
+  border-color: var(--lifefit-error);
+  color: var(--lifefit-error);
+}
+
+.lifefit-modal__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Body do Modal */
+.lifefit-modal__body {
+  flex: 1;
+  /* Remover overflow do body - o scroll está no lifefit-modal */
+  overflow: visible;
+  padding: var(--space-xl);
+  min-height: 0;
+}
+
+/* Footer do Modal */
+.lifefit-modal__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-color-light);
+  flex-shrink: 0;
+}
+
+.dark-mode .lifefit-modal__footer {
+  background: rgba(15, 20, 27, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.lifefit-modal__footer--spread {
+  justify-content: space-between;
+}
+
+/* Responsivo Mobile */
+@media (max-width: 768px) {
+  .lifefit-modal-overlay {
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.75rem, env(safe-area-inset-bottom));
+    align-items: flex-end;
+  }
+
+  .lifefit-modal {
+    max-width: 100%;
+    max-height: calc(95dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    animation: lifefit-slide-up-mobile 0.3s ease-out;
+  }
+
+  @keyframes lifefit-slide-up-mobile {
+    from { 
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .lifefit-modal__header,
+  .lifefit-modal__footer {
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .lifefit-modal__body {
+    padding: var(--space-lg);
+  }
+
+  .lifefit-modal__footer {
+    flex-direction: column-reverse;
+    gap: var(--space-sm);
+  }
+
+  .lifefit-modal__footer > button,
+  .lifefit-modal__footer > .btn-primary,
+  .lifefit-modal__footer > .btn-secondary,
+  .lifefit-modal__footer > .btn-danger {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   CONTENT WRAPPER PADRÃO
+   ---------------------------------------------------------
+   Container consistente para conteúdo principal.
+   ========================================================= */
+
+.lifefit-content-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-2xl);
+}
+
+@media (max-width: 768px) {
+  .lifefit-content-wrapper {
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .lifefit-content-wrapper {
+    padding: var(--space-md);
+  }
+}
+
+/* =========================================================
+   VARIANTES DE CARDS
+   ---------------------------------------------------------
+   Extensões do .lifefit-card base.
+   ========================================================= */
+
+.lifefit-card--flat {
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+.lifefit-card--flat:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+.lifefit-card--elevated {
+  box-shadow: var(--shadow-md);
+}
+
+.lifefit-card--elevated:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.lifefit-card--bordered {
+  border: 2px solid var(--lifefit-green-soft);
+  box-shadow: 0 0 20px rgba(185, 255, 44, 0.15);
+}
+
+.lifefit-card--interactive {
+  cursor: pointer;
+}
+
+.lifefit-card--interactive:hover {
+  border-color: var(--lifefit-green-soft);
+}
+
+.lifefit-card--compact {
+  padding: var(--space-md);
+}
+
+.lifefit-card--no-padding {
+  padding: 0;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ---------------------------------------------------------
+   Estado vazio consistente para listas e páginas.
+   ========================================================= */
+
+.lifefit-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  padding: var(--space-3xl) var(--space-xl);
+  text-align: center;
+}
+
+.lifefit-empty-state__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: var(--lifefit-green-light);
+  border-radius: var(--radius-full);
+  color: #90c22c;
+}
+
+.lifefit-empty-state__icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.lifefit-empty-state__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.lifefit-empty-state__description {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 360px;
+}
+
+.lifefit-empty-state__action {
+  margin-top: var(--space-md);
+}
+
+/* =========================================================
+   SKELETON LOADING
+   ---------------------------------------------------------
+   Placeholder animado durante carregamento.
+   ========================================================= */
+
+.lifefit-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border-color-light) 25%,
+    var(--border-color) 50%,
+    var(--border-color-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: lifefit-skeleton-loading 1.5s infinite ease-in-out;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes lifefit-skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.lifefit-skeleton--text {
+  height: 1em;
+  width: 100%;
+}
+
+.lifefit-skeleton--title {
+  height: 1.5em;
+  width: 60%;
+}
+
+.lifefit-skeleton--avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+}
+
+.lifefit-skeleton--card {
+  height: 120px;
+  border-radius: var(--radius-lg);
+}
+
+.lifefit-skeleton--button {
+  height: 44px;
+  width: 120px;
+  border-radius: var(--radius-sm);
+}
+
+/* =========================================================
+   BADGES E TAGS
+   ---------------------------------------------------------
+   Indicadores visuais pequenos.
+   ========================================================= */
+
+.lifefit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.25em 0.75em;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.lifefit-badge--success {
+  background: var(--lifefit-success-light);
+  color: var(--lifefit-success);
+}
+
+.lifefit-badge--warning {
+  background: var(--lifefit-warning-light);
+  color: var(--lifefit-warning);
+}
+
+.lifefit-badge--error {
+  background: var(--lifefit-error-light);
+  color: var(--lifefit-error);
+}
+
+.lifefit-badge--info {
+  background: var(--lifefit-info-light);
+  color: var(--lifefit-info);
+}
+
+.lifefit-badge--primary {
+  background: var(--lifefit-green-light);
+  color: var(--lifefit-green-dark);
+}
+
+.lifefit-badge--neutral {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   FORM INPUTS PADRONIZADOS
+   ---------------------------------------------------------
+   Estilo consistente para todos os campos de formulário.
+   ========================================================= */
+
+.lifefit-input,
+.lifefit-select,
+.lifefit-textarea {
+  width: 100%;
+  padding: var(--space-md);
+  font-family: var(--font-family-base);
+  font-size: 16px; /* Evita zoom no iOS */
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.lifefit-input:focus,
+.lifefit-select:focus,
+.lifefit-textarea:focus {
+  border-color: var(--lifefit-green-soft);
+  box-shadow: 0 0 0 4px var(--lifefit-green-light);
+}
+
+.lifefit-input:disabled,
+.lifefit-select:disabled,
+.lifefit-textarea:disabled {
+  background: var(--bg-secondary);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
+.lifefit-input::placeholder,
+.lifefit-textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.lifefit-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.lifefit-helper {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+.lifefit-input--error,
+.lifefit-select--error,
+.lifefit-textarea--error {
+  border-color: var(--lifefit-error);
+}
+
+.lifefit-input--error:focus,
+.lifefit-select--error:focus,
+.lifefit-textarea--error:focus {
+  box-shadow: 0 0 0 4px var(--lifefit-error-light);
+}
+
+.lifefit-error-message {
+  font-size: var(--font-size-xs);
+  color: var(--lifefit-error);
+  margin-top: var(--space-xs);
+}
+
+/* =========================================================
+   STAT CARDS / KPI
+   ---------------------------------------------------------
+   Cards de estatísticas/métricas.
+   ========================================================= */
+
+.lifefit-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-lg);
+}
+
+.lifefit-stat-card__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+.lifefit-stat-card__value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.lifefit-stat-card__change {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.lifefit-stat-card__change--positive {
+  color: var(--lifefit-success);
+}
+
+.lifefit-stat-card__change--negative {
+  color: var(--lifefit-error);
+}
+
+.lifefit-stat-card--highlight {
+  border-color: var(--lifefit-green-soft);
+  background: linear-gradient(135deg, 
+    var(--lifefit-green-light) 0%, 
+    var(--gradient-card) 50%
+  );
+}
+
+/* =========================================================
+   STAT GRID
+   ---------------------------------------------------------
+   Grid responsivo para múltiplos stat cards.
+   ========================================================= */
+
+.lifefit-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-lg);
+}
+
+@media (max-width: 480px) {
+  .lifefit-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  .lifefit-stat-card {
+    padding: var(--space-md);
+  }
+
+  .lifefit-stat-card__value {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* =========================================================
+   SECTION HEADER
+   ---------------------------------------------------------
+   Header padronizado para seções.
+   ========================================================= */
+
+.lifefit-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.lifefit-section-header__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.lifefit-section-header__subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: var(--space-xs) 0 0;
+}
+
+.lifefit-section-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+@media (max-width: 480px) {
+  .lifefit-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lifefit-section-header__actions {
+    width: 100%;
+  }
+
+  .lifefit-section-header__actions > button {
+    flex: 1;
+  }
+}
+
+/* =========================================================
+   DIVIDER
+   ---------------------------------------------------------
+   Linha divisória.
+   ========================================================= */
+
+.lifefit-divider {
+  height: 1px;
+  background: var(--border-color-light);
+  margin: var(--space-lg) 0;
+  border: none;
+}
+
+.lifefit-divider--thick {
+  height: 2px;
+}
+
+.lifefit-divider--accent {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--lifefit-green-soft) 50%, 
+    transparent 100%
+  );
+}
+
+
+
+

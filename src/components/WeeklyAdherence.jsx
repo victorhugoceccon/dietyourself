@@ -4,7 +4,6 @@ import './WeeklyAdherence.css'
 
 function WeeklyAdherence({ refreshTrigger }) {
   const [stats, setStats] = useState(null)
-  const [insights, setInsights] = useState([])
   const [loading, setLoading] = useState(true)
   const [showDailyDetail, setShowDailyDetail] = useState(false)
   const [dailyCheckIns, setDailyCheckIns] = useState([])
@@ -29,7 +28,6 @@ function WeeklyAdherence({ refreshTrigger }) {
       if (response.ok) {
         const data = await response.json()
         setStats(data.stats)
-        setInsights(data.insights || [])
       }
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error)
@@ -62,38 +60,27 @@ function WeeklyAdherence({ refreshTrigger }) {
   }
 
   const getAdherenceColor = (percentage) => {
-    if (percentage >= 80) return '#4CAF50'
-    if (percentage >= 60) return '#FF9800'
-    return '#F44336'
+    if (percentage >= 80) return '#7A9B7D' // Verde suave
+    if (percentage >= 60) return '#9FAF7D' // Verde oliva suave
+    if (percentage >= 40) return '#B5C57D' // Verde claro
+    return '#C5D5A0' // Verde muito suave
   }
 
-  const getAdherenceMessage = (percentage) => {
-    if (percentage >= 80) {
-      return {
-        message: 'Você está no caminho certo para alcançar seus objetivos!',
-        emoji: '🎯',
-        color: '#4CAF50'
+  const getProgressMessage = (percentage) => {
+    const messages = [
+      { threshold: 80, text: 'Você está mantendo o ritmo', emoji: '🌿', subtext: 'Boa semana até aqui' },
+      { threshold: 60, text: 'Você está construindo constância', emoji: '✨', subtext: 'Cada dia conta' },
+      { threshold: 40, text: 'Você está no caminho', emoji: '🌱', subtext: 'Não precisa ser perfeito, só consistente' },
+      { threshold: 20, text: 'Primeiro passo dado', emoji: '💚', subtext: 'Seu progresso começa aqui' },
+      { threshold: 0, text: 'Começando sua jornada', emoji: '🌱', subtext: 'Cada dia conta' }
+    ]
+
+    for (const msg of messages) {
+      if (percentage >= msg.threshold) {
+        return msg
       }
     }
-    if (percentage >= 60) {
-      return {
-        message: 'Boa adesão! Continue assim e você verá resultados consistentes.',
-        emoji: '💪',
-        color: '#FF9800'
-      }
-    }
-    if (percentage > 0) {
-      return {
-        message: 'Cada dia é uma nova oportunidade. Pequenos passos levam a grandes mudanças.',
-        emoji: '🌱',
-        color: '#F44336'
-      }
-    }
-    return {
-      message: 'Comece registrando seus check-ins diários para acompanhar seu progresso.',
-      emoji: '✨',
-      color: '#999'
-    }
+    return messages[messages.length - 1]
   }
 
   const getStreakMessage = () => {
@@ -101,25 +88,25 @@ function WeeklyAdherence({ refreshTrigger }) {
     
     if (stats.currentStreak >= 7) {
       return { 
-        message: `${stats.currentStreak} dias seguidos!`, 
+        message: 'Sequência sólida!', 
         emoji: '🔥', 
-        color: '#FF6B35',
-        description: 'Sequência incrível! Você está criando um hábito sólido.'
+        subtext: `${stats.currentStreak} dias seguidos`,
+        description: 'Você está criando um hábito. Parabéns!'
       }
     }
     if (stats.currentStreak >= 3) {
       return { 
-        message: `${stats.currentStreak} dias seguidos!`, 
-        emoji: '💪', 
-        color: '#4CAF50',
-        description: 'Ótimo! Mantenha essa consistência.'
+        message: 'Sequência iniciada', 
+        emoji: '💚', 
+        subtext: `${stats.currentStreak} dias seguidos`,
+        description: 'Continue assim! Cada dia conta.'
       }
     }
     return { 
-      message: `${stats.currentStreak} dia${stats.currentStreak > 1 ? 's' : ''} seguido${stats.currentStreak > 1 ? 's' : ''}!`, 
+      message: 'Primeiro passo dado', 
       emoji: '✨', 
-      color: '#66BB6A',
-      description: 'Continue assim!'
+      subtext: `${stats.currentStreak} dia${stats.currentStreak > 1 ? 's' : ''} seguido${stats.currentStreak > 1 ? 's' : ''}`,
+      description: 'Você está construindo constância.'
     }
   }
 
@@ -140,16 +127,36 @@ function WeeklyAdherence({ refreshTrigger }) {
     return checkInDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
   }
 
-  const getAdherenceIcon = (adherence) => {
+  const getAdherenceInfo = (adherence) => {
     switch (adherence) {
       case 'TOTAL':
-        return { emoji: '✅', label: 'Total', color: '#4CAF50' }
+        return { 
+          emoji: '✅', 
+          label: 'Segui totalmente', 
+          color: '#7A9B7D',
+          description: 'Dia completo registrado'
+        }
       case 'PARCIAL':
-        return { emoji: '⚡', label: 'Parcial', color: '#FF9800' }
+        return { 
+          emoji: '⚡', 
+          label: 'Segui parcialmente', 
+          color: '#9FAF7D',
+          description: 'Registro parcial também conta'
+        }
       case 'NAO_SEGUIU':
-        return { emoji: '🔄', label: 'Não seguiu', color: '#F44336' }
+        return { 
+          emoji: '🔄', 
+          label: 'Não segui hoje', 
+          color: '#B5C57D',
+          description: 'Amanhã é uma nova chance'
+        }
       default:
-        return { emoji: '⏸️', label: 'Sem registro', color: '#999' }
+        return { 
+          emoji: '○', 
+          label: 'Sem registro', 
+          color: '#E0E0E0',
+          description: 'Ainda não registrado'
+        }
     }
   }
 
@@ -163,103 +170,132 @@ function WeeklyAdherence({ refreshTrigger }) {
 
   const adherencePercentage = getAdherencePercentage()
   const streakInfo = getStreakMessage()
-  const adherenceMessage = getAdherenceMessage(adherencePercentage)
+  const progressMessage = getProgressMessage(adherencePercentage)
+  const adherenceColor = getAdherenceColor(adherencePercentage)
 
   return (
     <div className="weekly-adherence-card">
       <div className="adherence-header">
-        <h3 className="adherence-title">Aderência Semanal</h3>
-        <p className="adherence-subtitle">Últimos 7 dias</p>
+        <h2 className="adherence-title">Constância Semanal</h2>
+        <p className="adherence-subtitle">Consistência acima de perfeição</p>
       </div>
 
       {stats && stats.weekly.total > 0 ? (
         <>
-          {/* Indicador visual interativo */}
-          <div 
-            className="adherence-circle-container"
-            onClick={() => setShowDailyDetail(!showDailyDetail)}
-            style={{ cursor: 'pointer' }}
-            title="Clique para ver detalhamento diário"
-          >
+          {/* Indicador circular suavizado */}
+          <div className="adherence-circle-wrapper">
             <div 
               className="adherence-circle"
               style={{ 
-                background: `conic-gradient(${getAdherenceColor(adherencePercentage)} ${adherencePercentage * 3.6}deg, #e0e0e0 ${adherencePercentage * 3.6}deg)`
+                background: `conic-gradient(${adherenceColor} ${adherencePercentage * 3.6}deg, #F5F5F5 ${adherencePercentage * 3.6}deg)`
               }}
             >
               <div className="adherence-circle-inner">
-                <span className="adherence-percentage">{Math.round(adherencePercentage)}%</span>
-                <span className="adherence-label-small">de adesão</span>
-                <span className="adherence-click-hint">👆 Ver detalhes</span>
+                <span className="adherence-emoji-large">{progressMessage.emoji}</span>
+                <span className="adherence-message-main">{progressMessage.text}</span>
+                <span className="adherence-message-sub">{progressMessage.subtext}</span>
+                <span className="adherence-percentage-subtle">{Math.round(adherencePercentage)}%</span>
               </div>
             </div>
           </div>
 
-          {/* Micro explicação sobre impacto */}
-          <div className="adherence-impact" style={{ borderLeftColor: adherenceMessage.color }}>
-            <span className="impact-emoji">{adherenceMessage.emoji}</span>
-            <p className="impact-message">{adherenceMessage.message}</p>
-          </div>
-
-          {/* Breakdown resumido */}
-          <div className="adherence-breakdown">
-            <div className="breakdown-item">
-              <span className="breakdown-emoji">✅</span>
-              <span className="breakdown-label">Total:</span>
-              <span className="breakdown-value">{stats.weekly.totalAdherence}</span>
-            </div>
-            <div className="breakdown-item">
-              <span className="breakdown-emoji">⚡</span>
-              <span className="breakdown-label">Parcial:</span>
-              <span className="breakdown-value">{stats.weekly.parcialAdherence}</span>
-            </div>
-            <div className="breakdown-item">
-              <span className="breakdown-emoji">🔄</span>
-              <span className="breakdown-label">Não seguiu:</span>
-              <span className="breakdown-value">{stats.weekly.naoSeguiu}</span>
-            </div>
-          </div>
-
-          {/* Streak destacado */}
+          {/* Streak emocional */}
           {streakInfo && (
-            <div className="streak-badge" style={{ borderColor: streakInfo.color, backgroundColor: `${streakInfo.color}15` }}>
-              <span className="streak-emoji">{streakInfo.emoji}</span>
+            <div className="streak-card">
+              <div className="streak-icon-wrapper">
+                <span className="streak-emoji">{streakInfo.emoji}</span>
+              </div>
               <div className="streak-content">
-                <span className="streak-text">{streakInfo.message}</span>
-                <span className="streak-description">{streakInfo.description}</span>
+                <h3 className="streak-title">{streakInfo.message}</h3>
+                <p className="streak-subtext">{streakInfo.subtext}</p>
+                <p className="streak-description">{streakInfo.description}</p>
               </div>
             </div>
           )}
 
-          {/* Detalhamento diário (expandido) */}
+          {/* Indicadores visuais simplificados */}
+          <div className="adherence-indicators">
+            <div className="indicator-item">
+              <div className="indicator-icon" style={{ backgroundColor: '#7A9B7D15', borderColor: '#7A9B7D' }}>
+                <span className="indicator-emoji">✅</span>
+              </div>
+              <div className="indicator-content">
+                <span className="indicator-value">{stats.weekly.totalAdherence || 0}</span>
+                <span className="indicator-label">Dias completos</span>
+              </div>
+            </div>
+            <div className="indicator-item">
+              <div className="indicator-icon" style={{ backgroundColor: '#9FAF7D15', borderColor: '#9FAF7D' }}>
+                <span className="indicator-emoji">⚡</span>
+              </div>
+              <div className="indicator-content">
+                <span className="indicator-value">{stats.weekly.parcialAdherence || 0}</span>
+                <span className="indicator-label">Dias parciais</span>
+              </div>
+            </div>
+            <div className="indicator-item">
+              <div className="indicator-icon" style={{ backgroundColor: '#B5C57D15', borderColor: '#B5C57D' }}>
+                <span className="indicator-emoji">🔄</span>
+              </div>
+              <div className="indicator-content">
+                <span className="indicator-value">{stats.weekly.naoSeguiu || 0}</span>
+                <span className="indicator-label">Sem registro</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Microcopy LifeFit */}
+          <div className="lifefit-message">
+            <p className="lifefit-message-text">Cada dia conta. Você está construindo constância.</p>
+          </div>
+
+          {/* Detalhamento diário (opcional) */}
+          <button 
+            className="detail-toggle"
+            onClick={() => setShowDailyDetail(!showDailyDetail)}
+          >
+            <span>{showDailyDetail ? 'Ocultar' : 'Ver'} detalhes da semana</span>
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2"
+              style={{ transform: showDailyDetail ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
+            >
+              <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+
           {showDailyDetail && (
             <div className="daily-detail">
-              <h4 className="daily-detail-title">Detalhamento Diário</h4>
               <div className="daily-list">
                 {dailyCheckIns.length > 0 ? (
                   dailyCheckIns.map((checkIn, index) => {
-                    const adherenceInfo = getAdherenceIcon(checkIn.adherence)
+                    const adherenceInfo = getAdherenceInfo(checkIn.adherence)
                     return (
-                      <div key={index} className="daily-item" style={{ borderLeftColor: adherenceInfo.color }}>
-                        <div className="daily-date">
-                          <span className="daily-day">{getDayLabel(checkIn.checkInDate)}</span>
-                          <span className="daily-date-full">
-                            {new Date(checkIn.checkInDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
-                          </span>
-                        </div>
-                        <div className="daily-adherence" style={{ color: adherenceInfo.color }}>
-                          <span className="daily-emoji">{adherenceInfo.emoji}</span>
-                          <span className="daily-label">{adherenceInfo.label}</span>
+                      <div key={index} className="daily-item">
+                        <div className="daily-item-header">
+                          <div className="daily-date-info">
+                            <span className="daily-day">{getDayLabel(checkIn.checkInDate)}</span>
+                            <span className="daily-date-full">
+                              {new Date(checkIn.checkInDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                            </span>
+                          </div>
+                          <div className="daily-adherence-badge" style={{ backgroundColor: `${adherenceInfo.color}15`, borderColor: adherenceInfo.color }}>
+                            <span className="daily-emoji">{adherenceInfo.emoji}</span>
+                            <span className="daily-label">{adherenceInfo.label}</span>
+                          </div>
                         </div>
                         {checkIn.pesoAtual && (
                           <div className="daily-weight">
-                            <span className="daily-weight-label">Peso:</span>
                             <span className="daily-weight-value">{checkIn.pesoAtual} kg</span>
                           </div>
                         )}
                         {checkIn.observacao && (
                           <div className="daily-note">
-                            <span className="daily-note-text">"{checkIn.observacao}"</span>
+                            <p className="daily-note-text">"{checkIn.observacao}"</p>
                           </div>
                         )}
                       </div>
@@ -274,27 +310,10 @@ function WeeklyAdherence({ refreshTrigger }) {
         </>
       ) : (
         <div className="adherence-empty">
-          <p>Nenhum check-in esta semana ainda.</p>
-          <p className="adherence-empty-hint">Registre seus check-ins diários para ver sua adesão!</p>
-        </div>
-      )}
-
-      {insights.length > 0 && (
-        <div className="adherence-insights">
-          {insights
-            // Filtrar insights duplicados - se a mensagem principal já foi mostrada, não repetir
-            .filter(insight => {
-              // Se for mensagem de "excelente adesão" e já foi mostrada na seção impact, remover
-              const isDuplicated = insight.message?.toLowerCase().includes('excelente adesão') && 
-                                  adherenceMessage.message.toLowerCase().includes('excelente adesão')
-              return !isDuplicated
-            })
-            .map((insight, index) => (
-              <div key={index} className={`insight-item insight-${insight.type}`}>
-                <span className="insight-emoji">{insight.emoji}</span>
-                <span className="insight-message">{insight.message}</span>
-              </div>
-            ))}
+          <div className="empty-icon">🌱</div>
+          <h3 className="empty-title">Seu progresso começa aqui</h3>
+          <p className="adherence-empty-text">Registrar hoje já é um avanço. O LifeFit acompanha sua jornada desde o início, sem julgamento.</p>
+          <p className="adherence-empty-hint">Cada dia conta. Você está construindo constância.</p>
         </div>
       )}
     </div>

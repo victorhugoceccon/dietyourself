@@ -1,6 +1,6 @@
 .role-selector {
   position: relative;
-  z-index: 1000;
+  display: inline-block;
 }
 
 .role-selector-btn {
@@ -16,12 +16,9 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.dark-mode .role-selector-btn {
-  background: var(--bg-tertiary, #2a2a2a);
-  border-color: var(--border-color, #404040);
-  color: var(--text-primary, #ffffff);
+  position: relative;
+  z-index: 1000;
+  pointer-events: auto;
 }
 
 .role-selector-btn:hover {
@@ -31,13 +28,24 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+.role-selector-btn:active {
+  transform: translateY(0);
+}
+
+.dark-mode .role-selector-btn {
+  background: var(--bg-tertiary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
 .dark-mode .role-selector-btn:hover {
-  background: var(--bg-primary, #333333);
-  border-color: var(--border-color, #505050);
+  background: var(--bg-primary, #333) !important;
+  border-color: var(--border-color) !important;
 }
 
 .role-selector-icon {
   font-size: 1.125rem;
+  flex-shrink: 0;
 }
 
 .role-selector-text {
@@ -47,6 +55,7 @@
 .role-selector-arrow {
   transition: transform 0.2s ease;
   color: var(--text-secondary, #666);
+  flex-shrink: 0;
 }
 
 .role-selector-arrow.open {
@@ -59,28 +68,25 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 999;
+  z-index: 998;
   background: transparent;
+  cursor: default;
 }
 
 .role-selector-dropdown {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
   min-width: 220px;
   background: var(--bg-primary, #ffffff);
   border: 1px solid var(--border-color, #e0e0e0);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
   overflow: hidden;
   animation: slideDown 0.2s ease;
 }
 
 .dark-mode .role-selector-dropdown {
-  background: var(--bg-secondary, #242424);
-  border-color: var(--border-color, #404040);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  background: var(--bg-tertiary) !important;
+  border-color: var(--border-color) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
 }
 
 @keyframes slideDown {
@@ -105,8 +111,9 @@
 }
 
 .dark-mode .role-selector-header {
-  border-color: var(--border-color, #404040);
-  color: var(--text-secondary, #999);
+  background: var(--bg-tertiary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-secondary) !important;
 }
 
 .role-selector-list {
@@ -131,6 +138,7 @@
   transition: all 0.2s ease;
   text-align: left;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .dark-mode .role-selector-item {
@@ -142,7 +150,7 @@
 }
 
 .dark-mode .role-selector-item:hover {
-  background: var(--bg-tertiary, #2a2a2a);
+  background: var(--bg-primary, #333) !important;
 }
 
 .role-selector-item.active {
@@ -180,5 +188,6 @@
     min-width: 200px;
   }
 }
+
 
 

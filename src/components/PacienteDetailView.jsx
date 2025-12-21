@@ -25,100 +25,141 @@ function PacienteDetailView({ paciente, onUpdate }) {
     setDietError('')
     try {
       const token = localStorage.getItem('token')
+      const storedUser = localStorage.getItem('user')
+      const userData = storedUser ? JSON.parse(storedUser) : null
+      const userRole = userData?.role?.toUpperCase()
       
-      const response = await fetch(`${API_URL}/nutricionista/pacientes/${paciente.id}/dieta`, {
+      console.log('🔍 Carregando dieta do paciente:', paciente.id)
+      console.log('   - Role do usuário:', userRole)
+      
+      // Determinar a rota baseada no role do usuário
+      let apiRoute
+      if (userRole === 'PERSONAL') {
+        apiRoute = `${API_URL}/personal/pacientes/${paciente.id}/dieta`
+      } else {
+        // Default para nutricionista (compatibilidade)
+        apiRoute = `${API_URL}/nutricionista/pacientes/${paciente.id}/dieta`
+      }
+      
+      console.log('   - Rota da API:', apiRoute)
+      
+      const response = await fetch(apiRoute, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
+      
+      console.log('   - Status da resposta:', response.status)
 
-      if (response.ok) {
-        const data = await response.json()
-        console.log('✅ Dados carregados:', data)
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }))
+        console.error('❌ Erro na resposta:', response.status, errorData)
+        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`)
+      }
+      
+      const data = await response.json()
+      console.log('✅ Dados carregados:', data)
+      
+      // Atualizar paciente com dados completos do backend
+      if (data.paciente) {
+        setPacienteCompleto(data.paciente)
+      }
+      
+      // Processar dieta - pode vir como data.dieta ou data.dieta.dieta
+      // A nova estrutura salva é: { nutritionalNeeds: {...}, dieta: {...} }
+      // Então data.dieta pode ser o objeto completo ou apenas a dieta
+      let dietaRaw = null
+      let nutritionalNeeds = null
+      
+      if (data.dieta) {
+        // Se data.dieta tem propriedade 'dieta', é o formato antigo { dieta: { dieta: {...}, nutritionalNeeds: {...} } }
+        if (data.dieta.dieta) {
+          dietaRaw = data.dieta.dieta
+          nutritionalNeeds = data.dieta.nutritionalNeeds || data.nutritionalNeeds
+        } 
+        // Se data.dieta tem 'refeicoes', é o objeto dieta direto
+        else if (data.dieta.refeicoes) {
+          dietaRaw = data.dieta
+          nutritionalNeeds = data.nutritionalNeeds
+        }
+        // Caso contrário, usar data.dieta diretamente
+        else {
+          dietaRaw = data.dieta
+          nutritionalNeeds = data.nutritionalNeeds
+        }
+      }
+      
+      if (dietaRaw) {
+        let dietaProcessada = { ...dietaRaw }
         
-        // Atualizar paciente com dados completos do backend
-        if (data.paciente) {
-          setPacienteCompleto(data.paciente)
+        // Calcular totalDiaKcal se não existir ou estiver zerado
+        if (!dietaProcessada.totalDiaKcal || dietaProcessada.totalDiaKcal === 0) {
+          // Tentar usar nutritionalNeeds primeiro
+          if (nutritionalNeeds?.calorias) {
+            dietaProcessada.totalDiaKcal = nutritionalNeeds.calorias
+          } else {
+            // Calcular a partir das refeições
+            const total = dietaProcessada.refeicoes?.reduce((sum, r) => {
+              return sum + (r.totalRefeicaoKcal || 0)
+            }, 0) || 0
+            dietaProcessada.totalDiaKcal = total
+          }
         }
         
-        // Processar dieta - pode vir como data.dieta ou data.dieta.dieta
-        let dietaRaw = data.dieta?.dieta || data.dieta
-        const nutritionalNeeds = data.dieta?.nutritionalNeeds || data.nutritionalNeeds
-        
-        if (dietaRaw) {
-          let dietaProcessada = { ...dietaRaw }
+        // Calcular macrosDia se não existir ou estiver zerado
+        if (!dietaProcessada.macrosDia || 
+            (dietaProcessada.macrosDia.proteina_g === 0 && 
+             dietaProcessada.macrosDia.carbo_g === 0 && 
+             dietaProcessada.macrosDia.gordura_g === 0)) {
           
-          // Calcular totalDiaKcal se não existir ou estiver zerado
-          if (!dietaProcessada.totalDiaKcal || dietaProcessada.totalDiaKcal === 0) {
-            // Tentar usar nutritionalNeeds primeiro
-            if (nutritionalNeeds?.calorias) {
-              dietaProcessada.totalDiaKcal = nutritionalNeeds.calorias
-            } else {
-              // Calcular a partir das refeições
-              const total = dietaProcessada.refeicoes?.reduce((sum, r) => {
-                return sum + (r.totalRefeicaoKcal || 0)
-              }, 0) || 0
-              dietaProcessada.totalDiaKcal = total
+          // Tentar usar nutritionalNeeds primeiro
+          if (nutritionalNeeds?.macros) {
+            dietaProcessada.macrosDia = {
+              proteina_g: Math.round((nutritionalNeeds.macros.proteina || 0) * 10) / 10,
+              carbo_g: Math.round((nutritionalNeeds.macros.carboidrato || 0) * 10) / 10,
+              gordura_g: Math.round((nutritionalNeeds.macros.gordura || 0) * 10) / 10
             }
-          }
-          
-          // Calcular macrosDia se não existir ou estiver zerado
-          if (!dietaProcessada.macrosDia || 
-              (dietaProcessada.macrosDia.proteina_g === 0 && 
-               dietaProcessada.macrosDia.carbo_g === 0 && 
-               dietaProcessada.macrosDia.gordura_g === 0)) {
-            
-            // Tentar usar nutritionalNeeds primeiro
-            if (nutritionalNeeds?.macros) {
-              dietaProcessada.macrosDia = {
-                proteina_g: Math.round((nutritionalNeeds.macros.proteina || 0) * 10) / 10,
-                carbo_g: Math.round((nutritionalNeeds.macros.carboidrato || 0) * 10) / 10,
-                gordura_g: Math.round((nutritionalNeeds.macros.gordura || 0) * 10) / 10
-              }
-            } else {
-              // Calcular a partir dos itens das refeições
-              let totalProteina = 0
-              let totalCarbo = 0
-              let totalGordura = 0
+          } else {
+            // Calcular a partir dos itens das refeições
+            let totalProteina = 0
+            let totalCarbo = 0
+            let totalGordura = 0
 
-              dietaProcessada.refeicoes?.forEach(refeicao => {
-                refeicao.itens?.forEach(item => {
-                  if (item.macros) {
-                    totalProteina += item.macros.proteina_g || 0
-                    totalCarbo += item.macros.carbo_g || 0
-                    totalGordura += item.macros.gordura_g || 0
-                  }
-                })
+            dietaProcessada.refeicoes?.forEach(refeicao => {
+              refeicao.itens?.forEach(item => {
+                if (item.macros) {
+                  totalProteina += item.macros.proteina_g || 0
+                  totalCarbo += item.macros.carbo_g || 0
+                  totalGordura += item.macros.gordura_g || 0
+                }
               })
+            })
 
-              dietaProcessada.macrosDia = {
-                proteina_g: Math.round(totalProteina * 10) / 10,
-                carbo_g: Math.round(totalCarbo * 10) / 10,
-                gordura_g: Math.round(totalGordura * 10) / 10
-              }
+            dietaProcessada.macrosDia = {
+              proteina_g: Math.round(totalProteina * 10) / 10,
+              carbo_g: Math.round(totalCarbo * 10) / 10,
+              gordura_g: Math.round(totalGordura * 10) / 10
             }
           }
-          
-          console.log('📊 Dieta processada:', {
-            totalDiaKcal: dietaProcessada.totalDiaKcal,
-            macrosDia: dietaProcessada.macrosDia,
-            numRefeicoes: dietaProcessada.refeicoes?.length || 0
-          })
-          
-          setDieta(dietaProcessada)
-        } else {
-          setDieta(null)
         }
-      } else if (response.status === 404) {
-        setDieta(null)
+        
+        console.log('📊 Dieta processada:', {
+          totalDiaKcal: dietaProcessada.totalDiaKcal,
+          macrosDia: dietaProcessada.macrosDia,
+          numRefeicoes: dietaProcessada.refeicoes?.length || 0
+        })
+        
+        setDieta(dietaProcessada)
       } else {
-        const errorData = await response.json().catch(() => ({}))
-        setDietError(errorData.error || 'Erro ao carregar dieta')
+        console.log('⚠️  Nenhuma dieta encontrada para o paciente')
         setDieta(null)
       }
     } catch (error) {
       console.error('❌ Erro ao carregar dieta:', error)
-      setDietError('Erro ao carregar dados. Tente novamente.')
+      console.error('   - Tipo do erro:', error.constructor.name)
+      console.error('   - Mensagem:', error.message)
+      console.error('   - Stack:', error.stack)
+      setDietError(error.message || 'Erro ao carregar dados. Tente novamente.')
       setDieta(null)
     } finally {
       setLoading(false)
@@ -135,7 +176,21 @@ function PacienteDetailView({ paciente, onUpdate }) {
     setDietError('')
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${API_URL}/nutricionista/pacientes/${paciente.id}/dieta/generate`, {
+      const storedUser = localStorage.getItem('user')
+      const userData = storedUser ? JSON.parse(storedUser) : null
+      const userRole = userData?.role?.toUpperCase()
+      
+      // Determinar a rota baseada no role do usuário
+      let apiRoute
+      if (userRole === 'PERSONAL') {
+        // Personal não pode gerar dieta, apenas visualizar
+        throw new Error('Personal trainers não podem gerar dietas. Entre em contato com um nutricionista.')
+      } else {
+        // Default para nutricionista
+        apiRoute = `${API_URL}/nutricionista/pacientes/${paciente.id}/dieta/generate`
+      }
+      
+      const response = await fetch(apiRoute, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -179,11 +234,22 @@ function PacienteDetailView({ paciente, onUpdate }) {
     }
   }
 
+  const formatAlimentos = (alimentos) => {
+    if (!alimentos || (Array.isArray(alimentos) && alimentos.length === 0)) {
+      return 'Nenhum selecionado'
+    }
+    if (Array.isArray(alimentos)) {
+      return alimentos.join(', ')
+    }
+    return 'Nenhum selecionado'
+  }
+
   const getObjetivoColor = (objetivo) => {
     const cores = {
       'Emagrecer': '#FF6B6B',
       'Manter peso': '#4ECDC4',
-      'Ganhar massa muscular': '#95E1D3'
+      'Ganhar massa muscular': '#95E1D3',
+      'Ganhar peso de forma geral': '#95E1D3'
     }
     return cores[objetivo] || '#95A5A6'
   }
@@ -191,7 +257,16 @@ function PacienteDetailView({ paciente, onUpdate }) {
 
   // Usar dados completos do backend ou fallback para dados do prop
   const pacienteData = pacienteCompleto || paciente || {}
-  const questionnaireData = pacienteData?.questionnaireData
+  let questionnaireData = pacienteData?.questionnaireData
+  
+  // Parse alimentosDoDiaADia se for string (vem do backend como JSON string)
+  if (questionnaireData?.alimentosDoDiaADia && typeof questionnaireData.alimentosDoDiaADia === 'string') {
+    try {
+      questionnaireData.alimentosDoDiaADia = JSON.parse(questionnaireData.alimentosDoDiaADia)
+    } catch (e) {
+      questionnaireData.alimentosDoDiaADia = { carboidratos: [], proteinas: [], gorduras: [], frutas: [] }
+    }
+  }
 
   if (loading) {
     return (
@@ -216,53 +291,13 @@ function PacienteDetailView({ paciente, onUpdate }) {
     <div className="paciente-detail-container">
       {/* Header do Paciente */}
       <div className="paciente-header-card">
-        <div className="paciente-header-info">
+        <div className="paciente-header-top">
           <div className="paciente-main-info">
             <h2 className="paciente-nome">{pacienteData?.name || pacienteData?.email || paciente?.name || paciente?.email || 'Paciente'}</h2>
             <p className="paciente-email">{pacienteData?.email || paciente?.email || ''}</p>
           </div>
-          
-          {questionnaireData && (
-            <div className="paciente-stats">
-              {questionnaireData.idade && (
-                <div className="stat-item">
-                  <span className="stat-label">Idade</span>
-                  <span className="stat-value">{questionnaireData.idade} anos</span>
-                </div>
-              )}
-              {questionnaireData.sexo && (
-                <div className="stat-item">
-                  <span className="stat-label">Sexo</span>
-                  <span className="stat-value">{questionnaireData.sexo}</span>
-                </div>
-              )}
-              {questionnaireData.altura && (
-                <div className="stat-item">
-                  <span className="stat-label">Altura</span>
-                  <span className="stat-value">{questionnaireData.altura} cm</span>
-                </div>
-              )}
-              {questionnaireData.pesoAtual && (
-                <div className="stat-item">
-                  <span className="stat-label">Peso</span>
-                  <span className="stat-value">{questionnaireData.pesoAtual} kg</span>
-                </div>
-              )}
-              {questionnaireData.objetivo && (
-                <div className="stat-item objetivo-item">
-                  <span 
-                    className="objetivo-badge"
-                    style={{ backgroundColor: getObjetivoColor(questionnaireData.objetivo) + '20', color: getObjetivoColor(questionnaireData.objetivo) }}
-                  >
-                    {questionnaireData.objetivo}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
 
-        <div className="paciente-header-actions">
+          <div className="paciente-header-actions">
           {questionnaireData && (
             <button
               type="button"
@@ -292,75 +327,241 @@ function PacienteDetailView({ paciente, onUpdate }) {
               Editar Dieta
             </button>
           )}
+          </div>
         </div>
+
+        {questionnaireData && (
+          <div className="paciente-stats">
+            {questionnaireData.idade && (
+              <div className="stat-item">
+                <span className="stat-label">Idade</span>
+                <span className="stat-value">{questionnaireData.idade} anos</span>
+              </div>
+            )}
+            {questionnaireData.sexo && (
+              <div className="stat-item">
+                <span className="stat-label">Sexo</span>
+                <span className="stat-value">{questionnaireData.sexo}</span>
+              </div>
+            )}
+            {questionnaireData.altura && (
+              <div className="stat-item">
+                <span className="stat-label">Altura</span>
+                <span className="stat-value">{questionnaireData.altura} cm</span>
+              </div>
+            )}
+            {questionnaireData.pesoAtual && (
+              <div className="stat-item">
+                <span className="stat-label">Peso</span>
+                <span className="stat-value">{questionnaireData.pesoAtual} kg</span>
+              </div>
+            )}
+            {questionnaireData.objetivo && (
+              <div className="stat-item objetivo-item">
+                <span
+                  className="objetivo-badge"
+                  style={{ backgroundColor: getObjetivoColor(questionnaireData.objetivo) + '20', color: getObjetivoColor(questionnaireData.objetivo) }}
+                >
+                  {questionnaireData.objetivo}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Painel do Questionário */}
+      {/* Painel do Questionário - Novo formato de 7 blocos */}
       {showQuestionnaire && questionnaireData && (
         <div className="questionnaire-panel">
           <div className="questionnaire-grid">
+            {/* Bloco 1: Dados Básicos */}
             <div className="questionnaire-col">
-              <h3>Informações Básicas</h3>
+              <h3>📋 Dados Básicos</h3>
               <div className="info-grid">
-                {questionnaireData.nivelAtividade && (
+                {questionnaireData.idade && (
                   <div className="info-item">
-                    <span className="info-label">Nível de Atividade</span>
-                    <span className="info-data">{questionnaireData.nivelAtividade}</span>
+                    <span className="info-label">Idade</span>
+                    <span className="info-data">{questionnaireData.idade} anos</span>
                   </div>
                 )}
-                {questionnaireData.refeicoesDia && (
+                {questionnaireData.sexo && (
                   <div className="info-item">
-                    <span className="info-label">Refeições por dia</span>
-                    <span className="info-data">{questionnaireData.refeicoesDia}</span>
+                    <span className="info-label">Sexo</span>
+                    <span className="info-data">{questionnaireData.sexo}</span>
                   </div>
                 )}
-                {questionnaireData.preferenciaAlimentacao && (
+                {questionnaireData.altura && (
                   <div className="info-item">
-                    <span className="info-label">Preferência alimentar</span>
-                    <span className="info-data">{questionnaireData.preferenciaAlimentacao}</span>
+                    <span className="info-label">Altura</span>
+                    <span className="info-data">{questionnaireData.altura} cm</span>
                   </div>
                 )}
-                {questionnaireData.costumaCozinhar && (
+                {questionnaireData.pesoAtual && (
                   <div className="info-item">
-                    <span className="info-label">Cozinha</span>
-                    <span className="info-data">{questionnaireData.costumaCozinhar}</span>
+                    <span className="info-label">Peso Atual</span>
+                    <span className="info-data">{questionnaireData.pesoAtual} kg</span>
+                  </div>
+                )}
+                {questionnaireData.objetivo && (
+                  <div className="info-item">
+                    <span className="info-label">Objetivo</span>
+                    <span className="info-data">{questionnaireData.objetivo}</span>
                   </div>
                 )}
               </div>
             </div>
 
-            {(parseRestricoes(questionnaireData.restricoes).length > 0 || questionnaireData.alimentosNaoGosta) && (
+            {/* Bloco 2: Rotina e Atividade */}
+            <div className="questionnaire-col">
+              <h3>🏃 Rotina e Atividade</h3>
+              <div className="info-grid">
+                {questionnaireData.frequenciaAtividade && (
+                  <div className="info-item">
+                    <span className="info-label">Frequência de Atividade</span>
+                    <span className="info-data">{questionnaireData.frequenciaAtividade}</span>
+                  </div>
+                )}
+                {questionnaireData.tipoAtividade && (
+                  <div className="info-item">
+                    <span className="info-label">Tipo de Atividade</span>
+                    <span className="info-data">{questionnaireData.tipoAtividade}</span>
+                  </div>
+                )}
+                {questionnaireData.horarioTreino && (
+                  <div className="info-item">
+                    <span className="info-label">Horário de Treino</span>
+                    <span className="info-data">{questionnaireData.horarioTreino}</span>
+                  </div>
+                )}
+                {questionnaireData.rotinaDiaria && (
+                  <div className="info-item">
+                    <span className="info-label">Rotina Diária</span>
+                    <span className="info-data">{questionnaireData.rotinaDiaria}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bloco 3: Estrutura da Dieta */}
+            <div className="questionnaire-col">
+              <h3>🍽️ Estrutura da Dieta</h3>
+              <div className="info-grid">
+                {questionnaireData.quantidadeRefeicoes && (
+                  <div className="info-item">
+                    <span className="info-label">Quantidade de Refeições</span>
+                    <span className="info-data">{questionnaireData.quantidadeRefeicoes}</span>
+                  </div>
+                )}
+                {questionnaireData.preferenciaRefeicoes && (
+                  <div className="info-item">
+                    <span className="info-label">Preferência de Refeições</span>
+                    <span className="info-data">{questionnaireData.preferenciaRefeicoes}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bloco 4: Complexidade e Adesão */}
+            <div className="questionnaire-col">
+              <h3>⚖️ Complexidade e Adesão</h3>
+              <div className="info-grid">
+                {questionnaireData.confortoPesar && (
+                  <div className="info-item">
+                    <span className="info-label">Conforto em Pesar</span>
+                    <span className="info-data">{questionnaireData.confortoPesar}</span>
+                  </div>
+                )}
+                {questionnaireData.tempoPreparacao && (
+                  <div className="info-item">
+                    <span className="info-label">Tempo de Preparação</span>
+                    <span className="info-data">{questionnaireData.tempoPreparacao}</span>
+                  </div>
+                )}
+                {questionnaireData.preferenciaVariacao && (
+                  <div className="info-item">
+                    <span className="info-label">Preferência de Variação</span>
+                    <span className="info-data">{questionnaireData.preferenciaVariacao}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bloco 5: Alimentos do Dia a Dia */}
+            {questionnaireData.alimentosDoDiaADia && (
               <div className="questionnaire-col">
-                <h3>Restrições e Preferências</h3>
+                <h3>🥗 Alimentos do Dia a Dia</h3>
                 <div className="info-grid">
-                  {parseRestricoes(questionnaireData.restricoes).length > 0 && (
+                  {questionnaireData.alimentosDoDiaADia.carboidratos?.length > 0 && (
                     <div className="info-item">
-                      <span className="info-label">Restrições</span>
-                      <div className="tags-container">
-                        {parseRestricoes(questionnaireData.restricoes).map((r, idx) => (
-                          <span key={idx} className="tag-item">{r}</span>
-                        ))}
-                      </div>
+                      <span className="info-label">Carboidratos</span>
+                      <span className="info-data">{formatAlimentos(questionnaireData.alimentosDoDiaADia.carboidratos)}</span>
                     </div>
                   )}
-                  {questionnaireData.alimentosNaoGosta && (
+                  {questionnaireData.alimentosDoDiaADia.proteinas?.length > 0 && (
                     <div className="info-item">
-                      <span className="info-label">Não gosta de</span>
-                      <span className="info-data">{questionnaireData.alimentosNaoGosta}</span>
+                      <span className="info-label">Proteínas</span>
+                      <span className="info-data">{formatAlimentos(questionnaireData.alimentosDoDiaADia.proteinas)}</span>
+                    </div>
+                  )}
+                  {questionnaireData.alimentosDoDiaADia.gorduras?.length > 0 && (
+                    <div className="info-item">
+                      <span className="info-label">Gorduras</span>
+                      <span className="info-data">{formatAlimentos(questionnaireData.alimentosDoDiaADia.gorduras)}</span>
+                    </div>
+                  )}
+                  {questionnaireData.alimentosDoDiaADia.frutas?.length > 0 && (
+                    <div className="info-item">
+                      <span className="info-label">Frutas</span>
+                      <span className="info-data">{formatAlimentos(questionnaireData.alimentosDoDiaADia.frutas)}</span>
                     </div>
                   )}
                 </div>
               </div>
             )}
 
-            {questionnaireData.observacoes && (
-              <div className="questionnaire-col full-width">
-                <h3>Observações</h3>
-                <div className="observacoes-box">
-                  {questionnaireData.observacoes}
-                </div>
+            {/* Bloco 6: Restrições */}
+            <div className="questionnaire-col">
+              <h3>🚫 Restrições</h3>
+              <div className="info-grid">
+                {questionnaireData.restricaoAlimentar && (
+                  <div className="info-item">
+                    <span className="info-label">Restrição Alimentar</span>
+                    <span className="info-data">{questionnaireData.restricaoAlimentar}</span>
+                  </div>
+                )}
+                {questionnaireData.restricaoAlimentar === 'Outra' && questionnaireData.outraRestricao && (
+                  <div className="info-item">
+                    <span className="info-label">Especifique</span>
+                    <span className="info-data">{questionnaireData.outraRestricao}</span>
+                  </div>
+                )}
+                {questionnaireData.alimentosEvita && (
+                  <div className="info-item">
+                    <span className="info-label">Alimentos que Evita</span>
+                    <span className="info-data">{questionnaireData.alimentosEvita}</span>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+
+            {/* Bloco 7: Flexibilidade */}
+            <div className="questionnaire-col">
+              <h3>🔄 Flexibilidade</h3>
+              <div className="info-grid">
+                {questionnaireData.opcoesSubstituicao && (
+                  <div className="info-item">
+                    <span className="info-label">Opções de Substituição</span>
+                    <span className="info-data">{questionnaireData.opcoesSubstituicao}</span>
+                  </div>
+                )}
+                {questionnaireData.refeicoesLivres && (
+                  <div className="info-item">
+                    <span className="info-label">Refeições Livres</span>
+                    <span className="info-data">{questionnaireData.refeicoesLivres}</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}

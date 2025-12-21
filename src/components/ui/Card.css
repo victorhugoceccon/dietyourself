@@ -1,28 +1,34 @@
+/* ============================================
+   LifeFit - Card Component
+   Componente de card com design clean
+   ============================================ */
+
 .card {
-  background: var(--bg-primary, #ffffff);
-  border-radius: 16px;
-  border: 1px solid var(--border-color, #e8e8e8);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color-light);
+  box-shadow: none;
+  transition: all var(--transition-base);
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card-hoverable:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  border-color: var(--accent-color, #4CAF50);
+  border-color: var(--lifefit-green-soft);
+  box-shadow: var(--shadow-sm);
 }
 
 .card-default {
-  padding: 1.5rem;
+  padding: var(--space-xl);
 }
 
 .card-spacious {
-  padding: 2rem;
+  padding: var(--space-2xl);
 }
 
 .card-compact {
-  padding: 1rem;
+  padding: var(--space-lg);
 }
 
 .card button {
@@ -32,20 +38,19 @@
   border: none;
   cursor: pointer;
   outline: none;
-  font-family: inherit;
+  font-family: var(--font-family-base);
   font-size: inherit;
   color: inherit;
 }
 
 /* Dark mode */
 .dark-mode .card {
-  background: var(--bg-primary, #1a1a1a);
-  border-color: var(--border-color, #333);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background: var(--bg-elevated);
+  border-color: var(--border-color-light);
+  box-shadow: var(--shadow-sm);
 }
 
 .dark-mode .card-hoverable:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  border-color: var(--accent-color, #66bb6a);
+  box-shadow: var(--shadow-md);
+  border-color: var(--lifefit-green-light);
 }
-

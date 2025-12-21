@@ -57,10 +57,21 @@ function FoodSwapModal({ isOpen, onClose, foodItem, mealName, mealIndex, itemInd
         return
       }
 
+      // Se tiver reasonBlocked, exibir como mensagem informativa
+      // O novo formato pode ter reasonBlocked mesmo com status ok
       if (data.reasonBlocked) {
         setSwapResponse({
           ...data,
           infoMessage: data.reasonBlocked
+        })
+        // Não retornar aqui, continuar para exibir sugestões se houver
+      }
+
+      // Se não tiver reasonBlocked mas tiver notes, usar notes como infoMessage
+      if (!data.reasonBlocked && data.notes) {
+        setSwapResponse({
+          ...data,
+          infoMessage: data.notes
         })
         return
       }
@@ -166,18 +177,18 @@ function FoodSwapModal({ isOpen, onClose, foodItem, mealName, mealIndex, itemInd
           )}
 
           {/* Info Message */}
-          {swapResponse && !swapResponse.bestMatch && (swapResponse.infoMessage || swapResponse.notes) && (
+          {swapResponse && (swapResponse.infoMessage || swapResponse.reasonBlocked || swapResponse.notes) && (
             <div className="swap-alert swap-alert-info">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
                 <path d="M12 16V12M12 8H12.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               </svg>
-              <span>{swapResponse.infoMessage || swapResponse.notes}</span>
+              <span>{swapResponse.infoMessage || swapResponse.reasonBlocked || swapResponse.notes}</span>
             </div>
           )}
 
           {/* Suggestions */}
-          {swapResponse && (swapResponse.bestMatch || swapResponse.suggestions) && (
+          {swapResponse && (swapResponse.bestMatch || (swapResponse.suggestions && swapResponse.suggestions.length > 0)) && (
             <div className="swap-suggestions">
               {/* Best Match */}
               {swapResponse.bestMatch && (
@@ -235,8 +246,8 @@ function FoodSwapModal({ isOpen, onClose, foodItem, mealName, mealIndex, itemInd
                 </div>
               )}
 
-              {/* Notes */}
-              {swapResponse.notes && (
+              {/* Notes - só exibir se não foi exibido como infoMessage */}
+              {swapResponse.notes && !swapResponse.infoMessage && !swapResponse.reasonBlocked && (
                 <div className="swap-notes">
                   <p>{swapResponse.notes}</p>
                 </div>

@@ -19,6 +19,11 @@ import treinosExecutadosRoutes from './routes/treinos-executados.js'
 import solicitacoesMudancaRoutes from './routes/solicitacoes-mudanca.js'
 import personalRoutes from './routes/personal.js'
 import adminRoutes from './routes/admin.js'
+import brandingRoutes from './routes/branding.js'
+import notificationsRoutes from './routes/notifications.js'
+import dietTemplatesRoutes from './routes/diet-templates.js'
+import bodyMeasurementsRoutes from './routes/body-measurements.js'
+import recipesRoutes from './routes/recipes.js'
 
 dotenv.config()
 
@@ -54,6 +59,11 @@ app.use('/api/treinos-executados', treinosExecutadosRoutes)
 app.use('/api/solicitacoes-mudanca', solicitacoesMudancaRoutes)
 app.use('/api/personal', personalRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/branding', brandingRoutes)
+app.use('/api/notifications', notificationsRoutes)
+app.use('/api/diet-templates', dietTemplatesRoutes)
+app.use('/api/body-measurements', bodyMeasurementsRoutes)
+app.use('/api/recipes', recipesRoutes)
 
 // Rota de teste
 app.get('/api/health', (req, res) => {

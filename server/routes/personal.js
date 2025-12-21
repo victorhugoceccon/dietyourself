@@ -209,6 +209,157 @@ router.delete('/pacientes/:pacienteId', authenticate, async (req, res) => {
   }
 })
 
+// GET /api/personal/pacientes/:pacienteId/dieta - Obter dieta de um paciente específico
+router.get('/pacientes/:pacienteId/dieta', authenticate, async (req, res) => {
+  try {
+    const personalId = req.user.userId
+    const { pacienteId } = req.params
+    const role = req.user.role?.toUpperCase()
+
+    console.log('🔍 Personal buscando dieta do paciente:', pacienteId)
+    console.log('   - Personal ID:', personalId)
+    console.log('   - Role:', role)
+
+    // Verificar se é personal trainer
+    if (role !== 'PERSONAL' && role !== 'ADMIN') {
+      console.error('❌ Acesso negado - Role:', role)
+      return res.status(403).json({ error: 'Acesso negado.' })
+    }
+
+    // Verificar se o paciente pertence ao personal
+    const paciente = await prisma.user.findFirst({
+      where: {
+        id: pacienteId,
+        personalId: personalId
+      }
+    })
+
+    console.log('   - Paciente encontrado?', !!paciente)
+    if (paciente) {
+      console.log('   - Paciente personalId:', paciente.personalId)
+    }
+
+    if (!paciente) {
+      console.error('❌ Paciente não encontrado ou não vinculado')
+      return res.status(404).json({ error: 'Paciente não encontrado ou não está vinculado a você' })
+    }
+
+    // Buscar dieta
+    const dieta = await prisma.dieta.findUnique({
+      where: { userId: pacienteId }
+    })
+
+    console.log('   - Dieta encontrada?', !!dieta)
+
+    if (!dieta) {
+      console.log('⚠️  Nenhuma dieta encontrada para o paciente')
+      return res.json({ dieta: null, paciente })
+    }
+
+    // Parse do JSON
+    let dietaData
+    try {
+      dietaData = JSON.parse(dieta.dietaData)
+    } catch (e) {
+      return res.status(500).json({ error: 'Erro ao processar dieta salva' })
+    }
+
+    // Extrair dieta e nutritionalNeeds do objeto salvo
+    // O formato salvo é: { nutritionalNeeds: {...}, dieta: {...} }
+    let dietaFinal = dietaData.dieta || dietaData
+    let nutritionalNeeds = dietaData.nutritionalNeeds || null
+
+    // Garantir que totalDiaKcal e macrosDia existam, calculando se necessário
+    if (!dietaFinal.totalDiaKcal && dietaFinal.refeicoes) {
+      dietaFinal.totalDiaKcal = dietaFinal.refeicoes.reduce((sum, r) => sum + (r.totalRefeicaoKcal || 0), 0)
+    }
+
+    if (!dietaFinal.macrosDia && dietaFinal.refeicoes) {
+      let totalProteina = 0
+      let totalCarbo = 0
+      let totalGordura = 0
+
+      dietaFinal.refeicoes.forEach(refeicao => {
+        if (refeicao.itens) {
+          refeicao.itens.forEach(item => {
+            if (item.macros) {
+              totalProteina += item.macros.proteina_g || 0
+              totalCarbo += item.macros.carbo_g || 0
+              totalGordura += item.macros.gordura_g || 0
+            }
+          })
+        }
+      })
+
+      dietaFinal.macrosDia = {
+        proteina_g: Math.round(totalProteina * 10) / 10,
+        carbo_g: Math.round(totalCarbo * 10) / 10,
+        gordura_g: Math.round(totalGordura * 10) / 10
+      }
+    }
+
+    // Buscar dados completos do paciente incluindo questionnaireData completo
+    const pacienteCompleto = await prisma.user.findUnique({
+      where: { id: pacienteId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        questionnaireData: {
+          select: {
+            idade: true,
+            sexo: true,
+            altura: true,
+            pesoAtual: true,
+            objetivo: true,
+            frequenciaAtividade: true,
+            quantidadeRefeicoes: true,
+            alimentosDoDiaADia: true,
+            restricaoAlimentar: true,
+            outraRestricao: true,
+            alimentosEvita: true,
+            opcoesSubstituicao: true,
+            refeicoesLivres: true
+          }
+        }
+      }
+    })
+
+    // Parse alimentosDoDiaADia se for string JSON
+    if (pacienteCompleto?.questionnaireData?.alimentosDoDiaADia) {
+      try {
+        if (typeof pacienteCompleto.questionnaireData.alimentosDoDiaADia === 'string') {
+          pacienteCompleto.questionnaireData.alimentosDoDiaADia = JSON.parse(pacienteCompleto.questionnaireData.alimentosDoDiaADia)
+        }
+      } catch (e) {
+        console.error('Erro ao fazer parse dos alimentos do dia a dia:', e)
+      }
+    }
+
+    // Calcular necessidades nutricionais do paciente se não vierem na dieta
+    if (!nutritionalNeeds && pacienteCompleto?.questionnaireData) {
+      const { calcularNutricao } = await import('../utils/nutrition.js')
+      nutritionalNeeds = calcularNutricao(pacienteCompleto.questionnaireData)
+    }
+
+    console.log('✅ Dieta encontrada para paciente:', pacienteId)
+    console.log('   - dietaFinal existe?', !!dietaFinal)
+    console.log('   - dietaFinal.refeicoes?', !!dietaFinal?.refeicoes)
+    console.log('   - nutritionalNeeds existe?', !!nutritionalNeeds)
+    
+    res.json({
+      dieta: dietaFinal,
+      paciente: pacienteCompleto,
+      nutritionalNeeds: nutritionalNeeds
+    })
+  } catch (error) {
+    console.error('❌ Erro ao buscar dieta do paciente:', error)
+    console.error('   Stack:', error.stack)
+    console.error('   Message:', error.message)
+    res.status(500).json({ error: 'Erro ao buscar dieta do paciente', details: error.message })
+  }
+})
+
 export default router
 
 

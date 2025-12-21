@@ -1,0 +1,87 @@
+/* ============================================
+   LifeFit - Dashboard
+   Painel de controle do corpo - Modernizado
+   ============================================ */
+
+.paciente-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: var(--space-3xl) var(--space-lg) 0;
+}
+
+.dashboard-section {
+  width: 100%;
+  animation: fadeIn 0.5s ease;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hierarquia visual clara */
+.estado-section {
+  margin-bottom: 0;
+  animation-delay: 0.1s;
+}
+
+.checkin-section {
+  margin-bottom: 0;
+  animation-delay: 0.2s;
+}
+
+.adherence-section {
+  margin-bottom: 0;
+  animation-delay: 0.3s;
+}
+
+.nutrition-section {
+  margin-bottom: 0;
+  animation-delay: 0.4s;
+}
+
+.timeline-section {
+  margin-bottom: 0;
+  animation-delay: 0.5s;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .dashboard-hero-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .paciente-dashboard {
+    padding: var(--space-md) var(--space-md) 0;
+    gap: var(--space-2xl);
+  }
+
+  .dashboard-hero-grid {
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .paciente-dashboard {
+    padding: var(--space-sm) var(--space-sm) 0;
+    gap: var(--space-xl);
+  }
+}
+
+
+
+

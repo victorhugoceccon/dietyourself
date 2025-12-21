@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import Card from './ui/Card'
 import Badge from './ui/Badge'
 import Chip from './ui/Chip'
-import FoodSwapModal from './FoodSwapModal'
+// import FoodSwapModal from './FoodSwapModal' // Desativado temporariamente
 import { API_URL } from '../config/api'
 import './DietDisplay.css'
 
-function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
+function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritionalNeeds }) {
   const [dieta, setDieta] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -238,7 +238,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
             </svg>
           </div>
           <h3>Nenhuma dieta gerada ainda</h3>
-          <p>Clique no botão "Gerar Dieta" acima para criar seu plano alimentar personalizado baseado no seu questionário</p>
+          <p>Gere sua dieta para criar seu plano alimentar personalizado baseado no seu perfil</p>
         </div>
       </div>
     )
@@ -248,11 +248,129 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
 
   return (
     <div className="diet-display">
+      {/* Necessidades Nutricionais - Mesmo layout do Dashboard */}
+      {nutritionalNeeds && (
+        <div className="nutrition-needs-dashboard">
+          <div className="needs-dashboard-header">
+            <h3>Necessidades Nutricionais</h3>
+            <p className="needs-subtitle">Suas metas diárias</p>
+          </div>
+          <div className="nutrition-cards-row">
+            {/* Card de Calorias */}
+            <div className="nutrition-card">
+              <div className="card-icon-wrapper" style={{ backgroundColor: '#4A6B4D15', borderColor: '#4A6B4D40' }}>
+                <span className="card-icon-emoji">🔥</span>
+              </div>
+              <div className="card-content">
+                <div className="card-value">{Math.round(nutritionalNeeds.calorias || 0)}</div>
+                <div className="card-label">Calorias diárias</div>
+                <div className="card-progress-wrapper">
+                  <div className="card-progress-bar">
+                    <div 
+                      className="card-progress-fill" 
+                      style={{ 
+                        width: '100%',
+                        backgroundColor: '#4A6B4D'
+                      }}
+                    ></div>
+                  </div>
+                  <div className="card-status" style={{ color: '#4A6B4D' }}>
+                    Meta diária
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card de Proteína */}
+            <div className="nutrition-card">
+              <div className="card-icon-wrapper" style={{ backgroundColor: '#5B7A9B15', borderColor: '#5B7A9B40' }}>
+                <span className="card-icon-emoji">💪</span>
+              </div>
+              <div className="card-content">
+                <div className="card-value">{Math.round(nutritionalNeeds.macros?.proteina || 0)}</div>
+                <div className="card-label">Proteína diária</div>
+                <div className="card-progress-wrapper">
+                  <div className="card-progress-bar">
+                    <div 
+                      className="card-progress-fill" 
+                      style={{ 
+                        width: '100%',
+                        backgroundColor: '#5B7A9B'
+                      }}
+                    ></div>
+                  </div>
+                  <div className="card-status" style={{ color: '#5B7A9B' }}>
+                    Meta diária
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card de Carboidratos */}
+            <div className="nutrition-card">
+              <div className="card-icon-wrapper" style={{ backgroundColor: '#C99A5A15', borderColor: '#C99A5A40' }}>
+                <span className="card-icon-emoji">🍞</span>
+              </div>
+              <div className="card-content">
+                <div className="card-value">{Math.round(nutritionalNeeds.macros?.carboidrato || 0)}</div>
+                <div className="card-label">Carboidratos diários</div>
+                <div className="card-progress-wrapper">
+                  <div className="card-progress-bar">
+                    <div 
+                      className="card-progress-fill" 
+                      style={{ 
+                        width: '100%',
+                        backgroundColor: '#C99A5A'
+                      }}
+                    ></div>
+                  </div>
+                  <div className="card-status" style={{ color: '#C99A5A' }}>
+                    Meta diária
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card de Gorduras */}
+            <div className="nutrition-card">
+              <div className="card-icon-wrapper" style={{ backgroundColor: '#8B7A9B15', borderColor: '#8B7A9B40' }}>
+                <span className="card-icon-emoji">🧈</span>
+              </div>
+              <div className="card-content">
+                <div className="card-value">{Math.round(nutritionalNeeds.macros?.gordura || 0)}</div>
+                <div className="card-label">Gorduras diárias</div>
+                <div className="card-progress-wrapper">
+                  <div className="card-progress-bar">
+                    <div 
+                      className="card-progress-fill" 
+                      style={{ 
+                        width: '100%',
+                        backgroundColor: '#8B7A9B'
+                      }}
+                    ></div>
+                  </div>
+                  <div className="card-status" style={{ color: '#8B7A9B' }}>
+                    Meta diária
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Refeições colapsáveis */}
       <div className="diet-meals">
         {dieta.refeicoes && dieta.refeicoes.map((refeicao, mealIndex) => (
-          <Card key={mealIndex} className="meal-card" hoverable>
-            <div className={`meal-header-wrapper ${isExpanded(mealIndex) ? 'expanded' : ''}`}>
+          <Card 
+            key={mealIndex} 
+            className={`meal-card ${consumedMeals.includes(mealIndex) ? 'consumed' : ''}`} 
+            hoverable
+          >
+            <div 
+              className={`meal-header-wrapper ${isExpanded(mealIndex) ? 'expanded' : ''}`}
+              onClick={() => toggleMeal(mealIndex)}
+            >
               <label 
                 className="meal-checkbox-label" 
                 onClick={(e) => {
@@ -273,27 +391,21 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
                   <span className="meal-checkbox-loading">...</span>
                 )}
               </label>
-              <button
-                className="meal-header"
-                onClick={() => toggleMeal(mealIndex)}
-                type="button"
+              <div className="meal-header-content">
+                <h3 className="meal-name">{refeicao.nome}</h3>
+                <Badge variant="calories" size="medium" className="meal-badge">
+                  {refeicao.totalRefeicaoKcal} kcal
+                </Badge>
+              </div>
+              <svg
+                className={`meal-expand-icon ${isExpanded(mealIndex) ? 'expanded' : ''}`}
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
               >
-                <div className="meal-header-content">
-                  <h3 className="meal-name">{refeicao.nome}</h3>
-                  <Badge variant="calories" size="medium" className="meal-badge">
-                    {refeicao.totalRefeicaoKcal} kcal
-                  </Badge>
-                </div>
-                <svg
-                  className={`meal-expand-icon ${isExpanded(mealIndex) ? 'expanded' : ''}`}
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+                <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
 
             {isExpanded(mealIndex) && (
@@ -313,7 +425,20 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
                       
                       {item.substituicoes && item.substituicoes.length > 0 && (
                         <div className="substitutions-section">
-                          <button
+                          <div className="substitutions-list">
+                            <div className="substitutions-label">Alternativas:</div>
+                            {item.substituicoes.map((sub, subIndex) => (
+                              <div key={subIndex} className="substitution-item">
+                                <span className="substitution-name">{sub.alimento}</span>
+                                <span className="substitution-details">
+                                  {sub.porcaoEquivalente || sub.porcao}
+                                  {sub.kcalAproximada && ` • ${sub.kcalAproximada} kcal`}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                          {/* Botão de troca desativado temporariamente */}
+                          {/* <button
                             className="swap-food-button"
                             onClick={() => handleFoodItemClick(mealIndex, itemIndex, item, refeicao.nome)}
                             title="Trocar este alimento"
@@ -321,8 +446,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                               <path d="M12 4V1M12 4C10.8954 4 10 4.89543 10 6C10 7.10457 10.8954 8 12 8M12 4C13.1046 4 14 4.89543 14 6C14 7.10457 13.1046 8 12 8M12 20V23M12 20C10.8954 20 10 19.1046 10 18C10 16.8954 10.8954 16 12 16M12 20C13.1046 20 14 19.1046 14 18C14 16.8954 13.1046 16 12 16M6 12H3M21 12H18M6 12C6 10.8954 6.89543 10 8 10M6 12C6 13.1046 6.89543 14 8 14M18 12C18 10.8954 17.1046 10 16 10M18 12C18 13.1046 17.1046 14 16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
-                            <span>Trocar alimento</span>
-                          </button>
+                            <span>Trocar</span>
+                          </button> */}
                         </div>
                       )}
                     </div>
@@ -341,8 +466,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
         </Card>
       )}
 
-      {/* Modal de troca de alimento */}
-      <FoodSwapModal
+      {/* Modal de troca de alimento - Desativado temporariamente */}
+      {/* <FoodSwapModal
         isOpen={swapModalOpen}
         onClose={() => setSwapModalOpen(false)}
         foodItem={selectedFoodItem}
@@ -351,7 +476,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle }) {
         itemIndex={selectedItemIndex}
         onConfirm={handleSwapConfirm}
         dieta={dieta}
-      />
+      /> */}
     </div>
   )
 }

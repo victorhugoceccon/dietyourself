@@ -13,6 +13,9 @@
   padding: 1rem;
   animation: fadeIn 0.2s ease;
   box-sizing: border-box;
+  /* Prevenir scroll no overlay - o scroll deve ser apenas no modal */
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 @keyframes fadeIn {
@@ -31,7 +34,12 @@
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  /* O scroll deve estar no modal, não no overlay */
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* Prevenir que o scroll "vaze" para a página de fundo */
+  overscroll-behavior: contain;
 }
 
 .dark-mode .edit-diet-modal {
@@ -102,8 +110,8 @@
   padding-bottom: 2rem;
   padding-left: 2rem;
   padding-right: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* Remover overflow do content - o scroll está no edit-diet-modal */
+  overflow: visible;
   flex: 1;
   min-height: 0;
   display: flex;

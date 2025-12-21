@@ -1,0 +1,220 @@
+/* ============================================
+   LifeFit - Paciente Dieta
+   Página de dieta moderna e wellness
+   ============================================ */
+
+.paciente-dieta {
+  width: 100%;
+  padding-top: var(--space-3xl);
+}
+
+.diet-section {
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, #F8FAF8 100%);
+  border-radius: var(--radius-md);
+  padding: var(--space-3xl);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  border: 1px solid var(--border-color-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.diet-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-olive) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.diet-section:hover {
+  border-color: var(--lifefit-green-soft);
+  box-shadow: var(--shadow-md);
+}
+
+.diet-section:hover::before {
+  opacity: 1;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2xl);
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex: 1;
+}
+
+.download-pdf-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-dark) 100%);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  width: auto;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: var(--shadow-xs);
+  font-family: var(--font-family-base);
+}
+
+.download-pdf-btn:hover {
+  background: linear-gradient(135deg, var(--lifefit-green-dark) 0%, var(--lifefit-green-soft) 100%);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.download-pdf-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.section-header h2 {
+  font-size: var(--font-size-2xl);
+  color: var(--text-primary);
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.generate-diet-btn {
+  padding: var(--space-md) var(--space-2xl);
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-dark) 100%);
+  color: var(--on-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-family-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.generate-diet-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--lifefit-green-dark) 0%, var(--lifefit-green-soft) 100%);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.generate-diet-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.alert {
+  padding: var(--space-lg) var(--space-xl);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-base);
+  border: 1px solid;
+  font-weight: var(--font-weight-regular);
+  box-shadow: var(--shadow-xs);
+}
+
+.alert-error {
+  background: var(--lifefit-error-light);
+  color: var(--lifefit-error);
+  border-color: var(--lifefit-error);
+}
+
+.diet-generation-info {
+  margin-top: var(--space-lg);
+  padding: var(--space-xl);
+  background: linear-gradient(135deg, var(--lifefit-info-light) 0%, #F8FAF8 100%);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--lifefit-info);
+  text-align: center;
+  color: var(--lifefit-blue-gray-dark);
+  box-shadow: var(--shadow-xs);
+}
+
+.diet-generation-info p {
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  font-weight: var(--font-weight-regular);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .paciente-dieta {
+    padding-top: var(--space-md);
+  }
+
+  .diet-section {
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .section-header h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .generate-diet-btn {
+    width: 100%;
+    justify-content: center;
+    padding: var(--space-md) var(--space-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .paciente-dieta {
+    padding-top: var(--space-sm);
+  }
+
+  .diet-section {
+    padding: var(--space-lg);
+  }
+
+  .section-header h2 {
+    font-size: var(--font-size-lg);
+  }
+
+  .generate-diet-btn {
+    font-size: var(--font-size-sm);
+    padding: var(--space-sm) var(--space-lg);
+  }
+
+  .diet-generation-info {
+    padding: var(--space-lg);
+  }
+}
+
+
+
+

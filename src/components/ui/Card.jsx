@@ -1,12 +1,32 @@
-import './Card.css'
+/**
+ * Card - Componente de card reutilizável.
+ * 
+ * @param {React.ReactNode} children - Conteúdo do card
+ * @param {string} variant - Variante: 'default' | 'flat' | 'elevated' | 'bordered' | 'interactive'
+ * @param {boolean} compact - Padding reduzido
+ * @param {boolean} noPadding - Sem padding
+ * @param {function} onClick - Handler de clique (torna o card interativo)
+ */
+function Card({ 
+  children, 
+  variant = 'default',
+  compact = false,
+  noPadding = false,
+  onClick,
+  className = '',
+  ...props 
+}) {
+  const variantClass = variant !== 'default' ? `lifefit-card--${variant}` : ''
+  const compactClass = compact ? 'lifefit-card--compact' : ''
+  const noPaddingClass = noPadding ? 'lifefit-card--no-padding' : ''
+  const interactiveClass = onClick ? 'lifefit-card--interactive' : ''
 
-function Card({ children, className = '', variant = 'default', onClick, hoverable = false }) {
   const Component = onClick ? 'button' : 'div'
-  const props = onClick ? { onClick, type: 'button' } : {}
 
   return (
-    <Component
-      className={`card card-${variant} ${hoverable ? 'card-hoverable' : ''} ${className}`}
+    <Component 
+      className={`lifefit-card ${variantClass} ${compactClass} ${noPaddingClass} ${interactiveClass} ${className}`}
+      onClick={onClick}
       {...props}
     >
       {children}
@@ -15,4 +35,3 @@ function Card({ children, className = '', variant = 'default', onClick, hoverabl
 }
 
 export default Card
-

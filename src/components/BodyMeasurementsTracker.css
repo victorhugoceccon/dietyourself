@@ -1,0 +1,240 @@
+/* ============================================
+   BodyMeasurementsTracker - Medidas Corporais
+   ============================================ */
+
+.body-measurements-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* Loading */
+.measurements-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-3xl);
+}
+
+.measurements-loading .loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--lifefit-green-soft);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Stats Grid */
+.measurements-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+}
+
+@media (max-width: 900px) {
+  .measurements-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .measurements-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+  }
+}
+
+/* Timeline */
+.measurements-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Card */
+.measurement-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+.measurement-card:hover {
+  border-color: var(--lifefit-green-soft);
+}
+
+.dark-mode .measurement-card {
+  background: var(--gradient-card);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.measurement-date {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.date-day {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.badge-recent {
+  padding: 0.2rem 0.5rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--lifefit-success);
+  background: var(--lifefit-success-light);
+  border-radius: var(--radius-sm);
+}
+
+/* Data Grid */
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--space-md);
+}
+
+.data-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.data-item .label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.data-item .value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.measurement-notes {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border-color-light);
+}
+
+/* Delete Button */
+.btn-delete-measurement {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--text-tertiary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.measurement-card:hover .btn-delete-measurement {
+  opacity: 1;
+}
+
+.btn-delete-measurement:hover {
+  color: var(--lifefit-error);
+  background: var(--lifefit-error-light);
+  border-color: var(--lifefit-error);
+}
+
+/* Form */
+.measurement-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.form-section h4 {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.form-group label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.lifefit-textarea {
+  width: 100%;
+  padding: var(--space-md);
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  outline: none;
+  resize: vertical;
+  transition: all var(--transition-fast);
+}
+
+.lifefit-textarea:focus {
+  border-color: var(--lifefit-green-soft);
+  box-shadow: 0 0 0 4px var(--lifefit-green-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .measurement-card {
+    padding: var(--space-md);
+  }
+
+  .data-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .data-item .value {
+    font-size: var(--font-size-base);
+  }
+}
+
+

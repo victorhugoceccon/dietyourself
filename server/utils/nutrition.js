@@ -21,19 +21,37 @@ export function calcularTMB(peso, altura, idade, sexo) {
 }
 
 /**
- * Calcula o fator de atividade física
- * @param {string} nivelAtividade - Nível de atividade do usuário
+ * Calcula o fator de atividade física baseado na frequência e rotina
+ * @param {string} frequenciaAtividade - Frequência de atividade física
+ * @param {string} rotinaDiaria - Rotina diária do usuário
  * @returns {number} Fator de atividade
  */
-export function getFatorAtividade(nivelAtividade) {
-  const fatores = {
-    'Sedentário (não treino)': 1.2,
-    'Levemente ativo (1–2x por semana)': 1.375,
-    'Moderadamente ativo (3–4x por semana)': 1.55,
-    'Muito ativo (5x ou mais por semana)': 1.725
+export function getFatorAtividade(frequenciaAtividade, rotinaDiaria) {
+  // Baseado na frequência de atividade
+  let fatorBase = 1.2 // Sedentário padrão
+  
+  if (frequenciaAtividade) {
+    if (frequenciaAtividade.includes('5x ou mais')) {
+      fatorBase = 1.725
+    } else if (frequenciaAtividade.includes('3–4x')) {
+      fatorBase = 1.55
+    } else if (frequenciaAtividade.includes('1–2x')) {
+      fatorBase = 1.375
+    } else if (frequenciaAtividade.includes('Não pratico')) {
+      fatorBase = 1.2
+    }
   }
   
-  return fatores[nivelAtividade] || 1.2
+  // Ajustar baseado na rotina diária
+  if (rotinaDiaria) {
+    if (rotinaDiaria.includes('Ativa')) {
+      fatorBase += 0.1
+    } else if (rotinaDiaria.includes('Moderada')) {
+      fatorBase += 0.05
+    }
+  }
+  
+  return Math.min(fatorBase, 1.9) // Limitar máximo
 }
 
 /**
@@ -54,10 +72,12 @@ export function calcularCaloriasDiarias(tmb, fatorAtividade, objetivo) {
       caloriasTotais -= 500
       break
     case 'Ganhar massa muscular':
+    case 'Ganhar peso de forma geral':
       // Superávit calórico de 500kcal
       caloriasTotais += 500
       break
     case 'Manter peso':
+    case 'Manter o peso':
       // Manter calorias calculadas
       break
     default:
@@ -123,8 +143,7 @@ export function calcularMacros(calorias, objetivo) {
  */
 export function calcularNutricao(questionnaireData) {
   if (!questionnaireData || !questionnaireData.idade || !questionnaireData.pesoAtual || 
-      !questionnaireData.altura || !questionnaireData.sexo || !questionnaireData.objetivo ||
-      !questionnaireData.nivelAtividade) {
+      !questionnaireData.altura || !questionnaireData.sexo || !questionnaireData.objetivo) {
     return null
   }
   
@@ -136,8 +155,10 @@ export function calcularNutricao(questionnaireData) {
     questionnaireData.sexo
   )
   
-  // Calcular fator de atividade
-  const fatorAtividade = getFatorAtividade(questionnaireData.nivelAtividade)
+  // Calcular fator de atividade (usando novos campos ou fallback para compatibilidade)
+  const frequenciaAtividade = questionnaireData.frequenciaAtividade || questionnaireData.nivelAtividade
+  const rotinaDiaria = questionnaireData.rotinaDiaria || ''
+  const fatorAtividade = getFatorAtividade(frequenciaAtividade, rotinaDiaria)
   
   // Calcular calorias diárias
   const calorias = calcularCaloriasDiarias(tmb, fatorAtividade, questionnaireData.objetivo)

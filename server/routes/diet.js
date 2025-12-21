@@ -2,7 +2,7 @@ import express from 'express'
 import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
 import { calcularNutricao } from '../utils/nutrition.js'
-import { ajustarDietaCompleta, ajustarDietaParaNecessidades, calcularTotaisDieta } from '../utils/dietAdjuster.js'
+// Sistema de ajuste automático removido - usando output direto do agente
 
 const router = express.Router()
 
@@ -16,19 +16,38 @@ const normalizeWebhookUrl = (url) => {
 // Função para extrair URL base do N8N_WEBHOOK_URL e construir getDiet URL
 const getDietUrl = () => {
   const webhookUrl = process.env.N8N_WEBHOOK_URL || ''
-  if (!webhookUrl) return ''
+  console.log('🔍 N8N_WEBHOOK_URL do .env:', webhookUrl ? 'Configurado' : 'NÃO CONFIGURADO')
+  
+  if (!webhookUrl) {
+    console.error('❌ N8N_WEBHOOK_URL não está configurado no .env')
+    return ''
+  }
   
   const normalized = normalizeWebhookUrl(webhookUrl)
+  console.log('🔍 URL normalizada:', normalized)
+  
   // Extrair a base URL (antes de /webhook/...)
   const baseMatch = normalized.match(/^(https?:\/\/[^\/]+)/)
-  if (!baseMatch) return ''
+  if (!baseMatch) {
+    console.error('❌ Não foi possível extrair a base URL de:', normalized)
+    return ''
+  }
   
   const baseUrl = baseMatch[1]
-  return `${baseUrl}/webhook/getDiet`
+  const finalUrl = `${baseUrl}/webhook/getDiet`
+  console.log('✅ URL final construída:', finalUrl)
+  return finalUrl
 }
 
 const N8N_GET_DIET_URL = getDietUrl()
 const N8N_API_KEY = process.env.N8N_API_KEY || ''
+
+// Log da URL ao iniciar o servidor
+if (N8N_GET_DIET_URL) {
+  console.log('✅ N8N GetDiet URL configurada:', N8N_GET_DIET_URL)
+} else {
+  console.error('❌ N8N GetDiet URL NÃO configurada! Verifique N8N_WEBHOOK_URL no .env')
+}
 
 // Rota para gerar dieta
 router.post('/generate', authenticate, async (req, res) => {
@@ -38,11 +57,15 @@ router.post('/generate', authenticate, async (req, res) => {
   try {
     // Verificar se N8N está configurado
     if (!N8N_GET_DIET_URL) {
+      console.error('❌ N8N_GET_DIET_URL está vazio!')
+      console.error('   N8N_WEBHOOK_URL do .env:', process.env.N8N_WEBHOOK_URL || 'NÃO DEFINIDO')
       return res.status(500).json({ 
         error: 'Serviço de geração de dieta não configurado',
-        details: 'Configure N8N_WEBHOOK_URL no arquivo .env'
+        details: 'Configure N8N_WEBHOOK_URL no arquivo .env. A URL deve ser algo como: https://seu-n8n.com/webhook/...'
       })
     }
+    
+    console.log('✅ N8N está configurado, URL:', N8N_GET_DIET_URL)
 
     const userId = req.user.userId
     console.log('Gerando dieta para userId:', userId)
@@ -57,14 +80,22 @@ router.post('/generate', authenticate, async (req, res) => {
     }
 
     console.log('📋 Dados do questionário encontrados')
+    console.log('   - Idade:', questionnaireData.idade)
+    console.log('   - Sexo:', questionnaireData.sexo)
+    console.log('   - Objetivo:', questionnaireData.objetivo)
+    console.log('   - Frequência Atividade:', questionnaireData.frequenciaAtividade)
+    console.log('   - Quantidade Refeições:', questionnaireData.quantidadeRefeicoes)
 
-    // Parse das restrições
-    let restricoesArray = []
-    if (questionnaireData.restricoes) {
+    // Parse dos alimentos do dia a dia (novo formato)
+    let alimentosDoDiaADia = null
+    if (questionnaireData.alimentosDoDiaADia) {
       try {
-        restricoesArray = JSON.parse(questionnaireData.restricoes)
+        alimentosDoDiaADia = typeof questionnaireData.alimentosDoDiaADia === 'string' 
+          ? JSON.parse(questionnaireData.alimentosDoDiaADia)
+          : questionnaireData.alimentosDoDiaADia
       } catch (e) {
-        console.error('Erro ao fazer parse das restrições:', e)
+        console.error('Erro ao fazer parse dos alimentos do dia a dia:', e)
+        alimentosDoDiaADia = { carboidratos: [], proteinas: [], gorduras: [], frutas: [] }
       }
     }
 
@@ -77,7 +108,8 @@ router.post('/generate', authenticate, async (req, res) => {
       altura: questionnaireData.altura,
       sexo: questionnaireData.sexo,
       objetivo: questionnaireData.objetivo,
-      nivelAtividade: questionnaireData.nivelAtividade
+      frequenciaAtividade: questionnaireData.frequenciaAtividade,
+      rotinaDiaria: questionnaireData.rotinaDiaria
     })
     
     if (nutricaoCalculadaBackup) {
@@ -90,20 +122,55 @@ router.post('/generate', authenticate, async (req, res) => {
       console.warn('⚠️  Não foi possível calcular necessidades nutricionais')
     }
 
-    // Preparar contexto do questionário para N8N
+    // Converter quantidadeRefeicoes para número
+    let numRefeicoes = 5 // padrão
+    if (questionnaireData.quantidadeRefeicoes) {
+      const match = questionnaireData.quantidadeRefeicoes.match(/(\d+)/)
+      if (match) {
+        numRefeicoes = parseInt(match[1])
+      } else if (questionnaireData.quantidadeRefeicoes.includes('Mais de 5')) {
+        numRefeicoes = 6
+      }
+    }
+
+    // Preparar contexto do questionário para N8N (novo formato com 7 blocos)
     const questionnaireContext = {
+      // Bloco 1: Dados Básicos
       idade: questionnaireData.idade,
       sexo: questionnaireData.sexo,
       altura: questionnaireData.altura,
       pesoAtual: questionnaireData.pesoAtual,
       objetivo: questionnaireData.objetivo,
-      nivelAtividade: questionnaireData.nivelAtividade,
-      refeicoesDia: questionnaireData.refeicoesDia,
-      restricoes: restricoesArray,
-      alimentosNaoGosta: questionnaireData.alimentosNaoGosta || '',
-      preferenciaAlimentacao: questionnaireData.preferenciaAlimentacao,
-      costumaCozinhar: questionnaireData.costumaCozinhar,
-      observacoes: questionnaireData.observacoes || ''
+      
+      // Bloco 2: Rotina e Atividade
+      frequenciaAtividade: questionnaireData.frequenciaAtividade,
+      tipoAtividade: questionnaireData.tipoAtividade,
+      horarioTreino: questionnaireData.horarioTreino,
+      rotinaDiaria: questionnaireData.rotinaDiaria,
+      
+      // Bloco 3: Estrutura da Dieta
+      quantidadeRefeicoes: questionnaireData.quantidadeRefeicoes,
+      preferenciaRefeicoes: questionnaireData.preferenciaRefeicoes,
+      
+      // Bloco 4: Complexidade e Adesão
+      confortoPesar: questionnaireData.confortoPesar,
+      tempoPreparacao: questionnaireData.tempoPreparacao,
+      preferenciaVariacao: questionnaireData.preferenciaVariacao,
+      
+      // Bloco 5: Alimentos do Dia a Dia
+      alimentosDoDiaADia: alimentosDoDiaADia,
+      
+      // Bloco 6: Restrições
+      restricaoAlimentar: questionnaireData.restricaoAlimentar,
+      outraRestricao: questionnaireData.outraRestricao || '',
+      alimentosEvita: questionnaireData.alimentosEvita || '',
+      
+      // Bloco 7: Flexibilidade Real
+      opcoesSubstituicao: questionnaireData.opcoesSubstituicao,
+      refeicoesLivres: questionnaireData.refeicoesLivres,
+      
+      // Compatibilidade com formato antigo (para referência)
+      refeicoesDia: numRefeicoes
     }
 
     // Preparar payload para N8N com necessidades nutricionais calculadas
@@ -123,7 +190,7 @@ router.post('/generate', authenticate, async (req, res) => {
         tmb: nutricaoCalculadaBackup.tmb,
         fatorAtividade: nutricaoCalculadaBackup.fatorAtividade,
         // Instrução explícita para o agente
-        instrucao: `IMPORTANTE: Você DEVE criar uma dieta que resulte em EXATAMENTE ${nutricaoCalculadaBackup.calorias} kcal por dia, com ${nutricaoCalculadaBackup.macros.proteina}g de proteína, ${nutricaoCalculadaBackup.macros.carboidrato}g de carboidrato e ${nutricaoCalculadaBackup.macros.gordura}g de gordura. O totalDiaKcal e macrosDia no JSON de resposta DEVEM corresponder a estes valores. Crie ${questionnaireData.refeicoesDia || 5} refeições por dia conforme solicitado.`
+        instrucao: `IMPORTANTE: Você DEVE criar uma dieta que resulte em EXATAMENTE ${nutricaoCalculadaBackup.calorias} kcal por dia, com ${nutricaoCalculadaBackup.macros.proteina}g de proteína, ${nutricaoCalculadaBackup.macros.carboidrato}g de carboidrato e ${nutricaoCalculadaBackup.macros.gordura}g de gordura. O totalDiaKcal e macrosDia no JSON de resposta DEVEM corresponder a estes valores. Crie ${numRefeicoes} refeições por dia conforme solicitado.`
       } : null
     }
     
@@ -134,7 +201,7 @@ router.post('/generate', authenticate, async (req, res) => {
       console.log(`   - Proteína: ${nutricaoCalculadaBackup.macros.proteina}g`)
       console.log(`   - Carboidrato: ${nutricaoCalculadaBackup.macros.carboidrato}g`)
       console.log(`   - Gordura: ${nutricaoCalculadaBackup.macros.gordura}g`)
-      console.log(`   - Refeições por dia: ${questionnaireData.refeicoesDia || 5}`)
+      console.log(`   - Refeições por dia: ${numRefeicoes}`)
     }
 
     // Headers para N8N
@@ -146,7 +213,12 @@ router.post('/generate', authenticate, async (req, res) => {
       headers['X-N8N-API-KEY'] = N8N_API_KEY
     }
 
-    console.log('📤 Enviando requisição para N8N:', N8N_GET_DIET_URL)
+    console.log('📤 ===== ENVIANDO REQUISIÇÃO PARA N8N =====')
+    console.log('   URL:', N8N_GET_DIET_URL)
+    console.log('   Método: POST')
+    console.log('   Headers:', JSON.stringify(headers, null, 2))
+    console.log('📦 Payload completo:', JSON.stringify(payload, null, 2))
+    console.log('📦 Tamanho do payload:', JSON.stringify(payload).length, 'caracteres')
 
     // Fazer requisição para N8N
     let response
@@ -155,20 +227,36 @@ router.post('/generate', authenticate, async (req, res) => {
       // O timeout pode ser configurado via N8N_TIMEOUT no .env (em milissegundos)
       const timeoutMs = parseInt(process.env.N8N_TIMEOUT) || 600000 // 10 minutos padrão
       console.log(`⏱️  Timeout configurado: ${timeoutMs / 1000} segundos (${timeoutMs / 60000} minutos)`)
+      console.log('🚀 Iniciando fetch para N8N...')
       
+      const fetchStartTime = Date.now()
       response = await fetch(N8N_GET_DIET_URL, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(timeoutMs) // Timeout configurável
       })
+      
+      const fetchDuration = Date.now() - fetchStartTime
+      console.log(`✅ Fetch concluído em ${fetchDuration}ms`)
+      console.log('   Status:', response.status, response.statusText)
+      console.log('   Headers da resposta:', Object.fromEntries(response.headers.entries()))
     } catch (fetchError) {
-      console.error('❌ Erro ao fazer fetch:', fetchError)
+      console.error('❌ ===== ERRO AO FAZER FETCH =====')
+      console.error('   Tipo do erro:', fetchError.name)
+      console.error('   Mensagem:', fetchError.message)
+      console.error('   Stack:', fetchError.stack)
+      console.error('   URL tentada:', N8N_GET_DIET_URL)
       
       // Verificar se é um erro de timeout
       if (fetchError.name === 'TimeoutError' || fetchError.name === 'AbortError') {
         const timeoutMinutes = (parseInt(process.env.N8N_TIMEOUT) || 600000) / 60000
         throw new Error(`Tempo limite de ${timeoutMinutes} minutos excedido. A geração da dieta está demorando mais que o esperado. Tente novamente ou otimize o prompt do agente N8N (veja PROMPT_OTIMIZADO_N8N.md).`)
+      }
+      
+      // Verificar se é erro de conexão
+      if (fetchError.message.includes('fetch failed') || fetchError.message.includes('ECONNREFUSED')) {
+        throw new Error(`Não foi possível conectar ao N8N. Verifique se o N8N está rodando e se a URL ${N8N_GET_DIET_URL} está correta.`)
       }
       
       throw new Error(`Erro ao comunicar com o serviço de geração de dieta: ${fetchError.message}`)
@@ -364,6 +452,18 @@ router.post('/generate', authenticate, async (req, res) => {
     console.log('📊 Tipo de responseData:', typeof responseData)
     console.log('📊 responseData.dieta existe?', !!responseData.dieta)
     
+    // NOVO: Se não tiver campo "dieta", mas tiver um objeto no nível raiz com a estrutura de dieta
+    // (pode acontecer se o N8N retornar diretamente o objeto dieta sem wrapper)
+    if (!responseData.dieta && typeof responseData === 'object' && responseData !== null) {
+      const keys = Object.keys(responseData)
+      // Se tiver totalDiaKcal e macrosDia no nível raiz, é o objeto dieta direto
+      if (responseData.totalDiaKcal !== undefined && responseData.macrosDia) {
+        console.log('📦 Detectado: objeto dieta no nível raiz (sem wrapper)')
+        responseData = { dieta: responseData }
+        console.log('✅ Estrutura ajustada: { dieta: {...} }')
+      }
+    }
+
     // Se dieta vier como string (pode acontecer com caracteres de escape), tentar parsear
     if (responseData.dieta && typeof responseData.dieta === 'string') {
       console.log('⚠️  dieta é string, tentando parsear...')
@@ -381,22 +481,46 @@ router.post('/generate', authenticate, async (req, res) => {
         console.log('   Chaves após parse:', Object.keys(responseData.dieta))
       } catch (e) {
         console.error('❌ Erro ao parsear dieta string:', e.message)
-        // Tentar extrair JSON da string
-        const jsonMatch = responseData.dieta.match(/\{[\s\S]*\}/)
-        if (jsonMatch) {
+        // Tentar extrair JSON da string (pode ter múltiplos objetos JSON)
+        // Procurar pelo objeto que contém "totalDiaKcal" e "macrosDia"
+        const jsonMatches = responseData.dieta.match(/\{[^{}]*"totalDiaKcal"[^{}]*\}/g) || 
+                           responseData.dieta.match(/\{[\s\S]*?\}/g) || []
+        
+        for (const jsonMatch of jsonMatches) {
           try {
-            let matchedJson = jsonMatch[0]
-            // Remover caracteres de escape do JSON extraído
+            let matchedJson = jsonMatch
             if (matchedJson.includes('\\n')) {
               matchedJson = matchedJson.replace(/\\n/g, '\n').replace(/\\"/g, '"')
             }
-            responseData.dieta = JSON.parse(matchedJson)
-            console.log('✅ JSON extraído de dieta string')
-            console.log('   Tipo após extração:', typeof responseData.dieta)
-            console.log('   Chaves após extração:', Object.keys(responseData.dieta))
+            const parsed = JSON.parse(matchedJson)
+            // Verificar se é o objeto dieta (tem totalDiaKcal e macrosDia)
+            if (parsed.totalDiaKcal !== undefined && parsed.macrosDia) {
+              responseData.dieta = parsed
+              console.log('✅ JSON extraído de dieta string (objeto correto encontrado)')
+              console.log('   Tipo após extração:', typeof responseData.dieta)
+              console.log('   Chaves após extração:', Object.keys(responseData.dieta))
+              break
+            }
           } catch (e2) {
-            console.error('❌ Erro ao extrair JSON de dieta:', e2.message)
-            console.error('   JSON extraído (primeiros 500 chars):', jsonMatch[0].substring(0, 500))
+            // Continuar tentando outros matches
+            continue
+          }
+        }
+        
+        // Se ainda não conseguiu, tentar parse direto de toda a string (pode ser JSON válido com escapes)
+        if (typeof responseData.dieta === 'string') {
+          try {
+            // Tentar parse direto removendo todos os escapes
+            let finalAttempt = responseData.dieta
+              .replace(/\\n/g, '\n')
+              .replace(/\\"/g, '"')
+              .replace(/\\t/g, '\t')
+              .replace(/\\r/g, '\r')
+            responseData.dieta = JSON.parse(finalAttempt)
+            console.log('✅ dieta parseada após remoção completa de escapes')
+          } catch (e3) {
+            console.error('❌ Erro final ao parsear dieta:', e3.message)
+            console.error('   Primeiros 500 chars:', responseData.dieta.substring(0, 500))
           }
         }
       }
@@ -533,7 +657,16 @@ router.post('/generate', authenticate, async (req, res) => {
     if (!dietaJson) {
       console.error('❌ Estrutura da resposta inválida: dieta não encontrada')
       console.error('   responseData:', JSON.stringify(responseData, null, 2))
-      throw new Error('Resposta inválida: falta objeto "dieta"')
+      console.error('   Tipo de responseData:', typeof responseData)
+      console.error('   Chaves de responseData:', Object.keys(responseData || {}))
+      
+      // ÚLTIMA TENTATIVA: Se responseData tem totalDiaKcal e macrosDia no nível raiz, usar diretamente
+      if (responseData && typeof responseData === 'object' && responseData.totalDiaKcal !== undefined && responseData.macrosDia) {
+        console.log('📦 ÚLTIMA TENTATIVA: Usando responseData diretamente como dieta')
+        dietaJson = responseData
+      } else {
+        throw new Error('Resposta inválida: falta objeto "dieta"')
+      }
     }
     
     // Garantir que dietaJson é um objeto (pode ainda ser string)
@@ -761,37 +894,21 @@ router.post('/generate', authenticate, async (req, res) => {
       }
     }
     
-    // VALIDAÇÃO FINAL: Garantir que os valores retornados estão corretos
-    // Se o agente retornou valores muito diferentes dos calculados, corrigir
-    if (nutricaoCalculadaBackup && dietaJson && typeof dietaJson === 'object') {
-      // Corrigir totalDiaKcal se necessário
-      if (dietaJson.totalDiaKcal && Math.abs(dietaJson.totalDiaKcal - nutricaoCalculadaBackup.calorias) > (nutricaoCalculadaBackup.calorias * 0.05)) {
-        console.warn(`⚠️  Corrigindo totalDiaKcal: ${dietaJson.totalDiaKcal} → ${nutricaoCalculadaBackup.calorias}`)
-        dietaJson.totalDiaKcal = nutricaoCalculadaBackup.calorias
+    // ✅ USANDO OUTPUT DIRETO DO AGENTE - SEM CORREÇÕES AUTOMÁTICAS
+    // Os valores retornados pelo agente são usados exatamente como enviados
+    if (dietaJson && typeof dietaJson === 'object') {
+      console.log('📊 Valores retornados pelo agente (usando diretamente, sem correções):')
+      console.log(`   - totalDiaKcal: ${dietaJson.totalDiaKcal || 'não informado'}`)
+      if (dietaJson.macrosDia) {
+        console.log(`   - macrosDia.proteina_g: ${dietaJson.macrosDia.proteina_g || 'não informado'}`)
+        console.log(`   - macrosDia.carbo_g: ${dietaJson.macrosDia.carbo_g || 'não informado'}`)
+        console.log(`   - macrosDia.gordura_g: ${dietaJson.macrosDia.gordura_g || 'não informado'}`)
       }
-      
-      // Corrigir macrosDia se necessário
-      if (dietaJson.macrosDia && typeof dietaJson.macrosDia === 'object') {
-        const macrosCalculados = nutricaoCalculadaBackup.macros
-        const macrosRetornados = dietaJson.macrosDia
-        
-        if (Math.abs((macrosRetornados.proteina_g || 0) - macrosCalculados.proteina) > (macrosCalculados.proteina * 0.1)) {
-          console.warn(`⚠️  Corrigindo proteina_g: ${macrosRetornados.proteina_g} → ${macrosCalculados.proteina}`)
-          dietaJson.macrosDia.proteina_g = macrosCalculados.proteina
-        }
-        if (Math.abs((macrosRetornados.carbo_g || 0) - macrosCalculados.carboidrato) > (macrosCalculados.carboidrato * 0.1)) {
-          console.warn(`⚠️  Corrigindo carbo_g: ${macrosRetornados.carbo_g} → ${macrosCalculados.carboidrato}`)
-          dietaJson.macrosDia.carbo_g = macrosCalculados.carboidrato
-        }
-        if (Math.abs((macrosRetornados.gordura_g || 0) - macrosCalculados.gordura) > (macrosCalculados.gordura * 0.1)) {
-          console.warn(`⚠️  Corrigindo gordura_g: ${macrosRetornados.gordura_g} → ${macrosCalculados.gordura}`)
-          dietaJson.macrosDia.gordura_g = macrosCalculados.gordura
-        }
-      }
+      console.log(`   - Número de refeições: ${dietaJson.refeicoes?.length || 0}`)
     }
 
     // Normalizar estrutura do nutritionalNeeds para o formato esperado pelo frontend
-    // Se vier com proteina, carboidrato, gordura diretamente, criar objeto macros
+    // Usar valores EXATOS retornados pelo agente (sem cálculos ou ajustes)
     if (nutritionalNeeds && !nutritionalNeeds.macros && (nutritionalNeeds.proteina || nutritionalNeeds.carboidrato || nutritionalNeeds.gordura)) {
       nutritionalNeeds = {
         ...nutritionalNeeds,
@@ -804,20 +921,9 @@ router.post('/generate', authenticate, async (req, res) => {
       console.log('✅ Estrutura nutritionalNeeds normalizada para incluir macros')
     }
     
-    // Garantir que nutritionalNeeds tem estrutura completa
+    // Garantir que nutritionalNeeds tem estrutura completa (usando valores do agente)
     if (nutritionalNeeds) {
-      // Se não tiver calorias, tentar calcular a partir dos macros ou usar 0
-      if (!nutritionalNeeds.calorias && nutritionalNeeds.macros) {
-        // Calorias aproximadas: proteína e carboidrato = 4 kcal/g, gordura = 9 kcal/g
-        const macros = nutritionalNeeds.macros
-        const proteinaKcal = (macros.proteina || 0) * 4
-        const carboKcal = (macros.carboidrato || 0) * 4
-        const gorduraKcal = (macros.gordura || 0) * 9
-        nutritionalNeeds.calorias = proteinaKcal + carboKcal + gorduraKcal
-        console.log('📊 Calorias calculadas a partir dos macros:', nutritionalNeeds.calorias)
-      }
-      
-      // Garantir que tem macros
+      // Garantir que tem macros (usar valores do agente)
       if (!nutritionalNeeds.macros) {
         console.warn('⚠️  nutritionalNeeds não tem macros, criando estrutura padrão...')
         nutritionalNeeds.macros = {
@@ -827,45 +933,16 @@ router.post('/generate', authenticate, async (req, res) => {
         }
       }
       
-      // Garantir que tem calorias (mínimo 0)
+      // Garantir que tem calorias (usar valor do agente ou 0)
       if (!nutritionalNeeds.calorias) {
         nutritionalNeeds.calorias = 0
       }
     }
 
-    // AJUSTAR DIETA AUTOMATICAMENTE DE FORMA COMPLETA
-    // Se tivermos as necessidades nutricionais calculadas e a dieta, fazer ajuste completo:
-    // 1. Ajustar valores totais para corresponder às necessidades
-    // 2. Equilibrar distribuição de macros entre refeições (25% cada, até 35% para almoço/jantar)
-    // 3. Garantir pelo menos 2 frutas no dia
-    // 4. Garantir vegetais/saladas em todas as refeições
-    if (nutricaoCalculadaBackup && dietaJson && typeof dietaJson === 'object' && dietaJson.refeicoes) {
-      console.log('🔧 Ajustando dieta automaticamente de forma completa...')
-      
-      const necessidadesParaAjuste = {
-        calorias: nutricaoCalculadaBackup.calorias,
-        macros: {
-          proteina: nutricaoCalculadaBackup.macros.proteina,
-          carboidrato: nutricaoCalculadaBackup.macros.carboidrato,
-          gordura: nutricaoCalculadaBackup.macros.gordura
-        }
-      }
-      
-      // Ajustar completamente a dieta (valores totais + equilíbrio + frutas/vegetais)
-      dietaJson = ajustarDietaCompleta(dietaJson, necessidadesParaAjuste)
-      
-      // Atualizar nutritionalNeeds com os valores ajustados (que agora devem bater)
-      nutritionalNeeds = {
-        calorias: nutricaoCalculadaBackup.calorias,
-        macros: {
-          proteina: nutricaoCalculadaBackup.macros.proteina,
-          carboidrato: nutricaoCalculadaBackup.macros.carboidrato,
-          gordura: nutricaoCalculadaBackup.macros.gordura
-        }
-      }
-      
-      console.log('✅ Dieta ajustada completamente: valores totais, equilíbrio entre refeições, frutas e vegetais garantidos')
-    }
+    // ✅ USANDO OUTPUT DIRETO DO AGENTE - SEM AJUSTES AUTOMÁTICOS
+    // O output do agente é usado exatamente como retornado, sem modificações
+    // Não há mais ajustes de valores, equilíbrio, frutas ou vegetais
+    console.log('✅ Usando output direto do agente - sem ajustes automáticos')
 
     console.log('💾 Salvando dieta e necessidades nutricionais no banco...')
 
@@ -1351,27 +1428,21 @@ router.post('/swap-food', authenticate, async (req, res) => {
       throw new Error('Resposta inválida: não é um objeto')
     }
 
-    // Se tiver reasonBlocked, retornar como erro
-    if (responseData.reasonBlocked) {
+    // Se status for ok, retornar a resposta completa
+    // O novo formato pode ter reasonBlocked mesmo com status ok (informação, não erro)
+    if (responseData.status === 'ok') {
+      // Retornar resposta completa mesmo se tiver reasonBlocked (é informação, não erro)
+      // O frontend vai tratar reasonBlocked como mensagem informativa
+      return res.json(responseData)
+    }
+
+    // Se tiver reasonBlocked mas status não for ok, retornar como erro
+    if (responseData.reasonBlocked && responseData.status !== 'ok') {
       return res.status(400).json({
         error: 'Troca bloqueada',
         reason: responseData.reasonBlocked,
         details: responseData
       })
-    }
-
-    // Se status for ok, retornar mesmo sem bestMatch (pode ter apenas suggestions)
-    if (responseData.status === 'ok') {
-      // Se não tiver bestMatch mas tiver suggestions e notes, é válido
-      if (!responseData.bestMatch && responseData.suggestions && responseData.suggestions.length > 0) {
-        console.log('Resposta válida sem bestMatch, mas com suggestions e notes')
-        return res.json(responseData)
-      }
-      
-      // Se tiver bestMatch, retornar normalmente
-      if (responseData.bestMatch) {
-        return res.json(responseData)
-      }
     }
 
     // Se chegou aqui, a resposta não está no formato esperado

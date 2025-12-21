@@ -1,6 +1,6 @@
 /* Página completa de edição de dieta - SEM MODAL */
 .edit-diet-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-primary, #ffffff);
   padding: 0;
 }
@@ -15,8 +15,9 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100dvh;
+  height: auto;
+  overflow: visible;
 }
 
 .edit-diet-loading,
@@ -44,11 +45,15 @@
   align-items: center;
   flex-shrink: 0;
   gap: 2rem;
-  background: var(--bg-primary, #ffffff);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .dark-mode .edit-diet-header {
-  background: var(--bg-primary, #1a1a1a);
+  background: rgba(26, 26, 26, 0.78);
   border-color: var(--border-color, #333);
 }
 
@@ -61,9 +66,9 @@
 
 .btn-back-header {
   padding: 0.75rem 1.5rem;
-  background: var(--bg-secondary, #f5f5f5);
+  background: rgba(255, 255, 255, 0.72);
   color: var(--text-primary, #1a1a1a);
-  border: 1px solid var(--border-color, #e8e8e8);
+  border: 1px solid rgba(11, 15, 20, 0.10);
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
@@ -75,7 +80,7 @@
 }
 
 .btn-back-header:hover {
-  background: var(--bg-tertiary, #e8e8e8);
+  background: rgba(255, 255, 255, 0.92);
   transform: translateX(-2px);
 }
 
@@ -121,9 +126,9 @@
 }
 
 .btn-add-food {
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: white;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  background: var(--gradient-primary, linear-gradient(135deg, #b9ff2c 0%, #36d7ff 100%));
+  color: var(--on-primary, #0B0F14);
+  box-shadow: var(--shadow-xs, 0 2px 8px rgba(0, 0, 0, 0.08));
 }
 
 .btn-add-food:hover:not(:disabled) {
@@ -132,9 +137,9 @@
 }
 
 .btn-save {
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: white;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  background: var(--gradient-primary, linear-gradient(135deg, #b9ff2c 0%, #36d7ff 100%));
+  color: var(--on-primary, #0B0F14);
+  box-shadow: var(--shadow-xs, 0 2px 8px rgba(0, 0, 0, 0.08));
 }
 
 .btn-save:hover:not(:disabled) {
@@ -151,11 +156,134 @@
 /* Content - PÁGINA COMPLETA, SEM LIMITAÇÕES */
 .edit-diet-content {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: visible;
   padding: 3rem;
   width: 100%;
   box-sizing: border-box;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+}
+
+/* Ações do comparativo (badge + botão) */
+.comparative-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-edit-needs {
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 999px;
+  border: 1px solid rgba(11, 15, 20, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text-primary, #1a1a1a);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-edit-needs:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.dark-mode .btn-edit-needs {
+  background: var(--bg-tertiary, #2a2a2a);
+  border-color: var(--border-color, #404040);
+  color: var(--text-primary, #e0e0e0);
+}
+
+/* Modal de necessidades (usa o mesmo modal base) */
+.needs-modal {
+  max-width: 520px;
+}
+
+.needs-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.needs-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.needs-label {
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.dark-mode .needs-label {
+  color: var(--text-primary, #ffffff);
+}
+
+.needs-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(11, 15, 20, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text-primary, #1a1a1a);
+  outline: none;
+  font-size: 16px; /* evita zoom no iOS */
+}
+
+.needs-input:focus {
+  border-color: rgba(11, 15, 20, 0.18);
+  box-shadow: 0 0 0 3px rgba(54, 215, 255, 0.18), 0 0 0 6px rgba(185, 255, 44, 0.12);
+}
+
+.dark-mode .needs-input {
+  background: var(--bg-tertiary, #2a2a2a);
+  border-color: var(--border-color, #404040);
+  color: var(--text-primary, #ffffff);
+}
+
+.needs-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.needs-btn {
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  border: 1px solid rgba(11, 15, 20, 0.12);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.needs-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.needs-btn-cancel {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-primary, #1a1a1a);
+}
+
+.dark-mode .needs-btn-cancel {
+  background: var(--bg-tertiary, #2a2a2a);
+  border-color: var(--border-color, #404040);
+  color: var(--text-primary, #ffffff);
+}
+
+.needs-btn-save {
+  background: var(--gradient-primary, linear-gradient(135deg, #b9ff2c 0%, #36d7ff 100%));
+  color: var(--on-primary, #0B0F14);
+  border: none;
+}
+
+.needs-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
 }
 
 /* Nutrition Summary - 4 cards iguais lado a lado */
@@ -1484,8 +1612,8 @@
   color: #ffb74d;
 }
 
-/* Create Alimento Modal */
-.create-alimento-overlay {
+/* Create Alimento Modal (escopado para não vazar para outras páginas) */
+.edit-diet-page .create-alimento-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -1500,7 +1628,7 @@
   padding: 2rem;
 }
 
-.create-alimento-modal {
+.edit-diet-page .create-alimento-modal {
   background: var(--bg-primary, #ffffff);
   border-radius: 20px;
   width: 100%;
@@ -1511,7 +1639,7 @@
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dark-mode .create-alimento-modal {
+.dark-mode .edit-diet-page .create-alimento-modal {
   background: var(--bg-secondary, #2a2a2a);
 }
 
@@ -1526,7 +1654,7 @@
   }
 }
 
-.create-alimento-header {
+.edit-diet-page .create-alimento-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1534,22 +1662,22 @@
   border-bottom: 1px solid var(--border-color, #e0e0e0);
 }
 
-.dark-mode .create-alimento-header {
+.dark-mode .edit-diet-page .create-alimento-header {
   border-color: var(--border-color, #404040);
 }
 
-.create-alimento-header h2 {
+.edit-diet-page .create-alimento-header h2 {
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--text-primary, #1a1a1a);
   margin: 0;
 }
 
-.dark-mode .create-alimento-header h2 {
+.dark-mode .edit-diet-page .create-alimento-header h2 {
   color: var(--text-primary, #ffffff);
 }
 
-.modal-close-btn {
+.edit-diet-page .modal-close-btn {
   background: none;
   border: none;
   color: var(--text-secondary, #666);
@@ -1562,44 +1690,44 @@
   transition: all 0.2s ease;
 }
 
-.modal-close-btn:hover {
+.edit-diet-page .modal-close-btn:hover {
   background: var(--bg-secondary, #f5f5f5);
   color: var(--text-primary, #333);
 }
 
-.dark-mode .modal-close-btn {
+.dark-mode .edit-diet-page .modal-close-btn {
   color: var(--text-secondary, #b0b0b0);
 }
 
-.dark-mode .modal-close-btn:hover {
+.dark-mode .edit-diet-page .modal-close-btn:hover {
   background: var(--bg-tertiary, #2a2a2a);
   color: var(--text-primary, #e0e0e0);
 }
 
-.alimento-form {
+.edit-diet-page .alimento-form {
   padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.form-group {
+.edit-diet-page .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-group label {
+.edit-diet-page .form-group label {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary, #1a1a1a);
 }
 
-.dark-mode .form-group label {
+.dark-mode .edit-diet-page .form-group label {
   color: var(--text-primary, #e0e0e0);
 }
 
-.form-group input {
+.edit-diet-page .form-group input {
   width: 100%;
   padding: 0.875rem 1rem;
   border: 2px solid var(--border-color, #e0e0e0);
@@ -1611,29 +1739,29 @@
   transition: all 0.2s ease;
 }
 
-.dark-mode .form-group input {
+.dark-mode .edit-diet-page .form-group input {
   background: var(--bg-tertiary, #2a2a2a);
   color: var(--text-primary, #e0e0e0);
   border-color: var(--border-color, #404040);
 }
 
-.form-group input:focus {
+.edit-diet-page .form-group input:focus {
   border-color: var(--accent-color, #4CAF50);
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
   background: var(--bg-primary, #ffffff);
 }
 
-.dark-mode .form-group input:focus {
+.dark-mode .edit-diet-page .form-group input:focus {
   background: var(--bg-secondary, #242424);
 }
 
-.form-group small {
+.edit-diet-page .form-group small {
   font-size: 0.875rem;
   color: var(--text-secondary, #666);
   margin-top: -0.25rem;
 }
 
-.form-footer {
+.edit-diet-page .form-footer {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
@@ -1642,12 +1770,12 @@
   border-top: 1px solid var(--border-color, #e0e0e0);
 }
 
-.dark-mode .form-footer {
+.dark-mode .edit-diet-page .form-footer {
   border-color: var(--border-color, #404040);
 }
 
-.cancel-btn,
-.submit-btn {
+.edit-diet-page .cancel-btn,
+.edit-diet-page .submit-btn {
   padding: 0.875rem 2rem;
   border-radius: 12px;
   font-size: 1rem;
@@ -1657,33 +1785,33 @@
   border: none;
 }
 
-.cancel-btn {
+.edit-diet-page .cancel-btn {
   background: var(--bg-secondary, #f5f5f5);
   color: var(--text-primary, #333);
 }
 
-.cancel-btn:hover:not(:disabled) {
+.edit-diet-page .cancel-btn:hover:not(:disabled) {
   background: var(--bg-tertiary, #e8e8e8);
 }
 
-.dark-mode .cancel-btn {
+.dark-mode .edit-diet-page .cancel-btn {
   background: var(--bg-secondary, #242424);
   color: var(--text-primary, #e0e0e0);
 }
 
-.submit-btn {
+.edit-diet-page .submit-btn {
   background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
   color: white;
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
-.submit-btn:hover:not(:disabled) {
+.edit-diet-page .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
 }
 
-.cancel-btn:disabled,
-.submit-btn:disabled {
+.edit-diet-page .cancel-btn:disabled,
+.edit-diet-page .submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -1734,11 +1862,27 @@
   }
   
   .edit-diet-header {
-    padding: 1.5rem;
+    padding: 1rem;
+    gap: 1rem;
   }
   
   .edit-diet-content {
-    padding: 1.5rem;
+    padding: 1rem;
+  }
+
+  .edit-diet-header-left {
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .edit-diet-header-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .btn-save {
+    width: 100%;
+    justify-content: center;
   }
   
   .meal-header {
@@ -1746,11 +1890,46 @@
   }
   
   .meal-items {
-    padding: 1.5rem;
+    padding: 0;
   }
   
   .food-item {
     padding: 1rem;
+  }
+
+  .comparative-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-diet-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .btn-back-header {
+    padding: 0.6rem 0.9rem;
+    border-radius: 12px;
+  }
+
+  .btn-save {
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+  }
+
+  .porcao-input-wrapper {
+    min-width: 0;
+  }
+
+  .food-input.unidade-select {
+    width: 56px;
+    min-width: 56px;
+    max-width: 56px;
+  }
+
+  .needs-actions {
+    grid-template-columns: 1fr;
   }
 }
 

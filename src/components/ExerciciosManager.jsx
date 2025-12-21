@@ -32,11 +32,53 @@ function ExerciciosManager() {
     observacoes: ''
   })
   const [saving, setSaving] = useState(false)
+  const [toast, setToast] = useState(null)
+  const [highlightedCard, setHighlightedCard] = useState(null)
+  const [viewingVideo, setViewingVideo] = useState(null)
   const { theme } = useTheme()
+
+  const handleViewVideo = (videoUrl) => {
+    setViewingVideo(videoUrl)
+  }
 
   useEffect(() => {
     loadExercicios()
   }, [])
+
+  useEffect(() => {
+    // Quando o modal abrir, garantir que apareça no topo
+    if (showModal || viewingVideo) {
+      // Forçar scroll da janela para o topo - múltiplas tentativas
+      const scrollToTop = () => {
+        window.scrollTo(0, 0)
+        document.documentElement.scrollTop = 0
+        document.body.scrollTop = 0
+        if (document.documentElement.scrollTop !== 0 || document.body.scrollTop !== 0) {
+          document.documentElement.scrollTop = 0
+          document.body.scrollTop = 0
+        }
+      }
+      
+      scrollToTop()
+      setTimeout(scrollToTop, 0)
+      setTimeout(scrollToTop, 10)
+      setTimeout(scrollToTop, 50)
+    }
+  }, [showModal, viewingVideo])
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type })
+    setTimeout(() => {
+      setToast(null)
+    }, 3000)
+  }
+
+  const highlightCard = (id) => {
+    setHighlightedCard(id)
+    setTimeout(() => {
+      setHighlightedCard(null)
+    }, 2000)
+  }
 
   const loadExercicios = async () => {
     setLoading(true)
@@ -155,6 +197,11 @@ function ExerciciosManager() {
 
       if (response.ok) {
         handleCloseModal()
+        const action = editingExercicio ? 'editado' : 'criado'
+        showToast(`Exercício ${action} com sucesso!`, 'success')
+        if (editingExercicio) {
+          highlightCard(editingExercicio)
+        }
         loadExercicios()
       } else {
         setError(data.error || 'Erro ao salvar exercício')
@@ -182,14 +229,15 @@ function ExerciciosManager() {
       })
 
       if (response.ok) {
+        showToast('Exercício deletado com sucesso!', 'success')
         loadExercicios()
       } else {
         const data = await response.json()
-        alert(data.error || 'Erro ao deletar exercício')
+        showToast(data.error || 'Erro ao deletar exercício', 'error')
       }
     } catch (error) {
       console.error('Erro ao deletar exercício:', error)
-      alert('Erro ao deletar exercício')
+      showToast('Erro ao deletar exercício', 'error')
     }
   }
 
@@ -216,18 +264,20 @@ function ExerciciosManager() {
           className="btn-primary"
           onClick={() => handleOpenModal()}
         >
-          + Novo Exercício
+          Novo Exercício
         </button>
       </div>
 
       <div className="exercicios-filters">
-        <input
-          type="text"
-          placeholder="Buscar exercício..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
+        <div className="search-input-container">
+          <input
+            type="text"
+            placeholder="Buscar exercício..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+        </div>
         <select
           value={selectedCategoria}
           onChange={(e) => setSelectedCategoria(e.target.value)}
@@ -245,23 +295,42 @@ function ExerciciosManager() {
       )}
 
       <div className="exercicios-grid">
-        {filteredExercicios.length === 0 ? (
+        {exercicios.length === 0 && !loading ? (
           <div className="empty-state">
-            <p>Nenhum exercício encontrado.</p>
-            <p>Comece criando seu primeiro exercício!</p>
+            <div className="empty-state-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+            </div>
+            <h3>Nenhum exercício cadastrado ainda</h3>
+            <p>Comece criando seu primeiro exercício para organizar seus treinos.</p>
+            <button
+              className="btn-primary"
+              onClick={() => handleOpenModal()}
+            >
+              Criar primeiro exercício
+            </button>
+          </div>
+        ) : filteredExercicios.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
+            <h3>Nenhum exercício encontrado</h3>
+            <p>Tente ajustar os filtros de busca ou criar um novo exercício.</p>
           </div>
         ) : (
           filteredExercicios.map(exercicio => (
-            <div key={exercicio.id} className="exercicio-card">
-              {exercicio.videoUrl && (
-                <div className="exercicio-video">
-                  <video
-                    src={exercicio.videoUrl}
-                    controls
-                    className="video-player"
-                  />
-                </div>
-              )}
+            <div 
+              key={exercicio.id} 
+              className={`exercicio-card ${highlightedCard === exercicio.id ? 'card-highlighted' : ''}`}
+            >
               <div className="exercicio-content">
                 <div className="exercicio-header-card">
                   <h3>{exercicio.nome}</h3>
@@ -278,6 +347,17 @@ function ExerciciosManager() {
                   </p>
                 )}
                 <div className="exercicio-actions">
+                  {exercicio.videoUrl && (
+                    <button
+                      className="btn-view-video"
+                      onClick={() => handleViewVideo(exercicio.videoUrl)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                      Ver Vídeo
+                    </button>
+                  )}
                   <button
                     className="btn-edit"
                     onClick={() => handleOpenModal(exercicio)}
@@ -297,9 +377,46 @@ function ExerciciosManager() {
         )}
       </div>
 
+      {/* Modal de Vídeo */}
+      {viewingVideo && (
+        <div className="modal-overlay video-modal-overlay" onClick={() => setViewingVideo(null)}>
+          <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="video-modal-header">
+              <h3>Vídeo do Exercício</h3>
+              <button className="modal-close" onClick={() => setViewingVideo(null)}>×</button>
+            </div>
+            <div className="video-modal-body">
+              <video
+                src={viewingVideo}
+                controls
+                autoPlay
+                className="video-modal-player"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`toast toast-${toast.type}`}>
+          <span className="toast-message">{toast.message}</span>
+          <button 
+            className="toast-close" 
+            onClick={() => setToast(null)}
+            aria-label="Fechar notificação"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Modal */}
       {showModal && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
+        <div 
+          className="modal-overlay" 
+          onClick={handleCloseModal}
+        >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{editingExercicio ? 'Editar Exercício' : 'Novo Exercício'}</h3>
@@ -342,39 +459,18 @@ function ExerciciosManager() {
 
               <div className="form-group">
                 <label>Vídeo do Exercício</label>
-                <div style={{ 
-                  padding: '0.75rem',
-                  border: '1px solid var(--border-color, #e0e0e0)',
-                  borderRadius: '8px',
-                  backgroundColor: 'var(--bg-secondary, #f5f5f5)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}>
-                  <input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoUpload}
-                    style={{ 
-                      width: '100%',
-                      cursor: 'pointer',
-                      border: 'none',
-                      background: 'transparent',
-                      padding: 0,
-                      fontSize: '0.9375rem'
-                    }}
-                  />
-                </div>
+                <input
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  className="file-input"
+                />
                 {newExercicio.videoUrl && (
-                  <div className="video-preview" style={{ marginTop: '1rem' }}>
+                  <div className="video-preview">
                     <video 
                       src={newExercicio.videoUrl} 
                       controls 
-                      style={{ 
-                        maxWidth: '100%', 
-                        borderRadius: '8px',
-                        backgroundColor: '#000',
-                        display: 'block'
-                      }} 
+                      className="video-preview-player"
                     />
                   </div>
                 )}

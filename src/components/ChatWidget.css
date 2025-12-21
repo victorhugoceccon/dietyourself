@@ -190,7 +190,7 @@
 }
 
 .dark-mode .chat-widget-messages {
-  background: var(--bg-secondary, #242424);
+  background: var(--bg-secondary) !important;
 }
 
 .chat-message {
@@ -247,9 +247,9 @@
 }
 
 .dark-mode .bot-message .message-content {
-  background: var(--bg-primary, #1a1a1a);
-  color: var(--text-primary, #e0e0e0);
-  border-color: var(--border-color, #333);
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -257,6 +257,45 @@
   margin: 0 0 0.25rem 0;
   font-size: 0.9375rem;
   line-height: 1.5;
+}
+
+/* Estilos para tags HTML de formatação */
+.message-content p b,
+.message-content p strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.message-content p i,
+.message-content p em {
+  font-style: italic;
+  color: inherit;
+}
+
+.message-content p u {
+  text-decoration: underline;
+  color: inherit;
+}
+
+.message-content p s,
+.message-content p strike {
+  text-decoration: line-through;
+  color: inherit;
+}
+
+.message-content p br {
+  display: block;
+  content: "";
+  margin-top: 0.5em;
+}
+
+.user-message .message-content p b,
+.user-message .message-content p strong,
+.user-message .message-content p u,
+.user-message .message-content p i,
+.user-message .message-content p em {
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .message-time {
@@ -317,7 +356,8 @@
 }
 
 .dark-mode .chat-widget-input {
-  border-top-color: var(--border-color, #333);
+  background: var(--bg-tertiary) !important;
+  border-top-color: var(--border-color) !important;
 }
 
 .chat-widget-input input {
@@ -334,9 +374,9 @@
 }
 
 .dark-mode .chat-widget-input input {
-  background: var(--bg-secondary, #242424);
-  color: var(--text-primary, #e0e0e0);
-  border-color: var(--border-color, #333);
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
 }
 
 .chat-widget-input input:focus {
@@ -446,6 +486,36 @@
     right: 1rem;
     width: 56px;
     height: 56px;
+  }
+
+  .chat-widget-button svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .chat-notification-badge {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Mobile - Ajustar posição acima da navegação fixa */
+@media (max-width: 480px) {
+  .chat-widget-button {
+    bottom: 80px; /* Acima da barra de navegação fixa (70px + 10px de margem) */
+    right: 1rem;
+    width: 56px;
+    height: 56px;
+    z-index: 999; /* Abaixo da navegação (z-index 1000) mas acima do conteúdo */
+  }
+
+  .chat-widget-container {
+    width: calc(100vw - 2rem);
+    max-width: 400px;
+    height: calc(100vh - 180px);
+    max-height: calc(100vh - 180px);
+    right: 1rem;
+    bottom: 80px; /* Acima da barra de navegação */
   }
 
   .chat-widget-button svg {

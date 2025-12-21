@@ -12,6 +12,9 @@
   z-index: 3000;
   padding: 1rem;
   animation: fadeIn 0.2s ease;
+  /* Prevenir scroll no overlay - o scroll deve ser apenas no modal */
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 @keyframes fadeIn {
@@ -29,7 +32,12 @@
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  /* O scroll deve estar no modal, não no overlay */
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* Prevenir que o scroll "vaze" para a página de fundo */
+  overscroll-behavior: contain;
 }
 
 .dark-mode .checkin-modal {

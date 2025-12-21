@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
 import { API_URL } from '../config/api'
 import './AlimentosManager.css'
+import './CreateAlimentoModal.css'
 
 function AlimentosManager() {
   const [alimentos, setAlimentos] = useState([])
@@ -22,8 +23,7 @@ function AlimentosManager() {
     energiaKcal: '',
     proteina: '',
     lipideos: '',
-    carboidrato: '',
-    umidade: ''
+    carboidrato: ''
   })
   const [creating, setCreating] = useState(false)
   const { theme } = useTheme()
@@ -97,7 +97,6 @@ function AlimentosManager() {
       const proteina = parseFloat(newAlimento.proteina) || 0
       const lipideos = parseFloat(newAlimento.lipideos) || 0
       const carboidrato = parseFloat(newAlimento.carboidrato) || 0
-      const umidade = newAlimento.umidade ? parseFloat(newAlimento.umidade) : null
 
       const token = localStorage.getItem('token')
       const response = await fetch(`${API_URL}/nutricionista/alimentos`, {
@@ -112,8 +111,7 @@ function AlimentosManager() {
           energiaKcal: Math.round(energiaKcal * fator * 10) / 10,
           proteina: Math.round(proteina * fator * 10) / 10,
           lipideos: Math.round(lipideos * fator * 10) / 10,
-          carboidrato: Math.round(carboidrato * fator * 10) / 10,
-          umidade: umidade ? Math.round(umidade * fator * 10) / 10 : null
+          carboidrato: Math.round(carboidrato * fator * 10) / 10
         })
       })
 
@@ -127,8 +125,7 @@ function AlimentosManager() {
           energiaKcal: '',
           proteina: '',
           lipideos: '',
-          carboidrato: '',
-          umidade: ''
+          carboidrato: ''
         })
         loadAlimentos()
       } else {
@@ -438,13 +435,30 @@ function AlimentosManager() {
 
       {/* Modal para criar alimento */}
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Cadastrar Novo Alimento</h3>
-              <button onClick={() => setShowModal(false)} className="modal-close">×</button>
+        <div className="create-alimento-overlay" onClick={() => setShowModal(false)}>
+          <div className="create-alimento-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="create-alimento-header">
+              <div className="create-alimento-header-text">
+                <h3>Cadastrar Novo Alimento</h3>
+                <p className="create-alimento-subtitle">
+                  Informe os valores nutricionais da porção base. Vamos calcular automaticamente os valores por 100g.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="create-alimento-close"
+                aria-label="Fechar"
+                type="button"
+              >
+                ×
+              </button>
             </div>
-            <form onSubmit={handleCreateAlimento} className="alimento-form">
+            <form
+              id="create-alimento-form"
+              onSubmit={handleCreateAlimento}
+              className="create-alimento-form"
+              autoComplete="off"
+            >
               <div className="form-group">
                 <label>Descrição *</label>
                 <input
@@ -464,7 +478,7 @@ function AlimentosManager() {
                   placeholder="Ex: Cereais e derivados"
                 />
               </div>
-              <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+              <div className="form-group form-group--base">
                 <label>Porção Base (g) *</label>
                 <input
                   type="number"
@@ -475,8 +489,8 @@ function AlimentosManager() {
                   min="0.1"
                   placeholder="Ex: 100 (padrão), 32 (whey protein)"
                 />
-                <small className="form-hint" style={{ display: 'block', marginTop: '0.25rem', color: '#666', fontSize: '0.875rem' }}>
-                  Informe os valores nutricionais para esta porção. O sistema calculará automaticamente os valores por 100g.
+                <small className="form-hint">
+                  Dica: use <strong>100g</strong> como padrão. Para itens como whey, você pode usar <strong>30–35g</strong>.
                 </small>
               </div>
               <div className="form-row">
@@ -527,26 +541,15 @@ function AlimentosManager() {
                   />
                 </div>
               </div>
-              <div className="form-group">
-                <label>Umidade (%)</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={newAlimento.umidade}
-                  onChange={(e) => setNewAlimento({ ...newAlimento, umidade: e.target.value })}
-                  min="0"
-                  max="100"
-                />
-              </div>
-              <div className="modal-footer">
-                <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">
-                  Cancelar
-                </button>
-                <button type="submit" disabled={creating} className="btn-primary">
-                  {creating ? 'Salvando...' : 'Salvar'}
-                </button>
-              </div>
             </form>
+            <div className="create-alimento-footer">
+              <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">
+                Cancelar
+              </button>
+              <button type="submit" form="create-alimento-form" disabled={creating} className="btn-primary">
+                {creating ? 'Salvando...' : 'Salvar'}
+              </button>
+            </div>
           </div>
         </div>
       )}

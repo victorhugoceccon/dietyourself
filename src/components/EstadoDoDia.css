@@ -1,0 +1,238 @@
+/* ============================================
+   LifeFit - Estado do Dia
+   Painel de controle diário - Modernizado
+   ============================================ */
+
+.estado-do-dia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.day-status-card {
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, #F8FAF8 100%);
+  border-radius: var(--radius-md);
+  padding: var(--space-3xl);
+  border: 1px solid var(--border-color-light);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.day-status-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-olive) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.day-status-card:hover {
+  border-color: var(--lifefit-green-soft);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.day-status-card:hover::before {
+  opacity: 1;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2xl);
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.status-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.status-badge {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  color: var(--on-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-base);
+}
+
+.day-status-card:hover .status-badge {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-sm);
+}
+
+.status-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.status-message {
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  margin: 0;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-relaxed);
+}
+
+.motivational-message {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+  font-style: italic;
+  padding-left: var(--space-md);
+  border-left: 3px solid var(--lifefit-green-light);
+}
+
+.next-action-card {
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-dark) 100%);
+  border-radius: var(--radius-md);
+  padding: var(--space-2xl);
+  color: var(--on-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.next-action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.next-action-card:hover::before {
+  left: 100%;
+}
+
+.next-action-card:hover {
+  background: linear-gradient(135deg, var(--lifefit-green-dark) 0%, var(--lifefit-green-soft) 100%);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.action-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: transform var(--transition-base);
+}
+
+.next-action-card:hover .action-icon {
+  transform: scale(1.1);
+}
+
+.action-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.action-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--on-primary);
+  margin: 0 0 var(--space-xs) 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.action-description {
+  font-size: var(--font-size-base);
+  color: rgba(11, 15, 20, 0.82);
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+}
+
+.action-arrow {
+  flex-shrink: 0;
+  color: var(--on-primary);
+  opacity: 0.9;
+  transition: transform var(--transition-base);
+}
+
+.next-action-card:hover .action-arrow {
+  transform: translateX(4px);
+}
+
+.loading {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .day-status-card {
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+  }
+
+  .status-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .status-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .next-action-card {
+    padding: var(--space-xl);
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .action-icon {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .day-status-card {
+    padding: var(--space-lg);
+  }
+
+  .status-message {
+    font-size: var(--font-size-base);
+  }
+
+  .motivational-message {
+    font-size: var(--font-size-sm);
+    padding-left: var(--space-sm);
+  }
+}
+
+
+
+

@@ -86,14 +86,15 @@ function ProgressTimeline({ refreshTrigger }) {
   return (
     <div className="progress-timeline-card">
       <div className="timeline-header">
-        <h3 className="timeline-title">Linha do Tempo</h3>
+        <h3 className="timeline-title">Seu progresso</h3>
         <p className="timeline-subtitle">Últimos 30 dias</p>
       </div>
 
       {checkIns.length === 0 ? (
         <div className="timeline-empty">
-          <p>Nenhum check-in registrado ainda.</p>
-          <p className="timeline-empty-hint">Comece registrando seu primeiro check-in!</p>
+          <div className="empty-icon">📈</div>
+          <h3 className="empty-title">Seu progresso começa aqui</h3>
+          <p className="timeline-empty-hint">Registrar hoje já é um avanço. O LifeFit acompanha sua jornada desde o início, sem julgamento.</p>
         </div>
       ) : (
         <div className="timeline-container">
@@ -111,9 +112,9 @@ function ProgressTimeline({ refreshTrigger }) {
               <div className="timeline-content">
                 <div className="timeline-date">{formatDate(checkIn.checkInDate)}</div>
                 <div className="timeline-adherence">
-                  {checkIn.adherence === 'TOTAL' && 'Segui totalmente'}
-                  {checkIn.adherence === 'PARCIAL' && 'Segui parcialmente'}
-                  {checkIn.adherence === 'NAO_SEGUIU' && 'Não segui'}
+                  {checkIn.adherence === 'TOTAL' && 'Seguiu totalmente'}
+                  {checkIn.adherence === 'PARCIAL' && 'Seguiu parcialmente'}
+                  {checkIn.adherence === 'NAO_SEGUIU' && 'Não seguiu hoje'}
                 </div>
                 {checkIn.pesoAtual && (
                   <div className="timeline-weight">Peso: {checkIn.pesoAtual} kg</div>

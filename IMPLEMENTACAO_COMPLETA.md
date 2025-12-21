@@ -56,3 +56,9 @@ O usuário `victorhugoceccon@gmail.com` agora tem todas as 4 roles e pode:
 - Acessar todas as funcionalidades de cada role
 
 
+
+
+
+
+
+

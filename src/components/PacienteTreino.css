@@ -1,0 +1,21 @@
+.paciente-treino {
+  width: 100%;
+  padding-top: var(--space-3xl);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .paciente-treino {
+    padding-top: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .paciente-treino {
+    padding-top: var(--space-sm);
+  }
+}
+
+
+
+

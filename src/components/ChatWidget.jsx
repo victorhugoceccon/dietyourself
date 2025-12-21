@@ -2,6 +2,91 @@ import { useState, useRef, useEffect } from 'react'
 import { API_URL } from '../config/api'
 import './ChatWidget.css'
 
+// Função para sanitizar HTML permitindo apenas tags de formatação seguras
+const sanitizeHTML = (html) => {
+  if (!html || typeof html !== 'string') return ''
+  
+  // Lista de tags permitidas (apenas formatação de texto)
+  const allowedTags = ['b', 'strong', 'i', 'em', 'u', 's', 'strike', 'br', 'p', 'span']
+  
+  // Se estiver no browser, usar DOMParser para parsing seguro
+  if (typeof window !== 'undefined' && window.DOMParser) {
+    try {
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(html, 'text/html')
+      
+      // Remover scripts e elementos perigosos
+      const scripts = doc.querySelectorAll('script, iframe, object, embed, form, input, button, link, style')
+      scripts.forEach(el => el.remove())
+      
+      // Função recursiva para limpar nós
+      const cleanNode = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          return node.textContent
+        }
+        
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const tagName = node.tagName.toLowerCase()
+          
+          // Se a tag não está permitida, retornar apenas o conteúdo interno
+          if (!allowedTags.includes(tagName)) {
+            let content = ''
+            node.childNodes.forEach(child => {
+              content += cleanNode(child)
+            })
+            return content
+          }
+          
+          // Se a tag está permitida, manter ela
+          let content = ''
+          node.childNodes.forEach(child => {
+            content += cleanNode(child)
+          })
+          
+          // Para tags auto-fechadas
+          if (tagName === 'br') {
+            return '<br>'
+          }
+          
+          return `<${tagName}>${content}</${tagName}>`
+        }
+        
+        return ''
+      }
+      
+      let cleanedHTML = ''
+      doc.body.childNodes.forEach(node => {
+        cleanedHTML += cleanNode(node)
+      })
+      
+      return cleanedHTML || html // Fallback para o HTML original se algo der errado
+    } catch (e) {
+      console.warn('Erro ao sanitizar HTML:', e)
+      // Fallback: remover apenas scripts e permitir tags básicas
+    }
+  }
+  
+  // Fallback: remover scripts e elementos perigosos, permitir apenas tags básicas
+  let cleaned = html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+  
+  // Permitir apenas tags permitidas (versão simplificada)
+  cleaned = cleaned.replace(/<(\/?)([a-z]+)([^>]*)>/gi, (match, closing, tagName) => {
+    const tag = tagName.toLowerCase()
+    if (allowedTags.includes(tag)) {
+      if (tag === 'br' && !closing) {
+        return '<br>'
+      }
+      return closing ? `</${tag}>` : `<${tag}>`
+    }
+    return ''
+  })
+  
+  return cleaned
+}
+
 function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([
@@ -146,7 +231,7 @@ function ChatWidget() {
                 className={`chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}
               >
                 <div className="message-content">
-                  <p>{message.text}</p>
+                  <p dangerouslySetInnerHTML={{ __html: sanitizeHTML(message.text) }}></p>
                   <span className="message-time">
                     {message.timestamp.toLocaleTimeString('pt-BR', {
                       hour: '2-digit',

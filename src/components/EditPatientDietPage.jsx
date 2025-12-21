@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { API_URL } from '../config/api'
-import FoodSwapModal from './FoodSwapModal'
+// import FoodSwapModal from './FoodSwapModal' // Desativado temporariamente
 import './EditPatientDietPage.css'
 
 function EditPatientDietPage() {
@@ -756,7 +756,7 @@ function EditPatientDietPage() {
               <div className="comparative-section">
                 <div className="comparative-header">
                   <h3>Comparativo com Necessidades do Paciente</h3>
-                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <div className="comparative-actions">
                     <div className={`status-badge ${comparativo.statusGeral ? 'balanced' : 'unbalanced'}`}>
                       {comparativo.statusGeral ? (
                         <>
@@ -778,16 +778,6 @@ function EditPatientDietPage() {
                     <button
                       onClick={() => setShowEditNeeds(true)}
                       className="btn-edit-needs"
-                      style={{
-                        padding: '0.5rem 1rem',
-                        fontSize: '0.875rem',
-                        backgroundColor: '#2196F3',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontWeight: '500'
-                      }}
                     >
                       Editar Necessidades
                     </button>
@@ -1035,7 +1025,8 @@ function EditPatientDietPage() {
                             {item.kcal || 0} kcal
                           </div>
                           <div className="food-item-actions">
-                            <button
+                            {/* Botão de troca desativado temporariamente */}
+                            {/* <button
                               onClick={() => handleFoodItemClick(mealIndex, itemIndex, item)}
                               className="swap-food-btn"
                               type="button"
@@ -1045,7 +1036,7 @@ function EditPatientDietPage() {
                                 <path d="M12 4V1M12 4C10.8954 4 10 4.89543 10 6C10 7.10457 10.8954 8 12 8M12 4C13.1046 4 14 4.89543 14 6C14 7.10457 13.1046 8 12 8M12 20V23M12 20C10.8954 20 10 19.1046 10 18C10 16.8954 10.8954 16 12 16M12 20C13.1046 20 14 19.1046 14 18C14 16.8954 13.1046 16 12 16M6 12H3M21 12H18M6 12C6 10.8954 6.89543 10 8 10M6 12C6 13.1046 6.89543 14 8 14M18 12C18 10.8954 17.1046 10 16 10M18 12C18 13.1046 17.1046 14 16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                               </svg>
                               Trocar por IA
-                            </button>
+                            </button> */}
                             <button
                               onClick={() => removeItem(mealIndex, itemIndex)}
                               className="remove-item-btn"
@@ -1078,7 +1069,8 @@ function EditPatientDietPage() {
         </div>
       </div>
 
-      <FoodSwapModal
+      {/* Modal de troca de alimento - Desativado temporariamente */}
+      {/* <FoodSwapModal
         isOpen={swapModalOpen}
         onClose={() => setSwapModalOpen(false)}
         foodItem={selectedFoodItem}
@@ -1087,7 +1079,7 @@ function EditPatientDietPage() {
         itemIndex={selectedItemIndex}
         onConfirm={handleSwapConfirm}
         dieta={editedDieta}
-      />
+      /> */}
 
       {searchAlimento.show && (
         <div 
@@ -1159,7 +1151,7 @@ function EditPatientDietPage() {
             }
           }}
         >
-          <div className="alimento-search-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+          <div className="alimento-search-modal needs-modal" onClick={(e) => e.stopPropagation()}>
             <div className="alimento-search-modal-header">
               <h3>Editar Necessidades Nutricionais</h3>
               <button
@@ -1174,9 +1166,9 @@ function EditPatientDietPage() {
             </div>
             
             <div className="alimento-search-modal-body">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+              <div className="needs-form">
+                <div className="needs-field">
+                  <label className="needs-label">
                     Calorias (kcal)
                   </label>
                   <input
@@ -1186,19 +1178,14 @@ function EditPatientDietPage() {
                       ...editedNeeds,
                       calorias: parseFloat(e.target.value) || 0
                     })}
-                    style={{
-                      width: '100%',
-                      padding: '0.5rem',
-                      borderRadius: '6px',
-                      border: '1px solid #ddd'
-                    }}
+                    className="needs-input"
                     min="0"
                     step="1"
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                <div className="needs-field">
+                  <label className="needs-label">
                     Proteína (g)
                   </label>
                   <input
@@ -1211,19 +1198,14 @@ function EditPatientDietPage() {
                         proteina: parseFloat(e.target.value) || 0
                       }
                     })}
-                    style={{
-                      width: '100%',
-                      padding: '0.5rem',
-                      borderRadius: '6px',
-                      border: '1px solid #ddd'
-                    }}
+                    className="needs-input"
                     min="0"
                     step="0.1"
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                <div className="needs-field">
+                  <label className="needs-label">
                     Carboidrato (g)
                   </label>
                   <input
@@ -1236,19 +1218,14 @@ function EditPatientDietPage() {
                         carboidrato: parseFloat(e.target.value) || 0
                       }
                     })}
-                    style={{
-                      width: '100%',
-                      padding: '0.5rem',
-                      borderRadius: '6px',
-                      border: '1px solid #ddd'
-                    }}
+                    className="needs-input"
                     min="0"
                     step="0.1"
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                <div className="needs-field">
+                  <label className="needs-label">
                     Gordura (g)
                   </label>
                   <input
@@ -1261,46 +1238,23 @@ function EditPatientDietPage() {
                         gordura: parseFloat(e.target.value) || 0
                       }
                     })}
-                    style={{
-                      width: '100%',
-                      padding: '0.5rem',
-                      borderRadius: '6px',
-                      border: '1px solid #ddd'
-                    }}
+                    className="needs-input"
                     min="0"
                     step="0.1"
                   />
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <div className="needs-actions">
                   <button
                     onClick={() => setShowEditNeeds(false)}
-                    style={{
-                      flex: 1,
-                      padding: '0.75rem',
-                      borderRadius: '6px',
-                      border: '1px solid #ddd',
-                      backgroundColor: '#f5f5f5',
-                      cursor: 'pointer',
-                      fontWeight: '500'
-                    }}
+                    className="needs-btn needs-btn-cancel"
                   >
                     Cancelar
                   </button>
                   <button
                     onClick={handleSaveNeeds}
                     disabled={saving}
-                    style={{
-                      flex: 1,
-                      padding: '0.75rem',
-                      borderRadius: '6px',
-                      border: 'none',
-                      backgroundColor: '#4CAF50',
-                      color: 'white',
-                      cursor: saving ? 'not-allowed' : 'pointer',
-                      fontWeight: '500',
-                      opacity: saving ? 0.6 : 1
-                    }}
+                    className="needs-btn needs-btn-save"
                   >
                     {saving ? 'Salvando...' : 'Salvar'}
                   </button>

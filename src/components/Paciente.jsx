@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import ProfessionalLayout from './ProfessionalLayout'
 import Questionnaire from './Questionnaire'
 import NutritionDashboard from './NutritionDashboard'
 import DietDisplay from './DietDisplay'
-import ChatWidget from './ChatWidget'
 import LoadingBar from './LoadingBar'
-import ThemeToggle from './ThemeToggle'
 import UserProfile from './UserProfile'
 import DailyCheckInModal from './DailyCheckInModal'
 import ProgressTimeline from './ProgressTimeline'
 import WeeklyAdherence from './WeeklyAdherence'
 import PacienteTreinos from './PacienteTreinos'
-import RoleSelector from './RoleSelector'
 import { hasAnyRole } from '../utils/roleUtils'
 import { API_URL } from '../config/api'
 import './Paciente.css'
@@ -27,7 +25,16 @@ function Paciente() {
   const [showCheckInModal, setShowCheckInModal] = useState(false)
   const [profileRefreshTrigger, setProfileRefreshTrigger] = useState(0)
   const [treinosRefreshTrigger] = useState(0)
+  const [activeSection, setActiveSection] = useState('profile')
   const navigate = useNavigate()
+
+  const scrollToSection = (sectionId) => {
+    setActiveSection(sectionId)
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
 
   useEffect(() => {
     // Verificar autenticação
@@ -223,17 +230,12 @@ function Paciente() {
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    navigate('/login')
-  }
 
   if (loading || checkingQuestionnaire) {
     return (
-      <div className="paciente-container">
-        <div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>
-      </div>
+      <ProfessionalLayout allowedRoles={['PACIENTE', 'USUARIO']}>
+        <LoadingBar message="Carregando..." />
+      </ProfessionalLayout>
     )
   }
 
@@ -242,30 +244,89 @@ function Paciente() {
     return <Questionnaire onComplete={handleQuestionnaireComplete} />
   }
 
-  return (
-    <div className="paciente-container">
-      <header className="paciente-header">
-        <div className="header-content">
-          <div className="header-left">
-            <h1 className="logo">DietYourself</h1>
-            <p className="welcome-text">
-              Olá, {user?.name || user?.email}! 👋
-            </p>
-            <RoleSelector user={user} />
-          </div>
-          <div className="header-actions">
-            <ThemeToggle />
-            <button onClick={handleLogout} className="logout-btn">
-              Sair
-            </button>
-          </div>
-        </div>
-      </header>
+  const navItems = (
+    <>
+      <button
+        className={`nav-item ${activeSection === 'profile' ? 'active' : ''}`}
+        onClick={() => scrollToSection('profile')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span className="nav-text">Perfil</span>
+      </button>
+      <button
+        className={`nav-item ${activeSection === 'adherence' ? 'active' : ''}`}
+        onClick={() => scrollToSection('adherence')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        <span className="nav-text">Aderência</span>
+      </button>
+      <button
+        className={`nav-item ${activeSection === 'nutrition' ? 'active' : ''}`}
+        onClick={() => scrollToSection('nutrition')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="9" x2="15" y2="9"></line>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+        <span className="nav-text">Nutrição</span>
+      </button>
+      <button
+        className={`nav-item ${activeSection === 'diet' ? 'active' : ''}`}
+        onClick={() => scrollToSection('diet')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span className="nav-text">Dieta</span>
+      </button>
+      <button
+        className={`nav-item ${activeSection === 'treinos' ? 'active' : ''}`}
+        onClick={() => scrollToSection('treinos')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <path d="M6 14h12"></path>
+        </svg>
+        <span className="nav-text">Treinos</span>
+      </button>
+      <button
+        className={`nav-item ${activeSection === 'progress' ? 'active' : ''}`}
+        onClick={() => scrollToSection('progress')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        <span className="nav-text">Progresso</span>
+      </button>
+    </>
+  )
 
-      <main className="paciente-main">
-        <div className="paciente-content">
+  return (
+    <ProfessionalLayout 
+      allowedRoles={['PACIENTE', 'USUARIO']} 
+      headerNavItems={navItems}
+      headerNavClassName="header-nav-items-paciente"
+    >
+      <div className="paciente-content-wrapper">
+        {/* Navegação por Tabs - Mobile apenas */}
+        <nav className="paciente-nav">
+          <div className="nav-content">
+            {navItems}
+          </div>
+        </nav>
+
+        {/* Conteúdo Principal */}
+        <div className="paciente-main-content">
           {/* Profile Section */}
-          <section className="profile-section">
+          <section id="profile" className="profile-section">
             <UserProfile
               userId={user?.id}
               userName={user?.name}
@@ -276,18 +337,18 @@ function Paciente() {
           </section>
 
           {/* Aderência Semanal */}
-          <section className="adherence-section">
+          <section id="adherence" className="adherence-section">
             <WeeklyAdherence refreshTrigger={dietRefreshTrigger} />
           </section>
 
           {/* Dashboard Nutricional */}
-          <section className="nutrition-section">
+          <section id="nutrition" className="nutrition-section">
             <NutritionDashboard 
               refreshTrigger={dietRefreshTrigger}
             />
           </section>
 
-          <section className="diet-section">
+          <section id="diet" className="diet-section">
             <div className="section-header">
               <h2>Minha Dieta</h2>
               <span className="badge">Paciente</span>
@@ -336,17 +397,16 @@ function Paciente() {
           </section>
 
           {/* Treinos do Personal (se existirem) */}
-          <PacienteTreinos refreshTrigger={treinosRefreshTrigger} />
+          <section id="treinos" className="treinos-section">
+            <PacienteTreinos refreshTrigger={treinosRefreshTrigger} />
+          </section>
 
           {/* Linha do Tempo de Progresso */}
-          <section className="timeline-section">
+          <section id="progress" className="timeline-section">
             <ProgressTimeline refreshTrigger={dietRefreshTrigger} />
           </section>
         </div>
-      </main>
-
-      {/* Widget de Chat */}
-      <ChatWidget />
+      </div>
       
       {/* Modal de Check-in */}
       {showCheckInModal && (
@@ -355,7 +415,7 @@ function Paciente() {
           onCheckInComplete={handleCheckInComplete}
         />
       )}
-    </div>
+    </ProfessionalLayout>
   )
 }
 

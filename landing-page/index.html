@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DietYourself - Sua Dieta Personalizada com IA</title>
+    <meta name="description" content="Tenha acesso a dietas personalizadas criadas por IA e chat de suporte nutricional. Transforme sua alimentação hoje mesmo!">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Emagreça, ganhe massa ou mantenha o peso com uma <span class="highlight">dieta que se adapta à sua vida</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Criada por IA a partir da sua rotina, objetivos e preferências.<br>
+                        <strong>Sem cardápios impossíveis, sem terrorismo nutricional, sem desistir no meio do caminho.</strong>
+                    </p>
+                    <div class="hero-cta">
+                        <a href="#cadastro" class="btn btn-primary btn-large">
+                            Criar minha dieta personalizada
+                        </a>
+                        <a href="#como-funciona" class="btn btn-secondary btn-large">
+                            Como Funciona
+                        </a>
+                    </div>
+                    <div class="hero-trust">
+                        <p class="trust-text">✓ Leva menos de 5 minutos • ✓ Sem cartão de crédito • ✓ Cancele quando quiser</p>
+                    </div>
+                    <div class="hero-stats">
+                        <p class="stats-text">+<span id="dietas-criadas">3.200</span> dietas criadas este mês</p>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-card">
+                        <div class="card-header">
+                            <div class="card-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="diet-preview">
+                                <div class="meal-item">
+                                    <div class="meal-icon">🍳</div>
+                                    <div class="meal-info">
+                                        <h4>Café da Manhã</h4>
+                                        <p>2 ovos, pão integral, abacate</p>
+                                        <span class="meal-kcal">420 kcal</span>
+                                    </div>
+                                </div>
+                                <div class="meal-item">
+                                    <div class="meal-icon">🥗</div>
+                                    <div class="meal-info">
+                                        <h4>Almoço</h4>
+                                        <p>Frango grelhado, arroz, salada</p>
+                                        <span class="meal-kcal">580 kcal</span>
+                                    </div>
+                                </div>
+                                <div class="meal-item">
+                                    <div class="meal-icon">🍌</div>
+                                    <div class="meal-info">
+                                        <h4>Lanche</h4>
+                                        <p>Iogurte, frutas, castanhas</p>
+                                        <span class="meal-kcal">280 kcal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="diet-summary">
+                                <div class="summary-item">
+                                    <span class="summary-label">Total</span>
+                                    <span class="summary-value">2.150 kcal</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Proteína</span>
+                                    <span class="summary-value">150g</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">Por que escolher o DietYourself?</h2>
+            <p class="section-subtitle">A primeira dieta que entende sua rotina antes de montar seu prato</p>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🤖</div>
+                    <h3>Dieta que Aprende com Você</h3>
+                    <p>Uma dieta que se ajusta automaticamente para continuar funcionando. Não precisa começar do zero quando sua rotina muda.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💬</div>
+                    <h3>Dúvidas na Hora da Refeição? Pergunte</h3>
+                    <p>Nada de esperar dias por resposta. Chat disponível 24/7 para quando você realmente precisa.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📱</div>
+                    <h3>Acesso em Qualquer Lugar</h3>
+                    <p>Visualize sua dieta no celular, tablet ou computador. Tudo sincronizado e sempre atualizado.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔄</div>
+                    <h3>Seu Corpo Muda. Sua Dieta Também</h3>
+                    <p>Atualizações automáticas conforme você evolui. Sem precisar recalcular tudo manualmente.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🍎</div>
+                    <h3>Nunca Fique Preso a um Alimento</h3>
+                    <p>Substituições inteligentes que mantêm os macros e o resultado. Você escolhe o que come, sem quebrar a dieta.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <h3>Veja Seu Progresso Real</h3>
+                    <p>Registre seu peso, aderência e veja gráficos de evolução. Motivação visual para continuar quando a vontade faltar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="como-funciona">
+        <div class="container">
+            <h2 class="section-title">Como Funciona</h2>
+            <p class="section-subtitle">Mais simples do que parece. Mais eficaz do que você imagina.</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Preencha o Questionário</h3>
+                        <p>Leva menos de 5 minutos. Sem perguntas confusas. Apenas o essencial sobre seus objetivos, preferências e rotina.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Receba Sua Dieta Personalizada</h3>
+                        <p>Nossa IA analisa suas respostas e cria uma dieta completa, balanceada e adaptada especialmente para você.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Comece a Seguir</h3>
+                        <p>Acesse sua dieta diariamente, registre seu progresso e use o chat para tirar dúvidas sobre nutrição.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Acompanhe e Evolua</h3>
+                        <p>Veja seu progresso, ajuste objetivos quando necessário e receba atualizações automáticas da sua dieta.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="planos">
+        <div class="container">
+            <h2 class="section-title">Escolha Seu Plano</h2>
+            <p class="section-subtitle">Acesso completo a dietas personalizadas e chat de suporte nutricional</p>
+            
+            <div class="pricing-anchor">
+                <h3>Quanto custa não ter um plano alimentar que funciona?</h3>
+                <div class="anchor-items">
+                    <div class="anchor-item">❌ Tentativas frustradas</div>
+                    <div class="anchor-item">❌ Tempo perdido</div>
+                    <div class="anchor-item">❌ Efeito sanfona</div>
+                </div>
+                <p class="anchor-value">DietYourself custa menos que <strong>R$ 3 por dia</strong></p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Plano Mensal</h3>
+                        <div class="price">
+                            <span class="currency">R$</span>
+                            <span class="amount">97</span>
+                            <span class="period">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ Dieta personalizada criada por IA</li>
+                        <li>✓ Chat de suporte nutricional 24/7</li>
+                        <li>✓ Acesso ao banco de alimentos completo</li>
+                        <li>✓ Opções de substituição de alimentos</li>
+                        <li>✓ Acompanhamento de progresso</li>
+                        <li>✓ Atualizações automáticas da dieta</li>
+                        <li>✓ Acesso em todos os dispositivos</li>
+                    </ul>
+                    <a href="#cadastro" class="btn btn-primary btn-block">Quero minha dieta personalizada</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="badge">Mais Popular</div>
+                    <div class="pricing-header">
+                        <h3>Plano Trimestral</h3>
+                        <div class="price">
+                            <span class="currency">R$</span>
+                            <span class="amount">87</span>
+                            <span class="period">/mês</span>
+                        </div>
+                        <p class="billing-note">Cobrado trimestralmente (R$ 261)</p>
+                        <p class="savings">Economize R$ 30 por trimestre</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ Tudo do Plano Mensal</li>
+                        <li>✓ Economia de 10%</li>
+                        <li>✓ Prioridade no suporte</li>
+                        <li>✓ Relatórios mensais de progresso</li>
+                    </ul>
+                    <a href="#cadastro" class="btn btn-primary btn-block">Quero minha dieta personalizada</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Plano Anual</h3>
+                        <div class="price">
+                            <span class="currency">R$</span>
+                            <span class="amount">67</span>
+                            <span class="period">/mês</span>
+                        </div>
+                        <p class="billing-note">Cobrado anualmente (R$ 804)</p>
+                        <p class="savings">Economize R$ 360 por ano</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ Tudo do Plano Mensal</li>
+                        <li>✓ Economia de 31%</li>
+                        <li>✓ Suporte prioritário</li>
+                        <li>✓ Relatórios detalhados</li>
+                        <li>✓ Acesso a funcionalidades premium</li>
+                    </ul>
+                    <a href="#cadastro" class="btn btn-primary btn-block">Quero minha dieta personalizada</a>
+                </div>
+            </div>
+
+            <div class="pricing-guarantee">
+                <p>🛡️ <strong>Garantia de 7 dias:</strong> Não ficou satisfeito? Devolvemos 100% do seu dinheiro, sem perguntas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">O que nossos usuários dizem</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">
+                        "Em 12 semanas perdi 8kg sem cortar tudo que gosto. Foi a primeira dieta que consegui seguir de verdade."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div class="author-info">
+                            <strong>Maria Silva, 34 anos</strong>
+                            <span>Objetivo: emagrecimento • Resultado: -8kg em 12 semanas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">
+                        "Ganhei 6kg de massa magra em 4 meses. A dieta se ajustava conforme eu evoluía. Não precisei recalcular nada."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">J</div>
+                        <div class="author-info">
+                            <strong>João Santos, 28 anos</strong>
+                            <span>Objetivo: ganho de massa • Resultado: +6kg massa magra em 4 meses</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">
+                        "Mantive meu peso por 6 meses seguidos. Quando minha rotina mudou, a dieta se adaptou sozinha. Incrível!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">A</div>
+                        <div class="author-info">
+                            <strong>Ana Costa, 31 anos</strong>
+                            <span>Objetivo: manutenção • Resultado: peso estável há 6 meses</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Perguntas Frequentes</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Como a dieta é criada?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Nossa inteligência artificial analisa suas respostas do questionário (objetivos, preferências, restrições, rotina) e cria uma dieta personalizada baseada em dados nutricionais científicos e suas necessidades específicas.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Posso substituir alimentos?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim! Para cada alimento da sua dieta, oferecemos opções de substituição equivalentes nutricionalmente, mantendo o equilíbrio da sua dieta.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>O chat funciona 24 horas?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim! Nosso assistente virtual de nutrição está disponível 24 horas por dia, 7 dias por semana. Você pode tirar dúvidas sobre alimentos, receitas, nutrição e muito mais a qualquer momento.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Posso cancelar quando quiser?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim! Você pode cancelar sua assinatura a qualquer momento, sem taxas ou multas. Você continuará tendo acesso até o final do período pago.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>A dieta é atualizada automaticamente?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim! Conforme você registra seu progresso (peso, aderência), nossa IA ajusta automaticamente sua dieta para continuar alinhada com seus objetivos.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Funciona no celular?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim! Nossa plataforma é totalmente responsiva e funciona perfeitamente em smartphones, tablets e computadores. Tudo sincronizado em tempo real.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Pronto para transformar sua alimentação?</h2>
+                <p>Junte-se a milhares de pessoas que já estão alcançando seus objetivos com o DietYourself</p>
+                <a href="#cadastro" class="btn btn-primary btn-large">Criar minha dieta personalizada agora</a>
+                <p class="cta-note">Teste por 7 dias • Sem risco • Cancele quando quiser</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sticky CTA Mobile -->
+    <div class="sticky-cta" id="sticky-cta">
+        <a href="#cadastro" class="btn btn-primary btn-sticky">Criar minha dieta</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>DietYourself</h3>
+                    <p>Sua jornada para uma vida mais saudável começa aqui.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Produto</h4>
+                        <ul>
+                            <li><a href="#como-funciona">Como Funciona</a></li>
+                            <li><a href="#planos">Planos</a></li>
+                            <li><a href="#faq">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Suporte</h4>
+                        <ul>
+                            <li><a href="#">Central de Ajuda</a></li>
+                            <li><a href="#">Contato</a></li>
+                            <li><a href="#">Termos de Uso</a></li>
+                            <li><a href="#">Privacidade</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Redes Sociais</h4>
+                        <ul>
+                            <li><a href="#">Instagram</a></li>
+                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#">YouTube</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DietYourself. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,177 @@
+/* ============================================
+   NutricionistaStats - Dashboard KPIs
+   ============================================ */
+
+.nutricionista-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-2xl);
+}
+
+/* Stats Grid - Usando o lifefit-stats-grid do design system */
+.nutricionista-stats .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+@media (max-width: 1200px) {
+  .nutricionista-stats .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .nutricionista-stats .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+/* Attention Section */
+.attention-section {
+  padding: var(--space-lg);
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-xl);
+}
+
+.dark-mode .attention-section {
+  background: var(--gradient-card);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.attention-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.attention-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.attention-card:hover {
+  background: var(--bg-primary);
+  border-color: var(--lifefit-warning);
+  box-shadow: 0 0 0 3px var(--lifefit-warning-light);
+}
+
+.dark-mode .attention-card {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.dark-mode .attention-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.attention-avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--lifefit-warning-light);
+  color: var(--lifefit-warning);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-full);
+}
+
+.attention-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.attention-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attention-status {
+  font-size: var(--font-size-xs);
+  color: var(--lifefit-warning);
+  font-weight: var(--font-weight-medium);
+}
+
+.attention-arrow {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: transform var(--transition-fast);
+}
+
+.attention-card:hover .attention-arrow {
+  transform: translateX(3px);
+  color: var(--lifefit-warning);
+}
+
+/* Empty State */
+.stats-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-3xl) var(--space-xl);
+  text-align: center;
+  background: var(--gradient-card);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-xl);
+}
+
+.stats-empty-icon {
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.stats-empty h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.stats-empty p {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 300px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .attention-section {
+    padding: var(--space-md);
+  }
+
+  .attention-card {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .attention-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-sm);
+  }
+}
+
+

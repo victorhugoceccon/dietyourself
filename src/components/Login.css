@@ -13,6 +13,20 @@
   background: var(--gradient-subtle);
 }
 
+.login-theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .login-theme-toggle {
+    top: 16px;
+    right: 16px;
+  }
+}
+
 .login-background {
   position: absolute;
   width: 100%;

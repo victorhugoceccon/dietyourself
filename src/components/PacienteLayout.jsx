@@ -6,6 +6,7 @@ import DailyCheckInModal from './DailyCheckInModal'
 import BrandingProvider from './BrandingProvider'
 import Questionnaire from './Questionnaire'
 import NotificationCenter from './NotificationCenter'
+import ThemeToggle from './ThemeToggle'
 import { hasAnyRole } from '../utils/roleUtils'
 import { API_URL } from '../config/api'
 import './PacienteLayout.css'
@@ -291,6 +292,7 @@ function PacienteLayout() {
             </p>
           </div>
           <div className="header-right">
+            <ThemeToggle />
             <RoleSelector user={user} />
             {/* Navegação no header - Desktop apenas */}
             {navItems && (

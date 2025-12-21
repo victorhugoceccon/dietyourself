@@ -283,6 +283,10 @@
   background: var(--bg-elevated);
   transition: all 0.2s ease;
   gap: var(--space-md);
+  position: relative;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 @media (max-width: 768px) {
@@ -320,6 +324,9 @@
   position: relative;
   flex-shrink: 0;
   align-self: center;
+  pointer-events: auto;
+  z-index: 1;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (max-width: 768px) {
@@ -366,6 +373,24 @@
   height: 8px;
   background: var(--on-primary);
   border-radius: 50%;
+}
+
+/* Garantir que radio buttons sejam clicáveis em todos os casos */
+.radio-group input[type="radio"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 2 !important;
+}
+
+.radio-label {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Garantir que o label não bloqueie o input */
+.radio-label input[type="radio"] {
+  position: relative;
+  z-index: 10;
 }
 
 /* Seção de alimentos */

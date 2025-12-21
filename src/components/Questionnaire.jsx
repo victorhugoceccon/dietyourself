@@ -55,10 +55,15 @@ function Questionnaire({ onComplete }) {
   const totalSteps = 7
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }))
+    console.log(`📝 Alterando ${field} para:`, value)
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [field]: value
+      }
+      console.log(`✅ Novo estado de ${field}:`, newData[field])
+      return newData
+    })
     setError('')
   }
 
@@ -227,7 +232,16 @@ function Questionnaire({ onComplete }) {
         body: JSON.stringify(payload)
       })
 
-      const data = await response.json()
+      // Verificar se a resposta é JSON válido
+      let data
+      const contentType = response.headers.get('content-type')
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json()
+      } else {
+        const text = await response.text()
+        console.error('Resposta não é JSON:', text)
+        throw new Error(`Erro do servidor: ${response.status} ${response.statusText}`)
+      }
 
       if (!response.ok) {
         if (data.details) {
@@ -259,7 +273,18 @@ function Questionnaire({ onComplete }) {
 
     } catch (err) {
       console.error('Erro ao enviar questionário:', err)
-      setError(err.message || 'Erro ao salvar questionário')
+      console.error('Stack:', err.stack)
+      console.error('Payload enviado:', JSON.stringify(payload, null, 2))
+      
+      // Mensagem de erro mais detalhada
+      let errorMessage = 'Erro ao salvar questionário'
+      if (err.message) {
+        errorMessage = err.message
+      } else if (err instanceof TypeError && err.message.includes('JSON')) {
+        errorMessage = 'Erro de comunicação com o servidor. Verifique sua conexão.'
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -312,7 +337,10 @@ function Questionnaire({ onComplete }) {
                     name="sexo"
                     value="Feminino"
                     checked={formData.sexo === 'Feminino'}
-                    onChange={(e) => handleChange('sexo', e.target.value)}
+                    onChange={(e) => {
+                      e.stopPropagation()
+                      handleChange('sexo', e.target.value)
+                    }}
                   />
                   <span>Feminino</span>
                 </label>
@@ -322,7 +350,10 @@ function Questionnaire({ onComplete }) {
                     name="sexo"
                     value="Masculino"
                     checked={formData.sexo === 'Masculino'}
-                    onChange={(e) => handleChange('sexo', e.target.value)}
+                    onChange={(e) => {
+                      e.stopPropagation()
+                      handleChange('sexo', e.target.value)
+                    }}
                   />
                   <span>Masculino</span>
                 </label>

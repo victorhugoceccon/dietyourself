@@ -4,6 +4,7 @@ import RoleSelector from './RoleSelector'
 import ChatWidget from './ChatWidget'
 import BrandingProvider from './BrandingProvider'
 import NotificationCenter from './NotificationCenter'
+import ThemeToggle from './ThemeToggle'
 import { hasAnyRole } from '../utils/roleUtils'
 import { getUserRoles } from '../utils/roleUtils'
 import { API_URL } from '../config/api'
@@ -100,6 +101,7 @@ function ProfessionalLayout({ allowedRoles, children, headerNavItems, headerNavC
             )}
 
             <div className="header-right">
+              <ThemeToggle />
               <NotificationCenter />
               <button onClick={handleLogout} className="logout-btn">
                 Sair

@@ -12,20 +12,26 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Verificar preferência salva - padrão é LIGHT MODE (false)
+    // Verificar se há uma preferência salva válida
     const saved = localStorage.getItem('darkMode')
-    if (saved !== null) {
-      return saved === 'true'
+    
+    // Se não há valor salvo, iniciar em light mode
+    if (saved === null) {
+      return false
     }
-    // Padrão: Light Mode (não usa preferência do sistema)
+    
+    // Se o valor salvo é 'true', limpar e forçar light mode (reset de dark mode antigo)
+    if (saved === 'true') {
+      localStorage.removeItem('darkMode')
+      return false
+    }
+    
+    // Se o valor é 'false', usar light mode
     return false
   })
 
   useEffect(() => {
-    // Salvar preferência no localStorage
-    localStorage.setItem('darkMode', isDarkMode.toString())
-    
-    // Aplicar classe ao body
+    // Aplicar classe ao documento imediatamente
     if (isDarkMode) {
       document.documentElement.classList.add('dark-mode')
     } else {

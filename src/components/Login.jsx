@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getRoleRedirect } from '../utils/roleRedirect'
 import { AUTH_API_URL } from '../config/api'
+import ThemeToggle from './ThemeToggle'
 import './Login.css'
 
 function Login() {
@@ -109,6 +110,10 @@ function Login() {
         <div className="shape shape-1"></div>
         <div className="shape shape-2"></div>
         <div className="shape shape-3"></div>
+      </div>
+      
+      <div className="login-theme-toggle">
+        <ThemeToggle />
       </div>
       
       <div className="login-content">

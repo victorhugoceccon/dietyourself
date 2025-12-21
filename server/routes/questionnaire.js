@@ -248,9 +248,15 @@ router.post('/', authenticate, async (req, res) => {
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error('❌ Erro de validação:', error.errors)
+      const errorMessages = error.errors.map(err => {
+        const path = err.path.join('.')
+        return `${path}: ${err.message}`
+      }).join(', ')
+      
       return res.status(400).json({
         error: 'Dados inválidos',
-        details: error.errors.map(err => ({
+        details: errorMessages,
+        validationErrors: error.errors.map(err => ({
           path: err.path,
           message: err.message,
           code: err.code
@@ -260,9 +266,20 @@ router.post('/', authenticate, async (req, res) => {
 
     console.error('❌ Erro ao salvar questionário:', error)
     console.error('Stack trace:', error.stack)
+    console.error('Request body:', JSON.stringify(req.body, null, 2))
+    
+    // Verificar se é erro do Prisma
+    if (error.code && error.code.startsWith('P')) {
+      return res.status(500).json({ 
+        error: 'Erro no banco de dados', 
+        details: 'Erro ao salvar dados. Verifique os logs do servidor.',
+        code: error.code
+      })
+    }
+    
     res.status(500).json({ 
       error: 'Erro ao salvar questionário', 
-      details: error.message,
+      details: error.message || 'Erro desconhecido',
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     })
   }

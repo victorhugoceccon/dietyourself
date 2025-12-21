@@ -151,13 +151,21 @@ router.post('/', authenticate, async (req, res) => {
 
     // Verificar se já existe questionário
     console.log('🔍 Verificando se já existe questionário...')
-    const existing = await prisma.questionnaireData.findUnique({
-      where: { userId }
-    })
-    console.log('📋 Questionário existente:', existing ? 'Sim' : 'Não')
+    let existing
+    try {
+      existing = await prisma.questionnaireData.findUnique({
+        where: { userId }
+      })
+      console.log('📋 Questionário existente:', existing ? 'Sim' : 'Não')
+    } catch (findError) {
+      console.error('❌ Erro ao verificar questionário existente:', findError)
+      throw findError
+    }
 
     console.log('💾 Salvando dados no banco...')
-    const questionnaireData = existing
+    let questionnaireData
+    try {
+      questionnaireData = existing
       ? await prisma.questionnaireData.update({
           where: { userId },
           data: {

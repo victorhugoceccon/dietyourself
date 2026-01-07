@@ -1,0 +1,49 @@
+.crop-area {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  background: rgba(11, 15, 20, 0.06);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-color-light);
+}
+
+.dark-mode .crop-area {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.crop-controls {
+  margin-top: var(--space-lg);
+  display: grid;
+  gap: var(--space-md);
+}
+
+.crop-control {
+  display: grid;
+  gap: var(--space-xs);
+  color: var(--text-primary);
+}
+
+.crop-control span {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.crop-control input[type="range"] {
+  width: 100%;
+}
+
+.crop-empty {
+  color: var(--text-secondary);
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .crop-area {
+    height: 260px;
+  }
+}
+
+

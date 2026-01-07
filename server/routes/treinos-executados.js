@@ -3,6 +3,7 @@ import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
 import { hasRole, hasAnyRole } from '../utils/roleUtils.js'
 import { z } from 'zod'
+import { upsertWorkoutPointsEvent } from '../utils/groupPoints.js'
 
 const router = express.Router()
 
@@ -211,6 +212,17 @@ router.post('/finalizar', authenticate, async (req, res) => {
     const treinoAtualizado = await prisma.treinoExecutado.findUnique({
       where: { id: validatedData.treinoExecutadoId }
     })
+
+    // Gamificação: registrar pontos para todos os grupos do usuário
+    try {
+      await upsertWorkoutPointsEvent({
+        userId,
+        treinoExecutadoId: validatedData.treinoExecutadoId,
+        completouTreino: feedback.completouTreino
+      })
+    } catch (pointsError) {
+      console.warn('⚠️ Erro ao registrar pontos de treino (ignorado):', pointsError?.message || pointsError)
+    }
     
     res.json({
       message: 'Treino finalizado com sucesso',

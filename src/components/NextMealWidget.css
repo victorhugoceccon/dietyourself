@@ -227,7 +227,7 @@
 
 .macro-protein .macro-value { color: #3B82F6; }
 .macro-carbs .macro-value { color: #F59E0B; }
-.macro-fat .macro-value { color: #8B5CF6; }
+.macro-fat .macro-value { color: var(--lifefit-blue-gray); }
 
 /* Loading State */
 .next-meal-widget--loading {

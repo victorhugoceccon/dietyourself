@@ -268,6 +268,18 @@ function PacienteLayout() {
         </button>
       )}
       <button
+        className={`nav-item ${isActive('/paciente/projetos') ? 'active' : ''}`}
+        onClick={() => navigate('/paciente/projetos')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span className="nav-text">Projetos</span>
+      </button>
+      <button
         className={`nav-item ${isActive('/paciente/perfil') ? 'active' : ''}`}
         onClick={() => navigate('/paciente/perfil')}
       >
@@ -342,7 +354,7 @@ function PacienteLayout() {
 
           {/* Conteúdo Principal */}
           <div className="paciente-main-content">
-            <Outlet />
+            <Outlet context={{ userData }} />
           </div>
         </div>
       )}

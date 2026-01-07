@@ -199,6 +199,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color var(--transition-base), color var(--transition-base);
+  /* Evita scroll horizontal causado por grids/paddings rígidos no mobile */
+  overflow-x: hidden;
 }
 
 .dark-mode body {
@@ -292,6 +294,9 @@ body {
 .btn-info,
 .btn-icon {
   font-family: var(--font-family-base);
+  /* Mobile-first: permitir quebra e evitar cortes */
+  white-space: normal;
+  word-break: break-word;
 }
 
 .btn-primary,
@@ -299,12 +304,22 @@ body {
   background: var(--gradient-primary) !important;
   color: var(--on-primary) !important;
   border: 1px solid rgba(11, 15, 20, 0.10) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  text-align: center;
 }
 
 .btn-secondary {
   background: rgba(255, 255, 255, 0.72) !important;
   color: var(--text-primary) !important;
   border: 1px solid var(--border-color) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  text-align: center;
 }
 
 .dark-mode .btn-secondary {
@@ -317,6 +332,11 @@ body {
   background: var(--lifefit-error) !important;
   color: var(--lifefit-white) !important;
   border: 1px solid rgba(11, 15, 20, 0.10) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  text-align: center;
 }
 
 .btn-warning {
@@ -481,6 +501,7 @@ body {
   color: #90c22c;
   margin: 0;
   line-height: var(--line-height-tight);
+  word-break: break-word;
 }
 
 .lifefit-modal__subtitle {
@@ -551,6 +572,29 @@ body {
   justify-content: space-between;
 }
 
+/* =========================================================
+   Modal variant: scroll no BODY (evita footer/header cobrirem conteúdo)
+   Use em telas com formulários longos no mobile.
+   --------------------------------------------------------- */
+.lifefit-modal.lifefit-modal--scroll-body {
+  /* O container não deve rolar; quem rola é o body entre header/footer */
+  overflow: hidden;
+}
+
+.lifefit-modal.lifefit-modal--scroll-body .lifefit-modal__header,
+.lifefit-modal.lifefit-modal--scroll-body .lifefit-modal__footer {
+  position: relative;
+  top: auto;
+  bottom: auto;
+}
+
+.lifefit-modal.lifefit-modal--scroll-body .lifefit-modal__body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+}
+
 /* Responsivo Mobile */
 @media (max-width: 768px) {
   .lifefit-modal-overlay {
@@ -588,6 +632,13 @@ body {
   .lifefit-modal__footer {
     flex-direction: column-reverse;
     gap: var(--space-sm);
+    /* Safe area no iOS */
+    padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
+  }
+
+  /* No wizard, queremos o primário no FINAL (mais natural no mobile) */
+  .lifefit-modal.lifefit-modal--scroll-body .lifefit-modal__footer {
+    flex-direction: column;
   }
 
   .lifefit-modal__footer > button,
@@ -595,6 +646,30 @@ body {
   .lifefit-modal__footer > .btn-secondary,
   .lifefit-modal__footer > .btn-danger {
     width: 100%;
+  }
+}
+
+/* Mobile-first tokens: reduzir espaçamentos grandes no telefone */
+@media (max-width: 480px) {
+  :root {
+    /* No mobile, usamos gutters menores para aproveitar o máximo da tela */
+    --space-lg: 1rem;     /* 16px */
+    --space-xl: 1.25rem;  /* 20px */
+    --space-2xl: 1.5rem;  /* 24px */
+    --space-3xl: 2rem;    /* 32px */
+    --space-4xl: 2.5rem;  /* 40px */
+  }
+
+  /* iOS: evitar zoom automático ao focar inputs */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  /* Cards com padding mais confortável no mobile */
+  .lifefit-card {
+    padding: var(--space-lg);
   }
 }
 

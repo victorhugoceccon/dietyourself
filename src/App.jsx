@@ -7,6 +7,8 @@ import PacienteDashboard from './components/PacienteDashboard'
 import PacienteDieta from './components/PacienteDieta'
 import PacienteTreino from './components/PacienteTreino'
 import PacientePerfil from './components/PacientePerfil'
+import PacienteProjetos from './components/PacienteProjetos'
+import ProjetoDetalhe from './components/ProjetoDetalhe'
 import Nutricionista from './components/Nutricionista'
 import Personal from './components/Personal'
 import Admin from './components/Admin'
@@ -63,6 +65,8 @@ function App() {
             <Route path="dashboard" element={<PacienteDashboard />} />
             <Route path="dieta" element={<PacienteDieta />} />
             <Route path="treino" element={<PacienteTreino />} />
+            <Route path="projetos" element={<PacienteProjetos />} />
+            <Route path="projetos/:grupoId" element={<ProjetoDetalhe />} />
             <Route path="perfil" element={<PacientePerfil />} />
           </Route>
           <Route 

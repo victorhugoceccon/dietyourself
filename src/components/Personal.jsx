@@ -9,6 +9,7 @@ import PersonalFeedbackSolicitacoes from './PersonalFeedbackSolicitacoes'
 import BrandingSettings from './BrandingSettings'
 import PersonalStats from './PersonalStats'
 import LoadingBar from './LoadingBar'
+import ProfessionalBrandCard from './ProfessionalBrandCard'
 import './Personal.css'
 
 function Personal() {
@@ -134,6 +135,9 @@ function Personal() {
 
         {/* Conteúdo Principal */}
         <div className="personal-main-content">
+          <div className="personal-branding-wrap">
+            <ProfessionalBrandCard professionalUserId={user?.id} roleLabel="Personal Trainer" />
+          </div>
           {activeTab === 'dashboard' && <PersonalStats onTabChange={setActiveTab} />}
           {activeTab === 'exercicios' && <ExerciciosManager />}
           {activeTab === 'divisoes' && <DivisaoTreinoManager />}

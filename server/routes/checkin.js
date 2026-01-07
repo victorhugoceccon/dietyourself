@@ -2,6 +2,7 @@ import express from 'express'
 import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
 import { z } from 'zod'
+import { upsertCheckInPointsEvent } from '../utils/groupPoints.js'
 
 const router = express.Router()
 
@@ -62,6 +63,13 @@ router.post('/', authenticate, async (req, res) => {
           refeicoesConsumidas: validatedData.refeicoesConsumidas ? JSON.stringify(validatedData.refeicoesConsumidas) : null
         }
       })
+    }
+
+    // Gamificação: atualizar/registrar pontos para todos os grupos do usuário
+    try {
+      await upsertCheckInPointsEvent({ userId, checkIn })
+    } catch (pointsError) {
+      console.warn('⚠️ Erro ao registrar pontos de check-in (ignorado):', pointsError?.message || pointsError)
     }
 
     res.json({

@@ -21,6 +21,87 @@
   transition: all var(--transition-base);
   border: 1px solid var(--border-color-light);
 }
+.perfil-photo-section {
+  padding: var(--space-xl);
+}
+
+.perfil-photo-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.perfil-photo-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border-color-light);
+  background: rgba(255, 255, 255, 0.72);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.dark-mode .perfil-photo-avatar {
+  background: rgba(15, 20, 27, 0.72);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.perfil-photo-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.perfil-photo-fallback {
+  font-weight: var(--font-weight-bold);
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.perfil-photo-text {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.perfil-photo-title {
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.perfil-photo-subtitle {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.35;
+}
+
+.perfil-photo-btn {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+.perfil-photo-file {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .perfil-photo-row {
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .perfil-photo-avatar {
+    width: 72px;
+    height: 72px;
+  }
+}
+
 
 .perfil-section:hover {
   border-color: var(--lifefit-green-light);

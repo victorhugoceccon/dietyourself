@@ -17,6 +17,9 @@ const prescricaoTreinoSchema = z.object({
     nome: z.string().min(1),
     ordem: z.number().int().min(1),
     divisaoTreinoId: z.string().optional().nullable(),
+    grupoMuscularPrincipal: z.string().optional().nullable(),
+    grupoMuscularSecundario: z.string().optional().nullable(),
+    diaSemana: z.string().optional().nullable(),
     itens: z.array(z.object({
       exercicioId: z.string().min(1),
       series: z.number().int().min(1),
@@ -278,6 +281,9 @@ router.post('/', authenticate, async (req, res) => {
             nome: div.nome,
             ordem: div.ordem,
             divisaoTreinoId: div.divisaoTreinoId || null,
+            grupoMuscularPrincipal: div.grupoMuscularPrincipal || null,
+            grupoMuscularSecundario: div.grupoMuscularSecundario || null,
+            diaSemana: div.diaSemana || null,
             itens: {
               create: div.itens.map((item) => ({
                 exercicioId: item.exercicioId,
@@ -377,6 +383,9 @@ router.put('/:id', authenticate, async (req, res) => {
             nome: div.nome,
             ordem: div.ordem,
             divisaoTreinoId: div.divisaoTreinoId || null,
+            grupoMuscularPrincipal: div.grupoMuscularPrincipal || null,
+            grupoMuscularSecundario: div.grupoMuscularSecundario || null,
+            diaSemana: div.diaSemana || null,
             itens: {
               create: div.itens.map(item => ({
                 exercicioId: item.exercicioId,

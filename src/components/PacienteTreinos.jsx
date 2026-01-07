@@ -973,31 +973,6 @@ function PacienteTreinos({ refreshTrigger }) {
 
   return (
     <section className="treinos-section">
-      {/* Header com Banner e Logo do Personal */}
-      {branding && (branding.bannerUrl || branding.logoUrl) && (
-        <div className="treinos-header-branding">
-          {branding.bannerUrl && (
-            <div 
-              className="treinos-banner"
-              style={{
-                backgroundImage: `url(${branding.bannerUrl})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}
-            />
-          )}
-          {branding.logoUrl && (
-            <div className="treinos-logo-container">
-              <img 
-                src={branding.logoUrl} 
-                alt={branding.brandName || 'Personal Trainer'}
-                className="treinos-logo"
-              />
-            </div>
-          )}
-        </div>
-      )}
-
       <div className="treinos-section-content">
         <div className="section-header">
           <h2>Meus Treinos</h2>

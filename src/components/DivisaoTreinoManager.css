@@ -116,23 +116,21 @@
 .search-input {
   width: 100%;
   padding: var(--space-md) var(--space-md) var(--space-md) 2.75rem;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 2px solid var(--border-color);
   border-radius: var(--radius-lg);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
+  background: var(--bg-primary);
   color: var(--text-primary);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--transition-fast);
   height: 48px;
   box-sizing: border-box;
-  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.08);
+  box-shadow: var(--shadow-xs);
 }
 
 .search-input:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 4px 8px rgba(139, 92, 246, 0.12);
-  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(11, 15, 20, 0.18);
+  box-shadow: var(--shadow-sm);
 }
 
 .dark-mode .search-input {
@@ -148,7 +146,7 @@
 }
 
 .search-input::placeholder {
-  color: rgba(139, 92, 246, 0.5);
+  color: var(--text-tertiary);
   opacity: 0.7;
   font-weight: var(--font-weight-regular);
 }
@@ -159,15 +157,14 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #8B5CF6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15), 0 4px 12px rgba(139, 92, 246, 0.2);
-  background: rgba(255, 255, 255, 1);
+  border-color: var(--lifefit-green-soft);
+  box-shadow: 0 0 0 4px var(--lifefit-green-light);
 }
 
 .dark-mode .search-input:focus {
-  background: rgba(26, 27, 31, 1) !important;
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3), 0 4px 12px rgba(167, 139, 250, 0.25) !important;
-  border-color: #A78BFA !important;
+  background: var(--bg-primary) !important;
+  box-shadow: 0 0 0 4px var(--lifefit-green-light) !important;
+  border-color: var(--lifefit-green-soft) !important;
 }
 
 .divisoes-list {
@@ -200,14 +197,14 @@
 .divisao-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 92, 246, 0.15);
+  border: 1px solid var(--border-color-light);
   border-radius: var(--radius-xl);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   min-height: auto;
-  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.1);
+  box-shadow: var(--shadow-sm);
   position: relative;
   width: 100%;
   box-sizing: border-box;
@@ -220,7 +217,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #8B5CF6, #EC4899);
+  background: var(--gradient-primary);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -233,13 +230,13 @@
 
 .divisao-card:active {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  box-shadow: var(--shadow-sm);
 }
 
 .divisao-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.2);
-  border-color: rgba(139, 92, 246, 0.35);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(54, 215, 255, 0.25);
 }
 
 .divisao-card:hover::before {
@@ -254,8 +251,8 @@
 
 .divisao-card:focus-within {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 0 4px var(--lifefit-green-light);
+  border-color: var(--lifefit-green-soft);
 }
 
 .divisao-card:focus-within::before {
@@ -263,7 +260,7 @@
 }
 
 .dark-mode .divisao-card:focus-within {
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3) !important;
+  box-shadow: 0 0 0 4px var(--lifefit-green-light) !important;
 }
 
 .divisao-content {
@@ -349,11 +346,11 @@
 .divisao-exercicios {
   margin-top: var(--space-md);
   padding-top: var(--space-md);
-  border-top: 1px solid rgba(139, 92, 246, 0.1);
+  border-top: 1px solid var(--border-color-light);
 }
 
 .dark-mode .divisao-exercicios {
-  border-top-color: rgba(167, 139, 250, 0.15) !important;
+  border-top-color: rgba(255, 255, 255, 0.10) !important;
 }
 
 .divisao-exercicios-title {
@@ -410,13 +407,14 @@
   margin-top: auto;
   padding-top: var(--space-lg);
   padding-bottom: var(--space-lg);
-  border-top: 1px solid rgba(139, 92, 246, 0.1);
+  border-top: 1px solid var(--border-color-light);
   flex-shrink: 0;
   align-items: center;
 }
 
+/* dark-mode já usa tokens globais; manter só borda sutil */
 .dark-mode .divisao-actions {
-  border-top-color: rgba(167, 139, 250, 0.15) !important;
+  border-top-color: rgba(255, 255, 255, 0.10) !important;
 }
 
 .divisao-actions .btn-edit,
@@ -433,10 +431,10 @@
 
 
 /* Reutilizar estilos do ExerciciosManager */
-.btn-primary,
-.btn-edit,
-.btn-delete,
-.btn-cancel {
+.divisoes-manager .btn-primary,
+.divisoes-manager .btn-edit,
+.divisoes-manager .btn-delete,
+.divisoes-manager .btn-cancel {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
@@ -445,69 +443,18 @@
   transition: all 0.2s ease;
 }
 
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-xs);
-  padding: var(--space-md) var(--space-lg);
-  min-height: 44px;
-  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%) !important;
-  background-color: #4CAF50 !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  border-radius: var(--radius-lg);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-base);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3) !important;
-  text-transform: none;
-  letter-spacing: 0;
+/* NÃO redefinir .btn-primary aqui (o design system já define globalmente) */
+.divisoes-manager .btn-primary {
   white-space: nowrap;
-  flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
 }
 
-.btn-primary::before {
-  content: '+';
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: var(--space-xs);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4) !important;
-  background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%) !important;
-  background-color: #45a049 !important;
-}
-
-.dark-mode .btn-primary {
-  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%) !important;
-  background-color: #4CAF50 !important;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4) !important;
-  color: #FFFFFF !important;
-}
-
-.dark-mode .btn-primary:hover {
-  background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%) !important;
-  background-color: #45a049 !important;
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5) !important;
-}
-
-.btn-edit {
+.divisoes-manager .btn-edit {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
   padding: var(--space-md) var(--space-lg);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-sm);
@@ -519,31 +466,31 @@
   position: relative;
   white-space: nowrap;
   box-sizing: border-box;
-  background: rgba(139, 92, 246, 0.08);
-  color: #8B5CF6;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--text-primary);
   width: 100%;
   text-align: center;
 }
 
-.dark-mode .btn-edit {
-  background: rgba(167, 139, 250, 0.15) !important;
-  color: #A78BFA !important;
-  border-color: rgba(167, 139, 250, 0.3) !important;
+.dark-mode .divisoes-manager .btn-edit {
+  background: rgba(15, 20, 27, 0.65) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-.btn-edit:hover {
-  background: rgba(139, 92, 246, 0.12);
-  border-color: rgba(139, 92, 246, 0.3);
-  color: #7C3AED;
+.divisoes-manager .btn-edit:hover {
+  background: rgba(54, 215, 255, 0.10);
+  border-color: rgba(54, 215, 255, 0.25);
+  color: var(--text-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(139, 92, 246, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
-.dark-mode .btn-edit:hover {
-  background: rgba(167, 139, 250, 0.25) !important;
-  border-color: rgba(167, 139, 250, 0.4) !important;
-  color: #C4B5FD !important;
-  box-shadow: 0 4px 8px rgba(167, 139, 250, 0.3) !important;
+.dark-mode .divisoes-manager .btn-edit:hover {
+  background: rgba(54, 215, 255, 0.10) !important;
+  border-color: rgba(54, 215, 255, 0.25) !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-sm) !important;
 }
 
 .btn-delete {

@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { API_URL } from '../config/api'
+import ImageCropModal from './ImageCropModal'
 import './PacientePerfil.css'
 
 function PacientePerfil() {
@@ -14,6 +15,10 @@ function PacientePerfil() {
   const [resetting, setResetting] = useState(false)
   const [hasDiet, setHasDiet] = useState(false)
   const [showQuestionnaireModal, setShowQuestionnaireModal] = useState(false)
+  const photoInputRef = useRef(null)
+  const [pendingPhotoSrc, setPendingPhotoSrc] = useState('')
+  const [showPhotoCrop, setShowPhotoCrop] = useState(false)
+  const [savingPhoto, setSavingPhoto] = useState(false)
 
   useEffect(() => {
     loadData()
@@ -71,6 +76,43 @@ function PacientePerfil() {
       console.error('Erro ao carregar dados:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const getInitials = (nameOrEmail) => {
+    if (!nameOrEmail) return '?'
+    const parts = String(nameOrEmail).trim().split(/\s+/).filter(Boolean)
+    if (parts.length === 0) return '?'
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  }
+
+  const openPhotoPicker = () => photoInputRef.current?.click()
+
+  const saveProfilePhoto = async (profilePhoto) => {
+    setSavingPhoto(true)
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_URL}/user/profile`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ profilePhoto })
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Erro ao salvar foto de perfil')
+
+      const updatedUser = { ...user, profilePhoto: data.user?.profilePhoto || profilePhoto }
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+      setUser(updatedUser)
+    } catch (error) {
+      console.error('Erro ao salvar foto de perfil:', error)
+      alert(error.message || 'Erro ao salvar foto de perfil')
+    } finally {
+      setSavingPhoto(false)
     }
   }
 
@@ -166,6 +208,71 @@ function PacientePerfil() {
   return (
     <div className="paciente-perfil">
       <div className="perfil-container">
+        {/* Foto de perfil */}
+        <section className="perfil-section perfil-photo-section">
+          <div className="perfil-photo-row">
+            <div className="perfil-photo-avatar" onClick={openPhotoPicker} role="button" tabIndex={0}>
+              {user?.profilePhoto ? (
+                <img src={user.profilePhoto} alt={user?.name || user?.email || 'Foto de perfil'} />
+              ) : (
+                <div className="perfil-photo-fallback">{getInitials(user?.name || user?.email)}</div>
+              )}
+            </div>
+            <div className="perfil-photo-text">
+              <div className="perfil-photo-title">Foto de perfil</div>
+              <div className="perfil-photo-subtitle">
+                Toque para tirar/enviar uma foto. Você poderá recortar antes de salvar.
+              </div>
+              <button className="btn-secondary perfil-photo-btn" onClick={openPhotoPicker} disabled={savingPhoto}>
+                {savingPhoto ? 'Salvando...' : 'Alterar foto'}
+              </button>
+            </div>
+          </div>
+
+          <input
+            ref={photoInputRef}
+            type="file"
+            accept="image/*"
+            capture="user"
+            className="perfil-photo-file"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (!file) return
+              if (!file.type.startsWith('image/')) {
+                alert('Selecione uma imagem válida')
+                return
+              }
+              if (file.size > 2 * 1024 * 1024) {
+                alert('A imagem deve ter no máximo 2MB')
+                return
+              }
+              const reader = new FileReader()
+              reader.onloadend = () => {
+                setPendingPhotoSrc(reader.result)
+                setShowPhotoCrop(true)
+              }
+              reader.readAsDataURL(file)
+            }}
+          />
+
+          <ImageCropModal
+            isOpen={showPhotoCrop}
+            onClose={() => {
+              setShowPhotoCrop(false)
+              setPendingPhotoSrc('')
+            }}
+            imageSrc={pendingPhotoSrc}
+            title="Ajustar foto de perfil"
+            subtitle="Centralize o rosto e ajuste o zoom."
+            aspect={1}
+            onConfirm={async (dataUrl) => {
+              await saveProfilePhoto(dataUrl)
+              setShowPhotoCrop(false)
+              setPendingPhotoSrc('')
+            }}
+          />
+        </section>
+
         {/* Seção de Informações Básicas */}
         <section className="perfil-section">
           <div className="section-header">
@@ -459,6 +566,7 @@ function PacientePerfil() {
 }
 
 export default PacientePerfil
+
 
 
 

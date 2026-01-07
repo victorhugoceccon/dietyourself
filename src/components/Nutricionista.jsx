@@ -6,6 +6,7 @@ import LoadingBar from './LoadingBar'
 import AlimentosManager from './AlimentosManager'
 import BrandingSettings from './BrandingSettings'
 import NutricionistaStats from './NutricionistaStats'
+import ProfessionalBrandCard from './ProfessionalBrandCard'
 import { API_URL } from '../config/api'
 import './Nutricionista.css'
 
@@ -164,6 +165,9 @@ function Nutricionista() {
 
         {/* Conteúdo Principal */}
         <div className="nutricionista-main-content">
+          <div className="nutricionista-branding-wrap">
+            <ProfessionalBrandCard professionalUserId={user?.id} roleLabel="Nutricionista" />
+          </div>
           {activeTab === 'pacientes' && (
             <>
               {/* Dashboard de Estatísticas */}
@@ -179,7 +183,7 @@ function Nutricionista() {
                   <h2 className="sidebar-title">Meus Pacientes</h2>
                   <button
                     onClick={() => setShowCreateModal(true)}
-                    className="add-paciente-btn"
+                    className="btn-primary add-paciente-btn"
                     title="Adicionar novo paciente"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -198,7 +202,7 @@ function Nutricionista() {
                     </svg>
                     <input
                       type="text"
-                      className="search-input"
+                      className="lifefit-input search-input"
                       placeholder="Buscar paciente..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}

@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import PacienteTreinos from './PacienteTreinos'
+import ProfessionalBrandCard from './ProfessionalBrandCard'
 import { API_URL } from '../config/api'
 import './PacienteTreino.css'
 
 function PacienteTreino() {
   const [hasPersonal, setHasPersonal] = useState(false)
   const [loading, setLoading] = useState(true)
+  const outlet = useOutletContext()
+  const personalId = outlet?.userData?.personalId || null
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -52,12 +55,14 @@ function PacienteTreino() {
 
   return (
     <div className="paciente-treino">
+      <ProfessionalBrandCard professionalUserId={personalId} roleLabel="Seu Personal" />
       <PacienteTreinos refreshTrigger={0} />
     </div>
   )
 }
 
 export default PacienteTreino
+
 
 
 

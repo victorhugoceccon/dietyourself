@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { API_URL } from '../config/api'
+import ImageCropModal from './ImageCropModal'
 import './BrandingSettings.css'
 
 function BrandingSettings() {
@@ -14,7 +15,9 @@ function BrandingSettings() {
     accentColor: '#66BB6A',
     brandName: ''
   })
-  const [preview, setPreview] = useState(false)
+  const [pendingImageSrc, setPendingImageSrc] = useState('')
+  const [pendingField, setPendingField] = useState(null) // 'logoUrl' | 'bannerUrl'
+  const [showCrop, setShowCrop] = useState(false)
 
   useEffect(() => {
     loadBranding()
@@ -60,11 +63,25 @@ function BrandingSettings() {
   const handleImageUpload = async (field, file) => {
     if (!file) return
 
+    // Validar tipo
+    if (!file.type.startsWith('image/')) {
+      alert('Selecione uma imagem válida')
+      return
+    }
+
+    // Limitar tamanho antes de abrir o crop (evita travar)
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Imagem muito grande. Máximo de 2MB.')
+      return
+    }
+
     // Converter para base64
     const reader = new FileReader()
     reader.onloadend = () => {
       const base64String = reader.result
-      handleInputChange(field, base64String)
+      setPendingField(field)
+      setPendingImageSrc(base64String)
+      setShowCrop(true)
     }
     reader.readAsDataURL(file)
   }
@@ -174,6 +191,33 @@ function BrandingSettings() {
           </div>
         </div>
 
+        <ImageCropModal
+          isOpen={showCrop}
+          onClose={() => {
+            setShowCrop(false)
+            setPendingField(null)
+            setPendingImageSrc('')
+          }}
+          imageSrc={pendingImageSrc}
+          title={pendingField === 'logoUrl' ? 'Ajustar logo' : 'Ajustar banner'}
+          subtitle={pendingField === 'logoUrl'
+            ? 'Centralize e recorte a área que vai aparecer como logo.'
+            : 'Selecione a área que vai aparecer no banner.'}
+          aspect={pendingField === 'logoUrl' ? 1 : 3 / 1}
+          confirmLabel="USAR ESTA IMAGEM"
+          output={pendingField === 'logoUrl'
+            ? { maxWidth: 512, mimeType: 'image/jpeg', quality: 0.9 }
+            : { maxWidth: 1400, mimeType: 'image/jpeg', quality: 0.88 }}
+          onConfirm={(dataUrl) => {
+            if (pendingField) {
+              handleInputChange(pendingField, dataUrl)
+            }
+            setShowCrop(false)
+            setPendingField(null)
+            setPendingImageSrc('')
+          }}
+        />
+
         {/* Nome da Marca */}
         <div className="branding-section">
           <label className="branding-label">Nome da Marca</label>
@@ -188,43 +232,7 @@ function BrandingSettings() {
         </div>
 
 
-        {/* Preview */}
-        <div className="branding-section">
-          <button
-            className="preview-toggle-btn"
-            onClick={() => setPreview(!preview)}
-          >
-            {preview ? 'Ocultar' : 'Mostrar'} Preview
-          </button>
-
-          {preview && (
-            <div className="branding-preview">
-              <div 
-                className="preview-header"
-                style={{
-                  background: formData.bannerUrl ? `url(${formData.bannerUrl})` : '#4CAF50',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}
-              >
-                {formData.logoUrl ? (
-                  <img src={formData.logoUrl} alt="Logo" className="preview-logo" />
-                ) : (
-                  <h3 className="preview-brand-name">{formData.brandName || 'Sua Marca'}</h3>
-                )}
-              </div>
-              <div className="preview-content">
-                <div className="preview-button">
-                  Botão de Exemplo
-                </div>
-                <div className="preview-card">
-                  <h4>Card de Exemplo</h4>
-                  <p>Este é um exemplo de como seu branding será aplicado.</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Preview removido (evita poluição visual na tela) */}
 
         {/* Botão Salvar */}
         <div className="branding-actions">
@@ -242,6 +250,7 @@ function BrandingSettings() {
 }
 
 export default BrandingSettings
+
 
 
 

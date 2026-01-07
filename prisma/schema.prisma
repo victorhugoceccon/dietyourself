@@ -73,6 +73,11 @@ model User {
   // Relacionamento notificações
   notifications Notification[] @relation("UserNotifications")
 
+  // Relacionamento grupos (gamificação)
+  gruposCriados       Grupo[]            @relation("GruposCriados")
+  gruposMembros       GrupoMembro[]      @relation("GrupoMembroUser")
+  gruposPontosEventos GrupoPontosEvento[] @relation("GrupoPontosEventoUser")
+
   @@index([nutricionistaId])
   @@index([personalId])
   @@map("users")
@@ -314,6 +319,11 @@ model PrescricaoTreinoDivisao {
   nome  String // Nome da divisão nesta prescrição
   ordem Int // Ordem da divisão no treino (1, 2, 3...)
 
+  // Metadados (opcionais) para ajudar na organização/UX
+  grupoMuscularPrincipal   String?
+  grupoMuscularSecundario  String?
+  diaSemana                String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -455,6 +465,74 @@ model BrandingSettings {
 
   @@index([userId])
   @@map("branding_settings")
+}
+
+// ==========================================================
+// Grupos / Projetos (Gamificação)
+// ==========================================================
+
+model Grupo {
+  id            String   @id @default(uuid())
+  nome          String
+  descricao     String?
+  bannerUrl     String?  // URL ou base64 do banner do projeto
+  codigoConvite String   @unique
+  ativo         Boolean  @default(true)
+  inicio        DateTime?
+  fim           DateTime?
+
+  criadoPorId String
+  criadoPor   User @relation("GruposCriados", fields: [criadoPorId], references: [id], onDelete: Cascade)
+
+  membros       GrupoMembro[]
+  pontosEventos GrupoPontosEvento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([criadoPorId])
+  @@index([codigoConvite])
+  @@map("grupos")
+}
+
+model GrupoMembro {
+  id      String @id @default(uuid())
+  grupoId String
+  grupo   Grupo  @relation(fields: [grupoId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User @relation("GrupoMembroUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  papel    String   @default("MEMBRO") // DONO | ADMIN | MEMBRO
+  joinedAt DateTime @default(now())
+
+  @@unique([grupoId, userId])
+  @@index([grupoId])
+  @@index([userId])
+  @@map("grupos_membros")
+}
+
+model GrupoPontosEvento {
+  id      String @id @default(uuid())
+  grupoId String
+  grupo   Grupo  @relation(fields: [grupoId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User @relation("GrupoPontosEventoUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  tipo           String // CHECKIN_TOTAL | CHECKIN_PARCIAL | TREINO_COMPLETO | TREINO_INCOMPLETO | AJUSTE_MANUAL
+  pontos         Int
+  referenciaTipo String // DAILY_CHECKIN | TREINO_EXECUTADO | MANUAL
+  referenciaId   String // ID do registro de origem (ex: dailyCheckIn.id, treinoExecutado.id)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([grupoId, referenciaTipo, referenciaId])
+  @@index([grupoId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("grupos_pontos_eventos")
 }
 
 model PasswordResetToken {

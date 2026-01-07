@@ -1,0 +1,221 @@
+.paciente-projetos {
+  padding: var(--space-2xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.projetos-actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.projetos-action-btn {
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.projetos-loading {
+  padding: var(--space-2xl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.projetos-error {
+  margin-top: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  background: rgba(255, 59, 48, 0.10);
+  border: 1px solid rgba(255, 59, 48, 0.20);
+  color: var(--text-primary);
+}
+
+.projetos-grid {
+  margin-top: var(--space-xl);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+@media (max-width: 1100px) {
+  .projetos-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .paciente-projetos {
+    padding: var(--space-xl);
+  }
+  .projetos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.projeto-card {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+  overflow: hidden;
+}
+.projeto-card__banner {
+  width: calc(100% + (var(--space-xl) * 2));
+  margin: calc(var(--space-xl) * -1);
+  margin-bottom: var(--space-md);
+  height: 120px;
+  background: rgba(11, 15, 20, 0.04);
+}
+
+.projeto-card__banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+.dark-mode .projeto-card {
+  background: rgba(15, 20, 27, 0.72);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.projeto-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(144, 194, 44, 0.30);
+}
+
+.projeto-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.projeto-card__title {
+  font-size: 1.05rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.projeto-card__badge {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(144, 194, 44, 0.14);
+  border: 1px solid rgba(144, 194, 44, 0.22);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.projeto-card__desc {
+  margin-top: var(--space-md);
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.projeto-card__footer {
+  margin-top: var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.projeto-card__code {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.projeto-card__cta {
+  font-size: 0.9rem;
+  font-weight: var(--font-weight-semibold);
+  color: #90c22c;
+}
+
+.projetos-form {
+  display: grid;
+  gap: var(--space-lg);
+}
+.projetos-file {
+  width: 100%;
+}
+
+.projetos-banner-preview {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-color-light);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.dark-mode .projetos-banner-preview {
+  background: rgba(15, 20, 27, 0.72);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.projetos-banner-preview img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.projetos-banner-remove {
+  width: 100%;
+  border-radius: 0;
+  padding: 10px 14px;
+}
+
+
+.projetos-label {
+  display: grid;
+  gap: var(--space-xs);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.projetos-input,
+.projetos-textarea {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.dark-mode .projetos-input,
+.dark-mode .projetos-textarea {
+  background: rgba(15, 20, 27, 0.72);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.projetos-input:focus,
+.projetos-textarea:focus {
+  border-color: rgba(144, 194, 44, 0.45);
+  box-shadow: 0 0 0 3px rgba(185, 255, 44, 0.18);
+}
+
+.projetos-points-hint {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: rgba(144, 194, 44, 0.10);
+  border: 1px solid rgba(144, 194, 44, 0.20);
+}
+
+.projetos-empty-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+

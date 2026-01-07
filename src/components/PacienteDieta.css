@@ -5,13 +5,24 @@
 
 .paciente-dieta {
   width: 100%;
-  padding-top: var(--space-3xl);
+  /* 1) Wrapper da página: controla os gutters (mobile-first) */
+  padding: var(--space-md);
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-xl);
+}
+
+.paciente-dieta-content {
+  /* 2) Container interno: agrupa conteúdo e centraliza no desktop */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .diet-section {
   background: linear-gradient(135deg, var(--bg-elevated) 0%, #F8FAF8 100%);
   border-radius: var(--radius-md);
-  padding: var(--space-3xl);
+  /* O padding do card deve ser menor no mobile; aumentamos no desktop */
+  padding: var(--space-md);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-base);
   border: 1px solid var(--border-color-light);
@@ -166,11 +177,12 @@
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .paciente-dieta {
-    padding-top: var(--space-md);
+    padding: var(--space-sm);
+    padding-top: var(--space-sm);
   }
 
   .diet-section {
-    padding: var(--space-xl);
+    padding: var(--space-sm);
     border-radius: var(--radius-md);
   }
 
@@ -194,11 +206,12 @@
 
 @media (max-width: 480px) {
   .paciente-dieta {
-    padding-top: var(--space-sm);
+    padding: 10px;
+    padding-top: 10px;
   }
 
   .diet-section {
-    padding: var(--space-lg);
+    padding: 10px;
   }
 
   .section-header h2 {
@@ -214,6 +227,21 @@
     padding: var(--space-lg);
   }
 }
+
+/* Desktop/tablet: aumentar espaçamento com conforto */
+@media (min-width: 769px) {
+  .paciente-dieta {
+    padding: var(--space-2xl);
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-3xl);
+  }
+
+  .diet-section {
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+  }
+}
+
 
 
 

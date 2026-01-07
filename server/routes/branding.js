@@ -5,10 +5,29 @@ import { authenticate } from '../middleware/auth.js'
 
 const router = express.Router()
 
+const isDataImage = (value) =>
+  typeof value === 'string' && /^data:image\/(png|jpe?g|webp|gif);base64,/.test(value)
+
+const isHttpUrl = (value) => {
+  try {
+    const u = new URL(value)
+    return u.protocol === 'http:' || u.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
+const imageStringSchema = z
+  .string()
+  .max(3 * 1024 * 1024, 'Imagem muito grande. Máximo de 3MB.')
+  .refine((v) => isHttpUrl(v) || isDataImage(v), {
+    message: 'Imagem deve ser uma URL http(s) ou base64 (data:image/*)'
+  })
+
 // Schema de validação para atualizar branding
 const updateBrandingSchema = z.object({
-  logoUrl: z.string().url().optional().nullable(),
-  bannerUrl: z.string().url().optional().nullable(),
+  logoUrl: imageStringSchema.optional().nullable(),
+  bannerUrl: imageStringSchema.optional().nullable(),
   primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional().nullable(),
   secondaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional().nullable(),
   accentColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional().nullable(),
@@ -209,6 +228,7 @@ router.put('/', authenticate, async (req, res) => {
 })
 
 export default router
+
 
 
 

@@ -189,23 +189,14 @@
 }
 
 .add-paciente-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--gradient-primary);
-  color: var(--on-primary);
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  box-shadow: var(--shadow-xs);
+  /* o visual vem do .btn-primary; aqui só garantimos alinhamento */
 }
 
 .add-paciente-btn:hover {
-  box-shadow: var(--shadow-sm);
   transform: translateY(-1px);
 }
 
@@ -234,25 +225,21 @@
 
 .search-input {
   width: 100%;
-  padding: var(--space-md) var(--space-md) var(--space-md) calc(var(--space-md) + 24px + var(--space-sm));
-  border: 1px solid rgba(11, 15, 20, 0.10);
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.75);
-  color: var(--text-primary);
-  font-size: var(--font-size-sm);
-  font-family: var(--font-family-base);
-  transition: all var(--transition-base);
+  /* Mantém espaço para o ícone, mas herda visual do .lifefit-input */
+  padding-left: calc(var(--space-md) + 24px + var(--space-sm));
 }
 
 .search-input:focus {
-  outline: none;
-  border-color: rgba(11, 15, 20, 0.18);
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 0 3px rgba(54, 215, 255, 0.16), 0 0 0 6px rgba(185, 255, 44, 0.12);
+  /* foco já vem do .lifefit-input */
 }
 
 .search-input::placeholder {
   color: var(--text-tertiary);
+}
+
+/* Branding do profissional no topo do conteúdo */
+.nutricionista-branding-wrap {
+  margin-bottom: var(--space-md);
 }
 
 .search-clear-btn {

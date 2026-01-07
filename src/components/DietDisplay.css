@@ -733,6 +733,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  /* Mobile: reduzir espaçamentos gerais para aproveitar área útil */
+  .diet-meals {
+    gap: 10px;
+  }
+
   .nutrition-needs-compact {
     padding: var(--space-lg);
   }
@@ -755,7 +760,7 @@
   }
 
   .meal-content {
-    padding: var(--space-sm) var(--space-sm);
+    padding: 10px;
   }
 
   .meal-name {
@@ -771,8 +776,12 @@
   }
 
   .food-item {
-    padding: var(--space-sm) var(--space-xs);
+    padding: 10px;
     width: 100%;
+  }
+
+  .food-item {
+    gap: 8px;
   }
 
   .food-item-main {
@@ -803,12 +812,31 @@
   }
 
   .meal-items {
-    gap: var(--space-md);
+    gap: 10px;
     padding: 0;
+  }
+
+  .substitutions-section {
+    margin-top: 8px;
+    padding-top: 8px;
+    gap: 8px;
+  }
+
+  .substitutions-list {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .substitution-item {
+    padding: 8px 10px;
   }
 }
 
 @media (max-width: 480px) {
+  .diet-meals {
+    gap: 8px;
+  }
+
   .needs-grid {
     grid-template-columns: 1fr;
   }
@@ -853,12 +881,35 @@
   }
 
   .food-item {
-    padding: var(--space-xs) var(--space-xs);
+    padding: 8px;
     width: 100%;
   }
 
   .meal-content {
-    padding: var(--space-xs) var(--space-xs);
+    padding: 8px;
+  }
+
+  .meal-items {
+    gap: 8px;
+  }
+
+  .food-item {
+    gap: 6px;
+  }
+
+  .substitutions-section {
+    margin-top: 6px;
+    padding-top: 6px;
+    gap: 6px;
+  }
+
+  .substitutions-list {
+    padding: 6px;
+    gap: 6px;
+  }
+
+  .substitution-item {
+    padding: 6px 8px;
   }
 
   .substitutions-section {

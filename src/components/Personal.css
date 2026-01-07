@@ -226,7 +226,7 @@
     padding: 0 var(--space-lg);
     top: 72px;
     background: rgba(255, 255, 255, 0.98);
-    box-shadow: 0 2px 10px rgba(139, 92, 246, 0.08);
+    box-shadow: var(--shadow-sm);
     position: fixed;
     left: 0;
     right: 0;
@@ -236,7 +236,8 @@
   
   .personal-main-content {
     margin-top: 0;
-    padding: var(--space-lg);
+    /* Espaço para o menu fixo no topo (tablet) */
+    padding: calc(var(--space-lg) + 64px) var(--space-lg) var(--space-lg);
   }
 
   .dark-mode .personal-nav {
@@ -276,7 +277,7 @@
   }
 
   .personal-main-content {
-    padding: 0;
+    padding: calc(var(--space-lg) + 64px) var(--space-lg) var(--space-lg);
   }
 }
 
@@ -393,7 +394,7 @@
   }
 
   .personal-main-content {
-    padding: 0;
+    padding: var(--space-md);
   }
 
   /* Garantir que componentes filhos sejam transparentes no mobile */
@@ -403,6 +404,28 @@
   .dark-mode .personal-pacientes,
   .dark-mode .personal-feedback-solicitacoes {
     background: transparent !important;
+  }
+}
+
+/* Branding do profissional no topo do conteúdo */
+.personal-branding-wrap {
+  padding: var(--space-lg);
+  padding-bottom: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .personal-branding-wrap {
+    padding: var(--space-lg);
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .personal-branding-wrap {
+    padding: var(--space-md);
+    padding-bottom: 0;
   }
 }
 

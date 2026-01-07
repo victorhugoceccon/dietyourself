@@ -5,6 +5,7 @@
 
 .paciente-layout {
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-secondary);
   transition: background var(--transition-base);
 }

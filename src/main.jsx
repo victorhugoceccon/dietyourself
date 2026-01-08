@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 
+<<<<<<< HEAD
 // #region agent log - global error instrumentation
 const DEBUG_ENDPOINT = 'http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485'
 const debugSessionId = 'debug-session'
@@ -58,6 +59,8 @@ safeLog({
 })
 // #endregion
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />

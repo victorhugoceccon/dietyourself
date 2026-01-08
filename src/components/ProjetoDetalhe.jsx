@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../config/api'
+<<<<<<< HEAD
 import { EmptyState, Modal } from './ui'
 import GroupCheckInModal from './GroupCheckInModal'
+=======
+import { EmptyState, SectionHeader } from './ui'
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 import './ProjetoDetalhe.css'
 
 function ProjetoDetalhe() {
@@ -13,11 +17,16 @@ function ProjetoDetalhe() {
   const [loading, setLoading] = useState(true)
   const [grupo, setGrupo] = useState(null)
   const [leaderboard, setLeaderboard] = useState([])
+<<<<<<< HEAD
   const [checkIns, setCheckIns] = useState([])
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(false)
   const [showCheckInModal, setShowCheckInModal] = useState(false)
   const [selectedCheckIn, setSelectedCheckIn] = useState(null)
+=======
+  const [error, setError] = useState(null)
+  const [copied, setCopied] = useState(false)
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
   const getInitials = (nameOrEmail) => {
     if (!nameOrEmail) return '?'
@@ -32,22 +41,34 @@ function ProjetoDetalhe() {
       setLoading(true)
       setError(null)
 
+<<<<<<< HEAD
       const [gRes, lRes, cRes] = await Promise.all([
         fetch(`${API_URL}/groups/${grupoId}`, { headers: { Authorization: `Bearer ${token}` } }),
         fetch(`${API_URL}/groups/${grupoId}/leaderboard`, { headers: { Authorization: `Bearer ${token}` } }),
         fetch(`${API_URL}/groups/${grupoId}/checkins`, { headers: { Authorization: `Bearer ${token}` } })
+=======
+      const [gRes, lRes] = await Promise.all([
+        fetch(`${API_URL}/groups/${grupoId}`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_URL}/groups/${grupoId}/leaderboard`, { headers: { Authorization: `Bearer ${token}` } })
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       ])
 
       const gData = await gRes.json()
       const lData = await lRes.json()
+<<<<<<< HEAD
       const cData = await cRes.json()
       
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       if (!gRes.ok) throw new Error(gData?.error || 'Erro ao carregar grupo')
       if (!lRes.ok) throw new Error(lData?.error || 'Erro ao carregar ranking')
 
       setGrupo(gData.grupo)
       setLeaderboard(lData.leaderboard || [])
+<<<<<<< HEAD
       setCheckIns(cData.checkIns || [])
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     } catch (e) {
       setError(e.message)
     } finally {
@@ -71,6 +92,7 @@ function ProjetoDetalhe() {
     }
   }
 
+<<<<<<< HEAD
   const formatDate = (dateString) => {
     const date = new Date(dateString)
     const today = new Date()
@@ -104,10 +126,15 @@ function ProjetoDetalhe() {
 
   if (loading) {
     return <div className="projeto-modern projeto-loading">Carregando...</div>
+=======
+  if (loading) {
+    return <div className="projeto-detalhe projeto-loading">Carregando...</div>
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   }
 
   if (error) {
     return (
+<<<<<<< HEAD
       <div className="projeto-modern">
         <div className="projeto-error">{error}</div>
         <div className="projeto-actions-row">
@@ -115,6 +142,15 @@ function ProjetoDetalhe() {
             Voltar
           </button>
           <button className="btn-primary" onClick={load}>
+=======
+      <div className="projeto-detalhe">
+        <div className="projeto-error">{error}</div>
+        <div className="projeto-actions-row">
+          <button className="btn-secondary projeto-action-btn" onClick={() => navigate('/paciente/projetos')}>
+            Voltar
+          </button>
+          <button className="btn-primary projeto-action-btn" onClick={load}>
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
             Tentar novamente
           </button>
         </div>
@@ -124,12 +160,20 @@ function ProjetoDetalhe() {
 
   if (!grupo) {
     return (
+<<<<<<< HEAD
       <div className="projeto-modern">
+=======
+      <div className="projeto-detalhe">
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         <EmptyState
           title="Projeto não encontrado"
           description="Esse projeto pode ter sido removido, ou você não tem acesso."
           action={(
+<<<<<<< HEAD
             <button className="btn-secondary" onClick={() => navigate('/paciente/projetos')}>
+=======
+            <button className="btn-secondary projeto-action-btn" onClick={() => navigate('/paciente/projetos')}>
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
               Voltar
             </button>
           )}
@@ -139,6 +183,7 @@ function ProjetoDetalhe() {
   }
 
   return (
+<<<<<<< HEAD
     <div className="projeto-modern">
       {/* Hero Section */}
       <div className="projeto-hero">
@@ -474,8 +519,97 @@ function ProjetoDetalhe() {
           </div>
         </Modal>
       )}
+=======
+    <div className="projeto-detalhe">
+      <SectionHeader
+        title={grupo.nome}
+        subtitle={grupo.descricao || 'Pontue com check-ins diários e treinos finalizados.'}
+        actions={(
+          <div className="projeto-actions-row">
+            <button className="btn-secondary projeto-action-btn" onClick={() => navigate('/paciente/projetos')}>
+              Voltar
+            </button>
+            <button className="btn-primary projeto-action-btn" onClick={load}>
+              Atualizar
+            </button>
+          </div>
+        )}
+      />
+
+      {grupo.bannerUrl && (
+        <div className="projeto-banner">
+          <img src={grupo.bannerUrl} alt={`Banner do projeto ${grupo.nome}`} />
+        </div>
+      )}
+
+      <div className="projeto-invite">
+        <div className="projeto-invite__label">Código do projeto</div>
+        <div className="projeto-invite__row">
+          <div className="projeto-invite__code">{grupo.codigoConvite}</div>
+          <button className="btn-secondary projeto-action-btn" onClick={handleCopy}>
+            {copied ? 'Copiado!' : 'Copiar'}
+          </button>
+        </div>
+        <div className="projeto-invite__hint">
+          Envie esse código para seus amigos entrarem em “Projetos” &gt; “Entrar com código”.
+        </div>
+      </div>
+
+      <div className="projeto-board">
+        <div className="projeto-board__title">Participantes</div>
+        <div className="projeto-members">
+          {(grupo.membros || []).map((m) => {
+            const displayName = m.user?.name || m.user?.email || 'Usuário'
+            return (
+              <div key={m.userId} className="member-pill">
+                {m.user?.profilePhoto ? (
+                  <img className="avatar" src={m.user.profilePhoto} alt={displayName} />
+                ) : (
+                  <div className="avatar avatar--fallback">{getInitials(displayName)}</div>
+                )}
+                <div className="member-pill__name">{displayName}</div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="projeto-board">
+        <div className="projeto-board__title">Ranking</div>
+        {leaderboard.length === 0 ? (
+          <EmptyState
+            title="Sem pontuação ainda"
+            description="Quando o grupo fizer check-in e finalizar treinos, o placar aparece aqui."
+          />
+        ) : (
+          <div className="projeto-leaderboard">
+            {leaderboard.map((item) => (
+              <div key={item.user?.id} className="leader-row">
+                <div className="leader-pos">{item.posicao}</div>
+                <div className="leader-user">
+                  {item.user?.profilePhoto ? (
+                    <img className="avatar" src={item.user.profilePhoto} alt={item.user?.name || item.user?.email || 'Usuário'} />
+                  ) : (
+                    <div className="avatar avatar--fallback">{getInitials(item.user?.name || item.user?.email)}</div>
+                  )}
+                  <div className="leader-name">
+                    {item.user?.name || item.user?.email || 'Usuário'}
+                  </div>
+                </div>
+                <div className="leader-points">{item.pontos} pts</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     </div>
   )
 }
 
 export default ProjetoDetalhe
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e

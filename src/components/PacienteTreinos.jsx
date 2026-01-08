@@ -971,6 +971,7 @@ function PacienteTreinos({ refreshTrigger }) {
 
   const rotinaAtiva = getRotinaAtiva()
 
+<<<<<<< HEAD
   const handleDownloadPDF = async () => {
     try {
       const token = localStorage.getItem('token')
@@ -1284,11 +1285,14 @@ function PacienteTreinos({ refreshTrigger }) {
     `
   }
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   return (
     <section className="treinos-section">
       <div className="treinos-section-content">
         <div className="section-header">
           <h2>Meus Treinos</h2>
+<<<<<<< HEAD
           {rotinaAtiva && (
             <button
               onClick={handleDownloadPDF}
@@ -1305,6 +1309,8 @@ function PacienteTreinos({ refreshTrigger }) {
               </span>
             </button>
           )}
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         </div>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -1513,6 +1519,7 @@ function PacienteTreinos({ refreshTrigger }) {
                             handleIniciarTreino(rotinaAtiva.id, divisao.id)
                           }}
                         >
+<<<<<<< HEAD
                           <span>INICIAR TREINO</span>
                           <span className="cta-hero__arrow">
                             <svg width="46" height="24" viewBox="0 0 66 43" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1521,6 +1528,12 @@ function PacienteTreinos({ refreshTrigger }) {
                               <path className="three" d="m.154 3.895 3.822-3.756c.195-.192.507-.192.702 0L25.692 20.785a.7.7 0 0 1 0 .988L4.677 42.861a.498.498 0 0 1-.702 0l-3.821-3.754a.271.271 0 0 1 .007-.393L16.994 21.857a.271.271 0 0 0-.006-.714L.155 4.608a.27.27 0 0 1 .002-.713Z" fill="currentColor"/>
                             </svg>
                           </span>
+=======
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                          </svg>
+                          INICIAR TREINO
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
                         </button>
                       </>
                     )}

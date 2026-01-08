@@ -247,6 +247,7 @@ router.post('/finalizar', authenticate, async (req, res) => {
   }
 })
 
+<<<<<<< HEAD
 // GET /api/treinos-executados/recent - Listar últimos treinos finalizados do paciente
 router.get('/recent', authenticate, async (req, res) => {
   try {
@@ -293,6 +294,8 @@ router.get('/recent', authenticate, async (req, res) => {
   }
 })
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 // GET /api/treinos-executados - Listar treinos executados do paciente
 router.get('/', authenticate, async (req, res) => {
   try {

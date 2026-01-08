@@ -33,6 +33,7 @@ function Login() {
         body: JSON.stringify({ email, password }),
       })
 
+<<<<<<< HEAD
       // Verificar se a resposta é JSON válido
       let data
       const contentType = response.headers.get('content-type')
@@ -50,6 +51,12 @@ function Login() {
 
       if (!response.ok) {
         throw new Error(data?.error || data?.message || `Erro ${response.status}: ${response.statusText}`)
+=======
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao processar solicitação')
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       }
 
       // Salvar token no localStorage
@@ -71,12 +78,19 @@ function Login() {
 
     } catch (err) {
       console.error('Erro no login:', err)
+<<<<<<< HEAD
       if (err.message === 'Failed to fetch' || err.name === 'TypeError' || err.message.includes('fetch')) {
         setError('Erro de conexão. Verifique se o servidor está acessível.')
       } else if (err.message) {
         setError(err.message)
       } else {
         setError('Erro ao processar solicitação. Tente novamente.')
+=======
+      if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+        setError('Erro de conexão. Verifique se o servidor está acessível.')
+      } else {
+        setError(err.message || 'Erro ao processar solicitação')
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       }
     } finally {
       setLoading(false)

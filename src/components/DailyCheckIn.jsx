@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { useState, useEffect, useRef } from 'react'
 import { API_URL, loadGoogleMapsScript } from '../config/api'
+=======
+import { useState, useEffect } from 'react'
+import { API_URL } from '../config/api'
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 import './DailyCheckIn.css'
 
 function DailyCheckIn({ onCheckInComplete }) {
@@ -10,6 +15,7 @@ function DailyCheckIn({ onCheckInComplete }) {
   const [saving, setSaving] = useState(false)
   const [todayCheckIn, setTodayCheckIn] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
+<<<<<<< HEAD
   
   // Localização
   const [locationName, setLocationName] = useState('')
@@ -26,11 +32,14 @@ function DailyCheckIn({ onCheckInComplete }) {
   const [photoPreview, setPhotoPreview] = useState(null)
   const fileInputRef = useRef(null)
   const cameraInputRef = useRef(null)
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
   useEffect(() => {
     loadTodayCheckIn()
   }, [])
 
+<<<<<<< HEAD
   // Inicializar Google Maps Autocomplete e Mapa
   useEffect(() => {
     loadGoogleMapsScript(() => {
@@ -135,6 +144,8 @@ function DailyCheckIn({ onCheckInComplete }) {
     })
   }
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   const loadTodayCheckIn = async () => {
     setLoading(true)
     try {
@@ -152,6 +163,7 @@ function DailyCheckIn({ onCheckInComplete }) {
           setAdherence(data.checkIn.adherence)
           setPesoAtual(data.checkIn.pesoAtual ? data.checkIn.pesoAtual.toString() : '')
           setObservacao(data.checkIn.observacao || '')
+<<<<<<< HEAD
           setLocationName(data.checkIn.locationName || '')
           const lat = data.checkIn.locationLat || null
           const lng = data.checkIn.locationLng || null
@@ -168,6 +180,8 @@ function DailyCheckIn({ onCheckInComplete }) {
               }, 500)
             })
           }
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         }
       }
     } catch (error) {
@@ -193,11 +207,15 @@ function DailyCheckIn({ onCheckInComplete }) {
         body: JSON.stringify({
           adherence,
           pesoAtual: pesoAtual ? parseFloat(pesoAtual) : null,
+<<<<<<< HEAD
           observacao: observacao.trim() || null,
           locationName: locationName.trim() || null,
           locationLat: locationLat || null,
           locationLng: locationLng || null,
           photoUrl: photoUrl || null
+=======
+          observacao: observacao.trim() || null
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         })
       })
 
@@ -234,6 +252,7 @@ function DailyCheckIn({ onCheckInComplete }) {
     )
   }
 
+<<<<<<< HEAD
   // Função para obter localização atual
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -324,6 +343,8 @@ function DailyCheckIn({ onCheckInComplete }) {
     if (cameraInputRef.current) cameraInputRef.current.value = ''
   }
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   const today = new Date()
   const todayFormatted = today.toLocaleDateString('pt-BR', { 
     weekday: 'long', 
@@ -411,6 +432,7 @@ function DailyCheckIn({ onCheckInComplete }) {
           <div className="char-counter">{observacao.length}/500</div>
         </div>
 
+<<<<<<< HEAD
         <div className="checkin-section">
           <label htmlFor="location" className="checkin-section-label">
             Localização <span className="optional-label">opcional</span>
@@ -509,6 +531,8 @@ function DailyCheckIn({ onCheckInComplete }) {
           </div>
         </div>
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         <button
           type="submit"
           disabled={!adherence || saving}

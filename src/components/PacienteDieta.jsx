@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import DietDisplay from './DietDisplay'
 import LoadingBar from './LoadingBar'
 import ProfessionalBrandCard from './ProfessionalBrandCard'
+<<<<<<< HEAD
 import { useBranding } from '../hooks/useBranding'
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 import { API_URL } from '../config/api'
 import './PacienteDieta.css'
 import { useOutletContext } from 'react-router-dom'
@@ -19,7 +22,10 @@ function PacienteDieta() {
   const outlet = useOutletContext()
   const nutricionistaId = outlet?.userData?.nutricionistaId || null
   const navigate = useNavigate()
+<<<<<<< HEAD
   const { branding } = useBranding(nutricionistaId)
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
   useEffect(() => {
     checkQuestionnaire()
@@ -484,6 +490,7 @@ function PacienteDieta() {
   return (
     <div className="paciente-dieta">
       <div className="paciente-dieta-content">
+<<<<<<< HEAD
         <div 
           className="dieta-hero"
           style={{
@@ -557,6 +564,38 @@ function PacienteDieta() {
 
         <section className="diet-section diet-card">
           <ProfessionalBrandCard professionalUserId={nutricionistaId} roleLabel="Sua Nutricionista" />
+=======
+        <section className="diet-section">
+          <ProfessionalBrandCard professionalUserId={nutricionistaId} roleLabel="Sua Nutricionista" />
+          <div className="section-header">
+            <div className="header-title-group">
+              <h2>Minha alimentação</h2>
+              {hasDiet && (
+                <button
+                  onClick={handleDownloadPDF}
+                  className="download-pdf-btn"
+                  title="Baixar dieta em PDF"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>PDF</span>
+                </button>
+              )}
+            </div>
+            {!hasDiet && (
+              <button
+                onClick={handleGenerateDiet}
+                disabled={generatingDiet}
+                className="generate-diet-btn"
+              >
+                {generatingDiet ? 'Gerando...' : 'Gerar Dieta'}
+              </button>
+            )}
+          </div>
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
           {dietError && (
             <div className="alert alert-error" style={{ marginBottom: '1rem' }}>

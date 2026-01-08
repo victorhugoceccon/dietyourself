@@ -3,6 +3,7 @@ import { API_URL } from '../config/api'
 import './NextMealWidget.css'
 
 /**
+<<<<<<< HEAD
  * NextMealWidget - Mostra a próxima refeição do dia que ainda não foi consumida.
  */
 function NextMealWidget({ refreshTrigger }) {
@@ -35,6 +36,39 @@ function NextMealWidget({ refreshTrigger }) {
     }
   }, [])
 
+=======
+ * NextMealWidget - Mostra a próxima refeição do dia com timer countdown.
+ */
+function NextMealWidget({ refreshTrigger }) {
+  const [dieta, setDieta] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [currentTime, setCurrentTime] = useState(new Date())
+
+  // Horários típicos das refeições (configurável no futuro)
+  const mealSchedule = useMemo(() => ({
+    'Café da Manhã': { hour: 7, minute: 0 },
+    'Lanche da Manhã': { hour: 10, minute: 0 },
+    'Almoço': { hour: 12, minute: 30 },
+    'Lanche da Tarde': { hour: 15, minute: 30 },
+    'Jantar': { hour: 19, minute: 0 },
+    'Ceia': { hour: 21, minute: 30 },
+  }), [])
+
+  // Atualizar relógio a cada minuto
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Carregar dieta
+  useEffect(() => {
+    loadDieta()
+  }, [refreshTrigger])
+
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   const loadDieta = async () => {
     try {
       const token = localStorage.getItem('token')
@@ -59,6 +93,7 @@ function NextMealWidget({ refreshTrigger }) {
     }
   }
 
+<<<<<<< HEAD
   const loadConsumedMeals = async () => {
     try {
       const token = localStorage.getItem('token')
@@ -97,6 +132,74 @@ function NextMealWidget({ refreshTrigger }) {
     // Por enquanto, retornamos null para indicar que todas foram consumidas
     return null
   }, [dieta, consumedMeals])
+=======
+  // Encontrar próxima refeição
+  const nextMeal = useMemo(() => {
+    if (!dieta?.refeicoes) return null
+
+    const now = currentTime
+    const currentMinutes = now.getHours() * 60 + now.getMinutes()
+
+    // Encontrar a próxima refeição que ainda não passou
+    for (const refeicao of dieta.refeicoes) {
+      const schedule = mealSchedule[refeicao.nome]
+      if (schedule) {
+        const mealMinutes = schedule.hour * 60 + schedule.minute
+        if (mealMinutes > currentMinutes) {
+          return {
+            ...refeicao,
+            scheduledTime: schedule,
+            minutesUntil: mealMinutes - currentMinutes
+          }
+        }
+      }
+    }
+
+    // Se todas as refeições de hoje já passaram, mostrar a primeira de amanhã
+    const firstMeal = dieta.refeicoes[0]
+    if (firstMeal) {
+      const schedule = mealSchedule[firstMeal.nome] || { hour: 7, minute: 0 }
+      const mealMinutes = schedule.hour * 60 + schedule.minute
+      const minutesUntilTomorrow = (24 * 60 - currentMinutes) + mealMinutes
+
+      return {
+        ...firstMeal,
+        scheduledTime: schedule,
+        minutesUntil: minutesUntilTomorrow,
+        isTomorrow: true
+      }
+    }
+
+    return null
+  }, [dieta, currentTime, mealSchedule])
+
+  // Formatar tempo restante
+  const formatTimeRemaining = (minutes) => {
+    if (minutes < 60) {
+      return `${minutes} min`
+    }
+    const hours = Math.floor(minutes / 60)
+    const mins = minutes % 60
+    if (mins === 0) {
+      return `${hours}h`
+    }
+    return `${hours}h ${mins}min`
+  }
+
+  // Formatar horário
+  const formatTime = (schedule) => {
+    const hour = schedule.hour.toString().padStart(2, '0')
+    const minute = schedule.minute.toString().padStart(2, '0')
+    return `${hour}:${minute}`
+  }
+
+  // Determinar urgência do timer
+  const getTimerUrgency = (minutes) => {
+    if (minutes <= 15) return 'urgent'
+    if (minutes <= 30) return 'soon'
+    return 'normal'
+  }
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
   if (loading) {
     return (
@@ -113,9 +216,12 @@ function NextMealWidget({ refreshTrigger }) {
   }
 
   if (!nextMeal) {
+<<<<<<< HEAD
     // Verificar se não tem dieta ou se todas as refeições foram consumidas
     const allMealsConsumed = dieta?.refeicoes && consumedMeals.length === dieta.refeicoes.length
     
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     return (
       <div className="next-meal-widget next-meal-widget--empty">
         <div className="next-meal-empty-icon">
@@ -125,21 +231,52 @@ function NextMealWidget({ refreshTrigger }) {
             <path d="M16 10a4 4 0 0 1-8 0" />
           </svg>
         </div>
+<<<<<<< HEAD
         <p className="next-meal-empty-text">
           {allMealsConsumed 
             ? 'Todas as refeições do dia foram consumidas! 🎉' 
             : 'Nenhuma dieta cadastrada'}
         </p>
+=======
+        <p className="next-meal-empty-text">Nenhuma dieta cadastrada</p>
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       </div>
     )
   }
 
+<<<<<<< HEAD
   return (
     <div className="next-meal-widget next-meal-widget--normal">
+=======
+  const urgency = getTimerUrgency(nextMeal.minutesUntil)
+
+  return (
+    <div className={`next-meal-widget next-meal-widget--${urgency}`}>
+      {/* Timer Badge */}
+      <div className={`next-meal-timer timer-${urgency}`}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 6v6l4 2" />
+        </svg>
+        <span>{formatTimeRemaining(nextMeal.minutesUntil)}</span>
+        {nextMeal.isTomorrow && <span className="tomorrow-badge">amanhã</span>}
+      </div>
+
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       {/* Meal Info */}
       <div className="next-meal-content">
         <div className="next-meal-header">
           <h3 className="next-meal-title">{nextMeal.nome}</h3>
+<<<<<<< HEAD
+=======
+          <span className="next-meal-time">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 6v6l4 2" />
+            </svg>
+            {formatTime(nextMeal.scheduledTime)}
+          </span>
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         </div>
 
         <div className="next-meal-kcal">

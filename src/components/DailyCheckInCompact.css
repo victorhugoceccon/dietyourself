@@ -10,6 +10,7 @@
 .checkin-status-card,
 .checkin-prompt-card,
 .checkin-form-card {
+<<<<<<< HEAD
   background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
   border-radius: var(--radius-md);
   padding: var(--space-xl);
@@ -19,6 +20,16 @@
   position: relative;
   overflow: hidden;
   color: #f8fafc;
+=======
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, #F8FAF8 100%);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  border: 1px solid var(--border-color-light);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .checkin-status-card::before,
@@ -85,14 +96,22 @@
 .checkin-status-title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0 0 var(--space-xs) 0;
   letter-spacing: var(--letter-spacing-tight);
 }
 
 .checkin-status-label {
   font-size: var(--font-size-sm);
+<<<<<<< HEAD
   color: #cbd5e1;
+=======
+  color: var(--text-secondary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   font-weight: var(--font-weight-regular);
 }
@@ -109,12 +128,20 @@
 }
 
 .checkin-detail-label {
+<<<<<<< HEAD
   color: #cbd5e1;
+=======
+  color: var(--text-secondary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-weight: var(--font-weight-medium);
 }
 
 .checkin-detail-value {
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-weight: var(--font-weight-semibold);
 }
 
@@ -129,7 +156,11 @@
 .checkin-status-note p {
   margin: 0;
   font-size: var(--font-size-sm);
+<<<<<<< HEAD
   color: #cbd5e1;
+=======
+  color: var(--text-secondary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-style: italic;
   line-height: var(--line-height-relaxed);
 }
@@ -192,14 +223,22 @@
 .checkin-prompt-title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0 0 var(--space-xs) 0;
   letter-spacing: var(--letter-spacing-tight);
 }
 
 .checkin-prompt-description {
   font-size: var(--font-size-sm);
+<<<<<<< HEAD
   color: #cbd5e1;
+=======
+  color: var(--text-secondary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   font-weight: var(--font-weight-regular);
 }
@@ -254,7 +293,11 @@
 .checkin-form-title {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   letter-spacing: var(--letter-spacing-tight);
 }
@@ -295,11 +338,19 @@
 .checkin-form-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
+<<<<<<< HEAD
   color: #f8fafc;
 }
 
 .checkin-form-label .optional {
   color: #94a3b8;
+=======
+  color: var(--text-primary);
+}
+
+.checkin-form-label .optional {
+  color: var(--text-tertiary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-weight: var(--font-weight-regular);
   font-size: var(--font-size-xs);
 }

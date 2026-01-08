@@ -12,8 +12,12 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
+<<<<<<< HEAD
     "db:seed": "node prisma/seed.js",
     "icons:generate": "node scripts/generate-icons.js"
+=======
+    "db:seed": "node prisma/seed.js"
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",
@@ -41,7 +45,10 @@
     "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^8.2.2",
     "prisma": "^5.7.1",
+<<<<<<< HEAD
     "sharp": "^0.34.5",
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     "vite": "^5.0.8"
   },
   "prisma": {

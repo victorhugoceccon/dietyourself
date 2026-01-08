@@ -6,6 +6,7 @@
 .paciente-dashboard {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   gap: var(--space-2xl);
   max-width: 1600px;
   margin: 0 auto;
@@ -73,12 +74,20 @@
   color: #cbd5e1;
   line-height: 1.6;
   max-width: 720px;
+=======
+  gap: var(--space-3xl);
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: var(--space-3xl) var(--space-lg) 0;
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .dashboard-section {
   width: 100%;
   animation: fadeIn 0.5s ease;
   position: relative;
+<<<<<<< HEAD
   margin-bottom: var(--space-2xl);
 }
 
@@ -86,6 +95,8 @@
 .dashboard-section h2,
 .dashboard-section h3 {
   color: #f8fafc;
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 @keyframes fadeIn {

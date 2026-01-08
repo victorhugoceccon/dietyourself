@@ -24,6 +24,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
     loadConsumedMeals()
   }, [refreshTrigger])
 
+<<<<<<< HEAD
   // #region agent log
   fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485', {
     method: 'POST',
@@ -40,6 +41,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
   }).catch(() => {})
   // #endregion
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   const loadConsumedMeals = async () => {
     try {
       const token = localStorage.getItem('token')
@@ -61,29 +64,58 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
   }
 
   const handleMealToggle = async (mealIndex, mealName, e) => {
+<<<<<<< HEAD
     if (e) {
       e.preventDefault()
       e.stopPropagation()
     }
+=======
+    e.preventDefault() // Prevenir comportamento padrão
+    e.stopPropagation() // Evitar expandir/colapsar a refeição
+    
+    // Garantir que não expande a refeição ao clicar no checkbox
+    if (expandedMeals.has(mealIndex)) {
+      // Se está expandida, não fazer nada além de marcar/desmarcar
+    }
+    
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     setTogglingMeal(mealIndex)
     try {
       const token = localStorage.getItem('token')
       const isCurrentlyConsumed = consumedMeals.includes(mealIndex)
       
       if (isCurrentlyConsumed) {
+<<<<<<< HEAD
+=======
+        // Desmarcar - deletar consumo
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         const response = await fetch(`${API_URL}/consumed-meals/${mealIndex}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
           }
         })
+<<<<<<< HEAD
         if (response.ok) {
           setConsumedMeals(prev => prev.filter(index => index !== mealIndex))
           onMealToggle && onMealToggle()
+=======
+
+        if (response.ok) {
+          setConsumedMeals(prev => prev.filter(index => index !== mealIndex))
+          // Notificar componente pai para atualizar dashboard
+          if (onMealToggle) {
+            onMealToggle()
+          }
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         } else {
           throw new Error('Erro ao desmarcar refeição')
         }
       } else {
+<<<<<<< HEAD
+=======
+        // Marcar - criar consumo
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         const response = await fetch(`${API_URL}/consumed-meals`, {
           method: 'POST',
           headers: {
@@ -95,9 +127,19 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
             mealName
           })
         })
+<<<<<<< HEAD
         if (response.ok) {
           setConsumedMeals(prev => [...prev, mealIndex])
           onMealToggle && onMealToggle()
+=======
+
+        if (response.ok) {
+          setConsumedMeals(prev => [...prev, mealIndex])
+          // Notificar componente pai para atualizar dashboard
+          if (onMealToggle) {
+            onMealToggle()
+          }
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         } else {
           const errorData = await response.json()
           throw new Error(errorData.error || 'Erro ao marcar refeição')
@@ -150,6 +192,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
       } else {
         newSet.add(index)
       }
+<<<<<<< HEAD
 
       // #region agent log
       fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485', {
@@ -167,6 +210,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
       }).catch(() => {})
       // #endregion
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       return newSet
     })
   }
@@ -265,6 +310,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
 
   const isExpanded = (index) => expandedMeals.has(index)
 
+<<<<<<< HEAD
   const totalMeals = dieta?.refeicoes?.length || 0
   const consumedCount = consumedMeals.length
 
@@ -284,6 +330,10 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
           </div>
         </div>
       )}
+=======
+  return (
+    <div className="diet-display">
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       {/* Necessidades Nutricionais - Mesmo layout do Dashboard */}
       {nutritionalNeeds && (
         <div className="nutrition-needs-dashboard">
@@ -397,6 +447,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
 
       {/* Refeições colapsáveis */}
       <div className="diet-meals">
+<<<<<<< HEAD
         {dieta.refeicoes && dieta.refeicoes.map((refeicao, mealIndex) => {
           const isConsumed = consumedMeals.includes(mealIndex)
           const isExpanded = expandedMeals.has(mealIndex)
@@ -490,6 +541,104 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
             </div>
           )
         })}
+=======
+        {dieta.refeicoes && dieta.refeicoes.map((refeicao, mealIndex) => (
+          <Card 
+            key={mealIndex} 
+            className={`meal-card ${consumedMeals.includes(mealIndex) ? 'consumed' : ''}`} 
+            hoverable
+          >
+            <div 
+              className={`meal-header-wrapper ${isExpanded(mealIndex) ? 'expanded' : ''}`}
+              onClick={() => toggleMeal(mealIndex)}
+            >
+              <label 
+                className="meal-checkbox-label" 
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
+                <input
+                  type="checkbox"
+                  checked={consumedMeals.includes(mealIndex)}
+                  onChange={(e) => handleMealToggle(mealIndex, refeicao.nome, e)}
+                  onClick={(e) => e.stopPropagation()}
+                  disabled={togglingMeal === mealIndex}
+                  className="meal-checkbox"
+                />
+                <span className="meal-checkbox-custom"></span>
+                {togglingMeal === mealIndex && (
+                  <span className="meal-checkbox-loading">...</span>
+                )}
+              </label>
+              <div className="meal-header-content">
+                <h3 className="meal-name">{refeicao.nome}</h3>
+                <Badge variant="calories" size="medium" className="meal-badge">
+                  {refeicao.totalRefeicaoKcal} kcal
+                </Badge>
+              </div>
+              <svg
+                className={`meal-expand-icon ${isExpanded(mealIndex) ? 'expanded' : ''}`}
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+
+            {isExpanded(mealIndex) && (
+              <div className="meal-content">
+                <div className="meal-items">
+                  {refeicao.itens && refeicao.itens.map((item, itemIndex) => (
+                    <div key={itemIndex} className="food-item">
+                      <div className="food-item-main">
+                        <div className="food-info">
+                          <h4 className="food-name">{item.alimento}</h4>
+                          <p className="food-portion">{item.porcao}</p>
+                        </div>
+                        <Badge variant="secondary" size="small" className="food-kcal">
+                          {item.kcal} kcal
+                        </Badge>
+                      </div>
+                      
+                      {item.substituicoes && item.substituicoes.length > 0 && (
+                        <div className="substitutions-section">
+                          <div className="substitutions-list">
+                            <div className="substitutions-label">Alternativas:</div>
+                            {item.substituicoes.map((sub, subIndex) => (
+                              <div key={subIndex} className="substitution-item">
+                                <span className="substitution-name">{sub.alimento}</span>
+                                <span className="substitution-details">
+                                  {sub.porcaoEquivalente || sub.porcao}
+                                  {sub.kcalAproximada && ` • ${sub.kcalAproximada} kcal`}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                          {/* Botão de troca desativado temporariamente */}
+                          {/* <button
+                            className="swap-food-button"
+                            onClick={() => handleFoodItemClick(mealIndex, itemIndex, item, refeicao.nome)}
+                            title="Trocar este alimento"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                              <path d="M12 4V1M12 4C10.8954 4 10 4.89543 10 6C10 7.10457 10.8954 8 12 8M12 4C13.1046 4 14 4.89543 14 6C14 7.10457 13.1046 8 12 8M12 20V23M12 20C10.8954 20 10 19.1046 10 18C10 16.8954 10.8954 16 12 16M12 20C13.1046 20 14 19.1046 14 18C14 16.8954 13.1046 16 12 16M6 12H3M21 12H18M6 12C6 10.8954 6.89543 10 8 10M6 12C6 13.1046 6.89543 14 8 14M18 12C18 10.8954 17.1046 10 16 10M18 12C18 13.1046 17.1046 14 16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            <span>Trocar</span>
+                          </button> */}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Card>
+        ))}
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       </div>
 
       {dieta.observacoesPlano && (

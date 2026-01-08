@@ -10,6 +10,7 @@
 }
 
 .day-status-card {
+<<<<<<< HEAD
   background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
   border-radius: var(--radius-md);
   padding: var(--space-3xl);
@@ -19,6 +20,16 @@
   position: relative;
   overflow: hidden;
   color: #f8fafc;
+=======
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, #F8FAF8 100%);
+  border-radius: var(--radius-md);
+  padding: var(--space-3xl);
+  border: 1px solid var(--border-color-light);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .day-status-card::before {
@@ -55,7 +66,11 @@
 .status-title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   letter-spacing: var(--letter-spacing-tight);
   line-height: var(--line-height-tight);
@@ -87,7 +102,11 @@
 
 .status-message {
   font-size: var(--font-size-lg);
+<<<<<<< HEAD
   color: #cbd5e1;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-relaxed);

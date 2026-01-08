@@ -77,7 +77,10 @@ model User {
   gruposCriados       Grupo[]            @relation("GruposCriados")
   gruposMembros       GrupoMembro[]      @relation("GrupoMembroUser")
   gruposPontosEventos GrupoPontosEvento[] @relation("GrupoPontosEventoUser")
+<<<<<<< HEAD
   grupoTreinoCheckIns GrupoTreinoCheckIn[] @relation("GrupoTreinoCheckInUser")
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
   @@index([nutricionistaId])
   @@index([personalId])
@@ -180,6 +183,7 @@ model DailyCheckIn {
   observacao  String? // Observação curta do dia (opcional, máximo 500 caracteres)
   checkInDate DateTime @default(now()) // Data do check-in (apenas data, sem hora)
 
+<<<<<<< HEAD
   // Localização
   locationName String? // Nome do local (ex: "Smart Fit - Shopping Center")
   locationLat  Float?  // Latitude
@@ -188,6 +192,8 @@ model DailyCheckIn {
   // Foto do check-in
   photoUrl String? // URL ou base64 da foto do check-in
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -390,9 +396,12 @@ model TreinoExecutado {
   // Relacionamento com feedback
   feedback FeedbackTreino?
 
+<<<<<<< HEAD
   // Relacionamento com check-ins de grupo
   grupoCheckIns GrupoTreinoCheckIn[] @relation("TreinoExecutadoCheckIns")
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   @@unique([pacienteId, prescricaoId, divisaoId, dataExecucao]) // Um treino por dia por divisão
   @@index([pacienteId])
   @@index([prescricaoId])
@@ -498,7 +507,10 @@ model Grupo {
 
   membros       GrupoMembro[]
   pontosEventos GrupoPontosEvento[]
+<<<<<<< HEAD
   checkIns      GrupoTreinoCheckIn[]
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -548,6 +560,7 @@ model GrupoPontosEvento {
   @@map("grupos_pontos_eventos")
 }
 
+<<<<<<< HEAD
 model GrupoTreinoCheckIn {
   id        String   @id @default(uuid())
   grupoId   String
@@ -586,6 +599,8 @@ model GrupoTreinoCheckIn {
   @@map("grupos_treino_check_ins")
 }
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 model PasswordResetToken {
   id        String   @id @default(uuid())
   userId    String

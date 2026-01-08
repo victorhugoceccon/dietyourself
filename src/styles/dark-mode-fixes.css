@@ -25,10 +25,16 @@
   }
   
   /* Cards e containers - fundos escuros, textos brancos */
+<<<<<<< HEAD
   /* Excluir cards consumed e meal-action buttons */
   .card:not(.consumed):not([class*="consumed"]),
   [class*="card"]:not(.consumed):not([class*="consumed"]):not(.meal-action):not([class*="meal-action"]),
   [class*="Card"]:not(.consumed):not([class*="consumed"]):not(.meal-action):not([class*="meal-action"]) {
+=======
+  .card,
+  [class*="card"],
+  [class*="Card"] {
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     background: var(--bg-elevated) !important;
     color: var(--text-primary) !important;
   }
@@ -113,9 +119,14 @@
 }
 
 /* Correções específicas para componentes com gradientes problemáticos */
+<<<<<<< HEAD
 /* Excluir cards consumed e meal-action buttons */
 .dark-mode .meal-card:not(.consumed):not([class*="consumed"]),
 .dark-mode [class*="meal"]:not(.consumed):not([class*="consumed"]):not(.meal-action):not([class*="meal-action"]) {
+=======
+.dark-mode .meal-card,
+.dark-mode [class*="meal"] {
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   background: var(--bg-elevated) !important;
   color: var(--text-primary) !important;
 }

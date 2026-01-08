@@ -14,14 +14,22 @@
 .dashboard-header h2 {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0 0 var(--space-xs) 0;
   letter-spacing: var(--letter-spacing-tight);
   line-height: var(--line-height-tight);
 }
 
 .dashboard-header .subtitle {
+<<<<<<< HEAD
   color: #cbd5e1;
+=======
+  color: var(--text-secondary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-size: var(--font-size-sm);
   margin: 0;
   font-weight: var(--font-weight-regular);
@@ -37,10 +45,17 @@
 
 /* Card padrão */
 .nutrition-card {
+<<<<<<< HEAD
   background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
   border-radius: var(--radius-sm);
   padding: var(--space-2xl);
   border: 1px solid rgba(255, 255, 255, 0.08);
+=======
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+  border: 1px solid var(--border-color-light);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   transition: all var(--transition-base);
   display: flex;
   flex-direction: column;
@@ -49,8 +64,11 @@
   min-height: 280px;
   position: relative;
   overflow: hidden;
+<<<<<<< HEAD
   color: #f8fafc;
   box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5);
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .nutrition-card:hover {
@@ -97,7 +115,11 @@
 .card-value {
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   line-height: var(--line-height-tight);
   letter-spacing: var(--letter-spacing-tight);
   margin: 0;
@@ -106,7 +128,11 @@
 /* Label da métrica */
 .card-label {
   font-size: var(--font-size-xs);
+<<<<<<< HEAD
   color: #cbd5e1;
+=======
+  color: var(--text-secondary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-weight: var(--font-weight-regular);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -124,7 +150,11 @@
 .card-progress-bar {
   width: 100%;
   height: 4px;
+<<<<<<< HEAD
   background: rgba(255, 255, 255, 0.08);
+=======
+  background: var(--bg-tertiary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   border-radius: var(--radius-full);
   overflow: hidden;
   margin-bottom: var(--space-sm);
@@ -168,7 +198,10 @@
   letter-spacing: 0.05em;
   margin: 0;
   transition: all var(--transition-base);
+<<<<<<< HEAD
   color: #cbd5e1;
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .nutrition-card:hover .card-status {
@@ -180,11 +213,19 @@
 .no-data {
   text-align: center;
   padding: var(--space-4xl) var(--space-2xl);
+<<<<<<< HEAD
   background: linear-gradient(145deg, rgba(15, 18, 27, 0.9), rgba(8, 11, 18, 0.95));
   border-radius: var(--radius-sm);
   box-shadow: 0 14px 42px rgba(0, 0, 0, 0.45);
   color: #cbd5e1;
   border: 1px solid rgba(255, 255, 255, 0.08);
+=======
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color-light);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .no-data .empty-icon {
@@ -196,7 +237,11 @@
 .no-data .empty-title {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-primary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0 0 var(--space-md) 0;
   letter-spacing: var(--letter-spacing-tight);
 }

@@ -99,11 +99,19 @@
 
 /* Mobile: manter nav separado */
 @media (max-width: 768px) {
+<<<<<<< HEAD
 .paciente-nav {
     background: rgba(6, 8, 15, 0.95);
     backdrop-filter: blur(18px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+=======
+  .paciente-nav {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: none;
+    box-shadow: 0 2px 20px rgba(76, 175, 80, 0.1);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     padding: var(--space-md) var(--space-2xl);
     position: fixed;
     top: 72px;
@@ -153,7 +161,11 @@
   background: transparent;
   border: none;
   border-radius: var(--radius-lg);
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: var(--text-secondary);
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
@@ -220,7 +232,11 @@
 /* Hover state */
 .paciente-content-wrapper .nav-item:hover,
 .header-nav-items-paciente .nav-item:hover {
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: #FFFFFF;
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   transform: translateY(-2px);
 }
 
@@ -238,7 +254,11 @@
 /* Active state */
 .paciente-content-wrapper .nav-item.active,
 .header-nav-items-paciente .nav-item.active {
+<<<<<<< HEAD
   color: #f8fafc;
+=======
+  color: #FFFFFF;
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-weight: var(--font-weight-semibold);
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }

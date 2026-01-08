@@ -6,6 +6,7 @@ const API_BASE = import.meta.env.VITE_API_URL ||
 export const API_URL = API_BASE
 export const AUTH_API_URL = `${API_BASE}/auth`
 
+<<<<<<< HEAD
 // Google Maps API Key
 export const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
 
@@ -51,5 +52,7 @@ export const loadGoogleMapsScript = (callback) => {
   document.head.appendChild(script)
 }
 
+=======
+>>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
 

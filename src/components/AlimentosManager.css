@@ -1,0 +1,1488 @@
+/* Design System Variables */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9f9;
+  --bg-tertiary: #f5f5f5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --border-color: #e8e8e8;
+  --accent-color: #4CAF50;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.dark-mode {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #242424;
+  --bg-tertiary: #2a2a2a;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --border-color: #333333;
+  --accent-color: #66bb6a;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.alimentos-manager {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.alimentos-manager-content {
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  background: var(--bg-primary);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.alimentos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.alimentos-header > div:first-child {
+  flex: 1;
+  min-width: 300px;
+}
+
+.alimentos-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.875rem 1.75rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4CAF50 0%, #66bb6a 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.35);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  padding: 1rem 1.5rem;
+  background: rgba(244, 67, 54, 0.1);
+  color: #c62828;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+}
+
+.dark-mode .error-message {
+  background: rgba(244, 67, 54, 0.2);
+  color: #ff6b6b;
+  border-color: rgba(244, 67, 54, 0.4);
+}
+
+/* Seção de cálculo - Card elegante */
+.calculo-section {
+  background: var(--bg-primary);
+  padding: 2rem;
+  border-radius: 20px;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.calculo-section:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.calculo-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.calculo-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 400px;
+}
+
+.calculo-input input {
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  width: 100%;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.calculo-input input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  background: var(--bg-primary);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+}
+
+.dark-mode .calculo-input input:focus {
+  box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.2);
+}
+
+.input-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.calculo-result {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border-color);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calculo-result h4 {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.result-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  max-width: 600px;
+}
+
+.result-card {
+  background: linear-gradient(135deg, var(--accent-color) 0%, #66bb6a 100%);
+  padding: 1.5rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.result-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.dark-mode .result-card {
+  background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
+}
+
+.result-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.result-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.result-unit {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+/* Lista de alimentos - Layout melhorado */
+.alimentos-list {
+  background: var(--bg-primary);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.alimentos-list h3 {
+  margin: 0 0 2rem 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.alimentos-list h3::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--border-color) 0%, transparent 100%);
+}
+
+.alimentos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.alimento-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.alimento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-color), #66bb6a);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.alimento-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: var(--accent-color);
+  background: var(--bg-primary);
+}
+
+.alimento-card:hover::before {
+  transform: scaleX(1);
+}
+
+.dark-mode .alimento-card {
+  background: var(--bg-secondary);
+}
+
+.dark-mode .alimento-card:hover {
+  background: var(--bg-tertiary);
+}
+
+.alimento-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.alimento-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+}
+
+.alimento-categoria {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  display: inline-block;
+  width: fit-content;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .alimento-categoria {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.alimento-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-row span {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.info-row strong {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.btn-calcular {
+  width: 100%;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #2196F3 0%, #42a5f5 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.25);
+}
+
+.btn-calcular:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.35);
+}
+
+.btn-calcular:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-calcular:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+  /* Prevenir scroll no overlay - o scroll deve ser apenas no modal-content */
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.modal-content {
+  background: var(--bg-primary);
+  border-radius: 24px;
+  width: auto;
+  max-width: 500px;
+  min-width: 400px;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Prevenir que o scroll "vaze" para a página de fundo */
+  overscroll-behavior: contain;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dark-mode .modal-content {
+  background: var(--bg-secondary);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.modal-header {
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: 10;
+  border-radius: 24px 24px 0 0;
+}
+
+.dark-mode .modal-header {
+  background: var(--bg-secondary);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.modal-close {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.alimento-form {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.625rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  background: var(--bg-primary);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+}
+
+.dark-mode .form-group input:focus {
+  box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.2);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.modal-footer {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Scrollbar personalizado */
+.alimentos-grid::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.alimentos-grid::-webkit-scrollbar-track,
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.alimentos-grid::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.alimentos-grid::-webkit-scrollbar-thumb:hover,
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .alimentos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .alimentos-header {
+    flex-direction: column;
+  }
+
+  .alimentos-header > div:first-child {
+    width: 100%;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    flex: 1;
+  }
+
+  .calculo-input {
+    max-width: 100%;
+  }
+
+  .result-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .alimentos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .alimentos-list,
+  .calculo-section {
+    padding: 1.5rem;
+  }
+
+  .modal-content {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .alimentos-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .calculo-section h3,
+  .alimentos-list h3 {
+    font-size: 1.25rem;
+  }
+
+  .result-cards {
+    grid-template-columns: 1fr;
+  }
+
+  /* Mobile: 2 cards por linha com mesma largura/altura e texto legível */
+  .alimentos-grid-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .alimento-card-compact {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .alimento-name-compact {
+    /* remover clamp e permitir texto completo */
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+    font-size: 0.85rem;
+    line-height: 1.25;
+  }
+
+  .alimento-categoria-compact {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
+  }
+
+  .alimento-kcal-compact {
+    margin-top: auto;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .pagination-info {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Sidebar de alimentos - ocupa toda a largura */
+.alimentos-sidebar {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sidebar-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.header-actions-compact {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+}
+
+.btn-icon:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.btn-icon.primary {
+  background: linear-gradient(135deg, #4CAF50 0%, #66bb6a 100%);
+  color: white;
+  border: none;
+}
+
+.btn-icon.primary:hover {
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.sidebar-search {
+  margin-bottom: 1.5rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  background: var(--bg-primary);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.dark-mode .search-input:focus {
+  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+}
+
+.alimentos-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  margin-bottom: 1rem;
+  padding-right: 0.5rem;
+}
+
+.alimentos-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.alimento-card-compact {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alimento-card-compact:hover {
+  border-color: var(--accent-color);
+  background: var(--bg-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.alimento-card-compact.active {
+  border-color: var(--accent-color);
+  background: rgba(76, 175, 80, 0.1);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.dark-mode .alimento-card-compact.active {
+  background: rgba(102, 187, 106, 0.15);
+}
+
+.alimento-name-compact {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.alimento-categoria-compact {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+}
+
+.alimento-kcal-compact {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.pagination-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  border-color: var(--accent-color);
+  background: var(--bg-primary);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Modal de detalhes do alimento */
+.alimento-detail-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.alimento-detail-modal {
+  background: var(--bg-primary);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.dark-mode .alimento-detail-modal {
+  background: var(--bg-secondary);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.modal-detail-header {
+  padding: 2rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.modal-detail-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.3px;
+}
+
+.modal-detail-close {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.modal-detail-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.modal-detail-content {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.detail-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.detail-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.3px;
+}
+
+.detail-category {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.nutrition-base-section {
+  margin-top: 1rem;
+}
+
+.nutrition-base-section h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+}
+
+.nutrition-cards-base {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nutrition-card-base {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s ease;
+}
+
+.nutrition-card-base:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-icon-base {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-icon-base.energy {
+  background: linear-gradient(135deg, #4CAF50, #66bb6a);
+  color: white;
+}
+
+.card-icon-base.protein {
+  background: linear-gradient(135deg, #2196F3, #42a5f5);
+  color: white;
+}
+
+.card-icon-base.fat {
+  background: linear-gradient(135deg, var(--lifefit-green-olive), var(--lifefit-blue-gray-dark));
+  color: white;
+}
+
+.card-icon-base.carb {
+  background: linear-gradient(135deg, #FF9800, #ffb74d);
+  color: white;
+}
+
+.card-content-base {
+  flex: 1;
+}
+
+.card-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.card-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.card-unit {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.calculo-section-detail {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+}
+
+.calculo-section-detail h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+}
+
+.calculo-input-detail {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.peso-input {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.peso-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.dark-mode .peso-input:focus {
+  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+}
+
+.btn-calcular-detail {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #2196F3 0%, #42a5f5 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.25);
+  white-space: nowrap;
+}
+
+.btn-calcular-detail:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.35);
+}
+
+.btn-calcular-detail:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.calculo-result-detail {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border-color);
+  animation: fadeIn 0.3s ease;
+}
+
+.calculo-result-detail h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+}
+
+.result-cards-detail {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.result-card-detail {
+  background: linear-gradient(135deg, var(--accent-color) 0%, #66bb6a 100%);
+  padding: 1.5rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+}
+
+.dark-mode .result-card-detail {
+  background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
+}
+
+.result-label-detail {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.result-value-detail {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.result-unit-detail {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+/* Scrollbar para modal */
+.modal-detail-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-detail-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-detail-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.modal-detail-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* ============================
+   Mobile: Modal de detalhes do alimento
+   ============================ */
+@media (max-width: 768px) {
+  .alimento-detail-modal-overlay {
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.75rem, env(safe-area-inset-bottom)) 0.75rem;
+    align-items: flex-start;
+  }
+
+  .alimento-detail-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 1.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-radius: 18px;
+  }
+
+  .modal-detail-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(14px);
+  }
+
+  .dark-mode .modal-detail-header {
+    background: rgba(15, 20, 27, 0.78);
+  }
+
+  .modal-detail-header h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .modal-detail-close {
+    width: 36px;
+    height: 36px;
+  }
+
+  .modal-detail-content {
+    padding: 1.25rem;
+  }
+
+  .nutrition-cards-base {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .nutrition-card-base {
+    padding: 1rem;
+    border-radius: 14px;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .card-icon-base {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+
+  .card-label {
+    font-size: 0.8rem;
+  }
+
+  .card-value {
+    font-size: 1.25rem;
+  }
+
+  .calculo-section-detail {
+    padding: 1.25rem;
+    border-radius: 14px;
+  }
+
+  .calculo-input-detail {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .calculo-input-detail input,
+  .calculo-input-detail .peso-input {
+    font-size: 16px; /* evita zoom no iOS */
+  }
+
+  .btn-calcular-detail {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .result-cards-detail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .result-card-detail {
+    padding: 1rem;
+  }
+
+  .result-value-detail {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .alimento-detail-modal-overlay {
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.6rem max(0.75rem, env(safe-area-inset-bottom)) 0.6rem;
+  }
+
+  .modal-detail-header {
+    padding: 1rem;
+  }
+
+  .modal-detail-content {
+    padding: 1rem;
+  }
+
+  .nutrition-cards-base {
+    grid-template-columns: 1fr;
+  }
+
+  .result-cards-detail {
+    grid-template-columns: 1fr;
+  }
+}
+/* Scrollbar para sidebar */
+.alimentos-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.alimentos-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.alimentos-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.alimentos-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Responsive adjustments */
+/* Scrollbar personalizado para sidebar */
+.alimentos-scroll-container::-webkit-scrollbar,
+.alimentos-details::-webkit-scrollbar {
+  width: 8px;
+}
+
+.alimentos-scroll-container::-webkit-scrollbar-track,
+.alimentos-details::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.alimentos-scroll-container::-webkit-scrollbar-thumb,
+.alimentos-details::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.alimentos-scroll-container::-webkit-scrollbar-thumb:hover,
+.alimentos-details::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+@media (max-width: 1200px) {
+  .alimentos-manager-content {
+    width: 100%;
+    max-width: 1170px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Tablet/Mobile: não “esmagar” a lista; deixa a página respirar */
+  .alimentos-manager {
+    min-height: 100dvh;
+  }
+
+  .alimentos-manager-content {
+    height: auto;
+    min-height: 0;
+    padding: 1rem;
+    overflow: visible; /* evita cortar a lista no mobile */
+  }
+
+  .alimentos-sidebar {
+    height: auto;
+    max-height: none; /* remove limite que escondia a lista */
+    padding: 1rem;
+    overflow: hidden; /* scroll fica no container interno */
+  }
+
+  .alimentos-scroll-container {
+    /* garante área útil para ver a lista no mobile */
+    max-height: 60dvh;
+  }
+
+  .alimentos-grid-compact {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

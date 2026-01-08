@@ -1,0 +1,487 @@
+/* ============================================
+   LifeFit - Weekly Workout Calendar
+   Mini calendário semanal de treinos
+   ============================================ */
+
+.weekly-workout-calendar {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+  border: 1px solid var(--border-color-light);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.weekly-calendar-header {
+  margin-bottom: var(--space-xl);
+}
+
+.weekly-calendar-title {
+  margin: 0 0 var(--space-xs) 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.weekly-calendar-subtitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-regular);
+}
+
+.weekly-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: visible;
+  box-sizing: border-box;
+}
+
+.weekly-calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color-light);
+  transition: all var(--transition-base);
+  position: relative;
+  min-height: 100px;
+  overflow: visible;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+.weekly-calendar-day.today {
+  background: linear-gradient(135deg, var(--lifefit-green-light) 0%, rgba(102, 187, 106, 0.1) 100%);
+  border-color: var(--lifefit-green-soft);
+  border-width: 2px;
+}
+
+.weekly-calendar-day.has-treino {
+  border-color: var(--lifefit-green-soft);
+}
+
+.weekly-calendar-day.concluido {
+  background: linear-gradient(135deg, rgba(102, 187, 106, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%);
+  border-color: var(--lifefit-green-soft);
+}
+
+.weekly-calendar-day.clickable {
+  cursor: pointer;
+}
+
+.weekly-calendar-day.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--lifefit-green-soft);
+}
+
+.weekly-day-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  width: 100%;
+}
+
+.weekly-calendar-day.today {
+  padding-top: var(--space-sm);
+}
+
+.weekly-calendar-day.today .weekly-day-label {
+  color: #90c22c;
+  font-weight: var(--font-weight-bold);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.weekly-day-indicator {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: var(--space-xs) auto;
+  flex-shrink: 0;
+}
+
+.weekly-day-check {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--on-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.weekly-day-check svg {
+  width: 16px;
+  height: 16px;
+}
+
+.weekly-day-planned {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 2px solid var(--lifefit-green-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weekly-day-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--lifefit-green-soft);
+}
+
+.weekly-day-empty {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color-light);
+}
+
+.weekly-day-treino-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+  text-align: center;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.weekly-day-treino-name {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.weekly-day-status {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: #90c22c;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.weekly-day-today-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--lifefit-green-soft);
+  color: var(--on-primary);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  padding: 2px 6px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+  line-height: 1.2;
+  min-width: fit-content;
+  pointer-events: none;
+}
+
+.weekly-calendar-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-color-light);
+}
+
+.weekly-summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.weekly-summary-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: #90c22c;
+  line-height: 1;
+}
+
+.weekly-summary-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.weekly-summary-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border-color-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .weekly-workout-calendar {
+    padding: var(--space-md) var(--space-sm);
+    margin-bottom: var(--space-lg);
+    overflow-x: visible;
+  }
+
+  .weekly-calendar-header {
+    margin-bottom: var(--space-md);
+  }
+
+  .weekly-calendar-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .weekly-calendar-subtitle {
+    font-size: var(--font-size-xs);
+  }
+
+  .weekly-calendar-grid {
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+    overflow-x: visible;
+  }
+
+  .weekly-calendar-day {
+    padding: var(--space-xs) 2px;
+    min-height: 85px;
+    overflow: visible;
+    gap: 4px;
+  }
+
+  .weekly-day-label {
+    font-size: 9px;
+    margin-bottom: 2px;
+  }
+
+  .weekly-day-today-badge {
+    font-size: 9px;
+    padding: 2px 5px;
+    top: -8px;
+    letter-spacing: 0.01em;
+  }
+
+  .weekly-calendar-day.today {
+    /* Mesmo padding que os outros cards */
+  }
+
+  .weekly-calendar-day.today .weekly-day-label {
+    margin: 0;
+  }
+
+  .weekly-day-indicator {
+    width: 32px;
+    height: 32px;
+    margin: 4px auto;
+  }
+
+  .weekly-day-check,
+  .weekly-day-planned,
+  .weekly-day-empty {
+    width: 32px;
+    height: 32px;
+  }
+
+  .weekly-day-check svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .weekly-day-today-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    top: 4px;
+  }
+
+  .weekly-calendar-day.today .weekly-day-label {
+    margin-top: var(--space-xs);
+  }
+
+  .weekly-day-treino-name {
+    font-size: 9px;
+    line-height: 1.2;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .weekly-day-status {
+    font-size: 8px;
+  }
+
+  .weekly-day-today-badge {
+    font-size: 8px;
+    padding: 2px 4px;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    letter-spacing: 0;
+    border-radius: 6px;
+  }
+
+  .weekly-calendar-summary {
+    flex-direction: row;
+    gap: var(--space-md);
+    padding-top: var(--space-md);
+  }
+
+  .weekly-summary-divider {
+    width: 1px;
+    height: 30px;
+  }
+
+  .weekly-summary-value {
+    font-size: var(--font-size-xl);
+  }
+
+  .weekly-summary-label {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .weekly-workout-calendar {
+    padding: var(--space-sm) var(--space-xs);
+    margin-bottom: var(--space-md);
+  }
+
+  .weekly-calendar-header {
+    margin-bottom: var(--space-sm);
+  }
+
+  .weekly-calendar-title {
+    font-size: var(--font-size-base);
+  }
+
+  .weekly-calendar-grid {
+    gap: 4px;
+    margin-bottom: var(--space-sm);
+  }
+
+  .weekly-calendar-day {
+    padding: 6px 1px;
+    min-height: 75px;
+    gap: 2px;
+  }
+
+  .weekly-day-label {
+    font-size: 8px;
+    margin-bottom: 2px;
+  }
+
+  .weekly-day-treino-info {
+    margin-top: 2px;
+    gap: 2px;
+  }
+
+  .weekly-day-treino-name {
+    font-size: 7px;
+    line-height: 1.1;
+  }
+
+  .weekly-day-status {
+    font-size: 6px;
+  }
+
+  .weekly-day-indicator {
+    width: 28px;
+    height: 28px;
+    margin: 2px auto;
+  }
+
+  .weekly-day-check,
+  .weekly-day-planned,
+  .weekly-day-empty {
+    width: 28px;
+    height: 28px;
+  }
+
+  .weekly-day-check svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .weekly-day-today-badge {
+    font-size: 8px;
+    padding: 2px 4px;
+    top: -7px;
+    letter-spacing: 0;
+    border-radius: 6px;
+  }
+
+  .weekly-calendar-day.today {
+    /* Mesmo padding que os outros cards */
+  }
+
+  .weekly-calendar-day.today .weekly-day-label {
+    margin: 0;
+  }
+
+  .weekly-day-label {
+    font-size: 9px;
+  }
+
+  .weekly-day-treino-name {
+    font-size: 8px;
+    line-height: 1.1;
+  }
+
+  .weekly-day-status {
+    font-size: 7px;
+  }
+
+  .weekly-calendar-summary {
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
+  }
+
+  .weekly-summary-value {
+    font-size: var(--font-size-lg);
+  }
+
+  .weekly-summary-label {
+    font-size: 8px;
+  }
+}
+
+
+
+

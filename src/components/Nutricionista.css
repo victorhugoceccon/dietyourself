@@ -1,0 +1,942 @@
+/* ============================================
+   LifeFit - Nutricionista
+   Design moderno e clean seguindo padrão LifeFit
+   ============================================ */
+
+.nutricionista-content-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  min-width: 0;
+  /* Padding/margem padrão como Paciente/Personal */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-2xl);
+}
+
+/* ===== NAVEGAÇÃO ===== */
+.nutricionista-nav {
+  display: none; /* no desktop, o menu vai no header */
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(11, 15, 20, 0.08);
+  box-shadow: var(--shadow-sm);
+  padding: 0 var(--space-2xl);
+  position: sticky;
+  top: calc(env(safe-area-inset-top) + 72px); /* abaixo do header fixo */
+  z-index: 99;
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-lg);
+}
+
+/* Menu no header (desktop): usa os mesmos botões, mas sem barra sticky */
+.header-nav-items-nutricionista {
+  padding: 0;
+}
+
+.header-nav-items-nutricionista .nav-item {
+  padding: 8px 12px;
+  font-size: var(--font-size-xs);
+}
+
+.header-nav-items-nutricionista .nav-text {
+  font-size: var(--font-size-xs);
+}
+
+.nav-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 10px 0;
+}
+
+.nav-content::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(11, 15, 20, 0.08);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  white-space: nowrap;
+  font-family: var(--font-family-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nav-text {
+  display: inline-block;
+}
+
+.nav-item:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(11, 15, 20, 0.12);
+  box-shadow: var(--shadow-xs);
+}
+
+.nav-item.active {
+  color: var(--on-primary);
+  border-color: rgba(11, 15, 20, 0.10);
+  background: var(--gradient-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.nav-item svg {
+  transition: transform var(--transition-base);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nav-item:hover svg {
+  transform: scale(1.05);
+}
+
+.dark-mode .nav-item {
+  color: var(--text-primary) !important;
+}
+
+.dark-mode .nav-item.active {
+  color: var(--on-primary) !important;
+}
+
+/* ===== DARK MODE FIXES ===== */
+.dark-mode .nutricionista-nav {
+  background: rgba(15, 20, 27, 0.72) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+.dark-mode .search-input:focus {
+  background: var(--bg-elevated) !important;
+}
+
+.dark-mode .paciente-item.active {
+  background:
+    linear-gradient(135deg, rgba(185, 255, 44, 0.14) 0%, rgba(54, 215, 255, 0.10) 100%),
+    rgba(15, 20, 27, 0.72) !important;
+  border-color: rgba(185, 255, 44, 0.28) !important;
+}
+
+.dark-mode .paciente-item.active .paciente-name,
+.dark-mode .paciente-item.active .paciente-email,
+.dark-mode .paciente-item.active .paciente-meta {
+  color: var(--text-primary) !important;
+}
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+.nutricionista-main-content {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ===== LAYOUT PACIENTES ===== */
+.pacientes-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: var(--space-xl);
+  width: 100%;
+  min-width: 0;
+}
+
+/* ===== SIDEBAR PACIENTES ===== */
+.pacientes-sidebar {
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  border: 1px solid rgba(11, 15, 20, 0.08);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  max-height: calc(100vh - 200px);
+  position: sticky;
+  top: calc(env(safe-area-inset-top) + 140px);
+  min-width: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.sidebar-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.add-paciente-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  /* o visual vem do .btn-primary; aqui só garantimos alinhamento */
+}
+
+.add-paciente-btn:hover {
+  transform: translateY(-1px);
+}
+
+.add-paciente-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== BUSCA ===== */
+.search-container {
+  margin-bottom: var(--space-lg);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-md);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  /* Mantém espaço para o ícone, mas herda visual do .lifefit-input */
+  padding-left: calc(var(--space-md) + 24px + var(--space-sm));
+}
+
+.search-input:focus {
+  /* foco já vem do .lifefit-input */
+}
+
+.search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Branding do profissional no topo do conteúdo */
+.nutricionista-branding-wrap {
+  margin-bottom: var(--space-md);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: var(--space-sm);
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: var(--space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+}
+
+.search-clear-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.search-results-count {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  text-align: right;
+}
+
+/* ===== LISTA DE PACIENTES ===== */
+.pacientes-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.paciente-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(11, 15, 20, 0.08);
+  background: rgba(255, 255, 255, 0.58);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.paciente-item:hover {
+  border-color: rgba(11, 15, 20, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-xs);
+  transform: translateY(-1px);
+}
+
+.paciente-item.active {
+  border-color: rgba(11, 15, 20, 0.14);
+  background: linear-gradient(135deg, rgba(185, 255, 44, 0.20) 0%, rgba(54, 215, 255, 0.16) 100%), rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-sm);
+}
+
+.paciente-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-primary);
+  color: var(--on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.paciente-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.paciente-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paciente-email {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paciente-meta {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-xs);
+}
+
+.paciente-badges {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.paciente-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-xs);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(11, 15, 20, 0.10);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.paciente-badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+.paciente-badge.dieta {
+  background: rgba(24, 230, 160, 0.16);
+  border-color: rgba(24, 230, 160, 0.45);
+  color: #0B0F14;
+}
+
+.paciente-badge.questionnaire {
+  background: rgba(54, 215, 255, 0.14);
+  border-color: rgba(54, 215, 255, 0.42);
+  color: #0B0F14;
+}
+
+/* ===== ÁREA DE DETALHES ===== */
+.paciente-details {
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: var(--radius-md);
+  padding: var(--space-2xl);
+  border: 1px solid rgba(11, 15, 20, 0.08);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(16px);
+  min-height: 400px;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden; /* evita corte/scroll horizontal por elementos internos */
+}
+
+.empty-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4xl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-selection svg {
+  margin-bottom: var(--space-lg);
+  color: #90c22c;
+  opacity: 0.3;
+}
+
+.empty-selection h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.empty-selection p {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ===== ESTADOS VAZIOS ===== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-state svg {
+  margin-bottom: var(--space-lg);
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xs) 0;
+  font-weight: var(--font-weight-medium);
+}
+
+.empty-hint {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+/* ===== MODAL ===== */
+/* Modal: Cadastrar Paciente (independente + tema Ultra) */
+.create-paciente-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: max(var(--space-lg), env(safe-area-inset-top)) var(--space-lg) max(var(--space-lg), env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.create-paciente-modal {
+  width: min(560px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  background:
+    radial-gradient(1200px 500px at 20% 0%, rgba(185, 255, 44, 0.14) 0%, transparent 60%),
+    radial-gradient(1200px 500px at 90% 20%, rgba(54, 215, 255, 0.12) 0%, transparent 55%),
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(11, 15, 20, 0.12);
+  box-shadow: var(--shadow-xl);
+  position: relative;
+}
+
+.create-paciente-modal::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  opacity: 0.95;
+}
+
+.dark-mode .create-paciente-modal {
+  background:
+    radial-gradient(1200px 500px at 20% 0%, rgba(185, 255, 44, 0.12) 0%, transparent 60%),
+    radial-gradient(1200px 500px at 90% 20%, rgba(54, 215, 255, 0.10) 0%, transparent 55%),
+    rgba(15, 20, 27, 0.92);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.create-paciente-header {
+  padding: var(--space-xl);
+  border-bottom: 1px solid rgba(11, 15, 20, 0.10);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px);
+  flex-shrink: 0;
+}
+
+.dark-mode .create-paciente-header {
+  background: rgba(15, 20, 27, 0.55);
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+.create-paciente-header-text {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.create-paciente-header-text h2 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: #90c22c;
+  letter-spacing: -0.02em;
+  background: none !important;
+  -webkit-text-fill-color: #90c22c !important;
+}
+
+.create-paciente-subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.35;
+}
+
+.create-paciente-close {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(11, 15, 20, 0.10);
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.dark-mode .create-paciente-close {
+  background: rgba(15, 20, 27, 0.65);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.create-paciente-close:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-xs);
+}
+
+.create-paciente-form {
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+  flex: 1;
+}
+
+.create-paciente-form .form-group input {
+  font-size: 16px; /* evita zoom iOS */
+}
+
+.create-paciente-footer {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+  padding: var(--space-lg) var(--space-xl) calc(var(--space-lg) + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(11, 15, 20, 0.10);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+
+.dark-mode .create-paciente-footer {
+  background: rgba(15, 20, 27, 0.72);
+  border-top-color: rgba(255, 255, 255, 0.10);
+}
+
+@media (max-width: 480px) {
+  .create-paciente-overlay {
+    padding: max(var(--space-md), env(safe-area-inset-top)) var(--space-md) max(var(--space-md), env(safe-area-inset-bottom));
+  }
+
+  .create-paciente-modal {
+    width: calc(100vw - 1.5rem);
+    border-radius: 20px;
+  }
+
+  .create-paciente-header,
+  .create-paciente-form,
+  .create-paciente-footer {
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+
+  .create-paciente-footer {
+    flex-direction: column;
+  }
+
+  .create-paciente-footer .btn-primary,
+  .create-paciente-footer .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .pacientes-layout {
+    grid-template-columns: 320px 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .nutricionista-nav {
+    display: block; /* mobile/tablet: manter acessível */
+  }
+
+  .nutricionista-nav {
+    padding: 0 var(--space-lg);
+    top: auto;
+  }
+
+  .nav-content {
+    gap: var(--space-xs);
+    padding-bottom: var(--space-sm);
+    justify-content: center;
+  }
+
+  .nav-item {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+  }
+
+  .nav-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .nav-text {
+    font-size: var(--font-size-xs);
+    text-align: center;
+  }
+
+  .pacientes-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .pacientes-sidebar {
+    position: static;
+    max-height: none;
+  }
+
+  .paciente-details {
+    padding: var(--space-lg);
+    overflow: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .nutricionista-nav {
+    display: block; /* mobile: barra inferior fixa */
+  }
+
+  .nutricionista-content-wrapper {
+    gap: var(--space-md);
+    padding-bottom: 80px; /* Espaço para navegação fixa */
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+    padding-top: var(--space-md);
+  }
+
+  .nutricionista-nav {
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    border-top: 1px solid var(--border-color-light);
+    border-bottom: none;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    background: var(--bg-primary);
+  }
+
+  .dark-mode .nutricionista-nav {
+    background: var(--bg-primary) !important;
+    border-top-color: var(--border-color) !important;
+  }
+
+  .nav-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: var(--space-xs) 0;
+    gap: 0;
+    width: 100%;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    flex: 1;
+    min-width: 0;
+    border-bottom: none;
+    border-top: 2px solid transparent;
+    background: transparent;
+  }
+
+  .dark-mode .nav-item {
+    color: var(--text-primary) !important;
+  }
+
+  .nav-item.active {
+    border-top-color: var(--lifefit-green-soft);
+    border-bottom: none;
+    color: #90c22c;
+  }
+
+  .dark-mode .nav-item.active {
+    color: #90c22c !important;
+  }
+
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .nav-text {
+    display: block;
+    font-size: 9px;
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+
+  .pacientes-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .pacientes-sidebar {
+    padding: var(--space-md);
+    position: static;
+    max-height: none;
+    width: 100%;
+  }
+
+  .dark-mode .pacientes-sidebar {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .sidebar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .sidebar-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .dark-mode .sidebar-title {
+    color: var(--text-primary) !important;
+  }
+
+  .add-paciente-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-container {
+    margin-bottom: var(--space-md);
+  }
+
+  .search-results-count {
+    text-align: left;
+  }
+
+  .paciente-details {
+    padding: var(--space-md);
+    min-height: auto;
+    width: 100%;
+  }
+
+  .dark-mode .paciente-details {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .paciente-item {
+    padding: var(--space-sm);
+    gap: var(--space-sm);
+  }
+
+  .paciente-name {
+    font-size: var(--font-size-sm);
+  }
+
+  .paciente-email {
+    font-size: var(--font-size-xs);
+  }
+
+  .modal-overlay {
+    padding: var(--space-md);
+  }
+
+  .modal-content {
+    max-width: calc(100vw - 2rem);
+    max-height: 95vh;
+  }
+
+  .dark-mode .modal-content {
+    background: var(--bg-elevated) !important;
+  }
+
+  .modal-header,
+  .create-paciente-form {
+    padding: var(--space-lg);
+  }
+
+  .dark-mode .modal-header {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .dark-mode .modal-header h2 {
+    color: var(--text-primary) !important;
+  }
+
+  .form-group input {
+    font-size: 16px; /* Evita zoom no iOS */
+  }
+
+  .dark-mode .form-group input {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+  }
+}
+
+/* ===== DARK MODE FIXES ===== */
+.dark-mode .nutricionista-nav {
+  background: var(--bg-primary) !important;
+}
+
+.dark-mode .search-input {
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark-mode .search-input:focus {
+  background: var(--bg-elevated) !important;
+}
+
+.dark-mode .paciente-item {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark-mode .paciente-item:hover {
+  background: var(--bg-tertiary) !important;
+}
+
+.dark-mode .paciente-item.active {
+  /* manter o destaque “Ultra” também no dark */
+  background: linear-gradient(135deg, rgba(185, 255, 44, 0.20) 0%, rgba(54, 215, 255, 0.16) 100%), rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(185, 255, 44, 0.35) !important;
+}
+
+.dark-mode .paciente-item.active .paciente-name,
+.dark-mode .paciente-item.active .paciente-email,
+.dark-mode .paciente-item.active .paciente-meta {
+  color: var(--text-primary) !important;
+}
+
+.dark-mode .form-group input {
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark-mode .form-group input:focus {
+  background: var(--bg-elevated) !important;
+}
+
+.dark-mode .cancel-btn {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.dark-mode .cancel-btn:hover {
+  background: var(--bg-elevated) !important;
+}

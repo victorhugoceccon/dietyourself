@@ -1,0 +1,342 @@
+/* ============================================
+   NextMealWidget - Próxima Refeição com Timer
+   ============================================ */
+
+.next-meal-widget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5);
+  color: #f8fafc;
+}
+
+/* Barra de destaque superior baseada em urgência */
+.next-meal-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--lifefit-green-soft);
+}
+
+.next-meal-widget--soon::before {
+  background: var(--lifefit-warning);
+}
+
+.next-meal-widget--urgent::before {
+  background: var(--lifefit-error);
+  animation: pulse-bar 1.5s infinite;
+}
+
+@keyframes pulse-bar {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Dark mode */
+.dark-mode .next-meal-widget {
+  background: var(--gradient-card);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Timer Badge */
+.next-meal-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.35rem 0.75rem;
+  background: var(--lifefit-green-light);
+  color: var(--lifefit-green-dark);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.next-meal-timer svg {
+  flex-shrink: 0;
+}
+
+.timer-soon {
+  background: var(--lifefit-warning-light);
+  color: var(--lifefit-warning);
+}
+
+.timer-urgent {
+  background: var(--lifefit-error-light);
+  color: var(--lifefit-error);
+  animation: pulse-timer 1.5s infinite;
+}
+
+@keyframes pulse-timer {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.tomorrow-badge {
+  font-size: var(--font-size-xs);
+  opacity: 0.8;
+  margin-left: var(--space-xs);
+  text-transform: lowercase;
+}
+
+/* Content */
+.next-meal-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.next-meal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.next-meal-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: #f8fafc;
+  margin: 0;
+}
+
+.next-meal-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--font-size-sm);
+  color: #cbd5e1;
+}
+
+.next-meal-kcal {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.kcal-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.kcal-label {
+  font-size: var(--font-size-sm);
+  color: #cbd5e1;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Items List */
+.next-meal-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: rgba(185, 255, 44, 0.08);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-xs);
+}
+
+.dark-mode .next-meal-items {
+  background: rgba(185, 255, 44, 0.08);
+}
+
+.next-meal-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: #f8fafc;
+}
+
+.item-bullet {
+  color: #90c22c;
+  font-weight: bold;
+}
+
+.item-name {
+  flex: 1;
+  font-weight: var(--font-weight-medium);
+}
+
+.item-portion {
+  font-size: var(--font-size-xs);
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.dark-mode .item-portion {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.next-meal-more {
+  font-size: var(--font-size-xs);
+  color: #cbd5e1;
+  padding-left: var(--space-lg);
+}
+
+/* Macros Mini */
+.next-meal-macros {
+  display: flex;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: var(--space-sm);
+}
+
+.macro-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  flex: 1;
+  padding: var(--space-sm);
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .macro-mini {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.macro-value {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: #f8fafc;
+}
+
+.macro-label {
+  font-size: var(--font-size-xs);
+  color: #cbd5e1;
+  font-weight: var(--font-weight-medium);
+}
+
+.macro-protein .macro-value { color: #3B82F6; }
+.macro-carbs .macro-value { color: #F59E0B; }
+.macro-fat .macro-value { color: var(--lifefit-blue-gray); }
+
+/* Loading State */
+.next-meal-widget--loading {
+  min-height: 180px;
+}
+
+.next-meal-skeleton {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.skeleton-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    90deg,
+    var(--border-color-light) 25%,
+    var(--border-color) 50%,
+    var(--border-color-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+
+.skeleton-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.skeleton-line {
+  height: 1rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--border-color-light) 25%,
+    var(--border-color) 50%,
+    var(--border-color-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Empty State */
+.next-meal-widget--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  text-align: center;
+}
+
+.next-meal-widget--empty::before {
+  display: none;
+}
+
+.next-meal-empty-icon {
+  color: #94a3b8;
+  margin-bottom: var(--space-sm);
+  opacity: 0.5;
+}
+
+.next-meal-empty-text {
+  font-size: var(--font-size-sm);
+  color: #cbd5e1;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .next-meal-widget {
+    padding: var(--space-md);
+  }
+
+  .next-meal-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .kcal-value {
+    font-size: var(--font-size-2xl);
+  }
+
+  .next-meal-items {
+    padding: var(--space-sm);
+  }
+
+  .next-meal-macros {
+    gap: var(--space-sm);
+  }
+
+  .macro-mini {
+    padding: var(--space-xs);
+  }
+
+  .macro-value {
+    font-size: var(--font-size-sm);
+  }
+}
+
+

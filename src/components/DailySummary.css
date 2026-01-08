@@ -1,0 +1,248 @@
+/* ============================================
+   LifeFit - Daily Summary
+   Resumo do dia com design clean
+   ============================================ */
+
+.daily-summary {
+  background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
+  border-radius: var(--radius-sm);
+  padding: var(--space-3xl);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-base);
+  color: #f8fafc;
+}
+
+.daily-summary:hover {
+  border-color: var(--lifefit-green-light);
+}
+
+.summary-header {
+  margin-bottom: var(--space-xl);
+}
+
+.summary-header h2 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  color: #f8fafc;
+  margin: 0 0 var(--space-sm) 0;
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.summary-subtitle {
+  color: #cbd5e1;
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.summary-card {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-base);
+  color: #f8fafc;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+.summary-card:hover {
+  border-color: rgba(159, 239, 0, 0.4);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.card-icon {
+  font-size: 2rem;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: #f8fafc;
+  margin-bottom: var(--space-xs);
+  line-height: var(--line-height-tight);
+}
+
+.card-label {
+  font-size: var(--font-size-sm);
+  color: #cbd5e1;
+  font-weight: var(--font-weight-regular);
+  margin-bottom: var(--space-sm);
+}
+
+.card-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width var(--transition-slow);
+  border-radius: var(--radius-full);
+  background: var(--lifefit-green-soft);
+}
+
+.progress-text {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: #cbd5e1;
+  min-width: 40px;
+  text-align: right;
+}
+
+.next-meal-card {
+  background: linear-gradient(135deg, #b1ff00 0%, #3bd418 100%);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+  color: #0b1020;
+  margin-top: var(--space-lg);
+  box-shadow: 0 12px 28px rgba(59, 212, 24, 0.35);
+  transition: all var(--transition-base);
+  border: none;
+}
+
+.next-meal-card:hover {
+  background: var(--lifefit-green-dark);
+}
+
+.next-meal-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  opacity: 0.95;
+}
+
+.next-meal-icon {
+  font-size: var(--font-size-lg);
+}
+
+.next-meal-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  opacity: 0.9;
+}
+
+.next-meal-content h3 {
+  margin: 0 0 var(--space-xs) 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.next-meal-content p {
+  margin: 0;
+  font-size: var(--font-size-base);
+  opacity: 0.9;
+  font-weight: var(--font-weight-regular);
+}
+
+.loading {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .daily-summary {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+  }
+
+  .summary-header h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .summary-card {
+    padding: var(--space-lg);
+  }
+
+  .card-value {
+    font-size: var(--font-size-xl);
+  }
+
+  .card-icon {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .daily-summary {
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+  }
+
+  .summary-header h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .summary-cards {
+    gap: var(--space-sm);
+  }
+
+  .summary-card {
+    padding: var(--space-md);
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .card-icon {
+    font-size: 1.5rem;
+  }
+
+  .card-value {
+    font-size: var(--font-size-lg);
+  }
+
+  .card-label {
+    font-size: var(--font-size-xs);
+  }
+
+  .next-meal-card {
+    padding: var(--space-lg);
+  }
+
+  .next-meal-content h3 {
+    font-size: var(--font-size-lg);
+  }
+}
+
+
+
+

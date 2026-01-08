@@ -1,0 +1,607 @@
+/* ============================================
+   Paciente - Design Moderno
+   Classes específicas para evitar conflitos com Personal
+   ============================================ */
+
+/* ===== WRAPPER PRINCIPAL ===== */
+.paciente-content-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 100%;
+  background: transparent;
+  position: relative;
+}
+
+.dark-mode .paciente-content-wrapper {
+  background: transparent;
+}
+
+/* Desktop: Espaçamento otimizado */
+@media (min-width: 769px) {
+  .paciente-content-wrapper {
+    gap: 0;
+    padding: 0;
+  }
+}
+
+/* ===== NAVEGAÇÃO DESKTOP - ESTILO MODERNO ===== */
+/* Usar classe específica header-nav-items-paciente para evitar conflitos */
+/* Forçar display flex e posicionamento ao lado do role-selector */
+.header-nav-items-paciente {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-left: var(--space-md) !important;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  order: 4; /* Colocar após role-selector */
+}
+
+@media (min-width: 769px) {
+  /* Esconder nav separado no desktop */
+  .paciente-nav {
+    display: none !important;
+  }
+  
+  /* Garantir que nav items apareçam no header ao lado do role-selector */
+  .header-nav-items-paciente {
+    display: flex !important;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-left: var(--space-md) !important;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* Ajustar header-left para acomodar nav items em linha - aplicar sempre quando tem paciente */
+  .professional-layout:has(.paciente-content-wrapper) .professional-header .header-left,
+  body:has(.paciente-content-wrapper) .professional-header .header-left {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: var(--space-md);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Esconder scrollbar mas manter funcionalidade */
+  .professional-layout:has(.paciente-content-wrapper) .professional-header .header-left::-webkit-scrollbar,
+  body:has(.paciente-content-wrapper) .professional-header .header-left::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .professional-layout:has(.paciente-content-wrapper) .professional-header .header-left,
+  body:has(.paciente-content-wrapper) .professional-header .header-left {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* Garantir que logo, welcome-text e role-selector não encolham */
+  .professional-layout:has(.paciente-content-wrapper) .professional-header .header-left > .logo,
+  .professional-layout:has(.paciente-content-wrapper) .professional-header .header-left > .welcome-text,
+  .professional-layout:has(.paciente-content-wrapper) .professional-header .header-left > .role-selector,
+  body:has(.paciente-content-wrapper) .professional-header .header-left > .logo,
+  body:has(.paciente-content-wrapper) .professional-header .header-left > .welcome-text,
+  body:has(.paciente-content-wrapper) .professional-header .header-left > .role-selector {
+    flex-shrink: 0;
+  }
+  
+  /* Permitir que nav items encolham um pouco se necessário */
+  .header-nav-items-paciente {
+    flex-shrink: 1;
+    min-width: 0;
+    flex: 0 1 auto;
+  }
+}
+
+/* Mobile: manter nav separado */
+@media (max-width: 768px) {
+.paciente-nav {
+    background: rgba(6, 8, 15, 0.95);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    padding: var(--space-md) var(--space-2xl);
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    z-index: 98;
+    border-radius: 0;
+    margin-top: 0;
+    width: 100%;
+    display: block !important;
+  }
+  
+  .header-nav-items-paciente {
+    display: none !important;
+  }
+}
+
+.dark-mode .paciente-nav {
+  background: rgba(26, 27, 31, 0.95);
+  box-shadow: 0 2px 20px rgba(76, 175, 80, 0.15);
+}
+
+.nav-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Nav items - estilos gerais */
+.paciente-content-wrapper .nav-item,
+.header-nav-items-paciente .nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
+  color: #f8fafc;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  white-space: nowrap;
+  font-family: var(--font-family-base);
+  text-transform: none;
+  letter-spacing: 0;
+  overflow: hidden;
+}
+
+/* Nav items menores no header (desktop) */
+@media (min-width: 769px) {
+  .header-nav-items-paciente .nav-item {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-xs);
+    gap: var(--space-xs);
+    white-space: nowrap;
+  }
+  
+  .header-nav-items-paciente .nav-item svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  
+  .header-nav-items-paciente .nav-text {
+    font-size: var(--font-size-xs);
+  }
+}
+
+.paciente-content-wrapper .nav-item::before,
+.header-nav-items-paciente .nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: var(--radius-lg);
+  z-index: -1;
+}
+
+.nav-text {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+
+.paciente-content-wrapper .nav-item svg,
+.header-nav-items-paciente .nav-item svg {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover state */
+.paciente-content-wrapper .nav-item:hover,
+.header-nav-items-paciente .nav-item:hover {
+  color: #f8fafc;
+  transform: translateY(-2px);
+}
+
+.paciente-content-wrapper .nav-item:hover::before,
+.header-nav-items-paciente .nav-item:hover::before {
+  opacity: 1;
+}
+
+.paciente-content-wrapper .nav-item:hover svg,
+.header-nav-items-paciente .nav-item:hover svg {
+  transform: scale(1.1) rotate(5deg);
+  filter: brightness(1.2);
+}
+
+/* Active state */
+.paciente-content-wrapper .nav-item.active,
+.header-nav-items-paciente .nav-item.active {
+  color: #f8fafc;
+  font-weight: var(--font-weight-semibold);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.paciente-content-wrapper .nav-item.active::before,
+.header-nav-items-paciente .nav-item.active::before {
+  opacity: 1;
+  background: var(--gradient-primary);
+}
+
+.dark-mode .paciente-content-wrapper .nav-item.active::before,
+.dark-mode .header-nav-items-paciente .nav-item.active::before {
+  background: var(--gradient-primary);
+}
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+.paciente-main-content {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== RESPONSIVE - TABLET ===== */
+@media (max-width: 768px) {
+  .paciente-content-wrapper {
+    gap: 0;
+    padding: 0;
+  }
+
+  .paciente-nav {
+    padding: 0 var(--space-lg);
+    top: 72px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.08);
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 98;
+  }
+  
+  .paciente-main-content {
+    margin-top: 140px;
+    padding: 0;
+  }
+
+  .dark-mode .paciente-nav {
+    background: rgba(26, 27, 31, 0.98);
+  }
+
+  .nav-content {
+    gap: var(--space-xs);
+    padding-bottom: var(--space-sm);
+    justify-content: center;
+  }
+
+  .paciente-content-wrapper .nav-item {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ===== RESPONSIVE - MOBILE ===== */
+@media (max-width: 480px) {
+  .paciente-main-content {
+    padding: 0 var(--space-md) calc(var(--space-md) + 80px);
+  }
+
+  .dark-mode .paciente-main-content {
+    background: var(--bg-secondary) !important;
+  }
+
+  /* Garantir que componentes filhos sejam transparentes no mobile */
+  .dark-mode .user-profile-card,
+  .dark-mode .weekly-adherence-card,
+  .dark-mode .nutrition-dashboard,
+  .dark-mode .diet-display {
+    background: transparent !important;
+  }
+}
+
+/* ===== DARK MODE ADJUSTMENTS ===== */
+.dark-mode .paciente-content-wrapper {
+  background: transparent;
+}
+
+.dark-mode .paciente-main-content {
+  background: transparent;
+}
+
+/* Garantir que componentes filhos sejam transparentes */
+.dark-mode .user-profile-card,
+.dark-mode .weekly-adherence-card,
+.dark-mode .nutrition-dashboard,
+.dark-mode .diet-display {
+  background: transparent !important;
+}
+
+/* ===== ANIMAÇÕES SUAVES ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.paciente-main-content > * {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* ===== FORÇAR LARGURA TOTAL - REGRAS GLOBAIS ===== */
+/* Garantir que TUDO dentro de paciente-content-wrapper ocupe 100% */
+.paciente-content-wrapper *,
+.paciente-content-wrapper *::before,
+.paciente-content-wrapper *::after {
+  box-sizing: border-box;
+}
+
+/* Remover qualquer max-width que possa estar limitando */
+.paciente-content-wrapper section,
+.paciente-content-wrapper section > div,
+.paciente-content-wrapper section > div > div {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Componentes específicos - forçar largura total */
+.paciente-content-wrapper .user-profile,
+.paciente-content-wrapper .user-profile-card,
+.paciente-content-wrapper .weekly-adherence,
+.paciente-content-wrapper .weekly-adherence-card,
+.paciente-content-wrapper .nutrition-dashboard,
+.paciente-content-wrapper .nutrition-dashboard-container,
+.paciente-content-wrapper .diet-display,
+.paciente-content-wrapper .diet-display-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Seções com scroll offset para header fixo */
+.profile-section,
+.adherence-section,
+.nutrition-section,
+.diet-section,
+.treinos-section,
+.timeline-section {
+  scroll-margin-top: 100px;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 2rem;
+  padding: 0;
+}
+
+.profile-section {
+  margin-bottom: 2.5rem;
+}
+
+/* Estilos específicos das seções */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.badge {
+  padding: 0.5rem 1.2rem;
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-sm);
+}
+
+.diet-section {
+  width: 100%;
+  max-width: 100%;
+  background: var(--bg-primary);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.generate-diet-btn {
+  padding: 0.875rem 2rem;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.generate-diet-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(76, 175, 80, 0.35);
+}
+
+.generate-diet-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  border: 1px solid;
+}
+
+.alert-error {
+  background: rgba(244, 67, 54, 0.1);
+  color: #c62828;
+  border-color: #ef5350;
+}
+
+.dark-mode .alert-error {
+  background: rgba(244, 67, 54, 0.2);
+  color: #ff6b6b;
+  border-color: #e57373;
+}
+
+.info-section {
+  margin-top: 1rem;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.info-card {
+  background: var(--bg-primary);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-color);
+}
+
+.info-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .info-icon {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(139, 195, 74, 0.2) 100%);
+}
+
+.info-card:hover .info-icon {
+  transform: scale(1.1);
+}
+
+.info-card h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.info-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.info-value {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  background: var(--bg-secondary);
+  color: var(--accent-color);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .info-value {
+  background: var(--bg-tertiary);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .diet-section {
+    padding: 1.5rem;
+  }
+
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

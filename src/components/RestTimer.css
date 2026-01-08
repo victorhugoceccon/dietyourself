@@ -1,0 +1,221 @@
+/* ============================================
+   LifeFit - Rest Timer
+   Cronômetro de descanso nativo
+   ============================================ */
+
+.rest-timer {
+  padding: var(--space-lg);
+  background: linear-gradient(135deg, #F8FAF8 0%, var(--bg-elevated) 100%);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color-light);
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-base);
+}
+
+.rest-timer-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.rest-timer-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #90c22c;
+  background: var(--lifefit-green-light);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.rest-timer-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rest-timer-display {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+}
+
+.rest-timer-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rest-timer-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.rest-timer-bg {
+  fill: none;
+  stroke: var(--bg-tertiary);
+  stroke-width: 6;
+}
+
+.rest-timer-progress {
+  fill: none;
+  stroke: var(--lifefit-green-soft);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.rest-timer-time {
+  position: absolute;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.rest-timer-controls {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.rest-timer-start-btn,
+.rest-timer-pause-btn,
+.rest-timer-reset-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-family-base);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.rest-timer-start-btn {
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-dark) 100%);
+  color: var(--on-primary);
+  border: none;
+  box-shadow: var(--shadow-xs);
+}
+
+.rest-timer-start-btn:hover {
+  background: linear-gradient(135deg, var(--lifefit-green-dark) 0%, var(--lifefit-green-soft) 100%);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.rest-timer-pause-btn {
+  background: var(--bg-secondary);
+  border-color: var(--lifefit-green-soft);
+  color: #90c22c;
+}
+
+.rest-timer-pause-btn:hover {
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-xs);
+}
+
+.rest-timer-reset-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--lifefit-green-soft);
+  color: #90c22c;
+}
+
+.rest-timer-controls svg {
+  flex-shrink: 0;
+}
+
+.rest-timer-completed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.completed-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-olive) 100%);
+  color: var(--on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-sm);
+}
+
+.completed-message {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.completed-hint {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+  font-style: italic;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .rest-timer-circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  .rest-timer-time {
+    font-size: var(--font-size-xl);
+  }
+
+  .rest-timer-controls {
+    flex-direction: column;
+  }
+
+  .rest-timer-start-btn,
+  .rest-timer-pause-btn,
+  .rest-timer-reset-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+
+

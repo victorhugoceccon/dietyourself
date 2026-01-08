@@ -1,0 +1,120 @@
+/* ============================================
+   LifeFit - Badge Component
+   Componente de badge com design clean
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: all var(--transition-base);
+  font-family: var(--font-family-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-small {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-tight);
+}
+
+.badge-medium {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-tight);
+}
+
+.badge-large {
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-tight);
+}
+
+.badge-default {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color-light);
+}
+
+.badge-primary {
+  background: var(--gradient-primary);
+  color: var(--lifefit-white);
+  border: none;
+  box-shadow: var(--shadow-xs);
+}
+
+.badge-calories {
+  background: var(--gradient-primary);
+  color: var(--lifefit-white);
+  border: none;
+  box-shadow: var(--shadow-xs);
+}
+
+.badge-protein {
+  background: linear-gradient(135deg, var(--lifefit-blue-gray) 0%, var(--lifefit-blue-gray-dark) 100%);
+  color: var(--lifefit-white);
+  border: none;
+  box-shadow: var(--shadow-xs);
+}
+
+.badge-carbs {
+  background: linear-gradient(135deg, var(--lifefit-warning) 0%, #C99A5A 100%);
+  color: var(--lifefit-white);
+  border: none;
+  box-shadow: var(--shadow-xs);
+}
+
+.badge-fat {
+  background: linear-gradient(135deg, var(--lifefit-green-olive) 0%, var(--lifefit-green-soft) 100%);
+  color: var(--lifefit-white);
+  border: none;
+  box-shadow: var(--shadow-xs);
+}
+
+.badge-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color-light);
+}
+
+/* Dark mode adjustments */
+.dark-mode .badge-default {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color-light);
+}
+
+.dark-mode .badge-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary) !important;
+  border-color: var(--border-color-light);
+}
+
+.dark-mode .badge-primary,
+.dark-mode .badge-calories {
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-olive) 100%);
+  color: var(--lifefit-white) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.dark-mode .badge-protein {
+  background: linear-gradient(135deg, var(--lifefit-blue-gray) 0%, var(--lifefit-blue-gray-dark) 100%);
+  color: var(--lifefit-white) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.dark-mode .badge-carbs {
+  background: linear-gradient(135deg, var(--lifefit-warning) 0%, #C99A5A 100%);
+  color: var(--lifefit-white) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.dark-mode .badge-fat {
+  background: linear-gradient(135deg, var(--lifefit-green-olive) 0%, var(--lifefit-green-soft) 100%);
+  color: var(--lifefit-white) !important;
+  box-shadow: var(--shadow-sm);
+}

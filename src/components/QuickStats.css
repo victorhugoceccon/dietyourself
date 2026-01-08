@@ -1,0 +1,193 @@
+/* ============================================
+   LifeFit - Quick Stats
+   Estatísticas rápidas com design clean
+   ============================================ */
+
+.quick-stats {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3xl);
+  box-shadow: none;
+  border: 1px solid var(--border-color-light);
+  transition: all var(--transition-base);
+}
+
+.quick-stats:hover {
+  border-color: var(--lifefit-green-light);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg);
+}
+
+.stat-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  border: 1px solid var(--border-color-light);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--lifefit-green-soft);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.stat-card:hover {
+  border-color: var(--lifefit-green-soft);
+  background: var(--bg-tertiary);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+.streak-card {
+  border-left: 4px solid var(--lifefit-warning);
+}
+
+.streak-card::before {
+  background: var(--lifefit-warning);
+}
+
+.adherence-card {
+  border-left: 4px solid var(--lifefit-green-soft);
+}
+
+.adherence-card::before {
+  background: var(--lifefit-green-soft);
+}
+
+.objective-card {
+  border-left: 4px solid var(--lifefit-blue-gray);
+}
+
+.objective-card::before {
+  background: var(--lifefit-blue-gray);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  line-height: 1;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.stat-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  line-height: var(--line-height-tight);
+}
+
+.stat-value-text {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  line-height: var(--line-height-tight);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-regular);
+  margin-bottom: var(--space-xs);
+}
+
+.stat-hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  margin-top: var(--space-xs);
+}
+
+.loading {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .quick-stats {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .stat-card {
+    padding: var(--space-lg);
+  }
+
+  .stat-value {
+    font-size: var(--font-size-xl);
+  }
+
+  .stat-icon {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .quick-stats {
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+  }
+
+  .stat-card {
+    padding: var(--space-md);
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .stat-icon {
+    font-size: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: var(--font-size-lg);
+  }
+
+  .stat-value-text {
+    font-size: var(--font-size-base);
+  }
+
+  .stat-label {
+    font-size: var(--font-size-xs);
+  }
+
+  .stat-hint {
+    font-size: 0.7rem;
+  }
+}
+
+
+
+

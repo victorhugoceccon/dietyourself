@@ -1,0 +1,780 @@
+/* ============================================
+   Workout Share V2 - Estilo Strava/Stories
+   Overlay transparente para fotos
+   ============================================ */
+
+.ws-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(env(safe-area-inset-top) + 12px) 12px
+    calc(env(safe-area-inset-bottom) + 12px) 12px;
+}
+
+.ws-backdrop {
+  position: fixed;
+  inset: 0;
+}
+
+.ws-close {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 12px);
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 100001;
+  transition: all 0.2s ease;
+}
+
+.ws-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.ws-stage {
+  width: min(900px, 100%);
+  height: min(90vh, 900px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+  pointer-events: none;
+}
+
+/* Seletor de modo */
+.ws-mode-selector {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  pointer-events: auto;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ws-mode-btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ws-mode-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.ws-mode-btn.active {
+  background: linear-gradient(135deg, #B9FF2C 0%, #36D7FF 100%);
+  color: #0B0F14;
+  box-shadow: 0 4px 15px rgba(185, 255, 44, 0.3);
+}
+
+/* ============================================
+   Câmera
+   ============================================ */
+
+.ws-camera-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.ws-camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ws-camera-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.ws-camera-error p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin: 0;
+}
+
+.ws-camera-error button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #B9FF2C 0%, #36D7FF 100%);
+  color: #0B0F14;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ws-camera-controls {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.ws-camera-btn {
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.ws-camera-btn-gallery,
+.ws-camera-btn-flip {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.ws-camera-btn-gallery:hover,
+.ws-camera-btn-flip:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.ws-camera-btn-capture {
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  padding: 4px;
+}
+
+.ws-camera-btn-capture:hover {
+  transform: scale(1.05);
+}
+
+.ws-camera-btn-capture:active {
+  transform: scale(0.95);
+}
+
+.ws-capture-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid #0B0F14;
+  background: #fff;
+}
+
+/* Foto de fundo */
+.wsv2-photo-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.wsv2-photo-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wsv2-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.1) 30%,
+    rgba(0, 0, 0, 0.1) 70%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* Botão pequeno */
+.ws-btn-small {
+  padding: 10px 16px !important;
+  min-width: auto !important;
+  font-size: 13px !important;
+}
+
+.ws-preview-frame {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.ws-story-preview {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1080px;
+  height: 1920px;
+  transform-origin: top center;
+  will-change: transform;
+  pointer-events: auto;
+}
+
+/* ============================================
+   STORY V2 - Design Strava/Overlay
+   ============================================ */
+
+.ws-story-v2 {
+  width: 1080px;
+  height: 1920px;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 60px;
+  box-sizing: border-box;
+}
+
+/* Modo transparente (overlay para foto) */
+.ws-story-v2.ws-transparent {
+  background: transparent;
+}
+
+/* Modo completo (com fundo dark) */
+.ws-story-v2.ws-dark {
+  background: #0B0F14;
+}
+
+/* Background gradient para modo dark */
+.wsv2-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(185, 255, 44, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 40% at 80% 80%, rgba(54, 215, 255, 0.12) 0%, transparent 50%),
+    linear-gradient(180deg, #0B0F14 0%, #141920 50%, #0B0F14 100%);
+  z-index: 0;
+}
+
+/* Top Bar */
+.wsv2-topbar {
+  position: relative;
+  z-index: 1;
+}
+
+.wsv2-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wsv2-personal-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(185, 255, 44, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wsv2-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wsv2-logo-fallback {
+  font-size: 32px;
+  font-weight: 900;
+  color: #B9FF2C;
+  text-shadow: 0 0 20px rgba(185, 255, 44, 0.5);
+}
+
+.wsv2-personal-name {
+  flex: 1;
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.wsv2-lifefit-badge {
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.wsv2-lifefit-text {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, #B9FF2C 0%, #36D7FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dashboard */
+.wsv2-dashboard {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+}
+
+.wsv2-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-radius: 999px;
+  background: rgba(185, 255, 44, 0.15);
+  border: 2px solid rgba(185, 255, 44, 0.4);
+  width: fit-content;
+  backdrop-filter: blur(10px);
+}
+
+.wsv2-status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #B9FF2C;
+  box-shadow: 0 0 20px rgba(185, 255, 44, 0.8);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+}
+
+.wsv2-status span {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #B9FF2C;
+  text-shadow: 0 0 10px rgba(185, 255, 44, 0.3);
+}
+
+.wsv2-title {
+  margin: 0;
+  font-size: 96px;
+  font-weight: 950;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  max-width: 100%;
+}
+
+.wsv2-subtitle {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: -10px;
+}
+
+/* Stats Grid */
+.wsv2-stats-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 20px;
+}
+
+.wsv2-stat {
+  padding: 32px 24px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.wsv2-stat-lg {
+  background: linear-gradient(135deg, rgba(185, 255, 44, 0.15) 0%, rgba(54, 215, 255, 0.1) 100%);
+  border: 2px solid rgba(185, 255, 44, 0.3);
+}
+
+.wsv2-stat-icon {
+  font-size: 40px;
+}
+
+.wsv2-stat-value {
+  font-size: 56px;
+  font-weight: 950;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.wsv2-stat-lg .wsv2-stat-value {
+  background: linear-gradient(135deg, #B9FF2C 0%, #36D7FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wsv2-stat-label {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+/* Week Progress */
+.wsv2-week {
+  padding: 28px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wsv2-week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.wsv2-week-title {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wsv2-week-count {
+  font-size: 28px;
+  font-weight: 950;
+  background: linear-gradient(135deg, #B9FF2C 0%, #36D7FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wsv2-week-dots {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wsv2-week-dot {
+  flex: 1;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.wsv2-week-dot span {
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.wsv2-week-dot.active {
+  background: linear-gradient(135deg, rgba(185, 255, 44, 0.3) 0%, rgba(54, 215, 255, 0.2) 100%);
+  border-color: #B9FF2C;
+  box-shadow: 0 0 20px rgba(185, 255, 44, 0.3);
+}
+
+.wsv2-week-dot.active span {
+  color: #B9FF2C;
+}
+
+/* Intensity */
+.wsv2-intensity {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 28px;
+  border-radius: 999px;
+  background: rgba(54, 215, 255, 0.15);
+  border: 2px solid rgba(54, 215, 255, 0.4);
+  width: fit-content;
+}
+
+.wsv2-intensity-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.wsv2-intensity-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: #36D7FF;
+}
+
+/* Streak */
+.wsv2-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 32px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 100, 0, 0.2) 0%, rgba(255, 150, 0, 0.15) 100%);
+  border: 2px solid rgba(255, 120, 0, 0.4);
+  width: fit-content;
+}
+
+.wsv2-streak-fire {
+  font-size: 36px;
+}
+
+.wsv2-streak-num {
+  font-size: 42px;
+  font-weight: 950;
+  color: #FF8C00;
+  text-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+}
+
+.wsv2-streak-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Quote */
+.wsv2-quote {
+  position: relative;
+  z-index: 1;
+  padding: 40px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.wsv2-quote-mark {
+  position: absolute;
+  top: -20px;
+  left: 20px;
+  font-size: 140px;
+  font-weight: 900;
+  color: rgba(185, 255, 44, 0.15);
+  line-height: 1;
+}
+
+.wsv2-quote-text {
+  position: relative;
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer */
+.wsv2-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.wsv2-footer-date {
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.wsv2-footer-powered {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.wsv2-footer-powered strong {
+  background: linear-gradient(135deg, #B9FF2C 0%, #36D7FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+}
+
+/* ============================================
+   Actions Bar
+   ============================================ */
+
+.ws-actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100000;
+  padding: 16px 20px calc(env(safe-area-inset-bottom) + 16px) 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  pointer-events: auto;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.ws-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 16px 28px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 160px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+
+.ws-btn:hover {
+  transform: translateY(-2px);
+}
+
+.ws-btn-ghost {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ws-btn-primary {
+  color: #0B0F14;
+  font-weight: 800;
+}
+
+/* Mobile */
+@media (max-width: 680px) {
+  .ws-stage {
+    width: 100%;
+    height: 85vh;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 160px);
+  }
+
+  .ws-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    padding: 12px 12px calc(env(safe-area-inset-bottom) + 12px) 12px;
+    gap: 8px;
+  }
+
+  .ws-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 14px 12px;
+    font-size: 13px;
+  }
+
+  .ws-btn-primary {
+    flex: 2;
+  }
+
+  .ws-btn-small {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .ws-mode-selector {
+    margin-bottom: 8px;
+    padding: 4px;
+  }
+
+  .ws-mode-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .ws-camera-controls {
+    bottom: 30px;
+    gap: 30px;
+  }
+
+  .ws-camera-btn-gallery,
+  .ws-camera-btn-flip {
+    width: 44px;
+    height: 44px;
+  }
+
+  .ws-camera-btn-capture {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 400px) {
+  .ws-mode-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .ws-btn {
+    padding: 12px 10px;
+    font-size: 12px;
+    gap: 6px;
+  }
+}

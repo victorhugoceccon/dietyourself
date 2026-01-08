@@ -1,0 +1,881 @@
+/* ============================================
+   LifeFit - Paciente Perfil
+   Página de perfil com design clean
+   ============================================ */
+
+.paciente-perfil {
+  width: 100%;
+  background: #06080f;
+  min-height: 100vh;
+  color: #f8fafc;
+  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+}
+
+.perfil-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+.perfil-section {
+  background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
+  border-radius: var(--radius-sm);
+  padding: var(--space-3xl);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5);
+  transition: all var(--transition-base);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+.perfil-photo-section {
+  padding: var(--space-xl);
+}
+
+.perfil-photo-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.perfil-photo-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.perfil-photo-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.perfil-photo-fallback {
+  font-weight: var(--font-weight-bold);
+  font-size: 1.1rem;
+  color: #f8fafc;
+}
+
+.perfil-photo-text {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.perfil-photo-title {
+  font-weight: var(--font-weight-bold);
+  color: #9fef00;
+}
+
+.perfil-photo-subtitle {
+  color: #cbd5e1;
+  font-size: var(--font-size-sm);
+  line-height: 1.35;
+}
+
+.perfil-photo-btn {
+  align-self: flex-start;
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #e2e8f0 !important;
+}
+
+.perfil-photo-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(159, 239, 0, 0.4) !important;
+  color: #9fef00 !important;
+  transform: translateY(-1px);
+}
+
+.perfil-photo-file {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .perfil-photo-row {
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .perfil-photo-avatar {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+
+.perfil-section:hover {
+  border-color: var(--lifefit-green-light);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.section-header h2 {
+  font-size: var(--font-size-3xl);
+  color: #f8fafc !important;
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.edit-btn {
+  padding: var(--space-sm) var(--space-xl);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-md);
+  color: #e2e8f0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: var(--font-family-base);
+}
+
+.edit-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(159, 239, 0, 0.4);
+  color: #9fef00;
+  transform: translateY(-1px);
+}
+
+.status-badge {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.status-badge.completed {
+  background: var(--lifefit-success);
+  color: var(--lifefit-white);
+}
+
+.info-display {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.info-item {
+  display: flex;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-base);
+}
+
+.info-item:hover {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(159, 239, 0, 0.4);
+  border-left-width: 3px;
+  border-left-color: #9fef00;
+}
+
+.info-label {
+  font-weight: var(--font-weight-medium);
+  color: #cbd5e1;
+  min-width: 100px;
+  font-size: var(--font-size-sm);
+}
+
+.info-value {
+  color: #f8fafc;
+  flex: 1;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.form-group label {
+  font-weight: var(--font-weight-medium);
+  color: #9fef00;
+  font-size: var(--font-size-sm);
+}
+
+.form-group input {
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  background: rgba(0, 0, 0, 0.3);
+  color: #f8fafc;
+  transition: all var(--transition-base);
+  font-family: var(--font-family-base);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #9fef00;
+  border-width: 2px;
+  box-shadow: 0 0 0 3px rgba(159, 239, 0, 0.1);
+}
+
+.form-group input.disabled-input {
+  background: rgba(0, 0, 0, 0.2);
+  color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.form-group small {
+  font-size: var(--font-size-xs);
+  color: #cbd5e1;
+  margin-top: var(--space-xs);
+  font-weight: var(--font-weight-regular);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+}
+
+/* Botão salvar - novo formato */
+.save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #b1ff00 0%, #3bd418 100%);
+  color: #f8fafc;
+  border: none;
+  border-radius: 14px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(59, 212, 24, 0.35);
+  transform: skewX(-12deg);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+}
+
+.save-btn span {
+  transform: skewX(12deg);
+  display: inline-flex;
+  align-items: center;
+}
+
+.save-btn .cta-hero__arrow {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+}
+
+.save-btn svg {
+  height: 24px;
+  width: auto;
+}
+
+.save-btn:hover:not(:disabled) {
+  transform: skewX(-12deg) translateY(-2px);
+  box-shadow: 0 16px 34px rgba(59, 212, 24, 0.45);
+  filter: brightness(1.05);
+}
+
+.save-btn path.one {
+  transition: 0.4s;
+  transform: translateX(-40%);
+}
+
+.save-btn path.two {
+  transition: 0.45s;
+  transform: translateX(-20%);
+}
+
+.save-btn:hover path.one,
+.save-btn:hover path.two {
+  transform: translateX(0);
+}
+
+.save-btn:hover path.three {
+  animation: arrow-color 1s infinite 0.2s;
+}
+
+.save-btn:hover path.one {
+  animation: arrow-color 1s infinite 0.6s;
+}
+
+.save-btn:hover path.two {
+  animation: arrow-color 1s infinite 0.4s;
+}
+
+.save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Questionário Summary */
+.questionnaire-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.summary-text {
+  color: #cbd5e1;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+/* Botão ver questionário - novo formato */
+.view-questionnaire-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #b1ff00 0%, #3bd418 100%);
+  color: #f8fafc;
+  border: none;
+  border-radius: 14px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(59, 212, 24, 0.35);
+  transform: skewX(-12deg);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  align-self: flex-start;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+}
+
+.view-questionnaire-btn span {
+  transform: skewX(12deg);
+  display: inline-flex;
+  align-items: center;
+}
+
+.view-questionnaire-btn .cta-hero__arrow {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+}
+
+.view-questionnaire-btn svg {
+  height: 24px;
+  width: auto;
+}
+
+.view-questionnaire-btn:hover {
+  transform: skewX(-12deg) translateY(-2px);
+  box-shadow: 0 16px 34px rgba(59, 212, 24, 0.45);
+  filter: brightness(1.05);
+}
+
+.view-questionnaire-btn path.one {
+  transition: 0.4s;
+  transform: translateX(-40%);
+}
+
+.view-questionnaire-btn path.two {
+  transition: 0.45s;
+  transform: translateX(-20%);
+}
+
+.view-questionnaire-btn:hover path.one,
+.view-questionnaire-btn:hover path.two {
+  transform: translateX(0);
+}
+
+.view-questionnaire-btn:hover path.three {
+  animation: arrow-color 1s infinite 0.2s;
+}
+
+.view-questionnaire-btn:hover path.one {
+  animation: arrow-color 1s infinite 0.6s;
+}
+
+.view-questionnaire-btn:hover path.two {
+  animation: arrow-color 1s infinite 0.4s;
+}
+
+/* Modal do Questionário */
+.questionnaire-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 9999;
+  padding: var(--space-xl);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.questionnaire-modal-content {
+  background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 900px;
+  max-height: 95vh;
+  margin: var(--space-xl) auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5);
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  color: #f8fafc;
+}
+
+.questionnaire-modal-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.questionnaire-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  background: rgba(18, 26, 36, 0.95);
+}
+
+.questionnaire-modal-header h2 {
+  margin: 0;
+  font-size: var(--font-size-3xl);
+  color: #9fef00;
+  font-weight: var(--font-weight-semibold);
+}
+
+.close-modal-btn {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-full);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-2xl);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.close-modal-btn:hover {
+  background: rgba(239, 68, 68, 0.9);
+  border-color: rgba(239, 68, 68, 1);
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.questionnaire-modal-body {
+  padding: var(--space-2xl);
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Blocos do Questionário */
+.questionnaire-block {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-base);
+}
+
+.questionnaire-block:hover {
+  border-color: rgba(159, 239, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.block-title {
+  font-size: var(--font-size-xl);
+  color: #9fef00;
+  margin: 0 0 var(--space-lg) 0;
+  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.questionnaire-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-md);
+}
+
+.questionnaire-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-base);
+}
+
+.questionnaire-item:hover {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(159, 239, 0, 0.4);
+  border-left-width: 3px;
+  border-left-color: #9fef00;
+}
+
+.questionnaire-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.question-label {
+  font-weight: var(--font-weight-medium);
+  color: #cbd5e1;
+  font-size: var(--font-size-sm);
+}
+
+.question-value {
+  color: #f8fafc;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Alimentos Categories */
+.alimentos-categories {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.alimentos-category {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.category-label {
+  font-weight: var(--font-weight-semibold);
+  color: #9fef00;
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.category-value {
+  color: #f8fafc;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-2xl);
+  color: #cbd5e1;
+}
+
+.empty-state p {
+  margin: var(--space-sm) 0;
+  font-size: var(--font-size-base);
+}
+
+.empty-state .hint {
+  font-size: var(--font-size-sm);
+  color: #94a3b8;
+  margin-top: var(--space-sm);
+  font-weight: var(--font-weight-regular);
+}
+
+.danger-section {
+  border: 2px solid rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.reset-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.reset-description {
+  color: #f8fafc;
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  font-weight: var(--font-weight-regular);
+}
+
+.reset-list {
+  margin: 0;
+  padding-left: var(--space-xl);
+  color: #f8fafc;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+}
+
+.reset-list li {
+  margin: var(--space-sm) 0;
+}
+
+.reset-warning {
+  color: #fca5a5;
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+  padding: var(--space-xl);
+  background: rgba(239, 68, 68, 0.15);
+  border-radius: 0;
+  border-left: 3px solid rgba(239, 68, 68, 0.8);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+.reset-btn {
+  padding: var(--space-md) var(--space-2xl);
+  background: rgba(239, 68, 68, 0.9);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+  align-self: flex-start;
+  font-family: var(--font-family-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.reset-btn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 1);
+  box-shadow: 0 12px 28px rgba(239, 68, 68, 0.4);
+  transform: translateY(-2px);
+}
+
+.reset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-secondary);
+  color: var(--text-tertiary);
+}
+
+.loading {
+  text-align: center;
+  padding: var(--space-3xl);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .paciente-perfil {
+    padding-top: var(--space-md);
+  }
+
+  .perfil-section {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+  }
+
+  .section-header h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .questionnaire-modal-content {
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: var(--radius-md);
+    margin: var(--space-md) auto;
+  }
+
+  .questionnaire-modal-header {
+    padding: var(--space-xl);
+  }
+
+  .questionnaire-modal-header h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .questionnaire-modal-body {
+    padding: var(--space-xl);
+    gap: var(--space-xl);
+  }
+
+  .questionnaire-block {
+    padding: var(--space-lg);
+  }
+
+  .block-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .questionnaire-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .questionnaire-item {
+    padding: var(--space-md);
+  }
+
+  .view-questionnaire-btn {
+    width: 100%;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .info-label {
+    min-width: auto;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .save-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .paciente-perfil {
+    padding-top: var(--space-sm);
+  }
+
+  .perfil-section {
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+  }
+
+  .section-header h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .questionnaire-modal-overlay {
+    padding: var(--space-md);
+  }
+
+  .questionnaire-modal-header {
+    padding: var(--space-lg);
+  }
+
+  .questionnaire-modal-header h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .close-modal-btn {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-xl);
+  }
+
+  .questionnaire-modal-body {
+    padding: var(--space-lg);
+  }
+
+  .questionnaire-block {
+    padding: var(--space-md);
+  }
+
+  .block-title {
+    font-size: var(--font-size-base);
+  }
+
+  .questionnaire-item {
+    padding: var(--space-sm);
+  }
+
+  .question-label {
+    font-size: var(--font-size-xs);
+  }
+
+  .question-value {
+    font-size: var(--font-size-sm);
+  }
+
+  .alimentos-category {
+    padding: var(--space-md);
+  }
+
+  .category-label {
+    font-size: var(--font-size-xs);
+  }
+
+  .category-value {
+    font-size: var(--font-size-sm);
+  }
+
+  .edit-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .reset-btn {
+    width: 100%;
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--font-size-sm);
+  }
+}
+
+
+
+

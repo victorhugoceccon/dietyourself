@@ -1,0 +1,495 @@
+/* ============================================
+   LifeFit - Daily Check-in Compact
+   Check-in diário compacto para dashboard - Modernizado
+   ============================================ */
+
+.daily-checkin-compact {
+  width: 100%;
+}
+
+.checkin-status-card,
+.checkin-prompt-card,
+.checkin-form-card {
+  background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  color: #f8fafc;
+}
+
+.checkin-status-card::before,
+.checkin-prompt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-olive) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.checkin-status-card:hover,
+.checkin-prompt-card:hover {
+  border-color: var(--lifefit-green-soft);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.checkin-status-card:hover::before,
+.checkin-prompt-card:hover::before {
+  opacity: 1;
+}
+
+/* Status Card (quando já tem check-in) */
+.checkin-status-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.checkin-status-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid;
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.checkin-status-card:hover .checkin-status-icon {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+.checkin-status-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.checkin-status-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.checkin-status-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: #f8fafc;
+  margin: 0 0 var(--space-xs) 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.checkin-status-label {
+  font-size: var(--font-size-sm);
+  color: #cbd5e1;
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+}
+
+.checkin-status-detail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.checkin-detail-label {
+  color: #cbd5e1;
+  font-weight: var(--font-weight-medium);
+}
+
+.checkin-detail-value {
+  color: #f8fafc;
+  font-weight: var(--font-weight-semibold);
+}
+
+.checkin-status-note {
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--lifefit-green-soft);
+  margin-bottom: var(--space-md);
+}
+
+.checkin-status-note p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: #cbd5e1;
+  font-style: italic;
+  line-height: var(--line-height-relaxed);
+}
+
+.checkin-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-family-base);
+}
+
+.checkin-edit-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--lifefit-green-soft);
+  color: #90c22c;
+  box-shadow: var(--shadow-xs);
+}
+
+.checkin-edit-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Prompt Card (quando não tem check-in) */
+.checkin-prompt-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  cursor: pointer;
+}
+
+.checkin-prompt-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.8;
+  transition: transform var(--transition-base);
+}
+
+.checkin-prompt-card:hover .checkin-prompt-icon {
+  transform: scale(1.1);
+}
+
+.checkin-prompt-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.checkin-prompt-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: #f8fafc;
+  margin: 0 0 var(--space-xs) 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.checkin-prompt-description {
+  font-size: var(--font-size-sm);
+  color: #cbd5e1;
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+}
+
+.checkin-start-btn {
+  padding: var(--space-sm) var(--space-xl);
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-dark) 100%);
+  color: var(--on-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-family-base);
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+}
+
+.checkin-start-btn:hover {
+  background: linear-gradient(135deg, var(--lifefit-green-dark) 0%, var(--lifefit-green-soft) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Form Card */
+.checkin-form-card {
+  animation: slideDown 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.checkin-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.checkin-form-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: #f8fafc;
+  margin: 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.checkin-form-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.checkin-form-close:hover {
+  background: var(--bg-secondary);
+  border-color: var(--lifefit-green-soft);
+  color: #90c22c;
+  box-shadow: var(--shadow-xs);
+}
+
+.checkin-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.checkin-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.checkin-form-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: #f8fafc;
+}
+
+.checkin-form-label .optional {
+  color: #94a3b8;
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-xs);
+}
+
+.adherence-options-compact {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+.adherence-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: var(--font-family-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.adherence-option:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--lifefit-green-soft);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.adherence-option.selected {
+  border-width: 2px;
+  font-weight: var(--font-weight-semibold);
+  box-shadow: var(--shadow-sm);
+}
+
+.adherence-option-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.adherence-option-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.checkin-form-input,
+.checkin-form-textarea {
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all var(--transition-base);
+  font-family: var(--font-family-base);
+}
+
+.checkin-form-input:focus,
+.checkin-form-textarea:focus {
+  outline: none;
+  border-color: var(--lifefit-green-soft);
+  border-width: 2px;
+  box-shadow: 0 0 0 3px rgba(122, 155, 125, 0.1);
+}
+
+.checkin-form-textarea {
+  resize: vertical;
+  min-height: 60px;
+  line-height: var(--line-height-relaxed);
+}
+
+.checkin-form-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+  margin-top: var(--space-sm);
+}
+
+.checkin-form-cancel {
+  padding: var(--space-sm) var(--space-xl);
+  background: transparent;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-family-base);
+}
+
+.checkin-form-cancel:hover {
+  background: var(--bg-secondary);
+  border-color: var(--lifefit-green-soft);
+  color: #90c22c;
+  box-shadow: var(--shadow-xs);
+}
+
+.checkin-form-submit {
+  padding: var(--space-sm) var(--space-xl);
+  background: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-dark) 100%);
+  color: var(--on-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-family-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.checkin-form-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--lifefit-green-dark) 0%, var(--lifefit-green-soft) 100%);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.checkin-form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkin-loading {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .checkin-status-card,
+  .checkin-prompt-card,
+  .checkin-form-card {
+    padding: var(--space-lg);
+  }
+
+  .checkin-prompt-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .checkin-prompt-icon {
+    font-size: 2rem;
+  }
+
+  .checkin-start-btn {
+    width: 100%;
+  }
+
+  .adherence-options-compact {
+    grid-template-columns: 1fr;
+  }
+
+  .checkin-form-actions {
+    flex-direction: column;
+  }
+
+  .checkin-form-cancel,
+  .checkin-form-submit {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkin-status-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .checkin-status-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .checkin-status-emoji {
+    font-size: 1.25rem;
+  }
+}
+
+
+
+

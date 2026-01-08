@@ -1,0 +1,981 @@
+/* ============================================
+   LifeFit - Paciente Layout
+   Design clean e acolhedor
+   ============================================ */
+
+.paciente-layout {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #06080f;
+  transition: background var(--transition-base);
+}
+
+/* ===== HEADER ===== */
+.paciente-header {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  padding: var(--space-xl) var(--space-2xl);
+  margin-bottom: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(18px);
+}
+
+/* Forçar logo a aparecer sempre */
+.paciente-header h1.logo {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Regras globais para garantir visibilidade no desktop */
+@media (min-width: 769px) {
+  .paciente-header .header-left h1.logo {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #90c22c !important;
+    font-size: 1.5rem !important;
+    font-weight: var(--font-weight-bold) !important;
+    text-transform: uppercase !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+    order: 1 !important;
+  }
+
+  .paciente-header .header-left .role-selector {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    order: 3 !important;
+  }
+
+  .paciente-header .header-left .role-selector .role-selector-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-lg);
+  width: 100%;
+  position: relative;
+}
+
+/* Garantir que header-content sempre mostre seus filhos */
+.paciente-header .header-content {
+  overflow: visible;
+}
+
+.header-left {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-xl);
+  flex: 1;
+  flex-wrap: nowrap;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  position: relative;
+}
+
+.header-right {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* Garantir que header-left sempre mostre logo e role-selector */
+.paciente-header .header-left {
+  overflow: visible;
+}
+
+/* Forçar logo a aparecer - regra mais específica */
+.paciente-header .header-content .header-left h1.logo {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+/* Forçar role-selector a aparecer - regra mais específica */
+.paciente-header .header-content .header-left .role-selector,
+.paciente-header .header-content .header-left div.role-selector {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+/* Garantir que logo e role-selector não sejam cortados pelo overflow no desktop */
+@media (min-width: 769px) {
+  /* Garantir que header-content e header-left não cortem elementos */
+  .paciente-header .header-content {
+    overflow: visible !important;
+  }
+  
+  .paciente-header .header-left {
+    min-width: 500px; /* Espaço maior no desktop */
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+  
+  /* Forçar visibilidade da logo no desktop - regra mais específica */
+  .paciente-header .header-content .header-left h1.logo,
+  .paciente-header .header-content .header-left > h1.logo {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    position: relative !important;
+    z-index: 100 !important;
+    color: #90c22c !important;
+    font-size: 1.5rem !important;
+    font-weight: var(--font-weight-bold) !important;
+    text-transform: uppercase !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Forçar visibilidade do role-selector no desktop - regra mais específica */
+  .paciente-header .header-content .header-left .role-selector,
+  .paciente-header .header-content .header-left > .role-selector,
+  .paciente-header .header-content .header-left div.role-selector,
+  .paciente-header .header-content .header-left > div.role-selector {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    position: relative !important;
+    z-index: 100 !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Garantir que o botão do role-selector apareça */
+  .paciente-header .header-content .header-left .role-selector .role-selector-btn,
+  .paciente-header .header-content .header-left div.role-selector .role-selector-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Garantir que logo sempre apareça */
+.paciente-header .header-left h1.logo,
+.paciente-header .header-left .logo {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+  min-width: auto !important;
+  order: 1; /* Primeiro elemento */
+}
+
+/* Garantir que welcome-text apareça */
+.paciente-header .header-left .welcome-text,
+.paciente-header .header-left p.welcome-text {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap;
+  order: 2; /* Segundo elemento */
+}
+
+/* Garantir que role-selector sempre apareça */
+.paciente-header .header-right .role-selector,
+.paciente-header .header-right div.role-selector {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+  min-width: auto !important;
+}
+
+/* Garantir que logout-btn apareça na mesma linha */
+.paciente-header .header-right .logout-btn {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.header-left::-webkit-scrollbar {
+  display: none;
+}
+
+.header-left > .logo,
+.header-left > h1.logo,
+.header-left > .welcome-text,
+.header-left > p.welcome-text,
+.header-left > .role-selector,
+.header-left > div.role-selector {
+  flex-shrink: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Regras específicas para garantir visibilidade */
+.paciente-header h1.logo {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: #90c22c !important;
+}
+
+.paciente-header .role-selector {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.header-nav-items {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-left: var(--space-md);
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  order: 5; /* Quinto elemento, após logout-btn */
+}
+
+.header-nav-items .nav-item {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  gap: var(--space-xs);
+  white-space: nowrap;
+}
+
+.header-nav-items .nav-item svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.header-nav-items .nav-text {
+  font-size: var(--font-size-xs);
+}
+
+.logo,
+h1.logo {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: #90c22c;
+  margin: 0;
+  letter-spacing: -0.03em;
+  line-height: var(--line-height-tight);
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.welcome-text {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* Estilo do botão logout dentro do header-left */
+.header-left .logout-btn {
+  padding: var(--space-sm) var(--space-xl);
+  background: var(--lifefit-error);
+  color: var(--lifefit-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-family-base);
+  flex-shrink: 0 !important;
+  white-space: nowrap;
+  margin-left: var(--space-sm);
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  order: 4; /* Quarto elemento, após role-selector */
+}
+
+.header-left .logout-btn:hover {
+  background: #B86A6A;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Manter compatibilidade com header-actions caso ainda exista em algum lugar */
+.logout-btn {
+  padding: var(--space-sm) var(--space-xl);
+  background: var(--lifefit-error);
+  color: var(--lifefit-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-family-base);
+}
+
+.logout-btn:hover {
+  background: #B86A6A;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== NAVEGAÇÃO ===== */
+/* Desktop: esconder nav separado, mostrar no header */
+@media (min-width: 769px) {
+  .paciente-nav {
+    display: none !important;
+  }
+  
+  .header-nav-items {
+    display: flex !important;
+  }
+
+  /* Garantir que logo e role-selector sempre apareçam no desktop */
+  .paciente-header .header-left h1.logo,
+  .paciente-header .header-left .logo {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+    width: auto !important;
+    position: relative !important;
+    z-index: 10 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .paciente-header .header-left .role-selector,
+  .paciente-header .header-left div.role-selector {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+    width: auto !important;
+    position: relative !important;
+    z-index: 10 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Garantir que o botão do role-selector apareça */
+  .paciente-header .header-left .role-selector .role-selector-btn,
+  .paciente-header .header-left div.role-selector .role-selector-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .paciente-header .header-left .welcome-text,
+  .paciente-header .header-left p.welcome-text {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap;
+  }
+
+  /* Garantir que header-left não corte os elementos essenciais */
+  .paciente-header .header-left {
+    overflow-x: auto;
+    overflow-y: visible;
+    align-items: center;
+    min-width: 400px; /* Espaço mínimo maior no desktop */
+  }
+
+  /* Garantir que logo, welcome-text e role-selector não sejam cortados */
+  .paciente-header .header-left > h1.logo,
+  .paciente-header .header-left > .logo,
+  .paciente-header .header-left > .welcome-text,
+  .paciente-header .header-left > p.welcome-text,
+  .paciente-header .header-left > .role-selector,
+  .paciente-header .header-left > div.role-selector {
+    flex-shrink: 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+}
+
+/* Mobile: esconder nav do header, mostrar nav separado */
+@media (max-width: 768px) {
+  .header-nav-items {
+    display: none !important;
+  }
+  
+  .paciente-nav {
+    display: block;
+  }
+}
+
+.paciente-nav {
+  background: var(--card-bg, #ffffff);
+  border-bottom: 1px solid var(--border-color-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 0 var(--space-2xl);
+  position: sticky;
+  top: 73px;
+  z-index: 99;
+  backdrop-filter: blur(20px);
+}
+
+.dark-mode .paciente-nav {
+  background: var(--card-bg, #1a1f2e);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nav-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.nav-content::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-xl);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  white-space: nowrap;
+  font-family: var(--font-family-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nav-text {
+  display: inline-block;
+}
+
+.nav-item:hover {
+  color: #90c22c;
+  background: var(--bg-tertiary);
+}
+
+.nav-item.active {
+  color: #90c22c;
+  border-bottom-color: var(--lifefit-green-soft);
+  font-weight: var(--font-weight-semibold);
+  background: transparent;
+}
+
+.nav-item svg {
+  transition: transform var(--transition-base);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nav-item:hover svg {
+  transform: scale(1.05);
+}
+
+/* ===== WRAPPER PRINCIPAL ===== */
+.paciente-content-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 100%;
+  background: var(--bg-primary, #ffffff);
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.dark-mode .paciente-content-wrapper {
+  background: var(--bg-primary, #0f141b);
+}
+
+
+/* Desktop: Espaçamento otimizado */
+@media (min-width: 769px) {
+  .paciente-content-wrapper {
+    gap: 0;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+.paciente-main-content {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Espaçamento padrão entre seções das páginas */
+.paciente-main-content > * {
+  margin-bottom: var(--space-3xl);
+}
+
+.paciente-main-content > *:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .paciente-header {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .header-content {
+    flex-direction: row !important;
+    gap: var(--space-xs);
+    align-items: center;
+    justify-content: space-between;
+    overflow: visible !important;
+    flex-wrap: nowrap !important;
+    width: 100%;
+    display: flex !important;
+  }
+
+  .header-left {
+    flex-direction: row !important;
+    gap: var(--space-xs);
+    align-items: center;
+    flex: 1 1 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: visible;
+    min-width: 0;
+    max-width: none; /* Remover limite para permitir scroll se necessário */
+  }
+
+  /* Garantir que logo apareça no mobile - regra mais específica e menor */
+  .paciente-header .header-content .header-left h1.logo,
+  .paciente-header .header-content .header-left > h1.logo,
+  .paciente-header .header-left h1.logo,
+  .paciente-header .header-left .logo {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+    width: auto !important;
+    height: auto !important;
+    position: relative !important;
+    z-index: 100 !important;
+    color: #90c22c !important;
+    font-size: 1rem !important; /* Reduzido de xl para menor */
+    font-weight: var(--font-weight-bold) !important;
+    text-transform: uppercase !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .paciente-header .header-content .header-left .welcome-text,
+  .paciente-header .header-content .header-left > p.welcome-text,
+  .paciente-header .header-left .welcome-text,
+  .paciente-header .header-left p.welcome-text {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap;
+    font-size: 0.75rem !important; /* Reduzido para menor */
+    line-height: 1.2 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Garantir que role-selector apareça no mobile - regra mais específica */
+  .paciente-header .header-content .header-left .role-selector,
+  .paciente-header .header-content .header-left > .role-selector,
+  .paciente-header .header-content .header-left div.role-selector,
+  .paciente-header .header-content .header-left > div.role-selector,
+  .paciente-header .header-left .role-selector,
+  .paciente-header .header-left div.role-selector {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+    width: auto !important;
+    height: auto !important;
+    position: relative !important;
+    z-index: 100 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Garantir que o botão do role-selector apareça no mobile */
+  .paciente-header .header-content .header-left .role-selector .role-selector-btn,
+  .paciente-header .header-content .header-left div.role-selector .role-selector-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .logo {
+    font-size: var(--font-size-xl);
+  }
+
+  .welcome-text {
+    font-size: var(--font-size-sm);
+  }
+
+  /* Estilo do logout-btn dentro do header-left no mobile */
+  .paciente-header .header-left .logout-btn {
+    padding: var(--space-xs) var(--space-sm) !important;
+    font-size: 0.7rem !important;
+    white-space: nowrap;
+    line-height: 1.2;
+    flex-shrink: 0 !important;
+    min-width: auto;
+    margin-left: var(--space-xs) !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    order: 4 !important;
+  }
+
+
+  .paciente-nav {
+    padding: 0 var(--space-lg);
+    top: 73px;
+    background: var(--card-bg, #ffffff);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 98;
+    backdrop-filter: blur(20px);
+  }
+
+  .dark-mode .paciente-nav {
+    background: var(--card-bg, #1a1f2e);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .paciente-main-content {
+    margin-top: 50px; /* Espaço mínimo para o nav fixo no topo */
+  }
+
+  .nav-content {
+    gap: var(--space-xs);
+    padding-bottom: var(--space-sm);
+    justify-content: center;
+  }
+
+  .nav-item {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+  }
+
+  .nav-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .nav-text {
+    font-size: var(--font-size-xs);
+    text-align: center;
+  }
+
+  .paciente-content-wrapper {
+    gap: 0;
+    padding: 0;
+    margin-top: 0;
+  }
+
+  .paciente-main-content {
+    margin-top: 0;
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .paciente-header {
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .header-content {
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+    overflow: visible !important;
+    gap: var(--space-xs);
+    flex-wrap: nowrap !important;
+    width: 100%;
+    display: flex !important;
+  }
+
+  .header-left {
+    flex-direction: row !important;
+    gap: var(--space-xs);
+    align-items: center;
+    flex: 1 1 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    min-width: 0;
+    max-width: none; /* Remover limite para permitir scroll se necessário */
+  }
+
+  /* Estilo do logout-btn dentro do header-left no mobile pequeno */
+  .paciente-header .header-left .logout-btn {
+    padding: var(--space-xs) var(--space-sm) !important;
+    font-size: 0.65rem !important;
+    white-space: nowrap;
+    line-height: 1.2;
+    flex-shrink: 0 !important;
+    min-width: auto;
+    margin-left: var(--space-xs) !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    order: 4 !important;
+  }
+
+  /* Garantir que logo apareça no mobile pequeno - regra mais específica e menor */
+  .paciente-header .header-content .header-left h1.logo,
+  .paciente-header .header-content .header-left > h1.logo,
+  .paciente-header .header-left h1.logo,
+  .paciente-header .header-left .logo {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    font-size: 0.875rem !important; /* Reduzido ainda mais */
+    color: #90c22c !important;
+    width: auto !important;
+    height: auto !important;
+    position: relative !important;
+    z-index: 100 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: var(--font-weight-bold) !important;
+    text-transform: uppercase !important;
+    line-height: 1.2 !important;
+  }
+
+  .paciente-header .header-content .header-left .welcome-text,
+  .paciente-header .header-content .header-left > p.welcome-text,
+  .paciente-header .header-left .welcome-text,
+  .paciente-header .header-left p.welcome-text {
+    display: none; /* Esconder welcome-text no mobile pequeno para economizar espaço */
+  }
+
+  .header-actions {
+    flex-shrink: 0;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    align-items: center;
+    display: flex;
+  }
+
+  .logout-btn {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.65rem !important; /* Reduzido ainda mais */
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  /* Garantir que role-selector apareça no mobile pequeno - regra mais específica */
+  .paciente-header .header-content .header-left .role-selector,
+  .paciente-header .header-content .header-left > .role-selector,
+  .paciente-header .header-content .header-left div.role-selector,
+  .paciente-header .header-content .header-left > div.role-selector,
+  .paciente-header .header-left .role-selector,
+  .paciente-header .header-left div.role-selector {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    position: relative !important;
+    z-index: 100 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Garantir que o botão do role-selector apareça no mobile pequeno */
+  .paciente-header .header-content .header-left .role-selector .role-selector-btn,
+  .paciente-header .header-content .header-left div.role-selector .role-selector-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .paciente-nav {
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    border-top: 1px solid var(--border-color-light);
+    border-bottom: none;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    background: var(--card-bg, #ffffff);
+    backdrop-filter: blur(20px);
+  }
+
+  .dark-mode .paciente-nav {
+    background: var(--card-bg, #1a1f2e);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: var(--space-xs) 0;
+    gap: 0;
+    width: 100%;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    flex: 1;
+    min-width: 0;
+    border-bottom: none;
+    border-top: 2px solid transparent;
+    background: transparent;
+  }
+
+  .nav-item.active {
+    border-top-color: var(--lifefit-green-soft);
+    border-bottom: none;
+    color: #90c22c;
+  }
+
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .nav-text {
+    display: block;
+    font-size: 9px;
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+
+  .paciente-content-wrapper {
+    gap: 0;
+    padding: 0;
+    padding-bottom: 80px; /* Espaço para navegação fixa no bottom */
+    background: var(--bg-primary, #ffffff);
+    margin-top: 0;
+  }
+
+  .dark-mode .paciente-content-wrapper {
+    background: var(--bg-primary, #0f141b);
+  }
+
+
+  .paciente-main-content {
+    margin-top: 0;
+    padding: 0;
+  }
+}
+
+
+
+

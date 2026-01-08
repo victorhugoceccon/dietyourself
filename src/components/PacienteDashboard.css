@@ -1,0 +1,156 @@
+/* ============================================
+   LifeFit - Dashboard
+   Painel de controle do corpo - Modernizado
+   ============================================ */
+
+.paciente-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: var(--space-2xl) var(--space-lg) var(--space-2xl);
+  background: #06080f;
+  min-height: 100vh;
+  color: #f8fafc;
+}
+
+.dashboard-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-xl);
+  align-items: stretch;
+}
+
+/* Hero Section */
+.dashboard-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  padding: var(--space-2xl);
+  background: radial-gradient(circle at 20% 20%, rgba(124, 252, 0, 0.14), transparent 30%),
+              radial-gradient(circle at 80% 0%, rgba(0, 255, 170, 0.12), transparent 30%),
+              linear-gradient(135deg, #0f172a, #0b1020);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+  margin-bottom: 0;
+}
+
+.dashboard-hero__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(144, 194, 44, 0.18), transparent 45%);
+  pointer-events: none;
+}
+
+.dashboard-hero__content {
+  position: relative;
+  z-index: 1;
+  color: #f8fafc;
+  max-width: 820px;
+}
+
+.dashboard-hero__kicker {
+  margin: 0 0 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: #9fef00;
+  font-size: 0.85rem;
+}
+
+.dashboard-hero__title {
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f8fafc;
+}
+
+.dashboard-hero__subtitle {
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.6;
+  max-width: 720px;
+}
+
+.dashboard-section {
+  width: 100%;
+  animation: fadeIn 0.5s ease;
+  position: relative;
+  margin-bottom: var(--space-2xl);
+}
+
+.dashboard-section h1,
+.dashboard-section h2,
+.dashboard-section h3 {
+  color: #f8fafc;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hierarquia visual clara */
+.estado-section {
+  margin-bottom: 0;
+  animation-delay: 0.1s;
+}
+
+.checkin-section {
+  margin-bottom: 0;
+  animation-delay: 0.2s;
+}
+
+.adherence-section {
+  margin-bottom: 0;
+  animation-delay: 0.3s;
+}
+
+.nutrition-section {
+  margin-bottom: 0;
+  animation-delay: 0.4s;
+}
+
+.timeline-section {
+  margin-bottom: 0;
+  animation-delay: 0.5s;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .dashboard-hero-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .paciente-dashboard {
+    padding: var(--space-md) var(--space-md) 0;
+    gap: var(--space-2xl);
+  }
+
+  .dashboard-hero-grid {
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .paciente-dashboard {
+    padding: var(--space-sm) var(--space-sm) 0;
+    gap: var(--space-xl);
+  }
+}
+
+
+
+

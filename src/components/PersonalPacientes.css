@@ -1,0 +1,460 @@
+.personal-pacientes {
+  padding: 2rem;
+  background: var(--gradient-card);
+  border-radius: 22px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(11, 15, 20, 0.10);
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.personal-pacientes::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  opacity: 0.9;
+}
+
+.dark-mode .personal-pacientes {
+  background: var(--gradient-card) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.pacientes-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pacientes-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 0.5rem 0;
+}
+
+.dark-mode .pacientes-header h2 {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.subtitle {
+  color: var(--text-secondary, #666);
+  margin: 0;
+  font-size: 1rem;
+}
+
+.dark-mode .subtitle {
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.pacientes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.paciente-card {
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(11, 15, 20, 0.10);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .paciente-card {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark-mode .paciente-card:hover {
+  background: var(--bg-tertiary) !important;
+  border-color: var(--lifefit-green-soft) !important;
+}
+
+.paciente-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(11, 15, 20, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.paciente-card.selected {
+  border-color: rgba(11, 15, 20, 0.16);
+  background:
+    linear-gradient(135deg, rgba(185, 255, 44, 0.18) 0%, rgba(54, 215, 255, 0.14) 100%),
+    rgba(255, 255, 255, 0.72);
+}
+
+.dark-mode .paciente-card.selected {
+  background:
+    linear-gradient(135deg, rgba(185, 255, 44, 0.14) 0%, rgba(54, 215, 255, 0.10) 100%),
+    rgba(15, 20, 27, 0.72) !important;
+  border-color: rgba(185, 255, 44, 0.28) !important;
+}
+
+.dark-mode .paciente-card.selected .paciente-info h3,
+.dark-mode .paciente-card.selected .paciente-email {
+  color: var(--text-primary) !important;
+}
+
+.paciente-info h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 0.5rem 0;
+}
+
+.dark-mode .paciente-info h3 {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.paciente-email {
+  color: var(--text-secondary, #666);
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+}
+
+.dark-mode .paciente-email {
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.paciente-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.data-item {
+  color: var(--text-secondary, #666);
+  font-size: 0.875rem;
+}
+
+.dark-mode .data-item {
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.data-item strong {
+  color: var(--text-primary, #1a1a1a);
+  font-weight: 600;
+}
+
+.dark-mode .data-item strong {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.paciente-detail {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-elevated);
+  border-radius: 16px;
+  border: 1px solid var(--border-color-light);
+}
+
+.dark-mode .paciente-detail {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-color) !important;
+}
+
+.paciente-detail h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 1rem 0;
+}
+
+.dark-mode .paciente-detail h3 {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.paciente-detail p {
+  color: var(--text-secondary, #666);
+  margin: 0.5rem 0;
+}
+
+.dark-mode .paciente-detail p {
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.paciente-detail strong {
+  color: var(--text-primary, #1a1a1a);
+  font-weight: 600;
+}
+
+.dark-mode .paciente-detail strong {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary, #666);
+}
+
+.dark-mode .empty-state {
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.btn-create-paciente,
+.btn-create-paciente-empty {
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-primary);
+  color: var(--on-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-create-paciente:hover,
+.btn-create-paciente-empty:hover {
+  filter: brightness(1.02);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-create-paciente-empty {
+  margin-top: 1.5rem;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  /* Prevenir scroll no overlay - o scroll deve ser apenas no modal-content */
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 16px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(11, 15, 20, 0.10);
+  /* Prevenir que o scroll "vaze" para a página de fundo */
+  overscroll-behavior: contain;
+}
+
+.dark-mode .modal-content {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-color) !important;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color, #e8e8e8);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dark-mode .modal-header {
+  border-color: var(--border-color, #333);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.dark-mode .modal-header h3 {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-secondary, #666);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.dark-mode .modal-close {
+  color: var(--text-primary) !important;
+}
+
+.dark-mode .modal-close:hover {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.create-paciente-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  font-size: 0.9rem;
+}
+
+.dark-mode .form-group label {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color, #e8e8e8);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1a1a1a);
+  transition: border-color 0.2s ease;
+}
+
+.dark-mode .form-group input {
+  background: var(--bg-tertiary, #2a2a2a);
+  border-color: var(--border-color, #333);
+  color: var(--text-primary, #e0e0e0);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: rgba(11, 15, 20, 0.18);
+  box-shadow: 0 0 0 3px rgba(54, 215, 255, 0.16), 0 0 0 6px rgba(185, 255, 44, 0.12);
+}
+
+.form-group input::placeholder {
+  color: var(--text-tertiary, #999);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-primary);
+  color: var(--on-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.02);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dark-mode .btn-cancel {
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark-mode .btn-cancel:hover:not(:disabled) {
+  background: var(--bg-tertiary) !important;
+  border-color: var(--lifefit-green-soft) !important;
+}
+
+.btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary, #666);
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef5350;
+}
+
+.dark-mode .alert-error {
+  background: rgba(198, 40, 40, 0.2);
+  color: #ef5350;
+  border-color: rgba(239, 83, 80, 0.3);
+}
+
+@media (max-width: 768px) {
+  .pacientes-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+

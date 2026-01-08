@@ -1,0 +1,68 @@
+/* ============================================
+   LifeFit - Card Component
+   Componente de card com design clean
+   ============================================ */
+
+.card {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color-light);
+  box-shadow: none;
+  transition: all var(--transition-base);
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-hoverable:hover {
+  border-color: var(--lifefit-green-soft);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-default {
+  padding: var(--space-xl);
+}
+
+.card-spacious {
+  padding: var(--space-2xl);
+}
+
+.card-compact {
+  padding: var(--space-lg);
+}
+
+.card button:not(.meal-action):not(.meal-action *) {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-family: var(--font-family-base);
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Explicitly allow meal-action buttons to have their own styles */
+.card .meal-action,
+.lifefit-card .meal-action {
+  /* Reset any inherited styles */
+  width: auto !important;
+  text-align: center !important;
+  background: inherit !important;
+  border: inherit !important;
+  color: inherit !important;
+}
+
+/* Dark mode */
+/* Excluir cards consumed */
+.dark-mode .card:not(.consumed):not([class*="consumed"]) {
+  background: var(--bg-elevated);
+  border-color: var(--border-color-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.dark-mode .card-hoverable:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--lifefit-green-light);
+}

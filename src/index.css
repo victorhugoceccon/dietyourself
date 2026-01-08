@@ -1,0 +1,31 @@
+/* Import LifeFit Design System */
+@import './styles/lifefit-design-system.css';
+/* Dark mode removido - apenas light mode */
+
+:root {
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+}
+
+/* Dark mode removido - apenas light mode */
+

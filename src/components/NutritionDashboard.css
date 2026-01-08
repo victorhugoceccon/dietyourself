@@ -1,0 +1,278 @@
+/* ============================================
+   LifeFit - Nutrition Dashboard
+   Painel de controle visual
+   ============================================ */
+
+.nutrition-dashboard {
+  margin-bottom: 0;
+}
+
+.dashboard-header {
+  margin-bottom: var(--space-2xl);
+}
+
+.dashboard-header h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: #f8fafc;
+  margin: 0 0 var(--space-xs) 0;
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.dashboard-header .subtitle {
+  color: #cbd5e1;
+  font-size: var(--font-size-sm);
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+}
+
+/* Row horizontal com 4 cards */
+.nutrition-cards-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+/* Card padrão */
+.nutrition-card {
+  background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 280px;
+  position: relative;
+  overflow: hidden;
+  color: #f8fafc;
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5);
+}
+
+.nutrition-card:hover {
+  border-color: var(--lifefit-green-soft);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+/* Ícone circular no topo */
+.card-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid;
+  margin-bottom: var(--space-xl);
+  transition: all var(--transition-base);
+  flex-shrink: 0;
+}
+
+.nutrition-card:hover .card-icon-wrapper {
+  transform: scale(1.05);
+  border-width: 3px;
+}
+
+.card-icon-emoji {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+/* Conteúdo do card */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  flex: 1;
+  width: 100%;
+}
+
+/* Número grande */
+.card-value {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: #f8fafc;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin: 0;
+}
+
+/* Label da métrica */
+.card-label {
+  font-size: var(--font-size-xs);
+  color: #cbd5e1;
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+/* Wrapper de progresso */
+.card-progress-wrapper {
+  width: 100%;
+  margin-top: auto;
+  padding-top: var(--space-lg);
+}
+
+/* Barra de progresso horizontal fina */
+.card-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-sm);
+  transition: all var(--transition-base);
+}
+
+.nutrition-card:hover .card-progress-bar {
+  height: 5px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.card-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow), background-color var(--transition-base);
+  position: relative;
+}
+
+.card-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  border-radius: var(--radius-full);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.nutrition-card:hover .card-progress-fill::after {
+  opacity: 1;
+}
+
+/* Status microcopy */
+.card-status {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  transition: all var(--transition-base);
+  color: #cbd5e1;
+}
+
+.nutrition-card:hover .card-status {
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Estados vazios */
+.loading,
+.no-data {
+  text-align: center;
+  padding: var(--space-4xl) var(--space-2xl);
+  background: linear-gradient(145deg, rgba(15, 18, 27, 0.9), rgba(8, 11, 18, 0.95));
+  border-radius: var(--radius-sm);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.45);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.no-data .empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-lg);
+  opacity: 0.6;
+}
+
+.no-data .empty-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: #f8fafc;
+  margin: 0 0 var(--space-md) 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.no-data p {
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-relaxed);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .nutrition-cards-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .nutrition-cards-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .nutrition-card {
+    padding: var(--space-xl);
+    min-height: 240px;
+  }
+
+  .card-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .card-icon-emoji {
+    font-size: 1.75rem;
+  }
+
+  .card-value {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .nutrition-card {
+    padding: var(--space-lg);
+    min-height: 220px;
+  }
+
+  .card-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--space-md);
+  }
+
+  .card-icon-emoji {
+    font-size: 1.5rem;
+  }
+
+  .card-value {
+    font-size: var(--font-size-2xl);
+  }
+
+  .card-label {
+    font-size: 0.65rem;
+  }
+
+  .card-status {
+    font-size: 0.65rem;
+  }
+}

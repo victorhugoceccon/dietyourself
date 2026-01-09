@@ -441,17 +441,10 @@ body {
   margin: auto;
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
   background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5);
-=======
-  background: var(--gradient-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   /* O scroll deve estar no modal, não no overlay */
   overflow-y: auto;
   overflow-x: hidden;
@@ -459,20 +452,12 @@ body {
   animation: lifefit-slide-up 0.25s ease-out;
   /* Prevenir que o scroll "vaze" para a página de fundo */
   overscroll-behavior: contain;
-<<<<<<< HEAD
   color: #f8fafc;
 }
 
 .dark-mode .lifefit-modal {
   background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
   border-color: rgba(255, 255, 255, 0.08);
-=======
-}
-
-.dark-mode .lifefit-modal {
-  background: var(--gradient-card);
-  border-color: rgba(255, 255, 255, 0.1);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 /* Variantes de tamanho */
@@ -494,26 +479,15 @@ body {
   justify-content: space-between;
   gap: var(--space-md);
   padding: var(--space-lg) var(--space-xl);
-<<<<<<< HEAD
   background: rgba(18, 26, 36, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-=======
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color-light);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   flex-shrink: 0;
 }
 
 .dark-mode .lifefit-modal__header {
-<<<<<<< HEAD
   background: rgba(18, 26, 36, 0.95);
-=======
-  background: rgba(15, 20, 27, 0.85);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
@@ -525,11 +499,7 @@ body {
 .lifefit-modal__title {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-<<<<<<< HEAD
   color: #9fef00;
-=======
-  color: #90c22c;
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   line-height: var(--line-height-tight);
   word-break: break-word;
@@ -537,11 +507,7 @@ body {
 
 .lifefit-modal__subtitle {
   font-size: var(--font-size-sm);
-<<<<<<< HEAD
   color: #cbd5e1;
-=======
-  color: var(--text-secondary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: var(--space-xs) 0 0;
 }
 

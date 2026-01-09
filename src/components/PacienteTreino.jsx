@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import PacienteTreinos from './PacienteTreinos'
-<<<<<<< HEAD
 import { useBranding } from '../hooks/useBranding'
-=======
-import ProfessionalBrandCard from './ProfessionalBrandCard'
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 import { API_URL } from '../config/api'
 import './PacienteTreino.css'
 
@@ -15,10 +11,7 @@ function PacienteTreino() {
   const outlet = useOutletContext()
   const personalId = outlet?.userData?.personalId || null
   const navigate = useNavigate()
-<<<<<<< HEAD
   const { branding } = useBranding(personalId)
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
   useEffect(() => {
     checkPersonal()
@@ -63,7 +56,6 @@ function PacienteTreino() {
 
   return (
     <div className="paciente-treino">
-<<<<<<< HEAD
       {/* Hero Section */}
       <div 
         className="treino-hero"
@@ -88,9 +80,6 @@ function PacienteTreino() {
         </div>
       </div>
 
-=======
-      <ProfessionalBrandCard professionalUserId={personalId} roleLabel="Seu Personal" />
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       <PacienteTreinos refreshTrigger={0} />
     </div>
   )

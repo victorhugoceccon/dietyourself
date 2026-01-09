@@ -1,11 +1,6 @@
 /* Import LifeFit Design System */
 @import './styles/lifefit-design-system.css';
-<<<<<<< HEAD
 /* Dark mode removido - apenas light mode */
-=======
-@import './styles/dark-mode-fixes.css';
-@import './styles/professional-dark-mode-fixes.css';
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
 :root {
   font-family: var(--font-family-base);
@@ -32,11 +27,5 @@ body {
   text-align: left;
 }
 
-<<<<<<< HEAD
 /* Dark mode removido - apenas light mode */
-=======
-.dark-mode {
-  color-scheme: dark;
-}
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 

@@ -5,7 +5,6 @@
 
 .paciente-dieta {
   width: 100%;
-<<<<<<< HEAD
   padding: var(--space-lg);
   padding-top: var(--space-xl);
   padding-bottom: var(--space-2xl);
@@ -14,22 +13,11 @@
 }
 
 .paciente-dieta-content {
-=======
-  /* 1) Wrapper da página: controla os gutters (mobile-first) */
-  padding: var(--space-md);
-  padding-top: var(--space-md);
-  padding-bottom: var(--space-xl);
-}
-
-.paciente-dieta-content {
-  /* 2) Container interno: agrupa conteúdo e centraliza no desktop */
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-<<<<<<< HEAD
 .dieta-hero {
   position: relative;
   overflow: hidden;
@@ -80,31 +68,12 @@
   font-size: 0.85rem;
 }
 
-.dark-mode .dieta-hero__kicker {
-  color: #9fef00;
-}
-
 .dieta-hero__title {
   margin: 0 0 0.6rem;
   font-size: clamp(1.9rem, 4vw, 2.6rem);
   font-weight: 800;
   letter-spacing: -0.03em;
   color: #f8fafc;
-}
-
-.dark-mode .dieta-hero__title {
-  color: #9fef00 !important;
-}
-
-.dieta-hero__subtitle {
-  margin: 0 0 1.4rem;
-  color: #cbd5e1;
-  line-height: 1.6;
-  max-width: 720px;
-}
-
-.dark-mode .dieta-hero__subtitle {
-  color: #cbd5e1 !important;
 }
 
 .dieta-hero__subtitle {
@@ -263,39 +232,6 @@
   position: relative;
   overflow: hidden;
   color: #f8fafc;
-=======
-.diet-section {
-  background: linear-gradient(135deg, var(--bg-elevated) 0%, #F8FAF8 100%);
-  border-radius: var(--radius-md);
-  /* O padding do card deve ser menor no mobile; aumentamos no desktop */
-  padding: var(--space-md);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
-  border: 1px solid var(--border-color-light);
-  position: relative;
-  overflow: hidden;
-}
-
-.diet-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-olive) 100%);
-  opacity: 0;
-  transition: opacity var(--transition-base);
-}
-
-.diet-section:hover {
-  border-color: var(--lifefit-green-soft);
-  box-shadow: var(--shadow-md);
-}
-
-.diet-section:hover::before {
-  opacity: 1;
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .section-header {
@@ -488,8 +424,3 @@
     border-radius: var(--radius-lg);
   }
 }
-
-
-
-
-

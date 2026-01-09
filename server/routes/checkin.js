@@ -12,15 +12,11 @@ const checkInSchema = z.object({
   pesoAtual: z.number().positive().max(500).optional().nullable(),
   observacao: z.string().max(500).optional().nullable(),
   checkInDate: z.string().datetime().optional(), // ISO datetime string
-<<<<<<< HEAD
-  refeicoesConsumidas: z.array(z.number().int()).optional().nullable(), // Array de índices das refeições consumidas
+  refeicoesConsumidas: z.array(z.number().int()).optional().nullable(),
   locationName: z.string().max(255).optional().nullable(),
   locationLat: z.number().min(-90).max(90).optional().nullable(),
   locationLng: z.number().min(-180).max(180).optional().nullable(),
   photoUrl: z.string().optional().nullable()
-=======
-  refeicoesConsumidas: z.array(z.number().int()).optional().nullable() // Array de índices das refeições consumidas
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 })
 
 // POST /api/checkin - Criar ou atualizar check-in do dia
@@ -56,15 +52,11 @@ router.post('/', authenticate, async (req, res) => {
           adherence: validatedData.adherence,
           pesoAtual: validatedData.pesoAtual ?? null,
           observacao: validatedData.observacao ?? null,
-<<<<<<< HEAD
           refeicoesConsumidas: validatedData.refeicoesConsumidas ? JSON.stringify(validatedData.refeicoesConsumidas) : null,
           locationName: validatedData.locationName ?? null,
           locationLat: validatedData.locationLat ?? null,
           locationLng: validatedData.locationLng ?? null,
           photoUrl: validatedData.photoUrl ?? null
-=======
-          refeicoesConsumidas: validatedData.refeicoesConsumidas ? JSON.stringify(validatedData.refeicoesConsumidas) : null
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         }
       })
     } else {
@@ -76,15 +68,11 @@ router.post('/', authenticate, async (req, res) => {
           pesoAtual: validatedData.pesoAtual ?? null,
           observacao: validatedData.observacao ?? null,
           checkInDate,
-<<<<<<< HEAD
           refeicoesConsumidas: validatedData.refeicoesConsumidas ? JSON.stringify(validatedData.refeicoesConsumidas) : null,
           locationName: validatedData.locationName ?? null,
           locationLat: validatedData.locationLat ?? null,
           locationLng: validatedData.locationLng ?? null,
           photoUrl: validatedData.photoUrl ?? null
-=======
-          refeicoesConsumidas: validatedData.refeicoesConsumidas ? JSON.stringify(validatedData.refeicoesConsumidas) : null
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
         }
       })
     }
@@ -101,28 +89,19 @@ router.post('/', authenticate, async (req, res) => {
       checkIn
     })
   } catch (error) {
-<<<<<<< HEAD
-    // Log detalhado para identificar erros de runtime
     console.error('Erro ao registrar check-in:', {
       message: error?.message,
       stack: error?.stack,
       name: error?.name,
       body: req.body
     })
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         error: 'Dados inválidos',
         details: error.errors
       })
     }
-<<<<<<< HEAD
     res.status(500).json({ error: 'Erro ao registrar check-in', detail: error?.message || 'unknown_error' })
-=======
-    console.error('Erro ao registrar check-in:', error)
-    res.status(500).json({ error: 'Erro ao registrar check-in' })
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   }
 })
 

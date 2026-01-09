@@ -36,9 +36,12 @@ router.post('/register', async (req, res) => {
   try {
     const validatedData = registerSchema.parse(req.body)
     
+    // Normalizar email para lowercase
+    const normalizedEmail = validatedData.email.toLowerCase().trim()
+    
     // Verificar se o email já existe
     const existingUser = await prisma.user.findUnique({
-      where: { email: validatedData.email }
+      where: { email: normalizedEmail }
     })
 
     if (existingUser) {
@@ -51,7 +54,7 @@ router.post('/register', async (req, res) => {
     // Criar usuário
     const user = await prisma.user.create({
       data: {
-        email: validatedData.email,
+        email: normalizedEmail,
         password: hashedPassword,
         name: validatedData.name,
         role: validatedData.role || 'PACIENTE'
@@ -90,10 +93,13 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const validatedData = loginSchema.parse(req.body)
+    
+    // Normalizar email para lowercase
+    const normalizedEmail = validatedData.email.toLowerCase().trim()
 
     // Buscar usuário
     const user = await prisma.user.findUnique({
-      where: { email: validatedData.email },
+      where: { email: normalizedEmail },
       select: {
         id: true,
         email: true,
@@ -226,10 +232,13 @@ router.get('/me', async (req, res) => {
 router.post('/forgot-password', async (req, res) => {
   try {
     const validatedData = forgotPasswordSchema.parse(req.body)
+    
+    // Normalizar email para lowercase
+    const normalizedEmail = validatedData.email.toLowerCase().trim()
 
     // Buscar usuário
     const user = await prisma.user.findUnique({
-      where: { email: validatedData.email }
+      where: { email: normalizedEmail }
     })
 
     // Sempre retornar sucesso para evitar enumeração de emails

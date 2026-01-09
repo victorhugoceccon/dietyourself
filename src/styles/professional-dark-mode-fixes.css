@@ -37,14 +37,9 @@
   .alimentos-list,
   .alimento-card,
   .alimento-card-compact,
-<<<<<<< HEAD
   /* Excluir cards consumed e meal-action buttons */
   [class*="card"]:not(.consumed):not([class*="consumed"]):not(.meal-action):not([class*="meal-action"]),
   [class*="Card"]:not(.consumed):not([class*="consumed"]):not(.meal-action):not([class*="meal-action"]),
-=======
-  [class*="card"],
-  [class*="Card"],
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   [class*="section"],
   [class*="Section"] {
     background: var(--bg-elevated) !important;
@@ -90,13 +85,8 @@
   }
 
   /* ===== TODOS OS BOTÕES (exceto primários com gradiente) ===== */
-<<<<<<< HEAD
   button:not(.btn-primary):not([class*="gradient"]):not(.logout-btn):not(.meal-action):not([class*="meal-action"]),
   .btn-secondary:not(.meal-action):not([class*="meal-action"]),
-=======
-  button:not(.btn-primary):not([class*="gradient"]):not(.logout-btn),
-  .btn-secondary,
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   .btn-cancel,
   .cancel-btn,
   .pagination-btn,
@@ -108,13 +98,8 @@
     border-color: var(--border-color) !important;
   }
 
-<<<<<<< HEAD
   button:hover:not(.btn-primary):not([class*="gradient"]):not(.logout-btn):not(.meal-action):not([class*="meal-action"]),
   .btn-secondary:hover:not(.meal-action):not([class*="meal-action"]),
-=======
-  button:hover:not(.btn-primary):not([class*="gradient"]):not(.logout-btn),
-  .btn-secondary:hover,
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   .btn-cancel:hover,
   .cancel-btn:hover,
   .pagination-btn:hover:not(:disabled),

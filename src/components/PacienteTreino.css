@@ -1,6 +1,5 @@
 .paciente-treino {
   width: 100%;
-<<<<<<< HEAD
   padding: var(--space-2xl) var(--space-lg) var(--space-2xl);
   background: #06080f;
   min-height: 100vh;
@@ -90,9 +89,6 @@
   color: #cbd5e1;
   line-height: 1.6;
   max-width: 720px;
-=======
-  padding-top: var(--space-3xl);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 /* ===== RESPONSIVE ===== */
@@ -100,7 +96,6 @@
   .paciente-treino {
     padding-top: var(--space-md);
   }
-<<<<<<< HEAD
 
   .treino-hero {
     min-height: 220px;
@@ -120,35 +115,6 @@
   .treino-hero__subtitle {
     font-size: 0.95rem;
   }
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
-}
-
-@media (max-width: 480px) {
-  .paciente-treino {
-    padding-top: var(--space-sm);
-  }
-<<<<<<< HEAD
-
-  .treino-hero {
-    min-height: 200px;
-    padding: var(--space-lg);
-  }
-
-  .treino-hero__logo {
-    width: 72px;
-    height: 72px;
-  }
-
-  .treino-hero__title {
-    font-size: 1.4rem;
-  }
-
-  .treino-hero__subtitle {
-    font-size: 0.9rem;
-  }
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 

@@ -95,7 +95,6 @@ export async function upsertWorkoutPointsEvent({ userId, treinoExecutadoId, comp
   return { updated }
 }
 
-<<<<<<< HEAD
 export async function upsertGroupCheckInPointsEvent({ userId, grupoId, checkInId }) {
   try {
     // Verificar se o usuário é membro do grupo
@@ -153,7 +152,4 @@ export async function upsertGroupCheckInPointsEvent({ userId, grupoId, checkInId
     throw error
   }
 }
-
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 

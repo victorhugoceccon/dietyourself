@@ -10,7 +10,6 @@
 .checkin-status-card,
 .checkin-prompt-card,
 .checkin-form-card {
-<<<<<<< HEAD
   background: linear-gradient(145deg, rgba(15, 18, 27, 0.95), rgba(8, 11, 18, 0.98));
   border-radius: var(--radius-md);
   padding: var(--space-xl);
@@ -20,16 +19,6 @@
   position: relative;
   overflow: hidden;
   color: #f8fafc;
-=======
-  background: linear-gradient(135deg, var(--bg-elevated) 0%, #F8FAF8 100%);
-  border-radius: var(--radius-md);
-  padding: var(--space-xl);
-  border: 1px solid var(--border-color-light);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
-  position: relative;
-  overflow: hidden;
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .checkin-status-card::before,
@@ -96,22 +85,14 @@
 .checkin-status-title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-<<<<<<< HEAD
   color: #f8fafc;
-=======
-  color: var(--text-primary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0 0 var(--space-xs) 0;
   letter-spacing: var(--letter-spacing-tight);
 }
 
 .checkin-status-label {
   font-size: var(--font-size-sm);
-<<<<<<< HEAD
   color: #cbd5e1;
-=======
-  color: var(--text-secondary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   font-weight: var(--font-weight-regular);
 }
@@ -128,20 +109,12 @@
 }
 
 .checkin-detail-label {
-<<<<<<< HEAD
   color: #cbd5e1;
-=======
-  color: var(--text-secondary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-weight: var(--font-weight-medium);
 }
 
 .checkin-detail-value {
-<<<<<<< HEAD
   color: #f8fafc;
-=======
-  color: var(--text-primary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-weight: var(--font-weight-semibold);
 }
 
@@ -156,11 +129,7 @@
 .checkin-status-note p {
   margin: 0;
   font-size: var(--font-size-sm);
-<<<<<<< HEAD
   color: #cbd5e1;
-=======
-  color: var(--text-secondary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-style: italic;
   line-height: var(--line-height-relaxed);
 }
@@ -223,22 +192,14 @@
 .checkin-prompt-title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-<<<<<<< HEAD
   color: #f8fafc;
-=======
-  color: var(--text-primary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0 0 var(--space-xs) 0;
   letter-spacing: var(--letter-spacing-tight);
 }
 
 .checkin-prompt-description {
   font-size: var(--font-size-sm);
-<<<<<<< HEAD
   color: #cbd5e1;
-=======
-  color: var(--text-secondary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   font-weight: var(--font-weight-regular);
 }
@@ -293,11 +254,7 @@
 .checkin-form-title {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-<<<<<<< HEAD
   color: #f8fafc;
-=======
-  color: var(--text-primary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   margin: 0;
   letter-spacing: var(--letter-spacing-tight);
 }
@@ -338,19 +295,11 @@
 .checkin-form-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-<<<<<<< HEAD
   color: #f8fafc;
 }
 
 .checkin-form-label .optional {
   color: #94a3b8;
-=======
-  color: var(--text-primary);
-}
-
-.checkin-form-label .optional {
-  color: var(--text-tertiary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   font-weight: var(--font-weight-regular);
   font-size: var(--font-size-xs);
 }
@@ -367,8 +316,8 @@
   align-items: center;
   gap: var(--space-xs);
   padding: var(--space-md);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color-light);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -377,7 +326,7 @@
 }
 
 .adherence-option:hover {
-  background: var(--bg-tertiary);
+  background: rgba(0, 0, 0, 0.5);
   border-color: var(--lifefit-green-soft);
   box-shadow: var(--shadow-sm);
   transform: translateY(-1px);
@@ -387,6 +336,8 @@
   border-width: 2px;
   font-weight: var(--font-weight-semibold);
   box-shadow: var(--shadow-sm);
+  border-color: #9fef00;
+  background: linear-gradient(135deg, rgba(177, 255, 0, 0.14), rgba(59, 212, 24, 0.18));
 }
 
 .adherence-option-emoji {
@@ -396,7 +347,7 @@
 
 .adherence-option-label {
   font-size: var(--font-size-xs);
-  color: var(--text-primary);
+  color: #f8fafc;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -404,11 +355,11 @@
 .checkin-form-input,
 .checkin-form-textarea {
   padding: var(--space-md) var(--space-lg);
-  border: 1px solid var(--border-color-light);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.35);
+  color: #f8fafc;
   transition: all var(--transition-base);
   font-family: var(--font-family-base);
 }
@@ -416,9 +367,9 @@
 .checkin-form-input:focus,
 .checkin-form-textarea:focus {
   outline: none;
-  border-color: var(--lifefit-green-soft);
+  border-color: #9fef00;
   border-width: 2px;
-  box-shadow: 0 0 0 3px rgba(122, 155, 125, 0.1);
+  box-shadow: 0 0 0 3px rgba(159, 239, 0, 0.18);
 }
 
 .checkin-form-textarea {
@@ -486,7 +437,7 @@
 .checkin-loading {
   text-align: center;
   padding: var(--space-2xl);
-  color: var(--text-secondary);
+  color: #cbd5e1;
   font-size: var(--font-size-base);
 }
 
@@ -540,7 +491,3 @@
     font-size: 1.25rem;
   }
 }
-
-
-
-

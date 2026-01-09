@@ -60,7 +60,6 @@ function PacienteDashboard() {
 
   return (
     <div className="paciente-dashboard">
-<<<<<<< HEAD
       {/* Hero Section */}
       <div className="dashboard-hero">
         <div className="dashboard-hero__glow"></div>
@@ -72,9 +71,6 @@ function PacienteDashboard() {
           </p>
         </div>
       </div>
-
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       {/* Grid Principal: Estado + Próxima Refeição */}
       <section className="dashboard-section dashboard-hero-grid">
         <div className="estado-section">

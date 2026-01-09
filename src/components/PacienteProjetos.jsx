@@ -101,7 +101,6 @@ function PacienteProjetos() {
 
   return (
     <div className="paciente-projetos">
-<<<<<<< HEAD
       <div className="projetos-hero">
         <div className="projetos-hero__glow"></div>
         <div className="projetos-hero__content">
@@ -143,22 +142,6 @@ function PacienteProjetos() {
           </div>
         </div>
       </div>
-=======
-      <SectionHeader
-        title="Projetos"
-        subtitle="Crie um desafio com amigos e acompanhe o ranking por pontos."
-        actions={(
-          <div className="projetos-actions">
-            <button className="btn-secondary projetos-action-btn" onClick={() => setShowJoin(true)}>
-              Entrar com código
-            </button>
-            <button className="btn-primary projetos-action-btn" onClick={() => setShowCreate(true)}>
-              Criar projeto
-            </button>
-          </div>
-        )}
-      />
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
       {error && (
         <div className="projetos-error">
@@ -193,7 +176,6 @@ function PacienteProjetos() {
                   className="projeto-card"
                   onClick={() => navigate(`/paciente/projetos/${g.id}`)}
                 >
-<<<<<<< HEAD
                   <div className="projeto-card__media">
                     {g.bannerUrl ? (
                       <img src={g.bannerUrl} alt={`Banner do projeto ${g.nome}`} />
@@ -223,25 +205,6 @@ function PacienteProjetos() {
                       </span>
                       <span className="projeto-card__cta">Ver ranking →</span>
                     </div>
-=======
-                  {g.bannerUrl && (
-                    <div className="projeto-card__banner">
-                      <img src={g.bannerUrl} alt={`Banner do projeto ${g.nome}`} />
-                    </div>
-                  )}
-                  <div className="projeto-card__header">
-                    <div className="projeto-card__title">{g.nome}</div>
-                    <div className="projeto-card__badge">
-                      {g.membrosCount} {g.membrosCount === 1 ? 'membro' : 'membros'}
-                    </div>
-                  </div>
-                  {g.descricao && (
-                    <div className="projeto-card__desc">{g.descricao}</div>
-                  )}
-                  <div className="projeto-card__footer">
-                    <span className="projeto-card__code">Código: {g.codigoConvite}</span>
-                    <span className="projeto-card__cta">Ver ranking</span>
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
                   </div>
                 </button>
               ))}
@@ -261,7 +224,6 @@ function PacienteProjetos() {
             <button className="btn-secondary" onClick={() => setShowCreate(false)}>
               Cancelar
             </button>
-<<<<<<< HEAD
             <button className="projetos-action-btn cta" onClick={handleCreate} disabled={nome.trim().length < 2}>
               <span>Criar</span>
               <span className="cta-hero__arrow">
@@ -271,10 +233,6 @@ function PacienteProjetos() {
                   <path className="three" d="m.154 3.895 3.822-3.756c.195-.192.507-.192.702 0L25.692 20.785a.7.7 0 0 1 0 .988L4.677 42.861a.498.498 0 0 1-.702 0l-3.821-3.754a.271.271 0 0 1 .007-.393L16.994 21.857a.271.271 0 0 0-.006-.714L.155 4.608a.27.27 0 0 1 .002-.713Z" fill="currentColor"/>
                 </svg>
               </span>
-=======
-            <button className="btn-primary" onClick={handleCreate} disabled={nome.trim().length < 2}>
-              Criar
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
             </button>
           </>
         )}

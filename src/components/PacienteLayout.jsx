@@ -6,11 +6,7 @@ import DailyCheckInModal from './DailyCheckInModal'
 import BrandingProvider from './BrandingProvider'
 import Questionnaire from './Questionnaire'
 import NotificationCenter from './NotificationCenter'
-<<<<<<< HEAD
 // ThemeToggle removido - apenas light mode
-=======
-import ThemeToggle from './ThemeToggle'
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 import { hasAnyRole } from '../utils/roleUtils'
 import { API_URL } from '../config/api'
 import './PacienteLayout.css'
@@ -308,10 +304,6 @@ function PacienteLayout() {
             </p>
           </div>
           <div className="header-right">
-<<<<<<< HEAD
-=======
-            <ThemeToggle />
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
             <RoleSelector user={user} />
             {/* Navegação no header - Desktop apenas */}
             {navItems && (

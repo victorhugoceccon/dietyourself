@@ -31,11 +31,7 @@
   padding: var(--space-lg);
 }
 
-<<<<<<< HEAD
 .card button:not(.meal-action):not(.meal-action *) {
-=======
-.card button {
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   width: 100%;
   text-align: left;
   background: none;
@@ -47,7 +43,6 @@
   color: inherit;
 }
 
-<<<<<<< HEAD
 /* Explicitly allow meal-action buttons to have their own styles */
 .card .meal-action,
 .lifefit-card .meal-action {
@@ -62,10 +57,6 @@
 /* Dark mode */
 /* Excluir cards consumed */
 .dark-mode .card:not(.consumed):not([class*="consumed"]) {
-=======
-/* Dark mode */
-.dark-mode .card {
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   background: var(--bg-elevated);
   border-color: var(--border-color-light);
   box-shadow: var(--shadow-sm);

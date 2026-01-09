@@ -16,7 +16,6 @@ const CATEGORIAS = [
   'Outros'
 ]
 
-<<<<<<< HEAD
 // Função para obter ícone baseado na categoria
 const getCategoryIcon = (categoria) => {
   const icons = {
@@ -81,8 +80,6 @@ const getCategoryIcon = (categoria) => {
   return icons[categoria] || icons['Outros']
 }
 
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 function ExerciciosManager() {
   const [exercicios, setExercicios] = useState([])
   const [loading, setLoading] = useState(true)
@@ -400,18 +397,14 @@ function ExerciciosManager() {
             >
               <div className="exercicio-content">
                 <div className="exercicio-header-card">
-<<<<<<< HEAD
                   <div className="exercicio-title-with-icon">
                     {exercicio.categoria && (
                       <span className="exercicio-icon">
                         {getCategoryIcon(exercicio.categoria)}
                       </span>
                     )}
-                  <h3>{exercicio.nome}</h3>
+                    <h3>{exercicio.nome}</h3>
                   </div>
-=======
-                  <h3>{exercicio.nome}</h3>
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
                   {exercicio.categoria && (
                     <span className="categoria-badge">{exercicio.categoria}</span>
                   )}

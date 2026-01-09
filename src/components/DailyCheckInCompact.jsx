@@ -76,7 +76,6 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
         // Recarregar para atualizar outros componentes
         loadTodayCheckIn()
       } else {
-<<<<<<< HEAD
         let errorMessage = 'Erro ao salvar check-in'
         try {
           const text = await response.text()
@@ -85,10 +84,6 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
           // ignore
         }
         alert(errorMessage)
-=======
-        const errorData = await response.json()
-        alert(errorData.error || 'Erro ao salvar check-in')
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
       }
     } catch (error) {
       console.error('Erro ao salvar check-in:', error)

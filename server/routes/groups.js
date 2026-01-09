@@ -281,7 +281,6 @@ router.get('/:id/leaderboard', authenticate, async (req, res) => {
   }
 })
 
-<<<<<<< HEAD
 // POST /api/groups/:id/checkins - Criar check-in de grupo
 router.post('/:id/checkins', authenticate, async (req, res) => {
   try {
@@ -417,8 +416,6 @@ router.get('/:id/checkins', authenticate, async (req, res) => {
   }
 })
 
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 export default router
 
 

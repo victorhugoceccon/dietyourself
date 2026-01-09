@@ -6,17 +6,12 @@
 .paciente-layout {
   min-height: 100vh;
   min-height: 100dvh;
-<<<<<<< HEAD
   background: #06080f;
-=======
-  background: var(--bg-secondary);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   transition: background var(--transition-base);
 }
 
 /* ===== HEADER ===== */
 .paciente-header {
-<<<<<<< HEAD
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   padding: var(--space-xl) var(--space-2xl);
@@ -26,18 +21,6 @@
   top: 0;
   z-index: 100;
   backdrop-filter: blur(18px);
-=======
-  background: var(--bg-primary);
-  box-shadow: none;
-  padding: var(--space-xl) var(--space-2xl);
-  margin-bottom: 0;
-  border-bottom: 1px solid var(--border-color-light);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.98);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 /* Forçar logo a aparecer sempre */
@@ -488,28 +471,14 @@ h1.logo {
 }
 
 .paciente-nav {
-<<<<<<< HEAD
   background: var(--card-bg, #ffffff);
   border-bottom: 1px solid var(--border-color-light);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-=======
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color-light);
-  box-shadow: none;
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   padding: 0 var(--space-2xl);
   position: sticky;
   top: 73px;
   z-index: 99;
-<<<<<<< HEAD
   backdrop-filter: blur(20px);
-}
-
-.dark-mode .paciente-nav {
-  background: var(--card-bg, #1a1f2e);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 }
 
 .nav-content {
@@ -581,23 +550,13 @@ h1.logo {
   flex-direction: column;
   gap: 0;
   min-height: 100%;
-<<<<<<< HEAD
   background: var(--bg-primary, #ffffff);
-=======
-  background: transparent;
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   position: relative;
   margin: 0;
   padding: 0;
 }
 
-<<<<<<< HEAD
-.dark-mode .paciente-content-wrapper {
-  background: var(--bg-primary, #0f141b);
-}
 
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
 /* Desktop: Espaçamento otimizado */
 @media (min-width: 769px) {
@@ -750,27 +709,14 @@ h1.logo {
   .paciente-nav {
     padding: 0 var(--space-lg);
     top: 73px;
-<<<<<<< HEAD
     background: var(--card-bg, #ffffff);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-=======
-    background: rgba(255, 255, 255, 0.98);
-    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.08);
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
     position: fixed;
     left: 0;
     right: 0;
     width: 100%;
     z-index: 98;
-<<<<<<< HEAD
     backdrop-filter: blur(20px);
-  }
-
-  .dark-mode .paciente-nav {
-    background: var(--card-bg, #1a1f2e);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   }
 
   .paciente-main-content {
@@ -940,16 +886,8 @@ h1.logo {
     border-bottom: none;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     z-index: 1000;
-<<<<<<< HEAD
     background: var(--card-bg, #ffffff);
     backdrop-filter: blur(20px);
-  }
-
-  .dark-mode .paciente-nav {
-    background: var(--card-bg, #1a1f2e);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-=======
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
   }
 
   .nav-content {
@@ -1005,21 +943,11 @@ h1.logo {
     gap: 0;
     padding: 0;
     padding-bottom: 80px; /* Espaço para navegação fixa no bottom */
-<<<<<<< HEAD
     background: var(--bg-primary, #ffffff);
     margin-top: 0;
   }
 
-  .dark-mode .paciente-content-wrapper {
-    background: var(--bg-primary, #0f141b);
-  }
 
-=======
-    background: transparent;
-    margin-top: 0;
-  }
-
->>>>>>> 974b9cadf6720b9d883b748232be2a53545f282e
 
   .paciente-main-content {
     margin-top: 0;

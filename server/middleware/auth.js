@@ -43,3 +43,18 @@ export const requireRole = (allowedRoles) => {
   }
 }
 
+// Middleware para verificar se é admin
+export const requireAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Não autenticado' })
+  }
+
+  const userRole = req.user.role?.toUpperCase()
+  const userRoles = req.user.roles ? JSON.parse(req.user.roles) : [userRole]
+
+  if (userRole !== 'ADMIN' && !userRoles.includes('ADMIN')) {
+    return res.status(403).json({ error: 'Acesso restrito a administradores' })
+  }
+
+  next()
+}

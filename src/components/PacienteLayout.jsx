@@ -6,6 +6,7 @@ import DailyCheckInModal from './DailyCheckInModal'
 import BrandingProvider from './BrandingProvider'
 import Questionnaire from './Questionnaire'
 import NotificationCenter from './NotificationCenter'
+import SubscriptionStatus from './SubscriptionStatus'
 // ThemeToggle removido - apenas light mode
 import { hasAnyRole } from '../utils/roleUtils'
 import { API_URL } from '../config/api'
@@ -353,6 +354,7 @@ function PacienteLayout() {
 
           {/* Conteúdo Principal */}
           <div className="paciente-main-content">
+            <SubscriptionStatus />
             <Outlet context={{ userData }} />
           </div>
         </div>

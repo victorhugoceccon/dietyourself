@@ -1,10 +1,15 @@
 import express from 'express'
 import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
+import { requireActiveSubscription } from '../middleware/subscription.js'
 import { calcularNutricao } from '../utils/nutrition.js'
 // Sistema de ajuste automático removido - usando output direto do agente
 
 const router = express.Router()
+
+// Aplicar verificação de assinatura em todas as rotas (exceto para nutricionistas)
+router.use(authenticate)
+router.use(requireActiveSubscription)
 
 // Função auxiliar para normalizar URLs de webhook (substitui webhook-test por webhook)
 const normalizeWebhookUrl = (url) => {

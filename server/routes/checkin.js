@@ -1,10 +1,15 @@
 import express from 'express'
 import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
+import { requireActiveSubscription } from '../middleware/subscription.js'
 import { z } from 'zod'
 import { upsertCheckInPointsEvent } from '../utils/groupPoints.js'
 
 const router = express.Router()
+
+// Aplicar verificação de assinatura em todas as rotas
+router.use(authenticate)
+router.use(requireActiveSubscription)
 
 // Schema de validação para check-in
 const checkInSchema = z.object({

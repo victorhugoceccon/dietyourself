@@ -3,6 +3,7 @@ import { z } from 'zod'
 import prisma from '../config/database.js'
 import { hashPassword, comparePassword } from '../utils/hash.js'
 import { generateToken, verifyToken } from '../utils/jwt.js'
+import { createTrialSubscription } from '../middleware/subscription.js'
 
 const router = express.Router()
 
@@ -68,13 +69,28 @@ router.post('/register', async (req, res) => {
       }
     })
 
+    // Criar trial de 7 dias para pacientes
+    let subscription = null
+    if (user.role === 'PACIENTE') {
+      try {
+        subscription = await createTrialSubscription(user.id, 7)
+      } catch (subError) {
+        console.error('Erro ao criar trial (não crítico):', subError)
+      }
+    }
+
     // Gerar token
     const token = generateToken(user.id, user.email, user.role)
 
     res.status(201).json({
       message: 'Usuário criado com sucesso',
       user,
-      token
+      token,
+      subscription: subscription ? {
+        status: subscription.status,
+        trialEndDate: subscription.trialEndDate,
+        daysRemaining: 7
+      } : null
     })
   } catch (error) {
     if (error instanceof z.ZodError) {

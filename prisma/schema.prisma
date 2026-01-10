@@ -79,6 +79,9 @@ model User {
   gruposPontosEventos GrupoPontosEvento[] @relation("GrupoPontosEventoUser")
   grupoTreinoCheckIns GrupoTreinoCheckIn[] @relation("GrupoTreinoCheckInUser")
 
+  // Relacionamento assinatura
+  subscription Subscription? @relation("UserSubscription")
+
   @@index([nutricionistaId])
   @@index([personalId])
   @@map("users")
@@ -731,4 +734,53 @@ model RecipeFavorite {
   @@unique([userId, recipeId])
   @@index([userId])
   @@map("recipe_favorites")
+}
+
+// ==========================================================
+// Assinaturas (Subscription)
+// ==========================================================
+
+model Subscription {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation("UserSubscription", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Tipo do plano
+  plan   String @default("FREE_TRIAL") // FREE_TRIAL, MONTHLY, YEARLY, LIFETIME
+
+  // Status da assinatura
+  status String @default("TRIAL") // TRIAL, ACTIVE, CANCELLED, EXPIRED, SUSPENDED
+
+  // Datas do trial
+  trialStartDate DateTime?
+  trialEndDate   DateTime?
+
+  // Datas da assinatura paga
+  startDate DateTime?
+  endDate   DateTime?
+
+  // Dados de pagamento (para integração futura com Stripe/outro gateway)
+  paymentProvider      String? // STRIPE, MERCADOPAGO, MANUAL
+  externalCustomerId   String? // ID do cliente no gateway de pagamento
+  externalSubscriptionId String? // ID da assinatura no gateway
+  
+  // Preço pago (em centavos para evitar problemas de ponto flutuante)
+  pricePaidCents Int?
+  currency       String? @default("BRL")
+
+  // Histórico
+  cancelledAt    DateTime?
+  cancelReason   String?
+
+  // Metadados
+  metadata String? // JSON para dados extras
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([plan])
+  @@index([trialEndDate])
+  @@map("subscriptions")
 }

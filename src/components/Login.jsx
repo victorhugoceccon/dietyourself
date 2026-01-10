@@ -212,6 +212,16 @@ function Login() {
             >
               {loading ? 'Processando...' : 'Entrar'}
             </button>
+            <div className="landing-link">
+              <span>Ainda não conhece?</span>
+              <button
+                type="button"
+                className="link-button"
+                onClick={() => navigate('/landing')}
+              >
+                Ver landing page
+              </button>
+            </div>
           </form>
         </div>
       </div>

@@ -48,8 +48,10 @@ function PacienteProjetos() {
   }, [])
 
   const handleCreate = async () => {
+    console.log('handleCreate chamado', { nome, descricao, bannerUrl })
     try {
       setError(null)
+      console.log('Enviando para:', `${API_URL}/groups`)
       const res = await fetch(`${API_URL}/groups`, {
         method: 'POST',
         headers: {
@@ -62,7 +64,9 @@ function PacienteProjetos() {
           bannerUrl: bannerUrl ? bannerUrl : null
         })
       })
+      console.log('Resposta status:', res.status)
       const data = await res.json()
+      console.log('Resposta data:', data)
       if (!res.ok) throw new Error(data?.error || 'Erro ao criar grupo')
 
       setShowCreate(false)
@@ -72,6 +76,7 @@ function PacienteProjetos() {
       await load()
       if (data?.grupo?.id) navigate(`/paciente/projetos/${data.grupo.id}`)
     } catch (e) {
+      console.error('Erro ao criar projeto:', e)
       setError(e.message)
     }
   }
@@ -240,12 +245,14 @@ function PacienteProjetos() {
         <div className="projetos-form">
           <label className="projetos-label">
             Banner (opcional)
-            <input
-              className="projetos-file"
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={(e) => {
+            <div className="projetos-file-wrapper">
+              <span className="projetos-file-icon">📷</span>
+              <span className="projetos-file-text">Escolher imagem</span>
+              <input
+                className="projetos-file"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
                 const file = e.target.files?.[0]
                 if (!file) return
                 if (!file.type.startsWith('image/')) {
@@ -265,6 +272,7 @@ function PacienteProjetos() {
                 reader.readAsDataURL(file)
               }}
             />
+            </div>
           </label>
           {bannerUrl && (
             <div className="projetos-banner-preview">

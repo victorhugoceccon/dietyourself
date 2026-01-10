@@ -23,9 +23,9 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     
-    <!-- Service Worker Registration -->
+    <!-- Service Worker Registration (desabilitado em localhost para evitar interferência no dev) -->
     <script>
-      if ('serviceWorker' in navigator) {
+      if ('serviceWorker' in navigator && !location.hostname.includes('localhost')) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
             .then((registration) => {
@@ -40,6 +40,8 @@
               console.log('Erro ao registrar Service Worker:', error)
             })
         })
+      } else {
+        console.log('Service Worker desabilitado em ambiente localhost para evitar cache no dev.')
       }
     </script>
   </body>

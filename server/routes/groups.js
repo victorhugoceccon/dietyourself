@@ -1,10 +1,15 @@
 import express from 'express'
 import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
+import { requireActiveSubscription } from '../middleware/subscription.js'
 import { z } from 'zod'
 import crypto from 'crypto'
 
 const router = express.Router()
+
+// Aplicar verificação de assinatura em todas as rotas
+router.use(authenticate)
+router.use(requireActiveSubscription)
 
 const createGroupSchema = z.object({
   nome: z.string().min(2).max(60),

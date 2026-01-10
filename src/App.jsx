@@ -14,6 +14,9 @@ import Personal from './components/Personal'
 import Admin from './components/Admin'
 import EditPatientDietPage from './components/EditPatientDietPage'
 import { getRoleRedirect } from './utils/roleRedirect'
+import Landing from './pages/Landing'
+import BillingSuccess from './pages/BillingSuccess'
+import BillingCancel from './pages/BillingCancel'
 import './App.css'
 
 // Componente de rota protegida
@@ -51,6 +54,9 @@ function App() {
       <Router>
         <div className="App">
         <Routes>
+          <Route path="/landing" element={<Landing />} />
+          <Route path="/billing/success" element={<BillingSuccess />} />
+          <Route path="/billing/cancel" element={<BillingCancel />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route 

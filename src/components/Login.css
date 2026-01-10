@@ -359,6 +359,30 @@
   box-shadow: var(--shadow-sm);
 }
 
+.landing-link {
+  margin-top: var(--space-lg);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--lifefit-green-soft);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link-button:hover {
+  color: var(--lifefit-green);
+}
+
 .alert {
   padding: var(--space-md) var(--space-lg);
   border-radius: var(--radius-md);

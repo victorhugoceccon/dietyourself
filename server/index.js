@@ -1,7 +1,10 @@
 import express from 'express'
 import cors from 'cors'
+import helmet from 'helmet'
+import rateLimit from 'express-rate-limit'
 import dotenv from 'dotenv'
 import authRoutes from './routes/auth.js'
+import subscriptionRoutes from './routes/subscription.js'
 import questionnaireRoutes from './routes/questionnaire.js'
 import dietRoutes from './routes/diet.js'
 import chatRoutes from './routes/chat.js'
@@ -26,6 +29,8 @@ import bodyMeasurementsRoutes from './routes/body-measurements.js'
 import recipesRoutes from './routes/recipes.js'
 import groupsRoutes from './routes/groups.js'
 import placesRoutes from './routes/places.js'
+import billingRoutes, { handleAbacatePayWebhook } from './routes/billing.js'
+import checkoutExternalRoutes from './routes/checkout-external.js'
 
 dotenv.config()
 
@@ -33,17 +38,72 @@ const app = express()
 const PORT = process.env.PORT || 5000
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
 
-// Middlewares
+// ===== SEGURANÇA =====
+
+// Helmet - Headers de segurança
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: false // Desabilitar CSP para permitir inline scripts do Vite em dev
+}))
+
+// Rate Limiting - Prevenir ataques DDoS e brute force
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 500, // Limite de 500 requests por IP por janela
+  message: { error: 'Muitas requisições. Tente novamente em 15 minutos.' },
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 10, // Limite de 10 tentativas de login por IP
+  message: { error: 'Muitas tentativas de login. Tente novamente em 15 minutos.' },
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
+// Aplicar rate limit geral
+app.use(generalLimiter)
+
+// CORS
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: process.env.NODE_ENV === 'production' 
+    ? [FRONTEND_URL, /\.seudominio\.com$/] 
+    : true, // Em dev, aceita qualquer origem
   credentials: true
 }))
-// Aumentar limite para suportar fotos em base64 (padrão é 100KB, aumentamos para 5MB)
+
+// Webhook do AbacatePay (pode vir antes ou depois do body parser, dependendo do formato)
+app.post('/api/billing/abacatepay-webhook', express.json(), handleAbacatePayWebhook)
+
+// Rota de health check (útil para testar ngrok)
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'LifeFit API está rodando',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  })
+})
+
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'API Health Check',
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Body parsers - Aumentar limite para suportar fotos em base64
 app.use(express.json({ limit: '5mb' }))
 app.use(express.urlencoded({ extended: true, limit: '5mb' }))
 
 // Rotas
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authLimiter, authRoutes) // Rate limit específico para auth
+app.use('/api/subscription', subscriptionRoutes)
+app.use('/api/billing', billingRoutes)
+app.use('/api/checkout-external', checkoutExternalRoutes)
 app.use('/api/questionnaire', questionnaireRoutes)
 app.use('/api/diet', dietRoutes)
 app.use('/api/chat', chatRoutes)

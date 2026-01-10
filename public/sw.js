@@ -40,40 +40,41 @@ self.addEventListener('activate', (event) => {
 
 // Interceptar requisições
 self.addEventListener('fetch', (event) => {
-  // Ignorar requisições de API e outras que não devem ser cacheadas
-  if (event.request.url.includes('/api/') || 
-      event.request.url.includes('googleapis.com') ||
-      event.request.url.includes('gstatic.com')) {
+  const url = event.request.url
+
+  // Ignorar esquemas não http/https (ex.: chrome-extension) para evitar erro no Cache.put
+  if (!url.startsWith('http')) {
+    return
+  }
+
+  // Ignorar requisições de API, scripts locais de dev e fontes externas específicas
+  if (url.includes('/api/') ||
+      url.includes('googleapis.com') ||
+      url.includes('gstatic.com') ||
+      url.includes('/src/')) {
     return
   }
 
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Retornar do cache se disponível, senão buscar da rede
-        if (response) {
-          return response
-        }
-        return fetch(event.request).then((response) => {
-          // Verificar se a resposta é válida
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response
+        if (response) return response
+        return fetch(event.request).then((networkResponse) => {
+          if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+            return networkResponse
           }
 
-          // Clonar a resposta
-          const responseToCache = response.clone()
+          const responseToCache = networkResponse.clone()
 
           caches.open(CACHE_NAME)
             .then((cache) => {
               cache.put(event.request, responseToCache)
             })
+            .catch((err) => console.error('Erro ao armazenar no cache:', err))
 
-          return response
+          return networkResponse
         })
       })
-      .catch(() => {
-        // Se falhar, retornar página offline (se disponível)
-        return caches.match('/index.html')
-      })
+      .catch(() => caches.match('/index.html'))
   )
 })

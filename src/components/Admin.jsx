@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config/api'
 import ProfessionalLayout from './ProfessionalLayout'
 import LoadingBar from './LoadingBar'
+import SubscriptionManager from './SubscriptionManager'
 import './Admin.css'
 
 function Admin() {
@@ -16,6 +17,7 @@ function Admin() {
   const [editingUser, setEditingUser] = useState(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showLinkModal, setShowLinkModal] = useState(false)
+  const [activeTab, setActiveTab] = useState('users') // 'users' | 'subscriptions'
   const [linkUserData, setLinkUserData] = useState({
     userId: '',
     nutricionistaId: '',
@@ -448,7 +450,29 @@ function Admin() {
   return (
     <ProfessionalLayout allowedRoles={['ADMIN']}>
       <div className="admin-content-wrapper">
-        {/* Estatísticas */}
+        {/* Tabs de navegação */}
+        <div className="admin-tabs">
+          <button
+            className={`admin-tab ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => setActiveTab('users')}
+          >
+            👥 Usuários
+          </button>
+          <button
+            className={`admin-tab ${activeTab === 'subscriptions' ? 'active' : ''}`}
+            onClick={() => setActiveTab('subscriptions')}
+          >
+            💳 Assinaturas
+          </button>
+        </div>
+
+        {/* Tab de Assinaturas */}
+        {activeTab === 'subscriptions' && <SubscriptionManager />}
+
+        {/* Tab de Usuários */}
+        {activeTab === 'users' && (
+          <>
+            {/* Estatísticas */}
         {stats && (
           <div className="stats-section">
             <div className="stat-card">
@@ -649,69 +673,69 @@ function Admin() {
             </>
           )}
         </div>
+          </>
+        )}
+
+        {/* Modais globais */}
+        {showUserModal && (selectedUser || editingUser) && (
+          <UserModal
+            user={editingUser || selectedUser}
+            isEditing={!!editingUser}
+            onClose={() => {
+              setShowUserModal(false)
+              setSelectedUser(null)
+              setEditingUser(null)
+            }}
+            onSave={handleSaveUser}
+            onResetPassword={handleResetPassword}
+            onDelete={handleDeleteUser}
+            onEdit={() => handleEditUser(selectedUser)}
+            editingUser={editingUser}
+            setEditingUser={setEditingUser}
+            nutricionistas={nutricionistas}
+            personals={personals}
+            currentUserId={user?.id}
+          />
+        )}
+
+        {showCreateModal && (
+          <CreateUserModal
+            newUser={newUser}
+            setNewUser={setNewUser}
+            creating={creating}
+            onClose={() => {
+              setShowCreateModal(false)
+              setNewUser({
+                email: '',
+                password: '',
+                name: '',
+                role: 'PACIENTE'
+              })
+            }}
+            onSubmit={handleCreateUser}
+          />
+        )}
+
+        {showLinkModal && (
+          <LinkUserModal
+            linkUserData={linkUserData}
+            setLinkUserData={setLinkUserData}
+            users={users}
+            nutricionistas={nutricionistas}
+            personals={personals}
+            loading={loadingLinks}
+            onClose={() => {
+              setShowLinkModal(false)
+              setLinkUserData({
+                userId: '',
+                nutricionistaId: '',
+                personalId: ''
+              })
+            }}
+            onSubmit={handleLinkUser}
+          />
+        )}
       </div>
-
-      {/* Modal de Detalhes/Edição */}
-      {showUserModal && (selectedUser || editingUser) && (
-        <UserModal
-          user={editingUser || selectedUser}
-          isEditing={!!editingUser}
-          onClose={() => {
-            setShowUserModal(false)
-            setSelectedUser(null)
-            setEditingUser(null)
-          }}
-          onSave={handleSaveUser}
-          onResetPassword={handleResetPassword}
-          onDelete={handleDeleteUser}
-          onEdit={() => handleEditUser(selectedUser)}
-          editingUser={editingUser}
-          setEditingUser={setEditingUser}
-          nutricionistas={nutricionistas}
-          personals={personals}
-          currentUserId={user?.id}
-        />
-      )}
-
-      {/* Modal de Criação */}
-      {showCreateModal && (
-        <CreateUserModal
-          newUser={newUser}
-          setNewUser={setNewUser}
-          creating={creating}
-          onClose={() => {
-            setShowCreateModal(false)
-            setNewUser({
-              email: '',
-              password: '',
-              name: '',
-              role: 'PACIENTE'
-            })
-          }}
-          onSubmit={handleCreateUser}
-        />
-      )}
-
-      {/* Modal de Vincular */}
-      {showLinkModal && (
-        <LinkUserModal
-          linkUserData={linkUserData}
-          setLinkUserData={setLinkUserData}
-          users={users}
-          nutricionistas={nutricionistas}
-          personals={personals}
-          loading={loadingLinks}
-          onClose={() => {
-            setShowLinkModal(false)
-            setLinkUserData({
-              userId: '',
-              nutricionistaId: '',
-              personalId: ''
-            })
-          }}
-          onSubmit={handleLinkUser}
-        />
-      )}
     </ProfessionalLayout>
   )
 }

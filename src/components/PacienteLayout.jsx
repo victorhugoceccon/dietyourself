@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom'
-import RoleSelector from './RoleSelector'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import ChatWidget from './ChatWidget'
 import DailyCheckInModal from './DailyCheckInModal'
 import BrandingProvider from './BrandingProvider'
 import Questionnaire from './Questionnaire'
 import ConversationalQuestionnaire from './ConversationalQuestionnaire'
-import NotificationCenter from './NotificationCenter'
 import SubscriptionStatus from './SubscriptionStatus'
 import PWAInstallTutorial from './PWAInstallTutorial'
 // ThemeToggle removido - apenas light mode
@@ -167,12 +165,6 @@ function PacienteLayout() {
     setShowCheckInModal(false)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    navigate('/login')
-  }
-
   const isActive = (path) => {
     if (path === '/paciente') {
       return location.pathname === '/paciente' || location.pathname === '/paciente/dashboard'
@@ -325,41 +317,6 @@ function PacienteLayout() {
     <BrandingProvider professionalUserId={professionalUserId}>
       <div className="paciente-layout">
         <PWAInstallTutorial />
-        <header className="paciente-header">
-        <div className="header-content">
-          <div className="header-left">
-            <Link 
-              to="/paciente/dashboard" 
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                textDecoration: 'none',
-                flexShrink: 0
-              }}
-            >
-              <span className="logo-fallback" style={{ fontWeight: 700, fontSize: '18px', color: '#4A6B4D' }}>
-                GIBA APP
-              </span>
-            </Link>
-            <p className="welcome-text">
-              Olá, {user?.name || user?.email}
-            </p>
-          </div>
-          <div className="header-right">
-            <RoleSelector user={user} />
-            {/* Navegação no header - Desktop apenas */}
-            {navItems && (
-              <div className="header-nav-items">
-                {navItems}
-              </div>
-            )}
-            <NotificationCenter />
-            <button onClick={handleLogout} className="logout-btn">
-              Sair
-            </button>
-          </div>
-        </div>
-      </header>
 
       {/* Se não tem questionário, mostrar chat conversacional */}
       {shouldShowQuestionnaire ? (
@@ -377,47 +334,6 @@ function PacienteLayout() {
             padding: 0,
             paddingTop: 0,
             paddingBottom: 0
-          }}
-          ref={(el) => {
-            if (el) {
-              // #region agent log
-              setTimeout(() => {
-                const pacienteHeader = document.querySelector('.paciente-header')
-                const wrapper = el
-                if (pacienteHeader && wrapper) {
-                  const pacienteRect = pacienteHeader.getBoundingClientRect()
-                  const wrapperRect = wrapper.getBoundingClientRect()
-                  fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      location: 'PacienteLayout.jsx:wrapper',
-                      message: 'Measuring wrapper position relative to header',
-                      data: {
-                        pacienteHeader: {
-                          height: pacienteRect.height,
-                          bottom: pacienteRect.bottom,
-                          computedMarginBottom: window.getComputedStyle(pacienteHeader).marginBottom,
-                          computedPaddingBottom: window.getComputedStyle(pacienteHeader).paddingBottom
-                        },
-                        wrapper: {
-                          top: wrapperRect.top,
-                          computedMarginTop: window.getComputedStyle(wrapper).marginTop,
-                          computedPaddingTop: window.getComputedStyle(wrapper).paddingTop,
-                          computedHeight: window.getComputedStyle(wrapper).height
-                        },
-                        gap: wrapperRect.top - pacienteRect.bottom
-                      },
-                      timestamp: Date.now(),
-                      sessionId: 'debug-session',
-                      runId: 'run1',
-                      hypothesisId: 'B'
-                    })
-                  }).catch(() => {})
-                }
-              }, 100)
-              // #endregion
-            }
           }}
         >
           {console.log('🎯 Renderizando ConversationalQuestionnaire - hasQuestionnaire:', hasQuestionnaire)}

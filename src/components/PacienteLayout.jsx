@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom'
 import RoleSelector from './RoleSelector'
 import ChatWidget from './ChatWidget'
 import DailyCheckInModal from './DailyCheckInModal'
 import BrandingProvider from './BrandingProvider'
 import Questionnaire from './Questionnaire'
+import ConversationalQuestionnaire from './ConversationalQuestionnaire'
 import NotificationCenter from './NotificationCenter'
 import SubscriptionStatus from './SubscriptionStatus'
 // ThemeToggle removido - apenas light mode
@@ -25,6 +26,7 @@ function PacienteLayout() {
   const navigate = useNavigate()
   const location = useLocation()
 
+
   useEffect(() => {
     // Verificar autenticação
     const token = localStorage.getItem('token')
@@ -37,13 +39,21 @@ function PacienteLayout() {
 
     const userData = JSON.parse(storedUser)
     
-    // Verificar se tem acesso de paciente
-    if (!hasAnyRole(userData, ['PACIENTE', 'USUARIO'])) {
+    // Verificar se tem acesso de paciente ou é guest
+    if (!hasAnyRole(userData, ['PACIENTE', 'USUARIO', 'GUEST'])) {
       navigate('/login')
       return
     }
 
     setUser(userData)
+    
+    // Se for GUEST, redirecionar diretamente para projetos
+    if (userData.role === 'GUEST') {
+      const currentPath = window.location.pathname
+      if (!currentPath.includes('/paciente/projetos')) {
+        navigate('/paciente/projetos')
+      }
+    }
     
     // Buscar dados completos do usuário para obter personalId e nutricionistaId
     loadUserData(token, userData.id)
@@ -94,7 +104,10 @@ function PacienteLayout() {
         const data = await questionnaireResponse.json()
         console.log('📋 Resposta da API:', data)
         console.log('📋 Status do questionário (hasCompleted):', data.hasCompleted)
-        const hasCompleted = data.hasCompleted === true
+        console.log('📋 Dados do questionário:', data.data ? 'Existe' : 'Não existe')
+        
+        // Verificar se realmente tem dados completos (não apenas um registro vazio)
+        const hasCompleted = data.hasCompleted === true && data.data !== null
         console.log('📋 Definindo hasQuestionnaire como:', hasCompleted)
         setHasQuestionnaire(hasCompleted)
       } else {
@@ -103,11 +116,6 @@ function PacienteLayout() {
         setHasQuestionnaire(false)
       }
       setCheckingQuestionnaire(false)
-      
-      // Log após definir estado (usar setTimeout para garantir que o estado foi atualizado)
-      setTimeout(() => {
-        console.log('✅ Verificação do questionário concluída. hasQuestionnaire:', hasQuestionnaire ? 'TRUE' : 'FALSE')
-      }, 100)
 
       if (dietResponse.ok) {
         const data = await dietResponse.json()
@@ -180,7 +188,7 @@ function PacienteLayout() {
       return hasQuestionnaire // Dieta só aparece após questionário
     }
     if (route === '/paciente/treino') {
-      return hasQuestionnaire && hasPersonal // Treino só aparece se tiver personal
+      return hasQuestionnaire // Treino aparece após questionário
     }
     if (route === '/paciente/dashboard') {
       return hasQuestionnaire && hasDiet // Dashboard só aparece se tiver dieta
@@ -205,11 +213,7 @@ function PacienteLayout() {
         return
       }
 
-      // Se tentar acessar treino sem personal, redirecionar para perfil
-      if (currentPath === '/paciente/treino' && !hasPersonal) {
-        navigate('/paciente/perfil', { replace: true })
-        return
-      }
+      // Treino pode ser acessado mesmo sem personal (para gerar treino por IA)
     }
   }, [loading, checkingQuestionnaire, hasQuestionnaire, hasDiet, hasPersonal, location.pathname, navigate, user])
 
@@ -224,12 +228,34 @@ function PacienteLayout() {
 
   console.log('🎨 Renderizando. hasQuestionnaire:', hasQuestionnaire, 'loading:', loading, 'checkingQuestionnaire:', checkingQuestionnaire)
   
-  // DEBUG: Forçar exibição do questionário se necessário
-  const shouldShowQuestionnaire = !hasQuestionnaire
-  console.log('🔍 shouldShowQuestionnaire:', shouldShowQuestionnaire)
+  // Verificar se é usuário GUEST
+  const isGuest = user?.role === 'GUEST'
 
-  // Nav items - reutilizável para header e nav mobile
-  const navItems = hasQuestionnaire ? (
+  // DEBUG: Forçar exibição do questionário se necessário
+  // GUESTs não precisam preencher questionário - eles só têm acesso a projetos
+  const shouldShowQuestionnaire = !hasQuestionnaire && !isGuest
+  console.log('🔍 shouldShowQuestionnaire:', shouldShowQuestionnaire, '| isGuest:', isGuest)
+
+  // Nav items para GUEST (apenas Projetos)
+  const guestNavItems = (
+    <>
+      <button
+        className={`nav-item ${isActive('/paciente/projetos') ? 'active' : ''}`}
+        onClick={() => navigate('/paciente/projetos')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span className="nav-text">Projetos</span>
+      </button>
+    </>
+  )
+
+  // Nav items para usuários normais - reutilizável para header e nav mobile
+  const fullNavItems = hasQuestionnaire ? (
     <>
       {hasDiet && (
         <button
@@ -256,18 +282,16 @@ function PacienteLayout() {
         </svg>
         <span className="nav-text">Dieta</span>
       </button>
-      {hasPersonal && (
-        <button
-          className={`nav-item ${isActive('/paciente/treino') ? 'active' : ''}`}
-          onClick={() => navigate('/paciente/treino')}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-            <path d="M6 14h12"></path>
-          </svg>
-          <span className="nav-text">Treino</span>
-        </button>
-      )}
+      <button
+        className={`nav-item ${isActive('/paciente/treino') ? 'active' : ''}`}
+        onClick={() => navigate('/paciente/treino')}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <path d="M6 14h12"></path>
+        </svg>
+        <span className="nav-text">Treino</span>
+      </button>
       <button
         className={`nav-item ${isActive('/paciente/projetos') ? 'active' : ''}`}
         onClick={() => navigate('/paciente/projetos')}
@@ -293,13 +317,28 @@ function PacienteLayout() {
     </>
   ) : null
 
+  // Seleciona os nav items baseado no tipo de usuário
+  const navItems = isGuest ? guestNavItems : fullNavItems
+
   return (
     <BrandingProvider professionalUserId={professionalUserId}>
       <div className="paciente-layout">
         <header className="paciente-header">
         <div className="header-content">
           <div className="header-left">
-            <h1 className="logo">LifeFit</h1>
+            <Link 
+              to="/paciente/dashboard" 
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                textDecoration: 'none',
+                flexShrink: 0
+              }}
+            >
+              <span className="logo-fallback" style={{ fontWeight: 700, fontSize: '18px', color: '#4A6B4D' }}>
+                GIBA APP
+              </span>
+            </Link>
             <p className="welcome-text">
               Olá, {user?.name || user?.email}
             </p>
@@ -320,37 +359,107 @@ function PacienteLayout() {
         </div>
       </header>
 
-      {/* Se não tem questionário, mostrar questionário */}
+      {/* Se não tem questionário, mostrar chat conversacional */}
       {shouldShowQuestionnaire ? (
-        <div style={{ 
-          width: '100%',
-          minHeight: '100vh',
-          position: 'relative',
-          zIndex: 1,
-          background: 'transparent'
-        }}>
-          {console.log('🎯 Renderizando Questionnaire - hasQuestionnaire:', hasQuestionnaire)}
-          <Questionnaire onComplete={async () => {
-            console.log('✅ Questionário completado!')
-            setHasQuestionnaire(true)
+        <div 
+          id="questionnaire-wrapper"
+          style={{ 
+            width: '100%',
+            minHeight: 'calc(100vh - 73px)',
+            position: 'relative',
+            zIndex: 1,
+            background: 'transparent',
+            margin: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            padding: 0,
+            paddingTop: 0,
+            paddingBottom: 0
+          }}
+          ref={(el) => {
+            if (el) {
+              // #region agent log
+              setTimeout(() => {
+                const pacienteHeader = document.querySelector('.paciente-header')
+                const wrapper = el
+                if (pacienteHeader && wrapper) {
+                  const pacienteRect = pacienteHeader.getBoundingClientRect()
+                  const wrapperRect = wrapper.getBoundingClientRect()
+                  fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      location: 'PacienteLayout.jsx:wrapper',
+                      message: 'Measuring wrapper position relative to header',
+                      data: {
+                        pacienteHeader: {
+                          height: pacienteRect.height,
+                          bottom: pacienteRect.bottom,
+                          computedMarginBottom: window.getComputedStyle(pacienteHeader).marginBottom,
+                          computedPaddingBottom: window.getComputedStyle(pacienteHeader).paddingBottom
+                        },
+                        wrapper: {
+                          top: wrapperRect.top,
+                          computedMarginTop: window.getComputedStyle(wrapper).marginTop,
+                          computedPaddingTop: window.getComputedStyle(wrapper).paddingTop,
+                          computedHeight: window.getComputedStyle(wrapper).height
+                        },
+                        gap: wrapperRect.top - pacienteRect.bottom
+                      },
+                      timestamp: Date.now(),
+                      sessionId: 'debug-session',
+                      runId: 'run1',
+                      hypothesisId: 'B'
+                    })
+                  }).catch(() => {})
+                }
+              }, 100)
+              // #endregion
+            }
+          }}
+        >
+          {console.log('🎯 Renderizando ConversationalQuestionnaire - hasQuestionnaire:', hasQuestionnaire)}
+          <ConversationalQuestionnaire onComplete={async () => {
+            console.log('✅ Questionário conversacional completado!')
             const token = localStorage.getItem('token')
             if (token && user?.id) {
+              // Recarregar dados do usuário para verificar se o questionário foi salvo
+              // Isso garante que o estado seja atualizado corretamente
               await loadUserData(token, user.id)
-              // Após completar questionário, redirecionar para perfil
-              navigate('/paciente/perfil', { replace: true })
+              // O estado hasQuestionnaire será atualizado pelo loadUserData
+              console.log('✅ Dados recarregados após completar questionário')
+            } else {
+              // Fallback: definir como true se não conseguir recarregar
+              setHasQuestionnaire(true)
             }
           }} />
         </div>
       ) : (
         <div className="paciente-content-wrapper">
           {/* Navegação - Mobile apenas */}
-          {navItems && (
+          {navItems ? (
             <nav className="paciente-nav">
               <div className="nav-content">
                 {navItems}
               </div>
             </nav>
-          )}
+          ) : hasQuestionnaire ? (
+            // Fallback: se hasQuestionnaire mas navItems está vazio, mostrar menu básico
+            <nav className="paciente-nav">
+              <div className="nav-content">
+                <button
+                  className={`nav-item ${isActive('/paciente/perfil') ? 'active' : ''}`}
+                  onClick={() => navigate('/paciente/perfil')}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <span className="nav-text">Perfil</span>
+                </button>
+              </div>
+            </nav>
+          ) : null}
 
           {/* Conteúdo Principal */}
           <div className="paciente-main-content">

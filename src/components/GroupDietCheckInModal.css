@@ -1,0 +1,117 @@
+.group-diet-checkin-capture {
+  width: 100%;
+}
+
+.group-diet-checkin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.group-diet-checkin-error {
+  padding: 12px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #991b1b;
+  font-size: 14px;
+}
+
+.group-diet-checkin-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.group-diet-checkin-preview img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.group-diet-checkin-nutrition {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.group-diet-checkin-nutrition h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.group-diet-checkin-macros {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.group-diet-macro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.group-diet-macro .macro-icon {
+  font-size: 24px;
+}
+
+.group-diet-macro .macro-value {
+  font-weight: 600;
+  font-size: 16px;
+  color: #1f2937;
+}
+
+.group-diet-macro .macro-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.group-diet-checkin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group-diet-checkin-field label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+.group-diet-checkin-field .optional {
+  font-weight: 400;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.group-diet-checkin-field input,
+.group-diet-checkin-field textarea {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.group-diet-checkin-field input:focus,
+.group-diet-checkin-field textarea:focus {
+  border-color: #4A6B4D;
+}
+
+.group-diet-checkin-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}

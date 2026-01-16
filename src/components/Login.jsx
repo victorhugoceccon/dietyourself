@@ -146,7 +146,7 @@ function Login() {
                 </defs>
               </svg>
             </div>
-            <h1 className="logo-text">LifeFit</h1>
+            <img src="/giba-team-app.png" alt="GIBA APP" className="logo-img" style={{ height: '40px', width: 'auto' }} />
             <p className="logo-subtitle">Seu corpo, no seu ritmo</p>
           </div>
 

@@ -105,6 +105,92 @@ router.post('/register', async (req, res) => {
   }
 })
 
+// Schema para registro de guest (usuário com acesso restrito a projetos)
+const registerGuestSchema = z.object({
+  email: z.string().email('Email inválido'),
+  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+  name: z.string().min(1, 'Nome é obrigatório'),
+  codigoConvite: z.string().min(4, 'Código de convite inválido')
+})
+
+// Rota de registro guest (acesso apenas a projetos)
+router.post('/register-guest', async (req, res) => {
+  try {
+    const validatedData = registerGuestSchema.parse(req.body)
+    
+    const normalizedEmail = validatedData.email.toLowerCase().trim()
+    const normalizedCode = validatedData.codigoConvite.trim().toUpperCase()
+    
+    // Verificar se o email já existe
+    const existingUser = await prisma.user.findUnique({
+      where: { email: normalizedEmail }
+    })
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email já cadastrado. Faça login na sua conta existente.' })
+    }
+
+    // Verificar se o grupo existe
+    const grupo = await prisma.grupo.findUnique({
+      where: { codigoConvite: normalizedCode }
+    })
+
+    if (!grupo || !grupo.ativo) {
+      return res.status(404).json({ error: 'Projeto não encontrado ou inativo' })
+    }
+
+    // Hash da senha
+    const hashedPassword = await hashPassword(validatedData.password)
+
+    // Criar usuário com role GUEST
+    const user = await prisma.user.create({
+      data: {
+        email: normalizedEmail,
+        password: hashedPassword,
+        name: validatedData.name,
+        role: 'GUEST', // Role especial para acesso restrito
+        roles: JSON.stringify(['GUEST'])
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true
+      }
+    })
+
+    // Adicionar usuário ao grupo automaticamente
+    await prisma.grupoMembro.create({
+      data: {
+        grupoId: grupo.id,
+        userId: user.id,
+        papel: 'MEMBRO'
+      }
+    })
+
+    // Gerar token
+    const token = generateToken(user.id, user.email, user.role)
+
+    res.status(201).json({
+      message: 'Conta criada com sucesso',
+      user,
+      token,
+      grupoId: grupo.id
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ 
+        error: 'Dados inválidos',
+        details: error.errors
+      })
+    }
+    
+    console.error('Erro ao registrar guest:', error)
+    res.status(500).json({ error: 'Erro ao criar conta' })
+  }
+})
+
 // Rota de login
 router.post('/login', async (req, res) => {
   try {

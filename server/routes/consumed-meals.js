@@ -279,6 +279,21 @@ router.get('/stats', authenticate, async (req, res) => {
       }
     })
 
+    // Incluir refeições por foto
+    const photoMeals = await prisma.photoMeal.findMany({
+      where: {
+        userId,
+        consumedDate: today
+      }
+    })
+
+    photoMeals.forEach(photoMeal => {
+      consumedKcal += photoMeal.totalKcal || 0
+      consumedProtein += photoMeal.totalProtein || 0
+      consumedCarbs += photoMeal.totalCarbs || 0
+      consumedFat += photoMeal.totalFat || 0
+    })
+
     res.json({
       consumedMeals: consumedMeals.map(c => c.mealIndex),
       totals: {

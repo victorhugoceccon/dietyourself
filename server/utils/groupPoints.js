@@ -153,3 +153,59 @@ export async function upsertGroupCheckInPointsEvent({ userId, grupoId, checkInId
   }
 }
 
+// Registrar pontos para check-in de dieta (similar ao de treino)
+export async function upsertGroupDietaCheckInPointsEvent({ userId, grupoId, checkInId }) {
+  try {
+    const membership = await prisma.grupoMembro.findUnique({
+      where: { grupoId_userId: { grupoId, userId } }
+    })
+    
+    if (!membership) {
+      console.warn(`⚠️ Usuário ${userId} não é membro do grupo ${grupoId}`)
+      return { updated: 0 }
+    }
+
+    const grupo = await prisma.grupo.findUnique({
+      where: { id: grupoId },
+      select: { ativo: true }
+    })
+
+    if (!grupo || !grupo.ativo) {
+      console.warn(`⚠️ Grupo ${grupoId} não está ativo`)
+      return { updated: 0 }
+    }
+
+    // Check-in de dieta também vale 15 pontos
+    const tipo = 'CHECKIN_DIETA'
+    const pontos = 15
+
+    await prisma.grupoPontosEvento.upsert({
+      where: {
+        grupoId_referenciaTipo_referenciaId: {
+          grupoId,
+          referenciaTipo: 'GRUPO_DIETA_CHECKIN',
+          referenciaId: checkInId
+        }
+      },
+      create: {
+        grupoId,
+        userId,
+        tipo,
+        pontos,
+        referenciaTipo: 'GRUPO_DIETA_CHECKIN',
+        referenciaId: checkInId
+      },
+      update: {
+        tipo,
+        pontos
+      }
+    })
+
+    console.log(`✅ Pontos registrados: ${pontos} pontos para check-in de dieta ${checkInId} no grupo ${grupoId}`)
+    return { updated: 1 }
+  } catch (error) {
+    console.error('Erro ao registrar pontos de check-in de dieta:', error)
+    throw error
+  }
+}
+

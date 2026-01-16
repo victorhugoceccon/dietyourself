@@ -1,0 +1,661 @@
+/* Página principal */
+.giba-dieta-page {
+  min-height: 100vh;
+  background: linear-gradient(165deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+  color: #e8e8e8;
+  padding-bottom: 100px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Loading */
+.giba-dieta-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  gap: 20px;
+  color: #8b95a5;
+}
+
+.giba-dieta-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #2a3142;
+  border-top-color: #4ade80;
+  border-radius: 50%;
+  animation: gibaDietaSpinner 1s linear infinite;
+}
+
+@keyframes gibaDietaSpinner {
+  to { transform: rotate(360deg); }
+}
+
+/* =====================
+   EMPTY STATE (Sem dieta)
+   ===================== */
+
+.giba-dieta-welcome {
+  padding: 48px 24px 40px;
+  text-align: center;
+  background: linear-gradient(180deg, #1e2534 0%, transparent 100%);
+}
+
+.giba-dieta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  padding: 8px 20px;
+  border-radius: 30px;
+  margin-bottom: 24px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #0f1419;
+  box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+}
+
+.giba-dieta-badge-icon {
+  font-size: 18px;
+}
+
+.giba-dieta-badge-text {
+  font-weight: 800;
+}
+
+.giba-dieta-welcome-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.giba-dieta-welcome-sub {
+  font-size: 15px;
+  color: #8b95a5;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* =====================
+   SECTIONS
+   ===================== */
+
+.giba-dieta-section {
+  padding: 24px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.giba-dieta-section-header {
+  margin-bottom: 16px;
+}
+
+.giba-dieta-step {
+  display: inline-block;
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.giba-dieta-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.giba-dieta-section-desc {
+  font-size: 14px;
+  color: #8b95a5;
+  margin: 8px 0 16px;
+  line-height: 1.5;
+}
+
+/* Progress bar para gerar dieta */
+.giba-dieta-progress {
+  margin-bottom: 20px;
+}
+
+.giba-dieta-progress-bar {
+  height: 6px;
+  background: #2a3142;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.giba-dieta-progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  border-radius: 3px;
+  animation: gibaDietaProgress 60s linear forwards;
+}
+
+@keyframes gibaDietaProgress {
+  0% { width: 5%; }
+  20% { width: 25%; }
+  50% { width: 55%; }
+  80% { width: 85%; }
+  100% { width: 98%; }
+}
+
+.giba-dieta-progress-text {
+  font-size: 13px;
+  color: #8b95a5;
+  text-align: center;
+  margin: 0;
+}
+
+/* Buttons */
+.giba-dieta-btn-primary {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f1419;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+}
+
+.giba-dieta-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(74, 222, 128, 0.4);
+}
+
+.giba-dieta-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.giba-dieta-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* Info cards */
+.giba-dieta-info-section {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.giba-dieta-info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #1e2534;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.giba-dieta-info-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.giba-dieta-info-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.giba-dieta-info-card p {
+  font-size: 13px;
+  color: #8b95a5;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* =====================
+   DIET VIEW (Com dieta)
+   ===================== */
+
+.giba-dieta-hero {
+  padding: 40px 24px 32px;
+  text-align: center;
+  background: linear-gradient(180deg, #1e2534 0%, transparent 100%);
+}
+
+.giba-dieta-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f1419;
+}
+
+.giba-dieta-hero-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.giba-dieta-hero-sub {
+  font-size: 14px;
+  color: #8b95a5;
+  margin: 0;
+}
+
+/* Day progress */
+.giba-dieta-day-progress {
+  background: #1e2534;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.giba-dieta-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.giba-dieta-day-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.giba-dieta-day-count {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4ade80;
+}
+
+.giba-dieta-day-bar {
+  height: 10px;
+  background: #2a3142;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.giba-dieta-day-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+
+.giba-dieta-day-text {
+  font-size: 13px;
+  color: #8b95a5;
+  margin: 0;
+  text-align: center;
+}
+
+/* =====================
+   MACROS
+   ===================== */
+
+.giba-dieta-macros {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.giba-dieta-macro-card {
+  background: #1e2534;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.giba-dieta-macro-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.giba-dieta-macro-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.giba-dieta-macro-value {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.giba-dieta-macro-card.calories .giba-dieta-macro-value { color: #f59e0b; }
+.giba-dieta-macro-card.protein .giba-dieta-macro-value { color: #ef4444; }
+.giba-dieta-macro-card.carbs .giba-dieta-macro-value { color: #3b82f6; }
+.giba-dieta-macro-card.fats .giba-dieta-macro-value { color: #22c55e; }
+
+.giba-dieta-macro-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e8e8e8;
+  margin-top: 2px;
+}
+
+.giba-dieta-macro-desc {
+  font-size: 11px;
+  color: #6b7684;
+  margin-top: 4px;
+}
+
+/* =====================
+   MEALS
+   ===================== */
+
+.giba-dieta-meals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.giba-dieta-meal-card {
+  background: #1e2534;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.3s ease;
+}
+
+.giba-dieta-meal-card.consumed {
+  border-color: rgba(74, 222, 128, 0.3);
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.05) 0%, #1e2534 100%);
+}
+
+.giba-dieta-meal-card.expanded {
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+.giba-dieta-meal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  cursor: pointer;
+}
+
+.giba-dieta-meal-num {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f1419;
+  flex-shrink: 0;
+}
+
+.giba-dieta-meal-card.consumed .giba-dieta-meal-num {
+  background: #22c55e;
+}
+
+.giba-dieta-meal-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.giba-dieta-meal-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.giba-dieta-meal-kcal {
+  font-size: 13px;
+  color: #8b95a5;
+  margin: 0;
+}
+
+.giba-dieta-expand-icon {
+  font-size: 12px;
+  color: #8b95a5;
+  transition: transform 0.3s ease;
+}
+
+/* Meal content */
+.giba-dieta-meal-content {
+  padding: 0 18px 18px;
+}
+
+.giba-dieta-consume-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 12px;
+  border: 2px solid #4ade80;
+  background: transparent;
+  color: #4ade80;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+}
+
+.giba-dieta-consume-btn:hover:not(:disabled) {
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.giba-dieta-consume-btn.consumed {
+  background: rgba(74, 222, 128, 0.15);
+  border-color: rgba(74, 222, 128, 0.5);
+}
+
+.giba-dieta-consume-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Foods */
+.giba-dieta-foods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.giba-dieta-food-card {
+  background: #151a26;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.giba-dieta-food-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.giba-dieta-food-info {
+  flex: 1;
+}
+
+.giba-dieta-food-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.giba-dieta-food-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.giba-dieta-food-portion,
+.giba-dieta-food-kcal {
+  font-size: 13px;
+  color: #8b95a5;
+}
+
+.giba-dieta-food-macros {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.giba-dieta-food-macros span {
+  font-size: 12px;
+  color: #8b95a5;
+}
+
+/* Substitutions */
+.giba-dieta-subs {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255,255,255,0.1);
+}
+
+.giba-dieta-subs-label {
+  display: block;
+  font-size: 13px;
+  color: #4ade80;
+  margin-bottom: 10px;
+}
+
+.giba-dieta-subs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.giba-dieta-sub-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  padding: 8px 12px;
+  background: rgba(74, 222, 128, 0.05);
+  border-radius: 8px;
+}
+
+.giba-dieta-sub-name {
+  color: #e8e8e8;
+  font-weight: 500;
+}
+
+.giba-dieta-sub-portion {
+  color: #6b7684;
+  font-size: 12px;
+}
+
+/* =====================
+   OBSERVATIONS & TIPS
+   ===================== */
+
+.giba-dieta-obs {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(74, 222, 128, 0.08);
+  padding: 18px;
+  border-radius: 14px;
+}
+
+.giba-dieta-obs-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.giba-dieta-obs p {
+  font-size: 14px;
+  color: #c9d1d9;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.giba-dieta-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.giba-dieta-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #1e2534;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.giba-dieta-tip-num {
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f1419;
+  flex-shrink: 0;
+}
+
+.giba-dieta-tip p {
+  font-size: 14px;
+  color: #c9d1d9;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+
+@media (min-width: 480px) {
+  .giba-dieta-welcome-title {
+    font-size: 30px;
+  }
+  
+  .giba-dieta-hero-title {
+    font-size: 28px;
+  }
+  
+  .giba-dieta-section {
+    padding: 28px 24px;
+  }
+  
+  .giba-dieta-macros {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 479px) {
+  .giba-dieta-macros {
+    grid-template-columns: 1fr 1fr;
+  }
+}

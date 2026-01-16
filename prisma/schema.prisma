@@ -48,6 +48,9 @@ model User {
 
   // Relacionamento refeições consumidas
   consumedMeals ConsumedMeal[] // Refeições consumidas pelo paciente
+  
+  // Relacionamento refeições por foto
+  photoMeals PhotoMeal[] // Refeições identificadas por foto
 
   // Relacionamento prescrições de treino (como personal trainer)
   prescricoesPersonal PrescricaoTreino[] @relation("PersonalPrescricoes")
@@ -78,6 +81,28 @@ model User {
   gruposMembros       GrupoMembro[]      @relation("GrupoMembroUser")
   gruposPontosEventos GrupoPontosEvento[] @relation("GrupoPontosEventoUser")
   grupoTreinoCheckIns GrupoTreinoCheckIn[] @relation("GrupoTreinoCheckInUser")
+  grupoDietaCheckIns  GrupoDietaCheckIn[] @relation("GrupoDietaCheckInUser")
+  
+  // Relacionamento social (reações e comentários)
+  checkInReactions    CheckInReaction[]  @relation("CheckInReactionUser")
+  checkInComments     CheckInComment[]   @relation("CheckInCommentUser")
+  
+  // Relacionamento conquistas
+  achievements        UserAchievement[]  @relation("UserAchievementUser")
+  
+  // Relacionamento stories
+  stories             Story[]            @relation("StoryUser")
+  
+  // Relacionamento desafios
+  challengeParticipations ChallengeParticipation[] @relation("ChallengeParticipationUser")
+  
+  // Relacionamento metas
+  goals               Goal[]             @relation("GoalUser")
+  goalProgress        GoalProgress[]    @relation("GoalProgressUser")
+  
+  // Relacionamento chat
+  chatRooms           ChatRoomMember[]   @relation("ChatRoomMemberUser")
+  chatMessages        ChatMessage[]      @relation("ChatMessageUser")
 
   // Relacionamento assinatura
   subscription Subscription? @relation("UserSubscription")
@@ -94,37 +119,62 @@ model QuestionnaireData {
 
   // Bloco 1: Dados Básicos
   idade     Int
-  sexo      String // Masculino / Feminino
+  sexo      String? // Masculino / Feminino / Prefiro não informar
   altura    Float // em cm
   pesoAtual Float // em kg
   objetivo  String // Emagrecer, Manter o peso, Ganhar massa muscular, Ganhar peso de forma geral
 
-  // Bloco 2: Rotina e Atividade
-  frequenciaAtividade String // Não pratico, Sim 1-2x, Sim 3-4x, Sim 5x ou mais
-  tipoAtividade       String // Musculação, Cardio, Ambos, Outro
-  horarioTreino       String // Manhã, Tarde, Noite, Varia muito
-  rotinaDiaria        String // Sedentária, Moderada, Ativa
+  // Sentimentos e Expectativas
+  sentimentosCorpo    String? // Como se sente em relação ao corpo
+  expectativaSucesso  String? // O que faria o plano valer a pena em 30 dias
+
+  // Rotina e Sono
+  rotinaDiaria String // Descrição da rotina diária
+  sono         String // Durmo bem, Durmo mal, Varia muito
+
+  // Bloco 2: Atividade Física
+  frequenciaAtividade        String  // Não pratico atualmente, 1-2x, 3-4x, 5x ou mais
+  barreirasTreino           String? // O que impede de treinar (se não pratica)
+  tipoAtividade             String? // Tipo de atividade (se pratica)
+  relacaoEmocionalTreino    String? // Gosto, obrigação, sempre paro
+  preferenciaDificuldadeTreino String? // Preferência ou dificuldade no treino
+  rotinaTreinoDetalhada     String? // Descrição detalhada da rotina de treino (legado)
+  outraAtividade            String? // Se tipoAtividade for "Outro"
+  horarioTreino             String  // Manhã, Tarde, Noite, Varia muito
 
   // Bloco 3: Estrutura da Dieta
-  quantidadeRefeicoes  String // 3 refeições, 4 refeições, 5 refeições, Mais de 5
-  preferenciaRefeicoes String // Mais simples, Um equilíbrio, Mais completas
+  quantidadeRefeicoes  String // 3, 4, 5, Mais de 5
+  preferenciaRefeicoes String // Mais simples, Um equilíbrio, Mais completas e variadas
 
-  // Bloco 4: Complexidade e Adesão
-  confortoPesar      String // Sim sem problemas, Às vezes, Prefiro medidas caseiras
-  tempoPreparacao    String // Muito pouco, Médio, Tenho tempo
-  preferenciaVariacao String // Prefiro repetir, Um pouco de repetição, Prefiro variedade
+  // Bloco 4: Alimentação
+  alimentosGosta        String? // Alimentos favoritos
+  alimentosEvita        String? // Alimentos que evita
+  tempoPreparacao       String // Até 10 min, 10-30 min, Tenho tempo
+  confortoPesar         String // Sim, Às vezes, Prefiro medidas caseiras
+  preferenciaVariacao   String // Prefiro repetir, Um pouco de repetição, Prefiro muita variedade
+  alimentacaoFimSemana  String? // Parecida, Um pouco mais solta, Sai do controle
 
   // Bloco 5: Alimentos do Dia a Dia (JSON)
   alimentosDoDiaADia String? // JSON: { carboidratos: [], proteinas: [], gorduras: [], frutas: [] }
 
   // Bloco 6: Restrições
-  restricaoAlimentar String // Nenhuma, Intolerância à lactose, Glúten, Outra
+  restricaoAlimentar String // Nenhuma, Intolerância à lactose, Intolerância ao glúten, Outra
   outraRestricao     String? // Se selecionou "Outra"
-  alimentosEvita     String? // Textarea - alimentos que não gosta
 
   // Bloco 7: Flexibilidade Real
   opcoesSubstituicao String // Sim gosto, Algumas opções, Prefiro fixo
-  refeicoesLivres    String // Sim, Talvez, Não
+  refeicoesLivres    String // Sim, Talvez, Prefiro seguir o plano à risca
+
+  // Bloco 8: Saúde e Limitações
+  problemasSaude          String // Não, Sim
+  quaisProblemasSaude     String? // Detalhes dos problemas de saúde
+  usoMedicacao            String // Não, Sim
+  quaisMedicamentos       String? // Detalhes dos medicamentos
+  limitacoesFisicas       String // Não, Sim
+  detalhesLimitacao       String? // Detalhes da limitação física
+  restricoesMedicasExercicio String // Não, Sim
+  movimentosEvitar        String? // Movimentos a evitar
+  receiosSaude            String? // Receios relacionados à saúde
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -222,6 +272,33 @@ model ConsumedMeal {
   @@map("consumed_meals")
 }
 
+model PhotoMeal {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Foto original (base64)
+  photoUrl      String   // base64 da foto
+  
+  // Análise da IA
+  alimentos     String   // JSON: [{ nome, quantidade, quantidadeGramas, kcal, proteina, carboidrato, gordura }]
+  totalKcal     Float
+  totalProtein  Float
+  totalCarbs    Float
+  totalFat      Float
+  
+  // Metadados
+  consumedDate  DateTime @default(now()) // Data do consumo (apenas data, sem hora)
+  mealName      String?  // Nome da refeição (ex: "Almoço extra", "Lanche")
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([consumedDate])
+  @@map("photo_meals")
+}
+
 model Exercicio {
   id          String  @id @default(uuid())
   nome        String // Nome do exercício
@@ -302,6 +379,7 @@ model PrescricaoTreino {
 
   nome        String // Nome do treino (ex: "Treino A/B/C")
   observacoes String? // Observações gerais do treino
+  analysisJson String? // Análise visual e plano detalhado em JSON
   dataInicio  DateTime? // Data de início do treino
   dataFim     DateTime? // Data de término do treino (opcional)
   ativo       Boolean   @default(true) // Se o treino está ativo
@@ -502,6 +580,12 @@ model Grupo {
   membros       GrupoMembro[]
   pontosEventos GrupoPontosEvento[]
   checkIns      GrupoTreinoCheckIn[]
+  dietaCheckIns GrupoDietaCheckIn[]
+  stories       Story[]            @relation("StoryGrupo")
+  challenges    Challenge[]         @relation("ChallengeGrupo")
+  goals         Goal[]              @relation("GoalGrupo")
+  chatRooms     ChatRoom[]          @relation("ChatRoomGrupo")
+  achievements  UserAchievement[]   @relation("UserAchievementGrupo")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -583,10 +667,315 @@ model GrupoTreinoCheckIn {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Relacionamentos sociais
+  reactions           CheckInReaction[]  @relation("CheckInReactionCheckIn")
+  comments            CheckInComment[]   @relation("CheckInCommentCheckIn")
+
   @@index([grupoId])
   @@index([userId])
   @@index([createdAt])
   @@map("grupos_treino_check_ins")
+}
+
+// Check-in de dieta nos grupos
+model GrupoDietaCheckIn {
+  id            String   @id @default(uuid())
+  grupoId       String
+  grupo         Grupo    @relation(fields: [grupoId], references: [id], onDelete: Cascade)
+  
+  userId        String
+  user          User     @relation("GrupoDietaCheckInUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Link para PhotoMeal
+  photoMealId   String?   // ID do PhotoMeal relacionado
+  
+  // Dados do check-in
+  photoUrl      String?  // URL ou base64 da foto
+  title         String?  // Título do check-in
+  description   String?  // Descrição/observação
+  
+  // Dados nutricionais (do PhotoMeal ou manual)
+  totalKcal     Float?
+  totalProtein  Float?
+  totalCarbs    Float?
+  totalFat      Float?
+  mealName      String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([grupoId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("grupos_dieta_check_ins")
+}
+
+// Reações nos check-ins
+model CheckInReaction {
+  id        String   @id @default(uuid())
+  checkInId String
+  checkIn   GrupoTreinoCheckIn @relation("CheckInReactionCheckIn", fields: [checkInId], references: [id], onDelete: Cascade)
+  
+  userId    String
+  user      User     @relation("CheckInReactionUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  emoji     String   // 🔥, 💪, 👏, 🎯, ⚡, ❤️
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([checkInId, userId, emoji]) // Um usuário só pode reagir uma vez com cada emoji
+  @@index([checkInId])
+  @@index([userId])
+  @@map("check_in_reactions")
+}
+
+// Comentários nos check-ins
+model CheckInComment {
+  id        String   @id @default(uuid())
+  checkInId String
+  checkIn   GrupoTreinoCheckIn @relation("CheckInCommentCheckIn", fields: [checkInId], references: [id], onDelete: Cascade)
+  
+  userId    String
+  user      User     @relation("CheckInCommentUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  content   String   // Conteúdo do comentário
+  parentId  String?  // ID do comentário pai (para respostas)
+  parent    CheckInComment? @relation("CheckInCommentReply", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   CheckInComment[] @relation("CheckInCommentReply")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([checkInId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([createdAt])
+  @@map("check_in_comments")
+}
+
+// Conquistas disponíveis
+model Achievement {
+  id          String   @id @default(uuid())
+  code        String   @unique // Código único: STREAK_7, WORKOUTS_100, etc.
+  name        String   // Nome da conquista
+  description String   // Descrição
+  icon        String   // Emoji ou ícone
+  category    String   // TREINO, DIETA, CONSISTENCIA, SOCIAL, etc.
+  points      Int      @default(0) // Pontos extras ao desbloquear
+  
+  userAchievements UserAchievement[] @relation("UserAchievementAchievement")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([code])
+  @@index([category])
+  @@map("achievements")
+}
+
+// Conquistas do usuário
+model UserAchievement {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation("UserAchievementUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  achievementId String
+  achievement   Achievement @relation("UserAchievementAchievement", fields: [achievementId], references: [id], onDelete: Cascade)
+  
+  grupoId       String?   // Se a conquista foi desbloqueada em um grupo específico
+  grupo         Grupo?    @relation("UserAchievementGrupo", fields: [grupoId], references: [id], onDelete: Cascade)
+  
+  unlockedAt    DateTime  @default(now())
+  
+  @@unique([userId, achievementId, grupoId])
+  @@index([userId])
+  @@index([achievementId])
+  @@index([grupoId])
+  @@map("user_achievements")
+}
+
+// Stories (24 horas)
+model Story {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation("StoryUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  grupoId   String
+  grupo     Grupo    @relation("StoryGrupo", fields: [grupoId], references: [id], onDelete: Cascade)
+  
+  photoUrl  String   // URL ou base64 da foto/vídeo
+  type      String   @default("IMAGE") // IMAGE, VIDEO
+  caption   String?  // Legenda
+  
+  expiresAt DateTime // Expira em 24 horas
+  views     Int      @default(0) // Contador de visualizações
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([grupoId])
+  @@index([expiresAt])
+  @@map("stories")
+}
+
+// Desafios semanais
+model Challenge {
+  id          String   @id @default(uuid())
+  grupoId     String
+  grupo       Grupo    @relation("ChallengeGrupo", fields: [grupoId], references: [id], onDelete: Cascade)
+  
+  createdBy   String   // ID do criador
+  name        String   // Nome do desafio
+  description String?  // Descrição
+  type        String   // STEPS, WORKOUTS, DIET, CUSTOM
+  target      Int      // Meta (ex: 10000 passos, 5 treinos)
+  startDate   DateTime // Data de início
+  endDate     DateTime // Data de fim
+  
+  pointsReward Int     @default(50) // Pontos ao completar
+  
+  participations ChallengeParticipation[] @relation("ChallengeParticipationChallenge")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([grupoId])
+  @@index([startDate])
+  @@index([endDate])
+  @@map("challenges")
+}
+
+// Participação em desafios
+model ChallengeParticipation {
+  id          String   @id @default(uuid())
+  challengeId String
+  challenge   Challenge @relation("ChallengeParticipationChallenge", fields: [challengeId], references: [id], onDelete: Cascade)
+  
+  userId      String
+  user        User     @relation("ChallengeParticipationUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  progress    Int      @default(0) // Progresso atual
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([challengeId, userId])
+  @@index([challengeId])
+  @@index([userId])
+  @@map("challenge_participations")
+}
+
+// Metas pessoais e coletivas
+model Goal {
+  id          String   @id @default(uuid())
+  grupoId     String?
+  grupo       Grupo?   @relation("GoalGrupo", fields: [grupoId], references: [id], onDelete: Cascade)
+  
+  userId      String
+  user        User     @relation("GoalUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  type        String   // PERSONAL, GROUP
+  category    String   // WEIGHT, WORKOUTS, DIET, STREAK, CUSTOM
+  name        String   // Nome da meta
+  description String?  // Descrição
+  target      Float    // Valor alvo
+  unit        String   // kg, treinos, dias, etc.
+  startDate   DateTime
+  endDate     DateTime
+  
+  progress    GoalProgress[] @relation("GoalProgressGoal")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([grupoId])
+  @@index([userId])
+  @@index([endDate])
+  @@map("goals")
+}
+
+// Progresso das metas
+model GoalProgress {
+  id        String   @id @default(uuid())
+  goalId    String
+  goal      Goal     @relation("GoalProgressGoal", fields: [goalId], references: [id], onDelete: Cascade)
+  
+  userId    String
+  user      User     @relation("GoalProgressUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  value     Float    // Valor atual
+  date      DateTime @default(now())
+  notes     String?  // Observações
+  
+  createdAt DateTime @default(now())
+  
+  @@index([goalId])
+  @@index([userId])
+  @@index([date])
+  @@map("goal_progress")
+}
+
+// Salas de chat
+model ChatRoom {
+  id        String   @id @default(uuid())
+  grupoId   String
+  grupo     Grupo    @relation("ChatRoomGrupo", fields: [grupoId], references: [id], onDelete: Cascade)
+  
+  name      String?  // Nome da sala (opcional, pode ser "Chat do Projeto")
+  type      String   @default("GROUP") // GROUP, DIRECT
+  
+  members   ChatRoomMember[] @relation("ChatRoomMemberRoom")
+  messages  ChatMessage[]    @relation("ChatMessageRoom")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([grupoId])
+  @@map("chat_rooms")
+}
+
+// Membros da sala de chat
+model ChatRoomMember {
+  id        String   @id @default(uuid())
+  roomId    String
+  room      ChatRoom @relation("ChatRoomMemberRoom", fields: [roomId], references: [id], onDelete: Cascade)
+  
+  userId    String
+  user      User     @relation("ChatRoomMemberUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  joinedAt  DateTime @default(now())
+  lastReadAt DateTime? // Última vez que leu as mensagens
+  
+  @@unique([roomId, userId])
+  @@index([roomId])
+  @@index([userId])
+  @@map("chat_room_members")
+}
+
+// Mensagens do chat
+model ChatMessage {
+  id        String   @id @default(uuid())
+  roomId    String
+  room      ChatRoom @relation("ChatMessageRoom", fields: [roomId], references: [id], onDelete: Cascade)
+  
+  userId    String
+  user      User     @relation("ChatMessageUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  content   String   // Conteúdo da mensagem
+  type      String   @default("TEXT") // TEXT, IMAGE, CHECKIN_SHARE
+  
+  // Se for compartilhamento de check-in
+  checkInId String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([roomId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("chat_messages")
 }
 
 model PasswordResetToken {

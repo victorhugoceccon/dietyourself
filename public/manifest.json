@@ -1,12 +1,14 @@
 {
-  "name": "LifeFit - Seu Acompanhamento Nutricional",
-  "short_name": "LifeFit",
-  "description": "Acompanhe sua dieta, treinos e progresso de forma completa e personalizada",
+  "name": "Giba App - Dieta e Treino Personalizado",
+  "short_name": "Giba App",
+  "description": "Dieta e treino personalizados baseados no seu corpo. Análise visual, plano alimentar completo e exercícios sob medida.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#06080f",
-  "theme_color": "#9fef00",
+  "background_color": "#0f1419",
+  "theme_color": "#f59e0b",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -57,29 +59,46 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
-  "categories": ["health", "fitness", "lifestyle"],
+  "categories": ["health", "fitness", "lifestyle", "food"],
   "shortcuts": [
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
-      "description": "Acesse seu dashboard",
+      "description": "Veja seu progresso",
       "url": "/paciente/dashboard",
       "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Dieta",
+      "name": "Minha Dieta",
       "short_name": "Dieta",
-      "description": "Veja sua dieta",
+      "description": "Acesse seu plano alimentar",
       "url": "/paciente/dieta",
       "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Treinos",
-      "short_name": "Treinos",
+      "name": "Meu Treino",
+      "short_name": "Treino",
       "description": "Acesse seus treinos",
-      "url": "/paciente/treinos",
+      "url": "/paciente/treino",
       "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dashboard com progresso semanal"
+    },
+    {
+      "src": "/screenshots/treino.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Treino personalizado"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

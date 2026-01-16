@@ -52,7 +52,7 @@ function SubscriptionStatus({ showBanner = true }) {
             ) : (
               <strong>Seu período de teste expira em {subscription.daysRemaining} dias</strong>
             )}
-            <span>Assine agora para continuar usando o LifeFit</span>
+            <span>Assine agora para continuar usando o GIBA APP</span>
           </div>
         </div>
         <div className="banner-actions">
@@ -79,7 +79,7 @@ function SubscriptionStatus({ showBanner = true }) {
                 ? 'Seu período de teste expirou' 
                 : 'Sua assinatura está inativa'}
             </strong>
-            <span>Assine para desbloquear todos os recursos do LifeFit</span>
+            <span>Assine para desbloquear todos os recursos do GIBA APP</span>
           </div>
         </div>
         <div className="banner-actions">

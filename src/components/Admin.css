@@ -1,6 +1,6 @@
 /* ============================================
-   LifeFit - Admin
-   Design moderno e clean seguindo padrão LifeFit
+   GIBA APP - Admin
+   Design moderno e clean seguindo padrão GIBA APP
    ============================================ */
 
 .admin-content-wrapper {
@@ -290,7 +290,7 @@
 
 .btn-secondary:hover:not(:disabled) {
   border-color: var(--lifefit-green-soft);
-  color: #90c22c;
+  color: #ffde59;
   background: var(--bg-tertiary);
 }
 
@@ -447,7 +447,7 @@
 }
 
 .btn-action.btn-edit:hover {
-  color: #90c22c;
+  color: #ffde59;
 }
 
 .btn-action.btn-delete:hover {
@@ -485,7 +485,7 @@
 
 .pagination-btn:hover:not(:disabled) {
   border-color: var(--lifefit-green-soft);
-  color: #90c22c;
+  color: #ffde59;
   background: var(--bg-tertiary);
 }
 

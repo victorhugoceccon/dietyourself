@@ -7,7 +7,38 @@ import crypto from 'crypto'
 
 const router = express.Router()
 
-// Aplicar verificação de assinatura em todas as rotas
+// Rota PÚBLICA para buscar informações do grupo (para página de convite)
+router.get('/public/:codigo', async (req, res) => {
+  try {
+    const codigo = req.params.codigo.trim().toUpperCase()
+    
+    const grupo = await prisma.grupo.findUnique({
+      where: { codigoConvite: codigo },
+      include: {
+        _count: { select: { membros: true } }
+      }
+    })
+
+    if (!grupo || !grupo.ativo) {
+      return res.status(404).json({ error: 'Projeto não encontrado' })
+    }
+
+    res.json({
+      grupo: {
+        id: grupo.id,
+        nome: grupo.nome,
+        descricao: grupo.descricao,
+        bannerUrl: grupo.bannerUrl,
+        membrosCount: grupo._count.membros
+      }
+    })
+  } catch (error) {
+    console.error('Erro ao buscar grupo público:', error)
+    res.status(500).json({ error: 'Erro ao buscar projeto' })
+  }
+})
+
+// Aplicar verificação de assinatura nas rotas protegidas
 router.use(authenticate)
 router.use(requireActiveSubscription)
 
@@ -133,11 +164,49 @@ router.post('/', authenticate, async (req, res) => {
       }
     })
   } catch (error) {
+    console.error('=== ERRO AO CRIAR GRUPO ===')
+    console.error('Tipo do erro:', error.constructor.name)
+    console.error('Código do erro:', error.code)
+    console.error('Mensagem:', error.message)
+    console.error('Meta do erro:', error.meta)
+    console.error('Stack completo:', error.stack)
+    console.error('=== FIM DO ERRO ===')
+    
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: 'Dados inválidos', details: error.errors })
     }
-    console.error('Erro ao criar grupo:', error)
-    res.status(500).json({ error: 'Erro ao criar grupo' })
+    
+    // Erros específicos do Prisma
+    if (error.code === 'P2002') {
+      return res.status(409).json({ 
+        error: 'Código de convite já existe. Tente novamente.',
+        code: 'DUPLICATE_CODE'
+      })
+    }
+    
+    if (error.code === 'P2003') {
+      return res.status(400).json({ 
+        error: 'Usuário não encontrado ou inválido',
+        code: 'INVALID_USER'
+      })
+    }
+    
+    if (error.code === 'P2021' || error.code === '42P01') {
+      return res.status(500).json({ 
+        error: 'Tabela de grupos não existe no banco de dados. Execute as migrações.',
+        code: 'TABLE_NOT_FOUND'
+      })
+    }
+    
+    res.status(500).json({ 
+      error: 'Erro ao criar grupo',
+      message: error.message || 'Erro desconhecido',
+      code: error.code,
+      ...(process.env.NODE_ENV === 'development' && { 
+        stack: error.stack,
+        meta: error.meta 
+      })
+    })
   }
 })
 
@@ -386,8 +455,344 @@ router.post('/:id/checkins', authenticate, async (req, res) => {
   }
 })
 
-// GET /api/groups/:id/checkins - Listar check-ins do grupo
+// GET /api/groups/:id/checkins - Listar check-ins do grupo (treino + dieta unificados)
 router.get('/:id/checkins', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const grupoId = req.params.id
+    const { type } = req.query // 'treino', 'dieta', ou undefined (todos)
+
+    const membership = await requireMembership(userId, grupoId)
+    if (!membership) {
+      return res.status(403).json({ error: 'Você não tem acesso a este grupo' })
+    }
+
+    const [treinoCheckIns, dietaCheckIns] = await Promise.all([
+      type !== 'dieta' ? prisma.grupoTreinoCheckIn.findMany({
+        where: { grupoId },
+        include: {
+          user: {
+            select: { id: true, name: true, email: true, profilePhoto: true }
+          },
+          treinoExecutado: {
+            include: {
+              prescricao: { select: { id: true, nome: true } },
+              divisao: { select: { id: true, nome: true } }
+            }
+          },
+          reactions: {
+            include: {
+              user: {
+                select: { id: true, name: true, email: true, profilePhoto: true }
+              }
+            }
+          },
+          _count: {
+            select: { comments: true, reactions: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: type === 'treino' ? 50 : 25
+      }) : [],
+      type !== 'treino' ? prisma.grupoDietaCheckIn.findMany({
+        where: { grupoId },
+        include: {
+          user: {
+            select: { id: true, name: true, email: true, profilePhoto: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: type === 'dieta' ? 50 : 25
+      }) : []
+    ])
+
+    // Combinar e ordenar por data
+    const allCheckIns = [
+      ...treinoCheckIns.map(ci => ({ ...ci, type: 'treino' })),
+      ...dietaCheckIns.map(ci => ({ ...ci, type: 'dieta' }))
+    ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 50)
+
+    res.json({ checkIns: allCheckIns })
+  } catch (error) {
+    console.error('Erro ao listar check-ins:', error)
+    res.status(500).json({ error: 'Erro ao listar check-ins' })
+  }
+})
+
+// ==========================================================
+// REAÇÕES (Fase 1.1)
+// ==========================================================
+
+// POST /api/groups/:id/checkins/:checkInId/reactions - Adicionar reação
+router.post('/:id/checkins/:checkInId/reactions', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const grupoId = req.params.id
+    const checkInId = req.params.checkInId
+    const { emoji } = req.body
+
+    // Validar emoji
+    const validEmojis = ['🔥', '💪', '👏', '🎯', '⚡', '❤️']
+    if (!validEmojis.includes(emoji)) {
+      return res.status(400).json({ error: 'Emoji inválido' })
+    }
+
+    // Verificar se o usuário é membro do grupo
+    const membership = await requireMembership(userId, grupoId)
+    if (!membership) {
+      return res.status(403).json({ error: 'Você não tem acesso a este grupo' })
+    }
+
+    // Verificar se o check-in existe e pertence ao grupo
+    const checkIn = await prisma.grupoTreinoCheckIn.findFirst({
+      where: {
+        id: checkInId,
+        grupoId
+      }
+    })
+
+    if (!checkIn) {
+      return res.status(404).json({ error: 'Check-in não encontrado' })
+    }
+
+    // Adicionar ou remover reação (toggle)
+    const existing = await prisma.checkInReaction.findUnique({
+      where: {
+        checkInId_userId_emoji: {
+          checkInId,
+          userId,
+          emoji
+        }
+      }
+    })
+
+    if (existing) {
+      // Remover reação
+      await prisma.checkInReaction.delete({
+        where: { id: existing.id }
+      })
+      return res.json({ reaction: null, action: 'removed' })
+    } else {
+      // Adicionar reação
+      const reaction = await prisma.checkInReaction.create({
+        data: {
+          checkInId,
+          userId,
+          emoji
+        },
+        include: {
+          user: {
+            select: { id: true, name: true, email: true, profilePhoto: true }
+          }
+        }
+      })
+      return res.json({ reaction, action: 'added' })
+    }
+  } catch (error) {
+    console.error('Erro ao adicionar reação:', error)
+    res.status(500).json({ error: 'Erro ao adicionar reação' })
+  }
+})
+
+// GET /api/groups/:id/checkins/:checkInId/reactions - Listar reações
+router.get('/:id/checkins/:checkInId/reactions', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const grupoId = req.params.id
+    const checkInId = req.params.checkInId
+
+    const membership = await requireMembership(userId, grupoId)
+    if (!membership) {
+      return res.status(403).json({ error: 'Você não tem acesso a este grupo' })
+    }
+
+    const reactions = await prisma.checkInReaction.findMany({
+      where: { checkInId },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true, profilePhoto: true }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    })
+
+    // Agrupar por emoji
+    const grouped = reactions.reduce((acc, reaction) => {
+      if (!acc[reaction.emoji]) {
+        acc[reaction.emoji] = []
+      }
+      acc[reaction.emoji].push(reaction)
+      return acc
+    }, {})
+
+    res.json({ reactions: grouped, total: reactions.length })
+  } catch (error) {
+    console.error('Erro ao listar reações:', error)
+    res.status(500).json({ error: 'Erro ao listar reações' })
+  }
+})
+
+// ==========================================================
+// COMENTÁRIOS (Fase 1.2)
+// ==========================================================
+
+// POST /api/groups/:id/checkins/:checkInId/comments - Adicionar comentário
+router.post('/:id/checkins/:checkInId/comments', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const grupoId = req.params.id
+    const checkInId = req.params.checkInId
+    const { content, parentId } = req.body
+
+    if (!content || content.trim().length === 0) {
+      return res.status(400).json({ error: 'Conteúdo do comentário é obrigatório' })
+    }
+
+    if (content.length > 500) {
+      return res.status(400).json({ error: 'Comentário muito longo (máximo 500 caracteres)' })
+    }
+
+    const membership = await requireMembership(userId, grupoId)
+    if (!membership) {
+      return res.status(403).json({ error: 'Você não tem acesso a este grupo' })
+    }
+
+    // Verificar se o check-in existe
+    const checkIn = await prisma.grupoTreinoCheckIn.findFirst({
+      where: {
+        id: checkInId,
+        grupoId
+      }
+    })
+
+    if (!checkIn) {
+      return res.status(404).json({ error: 'Check-in não encontrado' })
+    }
+
+    // Se for resposta, verificar se o comentário pai existe
+    if (parentId) {
+      const parent = await prisma.checkInComment.findFirst({
+        where: {
+          id: parentId,
+          checkInId
+        }
+      })
+      if (!parent) {
+        return res.status(404).json({ error: 'Comentário pai não encontrado' })
+      }
+    }
+
+    const comment = await prisma.checkInComment.create({
+      data: {
+        checkInId,
+        userId,
+        content: content.trim(),
+        parentId: parentId || null
+      },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true, profilePhoto: true }
+        },
+        replies: {
+          include: {
+            user: {
+              select: { id: true, name: true, email: true, profilePhoto: true }
+            }
+          },
+          orderBy: { createdAt: 'asc' }
+        }
+      }
+    })
+
+    res.status(201).json({ comment })
+  } catch (error) {
+    console.error('Erro ao adicionar comentário:', error)
+    res.status(500).json({ error: 'Erro ao adicionar comentário' })
+  }
+})
+
+// GET /api/groups/:id/checkins/:checkInId/comments - Listar comentários
+router.get('/:id/checkins/:checkInId/comments', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const grupoId = req.params.id
+    const checkInId = req.params.checkInId
+
+    const membership = await requireMembership(userId, grupoId)
+    if (!membership) {
+      return res.status(403).json({ error: 'Você não tem acesso a este grupo' })
+    }
+
+    const comments = await prisma.checkInComment.findMany({
+      where: {
+        checkInId,
+        parentId: null // Apenas comentários principais
+      },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true, profilePhoto: true }
+        },
+        replies: {
+          include: {
+            user: {
+              select: { id: true, name: true, email: true, profilePhoto: true }
+            }
+          },
+          orderBy: { createdAt: 'asc' }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    })
+
+    res.json({ comments })
+  } catch (error) {
+    console.error('Erro ao listar comentários:', error)
+    res.status(500).json({ error: 'Erro ao listar comentários' })
+  }
+})
+
+// DELETE /api/groups/:id/checkins/:checkInId/comments/:commentId - Deletar comentário
+router.delete('/:id/checkins/:checkInId/comments/:commentId', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const grupoId = req.params.id
+    const checkInId = req.params.checkInId
+    const commentId = req.params.commentId
+
+    const membership = await requireMembership(userId, grupoId)
+    if (!membership) {
+      return res.status(403).json({ error: 'Você não tem acesso a este grupo' })
+    }
+
+    const comment = await prisma.checkInComment.findUnique({
+      where: { id: commentId }
+    })
+
+    if (!comment) {
+      return res.status(404).json({ error: 'Comentário não encontrado' })
+    }
+
+    if (comment.userId !== userId) {
+      return res.status(403).json({ error: 'Você não pode deletar este comentário' })
+    }
+
+    await prisma.checkInComment.delete({
+      where: { id: commentId }
+    })
+
+    res.json({ message: 'Comentário deletado com sucesso' })
+  } catch (error) {
+    console.error('Erro ao deletar comentário:', error)
+    res.status(500).json({ error: 'Erro ao deletar comentário' })
+  }
+})
+
+// ==========================================================
+// CHECK-IN DE DIETA (Fase 1.3)
+// ==========================================================
+
+// POST /api/groups/:id/dieta-checkins - Criar check-in de dieta
+router.post('/:id/dieta-checkins', authenticate, async (req, res) => {
   try {
     const userId = req.user.userId
     const grupoId = req.params.id
@@ -397,17 +802,112 @@ router.get('/:id/checkins', authenticate, async (req, res) => {
       return res.status(403).json({ error: 'Você não tem acesso a este grupo' })
     }
 
-    const checkIns = await prisma.grupoTreinoCheckIn.findMany({
+    const {
+      photoUrl,
+      photoMealId,
+      title,
+      description,
+      totalKcal,
+      totalProtein,
+      totalCarbs,
+      totalFat,
+      mealName
+    } = req.body
+
+    // Se tiver photoMealId, buscar dados do PhotoMeal
+    let finalKcal = totalKcal
+    let finalProtein = totalProtein
+    let finalCarbs = totalCarbs
+    let finalFat = totalFat
+    let finalMealName = mealName
+
+    if (photoMealId) {
+      const photoMeal = await prisma.photoMeal.findUnique({
+        where: { id: photoMealId },
+        select: {
+          totalKcal: true,
+          totalProtein: true,
+          totalCarbs: true,
+          totalFat: true,
+          mealName: true,
+          userId: true
+        }
+      })
+
+      if (!photoMeal) {
+        return res.status(404).json({ error: 'Refeição por foto não encontrada' })
+      }
+
+      if (photoMeal.userId !== userId) {
+        return res.status(403).json({ error: 'Esta refeição não pertence a você' })
+      }
+
+      finalKcal = photoMeal.totalKcal
+      finalProtein = photoMeal.totalProtein
+      finalCarbs = photoMeal.totalCarbs
+      finalFat = photoMeal.totalFat
+      finalMealName = photoMeal.mealName
+    }
+
+    const checkIn = await prisma.grupoDietaCheckIn.create({
+      data: {
+        grupoId,
+        userId,
+        photoMealId: photoMealId || null,
+        photoUrl: photoUrl || null,
+        title: title?.trim() || null,
+        description: description?.trim() || null,
+        totalKcal: finalKcal || null,
+        totalProtein: finalProtein || null,
+        totalCarbs: finalCarbs || null,
+        totalFat: finalFat || null,
+        mealName: finalMealName || null
+      },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true, profilePhoto: true }
+        }
+      }
+    })
+
+    // Registrar pontos (similar ao check-in de treino)
+    try {
+      const { upsertGroupDietaCheckInPointsEvent } = await import('../utils/groupPoints.js')
+      await upsertGroupDietaCheckInPointsEvent({
+        userId,
+        grupoId,
+        checkInId: checkIn.id
+      })
+    } catch (pointsError) {
+      console.warn('⚠️ Erro ao registrar pontos de check-in de dieta (ignorado):', pointsError?.message || pointsError)
+    }
+
+    res.status(201).json({
+      message: 'Check-in de dieta criado com sucesso',
+      checkIn
+    })
+  } catch (error) {
+    console.error('Erro ao criar check-in de dieta:', error)
+    res.status(500).json({ error: 'Erro ao criar check-in de dieta' })
+  }
+})
+
+// GET /api/groups/:id/dieta-checkins - Listar check-ins de dieta
+router.get('/:id/dieta-checkins', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const grupoId = req.params.id
+
+    const membership = await requireMembership(userId, grupoId)
+    if (!membership) {
+      return res.status(403).json({ error: 'Você não tem acesso a este grupo' })
+    }
+
+    const checkIns = await prisma.grupoDietaCheckIn.findMany({
       where: { grupoId },
       include: {
         user: {
           select: { id: true, name: true, email: true, profilePhoto: true }
-        },
-        treinoExecutado: {
-          include: {
-            prescricao: { select: { id: true, nome: true } },
-            divisao: { select: { id: true, nome: true } }
-          }
         }
       },
       orderBy: { createdAt: 'desc' },
@@ -416,8 +916,8 @@ router.get('/:id/checkins', authenticate, async (req, res) => {
 
     res.json({ checkIns })
   } catch (error) {
-    console.error('Erro ao listar check-ins:', error)
-    res.status(500).json({ error: 'Erro ao listar check-ins' })
+    console.error('Erro ao listar check-ins de dieta:', error)
+    res.status(500).json({ error: 'Erro ao listar check-ins de dieta' })
   }
 })
 

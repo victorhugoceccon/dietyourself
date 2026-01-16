@@ -1,5 +1,5 @@
 /* ============================================
-   LifeFit - Login
+   GIBA APP - Login
    Tela de login com design clean e acolhedor
    ============================================ */
 
@@ -164,12 +164,17 @@
   fill: var(--lifefit-green-soft);
 }
 
-.logo-text {
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--lifefit-green-soft);
+.logo-img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
   margin: 0;
   margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.logo-text {
+  display: none;
   letter-spacing: var(--letter-spacing-tight);
   line-height: var(--line-height-tight);
 }
@@ -556,8 +561,12 @@
     border-radius: var(--radius-xl);
   }
 
+  .logo-img {
+    height: 40px;
+  }
+  
   .logo-text {
-    font-size: var(--font-size-3xl);
+    display: none;
   }
 
   .form-group input,

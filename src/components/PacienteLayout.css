@@ -1,5 +1,5 @@
 /* ============================================
-   LifeFit - Paciente Layout
+   GIBA APP - Paciente Layout
    Design clean e acolhedor
    ============================================ */
 
@@ -15,7 +15,8 @@
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   padding: var(--space-xl) var(--space-2xl);
-  margin-bottom: 0;
+  margin: 0;
+  margin-bottom: 0 !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
@@ -23,29 +24,55 @@
   backdrop-filter: blur(18px);
 }
 
-/* Forçar logo a aparecer sempre */
-.paciente-header h1.logo {
+/* Logo como imagem */
+.paciente-header .logo-img {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   position: relative;
   z-index: 10;
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.paciente-header .logo-img:hover {
+  opacity: 0.8;
+}
+
+.paciente-header .header-left > a,
+.paciente-header .header-left > Link {
+  display: flex !important;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Forçar logo a aparecer sempre (mantido para compatibilidade) */
+.paciente-header h1.logo {
+  display: none !important;
 }
 
 /* Regras globais para garantir visibilidade no desktop */
 @media (min-width: 769px) {
-  .paciente-header .header-left h1.logo {
+  .paciente-header .header-left .logo-img {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    color: #90c22c !important;
-    font-size: 1.5rem !important;
-    font-weight: var(--font-weight-bold) !important;
-    text-transform: uppercase !important;
+    height: 45px !important;
+    width: auto !important;
     margin: 0 !important;
     padding: 0 !important;
     flex-shrink: 0 !important;
     order: 1 !important;
+  }
+  
+  .paciente-header .header-left h1.logo {
+    display: none !important;
   }
 
   .paciente-header .header-left .role-selector {
@@ -105,17 +132,22 @@
 }
 
 /* Forçar logo a aparecer - regra mais específica */
-.paciente-header .header-content .header-left h1.logo {
+.paciente-header .header-content .header-left .logo-img {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   flex-shrink: 0 !important;
   width: auto !important;
-  height: auto !important;
+  height: 40px !important;
   margin: 0 !important;
   padding: 0 !important;
   position: relative !important;
   z-index: 100 !important;
+  object-fit: contain;
+}
+
+.paciente-header .header-content .header-left h1.logo {
+  display: none !important;
 }
 
 /* Forçar role-selector a aparecer - regra mais específica */
@@ -147,13 +179,13 @@
   }
   
   /* Forçar visibilidade da logo no desktop - regra mais específica */
-  .paciente-header .header-content .header-left h1.logo,
-  .paciente-header .header-content .header-left > h1.logo {
+  .paciente-header .header-content .header-left .logo-img,
+  .paciente-header .header-content .header-left > .logo-img {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     width: auto !important;
-    height: auto !important;
+    height: 45px !important;
     max-width: none !important;
     max-height: none !important;
     overflow: visible !important;
@@ -161,13 +193,15 @@
     clip-path: none !important;
     position: relative !important;
     z-index: 100 !important;
-    color: #90c22c !important;
-    font-size: 1.5rem !important;
-    font-weight: var(--font-weight-bold) !important;
-    text-transform: uppercase !important;
     margin: 0 !important;
     padding: 0 !important;
     flex-shrink: 0 !important;
+    object-fit: contain;
+  }
+  
+  .paciente-header .header-content .header-left h1.logo,
+  .paciente-header .header-content .header-left > h1.logo {
+    display: none !important;
   }
   
   /* Forçar visibilidade do role-selector no desktop - regra mais específica */
@@ -200,14 +234,21 @@
 }
 
 /* Garantir que logo sempre apareça */
-.paciente-header .header-left h1.logo,
-.paciente-header .header-left .logo {
+.paciente-header .header-left .logo-img {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   flex-shrink: 0 !important;
   min-width: auto !important;
   order: 1; /* Primeiro elemento */
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.paciente-header .header-left h1.logo,
+.paciente-header .header-left .logo {
+  display: none !important;
 }
 
 /* Garantir que welcome-text apareça */
@@ -243,8 +284,23 @@
   display: none;
 }
 
+.header-left > .logo-img {
+  flex-shrink: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative;
+  z-index: 10;
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
 .header-left > .logo,
-.header-left > h1.logo,
+.header-left > h1.logo {
+  display: none !important;
+}
+
 .header-left > .welcome-text,
 .header-left > p.welcome-text,
 .header-left > .role-selector,
@@ -258,11 +314,17 @@
 }
 
 /* Regras específicas para garantir visibilidade */
-.paciente-header h1.logo {
+.paciente-header .logo-img {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  color: #90c22c !important;
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.paciente-header h1.logo {
+  display: none !important;
 }
 
 .paciente-header .role-selector {
@@ -298,19 +360,32 @@
   font-size: var(--font-size-xs);
 }
 
-.logo,
-h1.logo {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: #90c22c;
-  margin: 0;
-  letter-spacing: -0.03em;
-  line-height: var(--line-height-tight);
-  text-transform: uppercase;
-  font-size: 1.5rem;
+.logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.logo-fallback {
+  font-weight: 700 !important;
+  font-size: 18px !important;
+  color: #4A6B4D !important;
+  margin-left: 8px;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.logo,
+h1.logo {
+  display: none !important;
 }
 
 .welcome-text {
@@ -390,18 +465,24 @@ h1.logo {
   }
 
   /* Garantir que logo e role-selector sempre apareçam no desktop */
-  .paciente-header .header-left h1.logo,
-  .paciente-header .header-left .logo {
+  .paciente-header .header-left .logo-img {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     flex-shrink: 0 !important;
     min-width: auto !important;
     width: auto !important;
+    height: 45px !important;
     position: relative !important;
     z-index: 10 !important;
     margin: 0 !important;
     padding: 0 !important;
+    object-fit: contain;
+  }
+  
+  .paciente-header .header-left h1.logo,
+  .paciente-header .header-left .logo {
+    display: none !important;
   }
 
   .paciente-header .header-left .role-selector,
@@ -444,8 +525,23 @@ h1.logo {
   }
 
   /* Garantir que logo, welcome-text e role-selector não sejam cortados */
+  .paciente-header .header-left > .logo-img {
+    flex-shrink: 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 10 !important;
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+  }
+  
   .paciente-header .header-left > h1.logo,
-  .paciente-header .header-left > .logo,
+  .paciente-header .header-left > .logo {
+    display: none !important;
+  }
+  
   .paciente-header .header-left > .welcome-text,
   .paciente-header .header-left > p.welcome-text,
   .paciente-header .header-left > .role-selector,
@@ -459,17 +555,6 @@ h1.logo {
   }
 }
 
-/* Mobile: esconder nav do header, mostrar nav separado */
-@media (max-width: 768px) {
-  .header-nav-items {
-    display: none !important;
-  }
-  
-  .paciente-nav {
-    display: block;
-  }
-}
-
 .paciente-nav {
   background: var(--card-bg, #ffffff);
   border-bottom: 1px solid var(--border-color-light);
@@ -479,6 +564,20 @@ h1.logo {
   top: 73px;
   z-index: 99;
   backdrop-filter: blur(20px);
+  display: block; /* Sempre visível por padrão */
+}
+
+/* Mobile: esconder nav do header, garantir que nav separado esteja visível */
+@media (max-width: 768px) {
+  .header-nav-items {
+    display: none !important;
+  }
+  
+  .paciente-nav {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }
 
 .nav-content {
@@ -521,13 +620,13 @@ h1.logo {
 }
 
 .nav-item:hover {
-  color: #90c22c;
+  color: #ffde59;
   background: var(--bg-tertiary);
 }
 
 .nav-item.active {
-  color: #90c22c;
-  border-bottom-color: var(--lifefit-green-soft);
+  color: #ffde59;
+  border-bottom-color: #ffde59;
   font-weight: var(--font-weight-semibold);
   background: transparent;
 }
@@ -617,26 +716,37 @@ h1.logo {
   }
 
   /* Garantir que logo apareça no mobile - regra mais específica e menor */
-  .paciente-header .header-content .header-left h1.logo,
-  .paciente-header .header-content .header-left > h1.logo,
-  .paciente-header .header-left h1.logo,
-  .paciente-header .header-left .logo {
+  .paciente-header .header-content .header-left .logo-img,
+  .paciente-header .header-content .header-left > .logo-img,
+  .paciente-header .header-left .logo-img,
+  .paciente-header .header-left a .logo-img,
+  .paciente-header .header-left Link .logo-img {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     flex-shrink: 0 !important;
     min-width: auto !important;
     width: auto !important;
-    height: auto !important;
+    height: 35px !important;
     position: relative !important;
     z-index: 100 !important;
-    color: #90c22c !important;
-    font-size: 1rem !important; /* Reduzido de xl para menor */
-    font-weight: var(--font-weight-bold) !important;
-    text-transform: uppercase !important;
     margin: 0 !important;
     padding: 0 !important;
-    line-height: 1.2 !important;
+    object-fit: contain;
+  }
+
+  .paciente-header .header-left > a,
+  .paciente-header .header-left > Link {
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .paciente-header .header-content .header-left h1.logo,
+  .paciente-header .header-content .header-left > h1.logo,
+  .paciente-header .header-left h1.logo,
+  .paciente-header .header-left .logo {
+    display: none !important;
   }
 
   .paciente-header .header-content .header-left .welcome-text,
@@ -711,12 +821,15 @@ h1.logo {
     top: 73px;
     background: var(--card-bg, #ffffff);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    position: fixed;
+    position: sticky;
     left: 0;
     right: 0;
     width: 100%;
     z-index: 98;
     backdrop-filter: blur(20px);
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .paciente-main-content {
@@ -805,25 +918,27 @@ h1.logo {
   }
 
   /* Garantir que logo apareça no mobile pequeno - regra mais específica e menor */
-  .paciente-header .header-content .header-left h1.logo,
-  .paciente-header .header-content .header-left > h1.logo,
-  .paciente-header .header-left h1.logo,
-  .paciente-header .header-left .logo {
+  .paciente-header .header-content .header-left .logo-img,
+  .paciente-header .header-content .header-left > .logo-img,
+  .paciente-header .header-left .logo-img {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     flex-shrink: 0 !important;
-    font-size: 0.875rem !important; /* Reduzido ainda mais */
-    color: #90c22c !important;
+    height: 30px !important;
     width: auto !important;
-    height: auto !important;
     position: relative !important;
     z-index: 100 !important;
     margin: 0 !important;
     padding: 0 !important;
-    font-weight: var(--font-weight-bold) !important;
-    text-transform: uppercase !important;
-    line-height: 1.2 !important;
+    object-fit: contain;
+  }
+  
+  .paciente-header .header-content .header-left h1.logo,
+  .paciente-header .header-content .header-left > h1.logo,
+  .paciente-header .header-left h1.logo,
+  .paciente-header .header-left .logo {
+    display: none !important;
   }
 
   .paciente-header .header-content .header-left .welcome-text,
@@ -877,26 +992,33 @@ h1.logo {
 
   .paciente-nav {
     padding: 0;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-bottom: none;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.98);
+    z-index: 1000 !important;
+    background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(20px);
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
   }
 
   .nav-content {
-    display: flex;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     justify-content: space-around;
     align-items: center;
     padding: var(--space-xs) 0;
     gap: 0;
     width: 100%;
+    min-height: 60px; /* Altura mínima para garantir visibilidade */
   }
 
   .nav-item {
@@ -914,9 +1036,9 @@ h1.logo {
   }
 
   .nav-item.active {
-    border-top-color: var(--lifefit-green-soft);
+    border-top-color: #ffde59;
     border-bottom: none;
-    color: #90c22c;
+    color: #ffde59;
   }
 
   .nav-item svg {

@@ -5,11 +5,11 @@ import { authenticate } from '../middleware/auth.js'
 
 const router = express.Router()
 
-// Schema de validação para o novo questionário (7 blocos)
+// Schema de validação para o novo questionário
 const questionnaireSchema = z.object({
   // Bloco 1: Dados Básicos
   idade: z.number().int().min(1).max(150),
-  sexo: z.enum(['Masculino', 'Feminino']),
+  sexo: z.enum(['Masculino', 'Feminino', 'Prefiro não informar']).nullable().optional(),
   altura: z.number().positive().min(50).max(250),
   pesoAtual: z.number().positive().min(20).max(300),
   objetivo: z.enum([
@@ -19,55 +19,89 @@ const questionnaireSchema = z.object({
     'Ganhar peso de forma geral'
   ]),
   
-  // Bloco 2: Rotina e Atividade
+  // Sentimentos e Expectativas
+  sentimentosCorpo: z.string().optional().default(''),
+  expectativaSucesso: z.string().optional().default(''),
+  
+  // Rotina e Sono
+  rotinaDiaria: z.string(), // Texto livre
+  sono: z.enum([
+    'Durmo bem',
+    'Durmo mal e acordo cansado',
+    'Varia muito'
+  ]),
+  
+  // Bloco 2: Atividade Física
   frequenciaAtividade: z.enum([
+    'Não pratico atualmente',
+    '1–2x por semana',
+    '3–4x por semana',
+    '5x ou mais por semana',
+    // Valores legados para compatibilidade
     'Não pratico',
     'Sim, 1–2x por semana',
     'Sim, 3–4x por semana',
     'Sim, 5x ou mais por semana'
   ]),
-  tipoAtividade: z.enum([
-    'Musculação',
-    'Cardio (caminhada, corrida, bike)',
-    'Ambos',
-    'Outro'
-  ]),
+  barreirasTreino: z.string().optional().default(''),
+  tipoAtividade: z.string().optional().default(''),
+  relacaoEmocionalTreino: z.string().optional().default(''),
+  preferenciaDificuldadeTreino: z.string().optional().default(''),
+  rotinaTreinoDetalhada: z.string().optional().default(''), // Legado
+  outraAtividade: z.string().optional().default(''),
   horarioTreino: z.enum(['Manhã', 'Tarde', 'Noite', 'Varia muito']),
-  rotinaDiaria: z.enum([
-    'Sedentária (trabalho sentado, pouco movimento)',
-    'Moderada (anda bastante, se movimenta no dia)',
-    'Ativa (trabalho físico ou muito movimento)'
-  ]),
   
   // Bloco 3: Estrutura da Dieta
   quantidadeRefeicoes: z.enum([
+    '3',
+    '4',
+    '5',
+    'Mais de 5',
+    // Valores legados para compatibilidade
     '3 refeições',
     '4 refeições',
-    '5 refeições',
-    'Mais de 5'
+    '5 refeições'
   ]),
   preferenciaRefeicoes: z.enum([
+    'Mais simples',
+    'Um equilíbrio',
+    'Mais completas e variadas',
+    // Valores legados para compatibilidade
     'Mais simples, com poucos alimentos',
-    'Um equilíbrio entre simples e variadas',
-    'Mais completas e variadas'
+    'Um equilíbrio entre simples e variadas'
   ]),
   
-  // Bloco 4: Complexidade e Adesão
-  confortoPesar: z.enum([
-    'Sim, sem problemas',
-    'Às vezes',
-    'Prefiro medidas caseiras'
-  ]),
+  // Bloco 4: Alimentação
+  alimentosGosta: z.string().optional().default(''),
+  alimentosEvita: z.string().optional().default(''),
   tempoPreparacao: z.enum([
+    'Até 10 minutos',
+    '10–30 minutos',
+    'Tenho tempo e gosto de cozinhar',
+    // Valores legados para compatibilidade
     'Muito pouco (até 10 min)',
-    'Médio (10–30 min)',
-    'Tenho tempo e gosto de cozinhar'
+    'Médio (10–30 min)'
+  ]),
+  confortoPesar: z.enum([
+    'Sim',
+    'Às vezes',
+    'Prefiro medidas caseiras',
+    // Valores legados para compatibilidade
+    'Sim, sem problemas'
   ]),
   preferenciaVariacao: z.enum([
     'Prefiro repetir',
     'Um pouco de repetição é ok',
+    'Prefiro muita variedade',
+    // Valores legados para compatibilidade
+    'Um pouco de repetição é ok',
     'Prefiro variedade'
   ]),
+  alimentacaoFimSemana: z.enum([
+    'Parecida com a semana',
+    'Um pouco mais solta',
+    'Sai totalmente do controle'
+  ]).optional(),
   
   // Bloco 5: Alimentos do Dia a Dia (opcional)
   alimentosDoDiaADia: z.object({
@@ -86,19 +120,38 @@ const questionnaireSchema = z.object({
   restricaoAlimentar: z.enum([
     'Nenhuma',
     'Intolerância à lactose',
-    'Glúten',
+    'Intolerância ao glúten',
+    'Glúten', // Legado
     'Outra'
   ]),
   outraRestricao: z.string().optional().default(''),
-  alimentosEvita: z.string().optional().default(''),
   
   // Bloco 7: Flexibilidade Real
   opcoesSubstituicao: z.enum([
-    'Sim, gosto de ter opções',
+    'Sim, gosto de opções',
     'Algumas opções já são suficientes',
-    'Prefiro algo mais fixo'
+    'Prefiro algo mais fixo',
+    // Valores legados para compatibilidade
+    'Sim, gosto de ter opções'
   ]),
-  refeicoesLivres: z.enum(['Sim', 'Talvez', 'Não'])
+  refeicoesLivres: z.enum([
+    'Sim',
+    'Talvez',
+    'Prefiro seguir o plano à risca',
+    // Valores legados para compatibilidade
+    'Não'
+  ]),
+  
+  // Bloco 8: Saúde e Limitações
+  problemasSaude: z.enum(['Não', 'Sim']),
+  quaisProblemasSaude: z.string().optional().default(''),
+  usoMedicacao: z.enum(['Não', 'Sim']),
+  quaisMedicamentos: z.string().optional().default(''),
+  limitacoesFisicas: z.enum(['Não', 'Sim']),
+  detalhesLimitacao: z.string().optional().default(''),
+  restricoesMedicasExercicio: z.enum(['Não', 'Sim']),
+  movimentosEvitar: z.string().optional().default(''),
+  receiosSaude: z.string().optional().default('')
 })
 
 // Rota para verificar se o questionário foi preenchido
@@ -109,6 +162,14 @@ router.get('/check', authenticate, async (req, res) => {
     const questionnaireData = await prisma.questionnaireData.findUnique({
       where: { userId }
     })
+
+    // Verificar se o questionário existe E tem dados essenciais preenchidos
+    // Um questionário válido deve ter pelo menos idade, altura, peso e objetivo
+    const hasValidData = questionnaireData && 
+      questionnaireData.idade !== null &&
+      questionnaireData.altura !== null &&
+      questionnaireData.pesoAtual !== null &&
+      questionnaireData.objetivo !== null
 
     // Parse do JSON de alimentos se existir
     if (questionnaireData && questionnaireData.alimentosDoDiaADia) {
@@ -125,9 +186,13 @@ router.get('/check', authenticate, async (req, res) => {
       }
     }
 
+    console.log('📋 Verificando questionário para userId:', userId)
+    console.log('📋 Questionário existe:', !!questionnaireData)
+    console.log('📋 Dados válidos:', hasValidData)
+
     res.json({ 
-      hasCompleted: !!questionnaireData,
-      data: questionnaireData 
+      hasCompleted: hasValidData,
+      data: hasValidData ? questionnaireData : null
     })
   } catch (error) {
     console.error('Erro ao verificar questionário:', error)
@@ -142,6 +207,18 @@ router.post('/', authenticate, async (req, res) => {
     console.log('📝 Recebendo novo questionário (7 blocos) para userId:', userId)
     console.log('📦 Body recebido:', JSON.stringify(req.body, null, 2))
     
+    // Garantir que o usuário existe antes de prosseguir (evitar P2003)
+    const userExists = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true }
+    })
+
+    if (!userExists) {
+      return res.status(404).json({
+        error: 'Usuário não encontrado'
+      })
+    }
+
     const validatedData = questionnaireSchema.parse(req.body)
     console.log('✅ Dados validados:', JSON.stringify(validatedData, null, 2))
 
@@ -167,88 +244,80 @@ router.post('/', authenticate, async (req, res) => {
     console.log('💾 Salvando dados no banco...')
     let questionnaireData
     try {
+      const dataToSave = {
+        // Bloco 1: Dados Básicos
+        idade: validatedData.idade,
+        sexo: validatedData.sexo || null,
+        altura: validatedData.altura,
+        pesoAtual: validatedData.pesoAtual,
+        objetivo: validatedData.objetivo,
+        
+        // Sentimentos e Expectativas
+        sentimentosCorpo: validatedData.sentimentosCorpo || null,
+        expectativaSucesso: validatedData.expectativaSucesso || null,
+        
+        // Rotina e Sono
+        rotinaDiaria: validatedData.rotinaDiaria,
+        sono: validatedData.sono,
+        
+        // Bloco 2: Atividade Física
+        frequenciaAtividade: validatedData.frequenciaAtividade,
+        barreirasTreino: validatedData.barreirasTreino || null,
+        tipoAtividade: validatedData.tipoAtividade || null,
+        relacaoEmocionalTreino: validatedData.relacaoEmocionalTreino || null,
+        preferenciaDificuldadeTreino: validatedData.preferenciaDificuldadeTreino || null,
+        rotinaTreinoDetalhada: validatedData.rotinaTreinoDetalhada || null,
+        outraAtividade: validatedData.outraAtividade || null,
+        horarioTreino: validatedData.horarioTreino,
+        
+        // Bloco 3: Estrutura da Dieta
+        quantidadeRefeicoes: validatedData.quantidadeRefeicoes,
+        preferenciaRefeicoes: validatedData.preferenciaRefeicoes,
+        
+        // Bloco 4: Alimentação
+        alimentosGosta: validatedData.alimentosGosta || null,
+        alimentosEvita: validatedData.alimentosEvita || null,
+        tempoPreparacao: validatedData.tempoPreparacao,
+        confortoPesar: validatedData.confortoPesar,
+        preferenciaVariacao: validatedData.preferenciaVariacao,
+        alimentacaoFimSemana: validatedData.alimentacaoFimSemana || null,
+        
+        // Bloco 5: Alimentos do Dia a Dia
+        alimentosDoDiaADia: alimentosJson,
+        
+        // Bloco 6: Restrições
+        restricaoAlimentar: validatedData.restricaoAlimentar,
+        outraRestricao: validatedData.restricaoAlimentar === 'Outra' 
+          ? (validatedData.outraRestricao || null)
+          : null,
+        
+        // Bloco 7: Flexibilidade Real
+        opcoesSubstituicao: validatedData.opcoesSubstituicao,
+        refeicoesLivres: validatedData.refeicoesLivres,
+        
+        // Bloco 8: Saúde e Limitações
+        problemasSaude: validatedData.problemasSaude,
+        quaisProblemasSaude: validatedData.quaisProblemasSaude || null,
+        usoMedicacao: validatedData.usoMedicacao,
+        quaisMedicamentos: validatedData.quaisMedicamentos || null,
+        limitacoesFisicas: validatedData.limitacoesFisicas,
+        detalhesLimitacao: validatedData.detalhesLimitacao || null,
+        restricoesMedicasExercicio: validatedData.restricoesMedicasExercicio,
+        movimentosEvitar: validatedData.movimentosEvitar || null,
+        receiosSaude: validatedData.receiosSaude || null
+      }
+
       questionnaireData = existing
-      ? await prisma.questionnaireData.update({
-          where: { userId },
-          data: {
-            // Bloco 1
-            idade: validatedData.idade,
-            sexo: validatedData.sexo,
-            altura: validatedData.altura,
-            pesoAtual: validatedData.pesoAtual,
-            objetivo: validatedData.objetivo,
-            
-            // Bloco 2
-            frequenciaAtividade: validatedData.frequenciaAtividade,
-            tipoAtividade: validatedData.tipoAtividade,
-            horarioTreino: validatedData.horarioTreino,
-            rotinaDiaria: validatedData.rotinaDiaria,
-            
-            // Bloco 3
-            quantidadeRefeicoes: validatedData.quantidadeRefeicoes,
-            preferenciaRefeicoes: validatedData.preferenciaRefeicoes,
-            
-            // Bloco 4
-            confortoPesar: validatedData.confortoPesar,
-            tempoPreparacao: validatedData.tempoPreparacao,
-            preferenciaVariacao: validatedData.preferenciaVariacao,
-            
-            // Bloco 5
-            alimentosDoDiaADia: alimentosJson,
-            
-            // Bloco 6
-            restricaoAlimentar: validatedData.restricaoAlimentar,
-            outraRestricao: validatedData.restricaoAlimentar === 'Outra' 
-              ? validatedData.outraRestricao 
-              : null,
-            alimentosEvita: validatedData.alimentosEvita || null,
-            
-            // Bloco 7
-            opcoesSubstituicao: validatedData.opcoesSubstituicao,
-            refeicoesLivres: validatedData.refeicoesLivres
-          }
-        })
-      : await prisma.questionnaireData.create({
-          data: {
-            userId,
-            
-            // Bloco 1
-            idade: validatedData.idade,
-            sexo: validatedData.sexo,
-            altura: validatedData.altura,
-            pesoAtual: validatedData.pesoAtual,
-            objetivo: validatedData.objetivo,
-            
-            // Bloco 2
-            frequenciaAtividade: validatedData.frequenciaAtividade,
-            tipoAtividade: validatedData.tipoAtividade,
-            horarioTreino: validatedData.horarioTreino,
-            rotinaDiaria: validatedData.rotinaDiaria,
-            
-            // Bloco 3
-            quantidadeRefeicoes: validatedData.quantidadeRefeicoes,
-            preferenciaRefeicoes: validatedData.preferenciaRefeicoes,
-            
-            // Bloco 4
-            confortoPesar: validatedData.confortoPesar,
-            tempoPreparacao: validatedData.tempoPreparacao,
-            preferenciaVariacao: validatedData.preferenciaVariacao,
-            
-            // Bloco 5
-            alimentosDoDiaADia: alimentosJson,
-            
-            // Bloco 6
-            restricaoAlimentar: validatedData.restricaoAlimentar,
-            outraRestricao: validatedData.restricaoAlimentar === 'Outra' 
-              ? validatedData.outraRestricao 
-              : null,
-            alimentosEvita: validatedData.alimentosEvita || null,
-            
-            // Bloco 7
-            opcoesSubstituicao: validatedData.opcoesSubstituicao,
-            refeicoesLivres: validatedData.refeicoesLivres
-          }
-        })
+        ? await prisma.questionnaireData.update({
+            where: { userId },
+            data: dataToSave
+          })
+        : await prisma.questionnaireData.create({
+            data: {
+              userId,
+              ...dataToSave
+            }
+          })
     } catch (saveError) {
       console.error('❌ Erro ao salvar questionário no banco:', saveError)
       console.error('❌ Código do erro:', saveError.code)
@@ -284,6 +353,13 @@ router.post('/', authenticate, async (req, res) => {
     console.error('❌ Erro ao salvar questionário:', error)
     console.error('Stack trace:', error.stack)
     console.error('Request body:', JSON.stringify(req.body, null, 2))
+    console.error('Error code:', error.code, 'meta:', error.meta)
+    if (error.code === 'P2003') {
+      return res.status(400).json({
+        error: 'Erro de integridade',
+        details: 'Usuário não encontrado ou relação inválida. Verifique se o usuário existe.'
+      })
+    }
     
     // Verificar se é erro do Prisma
     if (error.code && error.code.startsWith('P')) {

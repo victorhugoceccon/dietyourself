@@ -76,7 +76,7 @@ function BillingSuccess() {
           <>
             <div className="success-icon">✓</div>
             <h1>Pagamento confirmado!</h1>
-            <p>Sua assinatura foi ativada com sucesso. Você já pode usar todos os recursos do LifeFit.</p>
+            <p>Sua assinatura foi ativada com sucesso. Você já pode usar todos os recursos do GIBA APP.</p>
             <div className="success-actions">
               <button className="btn cta" onClick={() => navigate('/paciente/dashboard')}>
                 Ir para Dashboard

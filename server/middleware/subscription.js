@@ -27,8 +27,10 @@ export const requireActiveSubscription = async (req, res, next) => {
       return res.status(404).json({ error: 'Usuário não encontrado' })
     }
 
-    // Admins, Nutricionistas e Personais não precisam de assinatura
-    if (['ADMIN', 'NUTRICIONISTA', 'PERSONAL'].includes(user.role)) {
+    // Admins, Nutricionistas, Personais e Guests não precisam de assinatura
+    // GUEST tem acesso apenas a rotas de grupos/projetos (verificado no router)
+    if (['ADMIN', 'NUTRICIONISTA', 'PERSONAL', 'GUEST'].includes(user.role)) {
+      req.userRole = user.role
       return next()
     }
 

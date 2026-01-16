@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.js'
 import subscriptionRoutes from './routes/subscription.js'
 import questionnaireRoutes from './routes/questionnaire.js'
 import dietRoutes from './routes/diet.js'
+import workoutRoutes from './routes/workout.js'
 import chatRoutes from './routes/chat.js'
 import nutricionistaRoutes from './routes/nutricionista.js'
 import nutricionistaAIRoutes from './routes/nutricionista-ai.js'
@@ -31,6 +32,8 @@ import groupsRoutes from './routes/groups.js'
 import placesRoutes from './routes/places.js'
 import billingRoutes, { handleAbacatePayWebhook } from './routes/billing.js'
 import checkoutExternalRoutes from './routes/checkout-external.js'
+import chefRoutes from './routes/chef.js'
+import photoMealsRoutes from './routes/photo-meals.js'
 
 dotenv.config()
 
@@ -106,6 +109,7 @@ app.use('/api/billing', billingRoutes)
 app.use('/api/checkout-external', checkoutExternalRoutes)
 app.use('/api/questionnaire', questionnaireRoutes)
 app.use('/api/diet', dietRoutes)
+app.use('/api/workout', workoutRoutes)
 app.use('/api/chat', chatRoutes)
 app.use('/api/nutricionista', nutricionistaRoutes)
 app.use('/api/nutricionista/ai', nutricionistaAIRoutes)
@@ -128,6 +132,8 @@ app.use('/api/body-measurements', bodyMeasurementsRoutes)
 app.use('/api/recipes', recipesRoutes)
 app.use('/api/groups', groupsRoutes)
 app.use('/api/places', placesRoutes)
+app.use('/api/chef', chefRoutes)
+app.use('/api/photo-meals', photoMealsRoutes)
 
 // Rota de teste
 app.get('/api/health', (req, res) => {

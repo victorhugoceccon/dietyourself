@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { API_URL } from '../config/api'
+import PhotoMealCapture from './PhotoMealCapture'
 import './NutritionDashboard.css'
 
 function NutritionDashboard({ refreshTrigger }) {
   const [nutritionData, setNutritionData] = useState(null)
   const [consumedData, setConsumedData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [showPhotoCapture, setShowPhotoCapture] = useState(false)
 
   useEffect(() => {
     loadNutritionData()
@@ -158,12 +160,50 @@ function NutritionDashboard({ refreshTrigger }) {
     return Math.round(value).toString()
   }
 
+  const handlePhotoSuccess = () => {
+    // Recarregar dados após adicionar refeição por foto
+    loadNutritionData()
+    loadConsumedMeals()
+  }
+
   return (
     <div className="nutrition-dashboard">
-      <div className="dashboard-header">
-        <h2>Nutrição</h2>
-        <p className="subtitle">Seu progresso de hoje</p>
+      <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}>
+        <div>
+          <h2>Nutrição</h2>
+          <p className="subtitle">Seu progresso de hoje</p>
+        </div>
+        <button
+          className="photo-meal-add-btn"
+          onClick={() => setShowPhotoCapture(true)}
+          title="Adicionar refeição por foto"
+          style={{
+            display: 'flex',
+            visibility: 'visible',
+            opacity: 1,
+            padding: '10px 16px',
+            background: '#4A6B4D',
+            color: 'white',
+            border: '1px solid #4A6B4D',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: 500,
+            alignItems: 'center',
+            gap: '6px',
+            flexShrink: 0
+          }}
+        >
+          📸 Adicionar por Foto
+        </button>
       </div>
+
+      {showPhotoCapture && (
+        <PhotoMealCapture
+          onClose={() => setShowPhotoCapture(false)}
+          onSuccess={handlePhotoSuccess}
+        />
+      )}
 
       <div className="nutrition-cards-row">
         {/* Card de Calorias */}

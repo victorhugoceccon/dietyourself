@@ -1,0 +1,388 @@
+/* Página principal */
+.convite-page {
+  min-height: 100vh;
+  background: linear-gradient(165deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+  color: #e8e8e8;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Loading */
+.convite-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 20px;
+  color: #8b95a5;
+}
+
+.convite-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #2a3142;
+  border-top-color: #a78bfa;
+  border-radius: 50%;
+  animation: conviteSpinner 1s linear infinite;
+}
+
+@keyframes conviteSpinner {
+  to { transform: rotate(360deg); }
+}
+
+/* Error */
+.convite-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  padding: 24px;
+}
+
+.convite-error-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.convite-error h2 {
+  font-size: 24px;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.convite-error p {
+  font-size: 15px;
+  color: #8b95a5;
+  margin: 0;
+}
+
+.convite-error-hint {
+  margin-top: 8px !important;
+  font-size: 13px !important;
+}
+
+.convite-error-msg {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* Header */
+.convite-header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.convite-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #0f1419;
+}
+
+.convite-logo span:first-child {
+  font-size: 18px;
+}
+
+/* Hero */
+.convite-hero {
+  position: relative;
+  padding: 60px 24px 40px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-align: center;
+}
+
+.convite-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.convite-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 20, 25, 0.4) 0%, rgba(15, 20, 25, 0.95) 100%);
+}
+
+.convite-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.convite-hero-badge {
+  display: inline-block;
+  background: rgba(167, 139, 250, 0.2);
+  color: #a78bfa;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.convite-hero-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+
+.convite-hero-desc {
+  font-size: 14px;
+  color: #c9d1d9;
+  margin: 0 0 20px;
+  line-height: 1.5;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.convite-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+}
+
+.convite-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.convite-stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #a78bfa;
+}
+
+.convite-stat-label {
+  font-size: 12px;
+  color: #8b95a5;
+}
+
+/* Content */
+.convite-content {
+  padding: 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Sections */
+.convite-section {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.convite-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.convite-section p {
+  font-size: 14px;
+  color: #8b95a5;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+/* Buttons */
+.convite-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f1419;
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.3);
+}
+
+.convite-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(167, 139, 250, 0.4);
+}
+
+.convite-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.convite-btn-primary.large {
+  width: 100%;
+  padding: 16px 28px;
+  font-size: 16px;
+}
+
+.convite-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #a78bfa;
+  background: transparent;
+  border: 2px solid rgba(167, 139, 250, 0.4);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.convite-btn-secondary:hover {
+  border-color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.convite-btn-link {
+  background: none;
+  border: none;
+  color: #8b95a5;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.convite-btn-link:hover {
+  color: #a78bfa;
+}
+
+/* Divider */
+.convite-divider {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+}
+
+.convite-divider::before,
+.convite-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.convite-divider span {
+  padding: 0 16px;
+  color: #6b7684;
+  font-size: 13px;
+}
+
+.convite-alt-text {
+  font-size: 14px;
+  color: #8b95a5;
+  margin-bottom: 12px !important;
+}
+
+/* Form */
+.convite-form {
+  text-align: left;
+}
+
+.convite-form-group {
+  margin-bottom: 16px;
+}
+
+.convite-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8b95a5;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.convite-form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background: #151a26;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #e8e8e8;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.convite-form-group input:focus {
+  outline: none;
+  border-color: #a78bfa;
+}
+
+.convite-form-group input::placeholder {
+  color: #6b7684;
+}
+
+/* Info */
+.convite-info {
+  margin-top: 24px;
+}
+
+.convite-info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(167, 139, 250, 0.08);
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  padding: 16px;
+  border-radius: 14px;
+  text-align: left;
+}
+
+.convite-info-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.convite-info-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #a78bfa;
+  margin: 0 0 4px;
+}
+
+.convite-info-card p {
+  font-size: 13px;
+  color: #8b95a5;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (min-width: 480px) {
+  .convite-hero-title {
+    font-size: 32px;
+  }
+  
+  .convite-content {
+    padding: 32px;
+  }
+}

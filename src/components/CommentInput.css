@@ -1,0 +1,88 @@
+.comment-input-toggle {
+  width: 100%;
+  padding: 10px;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 20px;
+  color: #a78bfa;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.comment-input-toggle:hover {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: #a78bfa;
+}
+
+.comment-input-form {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-input-field {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.comment-input-field:focus {
+  border-color: #a78bfa;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.comment-input-field::placeholder {
+  color: #8b95a5;
+}
+
+.comment-input-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.comment-input-cancel,
+.comment-input-submit {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.comment-input-cancel {
+  background: transparent;
+  color: #8b95a5;
+}
+
+.comment-input-cancel:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.comment-input-submit {
+  background: #a78bfa;
+  color: #0f1419;
+}
+
+.comment-input-submit:hover:not(:disabled) {
+  background: #8b5cf6;
+  transform: translateY(-1px);
+}
+
+.comment-input-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

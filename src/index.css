@@ -1,4 +1,4 @@
-/* Import LifeFit Design System */
+/* Import GIBA APP Design System */
 @import './styles/lifefit-design-system.css';
 /* Dark mode removido - apenas light mode */
 
@@ -25,6 +25,14 @@ body {
   width: 100%;
   margin: 0;
   text-align: left;
+}
+
+/* Esconder chat widget na página do questionário conversacional */
+body:has(.conversational-questionnaire) .chat-widget-button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* Dark mode removido - apenas light mode */

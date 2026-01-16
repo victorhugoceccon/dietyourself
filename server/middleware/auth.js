@@ -51,7 +51,7 @@ export const requireAdmin = (req, res, next) => {
 
   const userRole = req.user.role?.toUpperCase()
   const userRoles = req.user.roles ? JSON.parse(req.user.roles) : [userRole]
-
+  
   if (userRole !== 'ADMIN' && !userRoles.includes('ADMIN')) {
     return res.status(403).json({ error: 'Acesso restrito a administradores' })
   }

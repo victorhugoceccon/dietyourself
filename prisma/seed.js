@@ -144,7 +144,23 @@ async function main() {
       restricaoAlimentar: 'Nenhuma',
       alimentosEvita: '',
       opcoesSubstituicao: 'Sim, gosto de ter opções',
-      refeicoesLivres: 'Talvez'
+      refeicoesLivres: 'Talvez',
+      // Campos obrigatórios adicionados
+      sono: 'Durmo bem',
+      problemasSaude: 'Não',
+      usoMedicacao: 'Não',
+      limitacoesFisicas: 'Não',
+      restricoesMedicasExercicio: 'Não',
+      // Campos opcionais novos (preenchidos para evitar validação)
+      alimentacaoFimSemana: 'Parecida com a semana',
+      barreirasTreino: '',
+      relacaoEmocionalTreino: '',
+      preferenciaDificuldadeTreino: '',
+      quaisProblemasSaude: '',
+      quaisMedicamentos: '',
+      detalhesLimitacao: '',
+      movimentosEvitar: '',
+      receiosSaude: ''
     }
   })
   console.log('✅ Questionário criado para:', paciente1.email)

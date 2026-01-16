@@ -1,0 +1,583 @@
+/* Página principal */
+.giba-dash-page {
+  min-height: 100vh;
+  background: linear-gradient(165deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+  color: #e8e8e8;
+  padding-bottom: 100px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Loading */
+.giba-dash-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  gap: 20px;
+  color: #8b95a5;
+}
+
+.giba-dash-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #2a3142;
+  border-top-color: #4ade80;
+  border-radius: 50%;
+  animation: gibaDashSpinner 1s linear infinite;
+}
+
+@keyframes gibaDashSpinner {
+  to { transform: rotate(360deg); }
+}
+
+/* =====================
+   HERO
+   ===================== */
+
+.giba-dash-hero {
+  padding: 40px 24px 32px;
+  text-align: center;
+  background: linear-gradient(180deg, #1e2534 0%, transparent 100%);
+}
+
+.giba-dash-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f1419;
+}
+
+.giba-dash-hero-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px;
+}
+
+.giba-dash-hero-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.giba-dash-status-emoji {
+  font-size: 24px;
+}
+
+.giba-dash-status-text {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* =====================
+   SECTIONS
+   ===================== */
+
+.giba-dash-section {
+  padding: 20px;
+}
+
+.giba-dash-section-header {
+  margin-bottom: 12px;
+}
+
+.giba-dash-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.giba-dash-section-desc {
+  font-size: 13px;
+  color: #8b95a5;
+  margin: 4px 0 16px;
+  line-height: 1.5;
+}
+
+/* =====================
+   PROGRESS CARDS
+   ===================== */
+
+.giba-dash-progress-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.giba-dash-progress-card {
+  background: #1e2534;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.05);
+  position: relative;
+  overflow: visible;
+}
+
+.giba-dash-progress-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+  position: relative;
+  width: 100%;
+}
+
+.giba-dash-progress-icon {
+  font-size: 20px;
+}
+
+.giba-dash-progress-label {
+  font-size: 11px;
+  color: #8b95a5;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.giba-dash-photo-btn {
+  position: absolute !important;
+  top: -4px !important;
+  right: -4px !important;
+  background: #4A6B4D !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+  z-index: 100 !important;
+  box-shadow: 0 2px 8px rgba(74, 107, 77, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-width: 36px !important;
+  min-height: 32px !important;
+  line-height: 1 !important;
+}
+
+.giba-dash-photo-btn:hover {
+  background: #3a5a3d;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(74, 107, 77, 0.4);
+}
+
+.giba-dash-progress-value {
+  margin-bottom: 10px;
+}
+
+.giba-dash-value-main {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.giba-dash-value-total {
+  font-size: 13px;
+  color: #6b7684;
+}
+
+.giba-dash-progress-bar {
+  height: 6px;
+  background: #2a3142;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.giba-dash-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.giba-dash-progress-fill.meals {
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+}
+
+.giba-dash-progress-fill.kcal {
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+}
+
+.giba-dash-progress-fill.protein {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.giba-dash-progress-percent {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8b95a5;
+}
+
+/* =====================
+   NEXT MEAL
+   ===================== */
+
+.giba-dash-next-meal {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, #1e2534 100%);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 16px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.giba-dash-next-meal:hover {
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.15);
+}
+
+.giba-dash-next-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.giba-dash-next-info {
+  flex: 1;
+}
+
+.giba-dash-next-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.giba-dash-next-kcal {
+  font-size: 13px;
+  color: #4ade80;
+  margin: 0;
+}
+
+.giba-dash-next-arrow {
+  font-size: 18px;
+  color: #4ade80;
+}
+
+/* =====================
+   CHECK-IN
+   ===================== */
+
+.giba-dash-checkin-done {
+  background: #1e2534;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.giba-dash-checkin-badge {
+  display: inline-block;
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.giba-dash-checkin-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.giba-dash-checkin-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #151a26;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.giba-dash-checkin-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.giba-dash-checkin-label {
+  display: block;
+  font-size: 11px;
+  color: #8b95a5;
+  text-transform: uppercase;
+}
+
+.giba-dash-checkin-value {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.giba-dash-checkin-pending {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #1e2534;
+  border-radius: 16px;
+  padding: 18px;
+  border: 2px dashed rgba(255,255,255,0.1);
+}
+
+.giba-dash-checkin-pending-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.giba-dash-checkin-pending-info {
+  flex: 1;
+}
+
+.giba-dash-checkin-pending-info h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.giba-dash-checkin-pending-info p {
+  font-size: 13px;
+  color: #8b95a5;
+  margin: 0;
+}
+
+.giba-dash-checkin-btn {
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  border: none;
+  border-radius: 10px;
+  color: #0f1419;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* =====================
+   WEEKLY
+   ===================== */
+
+.giba-dash-week {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.giba-dash-day {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px;
+  background: #1e2534;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.2s ease;
+}
+
+.giba-dash-day.today {
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.giba-dash-day.completed {
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.giba-dash-day-name {
+  font-size: 11px;
+  color: #8b95a5;
+  font-weight: 600;
+}
+
+.giba-dash-day.today .giba-dash-day-name {
+  color: #4ade80;
+}
+
+.giba-dash-day-status {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4ade80;
+}
+
+.giba-dash-day.completed .giba-dash-day-status {
+  background: rgba(74, 222, 128, 0.2);
+  border-radius: 50%;
+}
+
+.giba-dash-week-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(74, 222, 128, 0.08);
+  border-radius: 10px;
+}
+
+.giba-dash-week-completed {
+  font-size: 13px;
+  color: #8b95a5;
+}
+
+.giba-dash-week-streak {
+  font-size: 13px;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+/* =====================
+   SHORTCUTS
+   ===================== */
+
+.giba-dash-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.giba-dash-shortcut {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  background: #1e2534;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.giba-dash-shortcut:hover {
+  border-color: #4ade80;
+  background: #252d3d;
+}
+
+.giba-dash-shortcut-icon {
+  font-size: 24px;
+}
+
+.giba-dash-shortcut-text {
+  font-size: 11px;
+  color: #8b95a5;
+  font-weight: 600;
+}
+
+/* =====================
+   TIP
+   ===================== */
+
+.giba-dash-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.giba-dash-tip-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.giba-dash-tip-content h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin: 0 0 4px;
+}
+
+.giba-dash-tip-content p {
+  font-size: 13px;
+  color: #c9d1d9;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+
+@media (max-width: 400px) {
+  .giba-dash-progress-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .giba-dash-progress-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+    overflow: visible !important;
+  }
+  
+  .giba-dash-progress-header {
+    flex-direction: row;
+    margin-bottom: 0;
+    min-width: 90px;
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  .giba-dash-photo-btn {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    z-index: 100 !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .giba-dash-progress-value {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  
+  .giba-dash-progress-bar {
+    width: 60px;
+    margin-bottom: 0;
+  }
+  
+  .giba-dash-shortcuts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .giba-dash-checkin-data {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 480px) {
+  .giba-dash-hero-title {
+    font-size: 32px;
+  }
+  
+  .giba-dash-section {
+    padding: 24px;
+  }
+}

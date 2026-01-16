@@ -276,15 +276,18 @@
     top: 72px;
     background: rgba(255, 255, 255, 0.98);
     box-shadow: 0 2px 10px rgba(76, 175, 80, 0.08);
-    position: fixed;
+    position: sticky;
     left: 0;
     right: 0;
     width: 100%;
     z-index: 98;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   
   .paciente-main-content {
-    margin-top: 140px;
+    margin-top: 0;
     padding: 0;
   }
 
@@ -311,8 +314,45 @@
 
 /* ===== RESPONSIVE - MOBILE ===== */
 @media (max-width: 480px) {
+  /* Menu fixo no bottom para mobile pequeno - prioridade sobre PacienteLayout */
+  .paciente-layout .paciente-nav {
+    padding: 0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom: none !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3) !important;
+    z-index: 1000 !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(20px) !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+  }
+
+  .paciente-layout .paciente-nav .nav-content {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: var(--space-xs) 0 !important;
+    gap: 0 !important;
+    width: 100% !important;
+    min-height: 60px !important;
+  }
+
   .paciente-main-content {
     padding: 0 var(--space-md) calc(var(--space-md) + 80px);
+    padding-bottom: calc(var(--space-md) + 80px) !important;
+  }
+
+  .paciente-content-wrapper {
+    padding-bottom: 80px !important;
   }
 
   .dark-mode .paciente-main-content {

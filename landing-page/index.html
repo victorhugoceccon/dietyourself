@@ -3,129 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DietYourself - Sua Dieta Personalizada com IA</title>
-    <meta name="description" content="Tenha acesso a dietas personalizadas criadas por IA e chat de suporte nutricional. Transforme sua alimentação hoje mesmo!">
+    <title>Giba App – Dieta e Treino Personalizado | Transforme seu corpo</title>
+    <meta name="description" content="Dieta e treino personalizados para você. Análise visual do seu corpo, plano alimentar completo e treinos sob medida. Comece sua transformação hoje.">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <a href="#" class="nav-brand">
+                <span class="nav-logo">💪</span>
+                <span class="nav-name">Giba</span>
+            </a>
+            <div class="nav-links">
+                <a href="#funcionalidades">Funcionalidades</a>
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#planos">Planos</a>
+            </div>
+            <a href="#cadastro" class="nav-cta">Começar agora</a>
+        </div>
+    </nav>
+
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-glow hero-glow-1"></div>
+            <div class="hero-glow hero-glow-2"></div>
+            <div class="hero-pattern"></div>
+        </div>
         <div class="container">
             <div class="hero-content">
-                <div class="hero-text">
-                    <h1 class="hero-title">
-                        Emagreça, ganhe massa ou mantenha o peso com uma <span class="highlight">dieta que se adapta à sua vida</span>
-                    </h1>
-                    <p class="hero-subtitle">
-                        Criada por IA a partir da sua rotina, objetivos e preferências.<br>
-                        <strong>Sem cardápios impossíveis, sem terrorismo nutricional, sem desistir no meio do caminho.</strong>
-                    </p>
-                    <div class="hero-cta">
-                        <a href="#cadastro" class="btn btn-primary btn-large">
-                            Criar minha dieta personalizada
-                        </a>
-                        <a href="#como-funciona" class="btn btn-secondary btn-large">
-                            Como Funciona
-                        </a>
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>Novo: Análise visual do corpo</span>
+                </div>
+                <h1 class="hero-title">
+                    Seu <span class="highlight-gradient">corpo único</span> merece um plano <span class="highlight-gradient">único</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Dieta personalizada + treino sob medida baseado no seu biotipo. 
+                    Sem fórmulas genéricas. Resultados reais.
+                </p>
+                <div class="hero-cta">
+                    <a href="#cadastro" class="btn btn-primary btn-glow">
+                        <span>Criar meu plano personalizado</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </a>
+                    <a href="#como-funciona" class="btn btn-ghost">
+                        Ver como funciona
+                    </a>
+                </div>
+                <div class="hero-trust">
+                    <div class="trust-item">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M15 5L7 13L3 9" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Teste grátis por 7 dias</span>
                     </div>
-                    <div class="hero-trust">
-                        <p class="trust-text">✓ Leva menos de 5 minutos • ✓ Sem cartão de crédito • ✓ Cancele quando quiser</p>
+                    <div class="trust-item">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M15 5L7 13L3 9" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Cancele quando quiser</span>
                     </div>
-                    <div class="hero-stats">
-                        <p class="stats-text">+<span id="dietas-criadas">3.200</span> dietas criadas este mês</p>
+                    <div class="trust-item">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M15 5L7 13L3 9" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Suporte 24/7</span>
                     </div>
                 </div>
-                <div class="hero-image">
-                    <div class="hero-card">
-                        <div class="card-header">
-                            <div class="card-dots">
-                                <span></span>
-                                <span></span>
-                                <span></span>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="app-preview">
+                                <div class="preview-header">
+                                    <div class="preview-greeting">
+                                        <span class="greeting-emoji">👋</span>
+                                        <div>
+                                            <p class="greeting-hello">Olá, Maria!</p>
+                                            <p class="greeting-sub">Pronta para treinar?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="preview-stats">
+                                    <div class="stat-card stat-streak">
+                                        <span class="stat-icon">🔥</span>
+                                        <span class="stat-value">7</span>
+                                        <span class="stat-label">dias seguidos</span>
+                                    </div>
+                                    <div class="stat-card stat-workout">
+                                        <span class="stat-icon">💪</span>
+                                        <span class="stat-value">23</span>
+                                        <span class="stat-label">treinos feitos</span>
+                                    </div>
+                                </div>
+                                <div class="preview-today">
+                                    <p class="today-label">Hoje</p>
+                                    <div class="today-card">
+                                        <div class="today-icon">🏋️</div>
+                                        <div class="today-info">
+                                            <p class="today-title">Treino A - Superior</p>
+                                            <p class="today-sub">Peito, Ombro e Tríceps</p>
+                                        </div>
+                                        <button class="today-btn">▶</button>
+                                    </div>
+                                </div>
+                                <div class="preview-meal">
+                                    <p class="meal-label">Próxima refeição</p>
+                                    <div class="meal-card">
+                                        <span class="meal-icon">🥗</span>
+                                        <div class="meal-info">
+                                            <p class="meal-title">Almoço</p>
+                                            <p class="meal-kcal">580 kcal</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-content">
-                            <div class="diet-preview">
-                                <div class="meal-item">
-                                    <div class="meal-icon">🍳</div>
-                                    <div class="meal-info">
-                                        <h4>Café da Manhã</h4>
-                                        <p>2 ovos, pão integral, abacate</p>
-                                        <span class="meal-kcal">420 kcal</span>
-                                    </div>
-                                </div>
-                                <div class="meal-item">
-                                    <div class="meal-icon">🥗</div>
-                                    <div class="meal-info">
-                                        <h4>Almoço</h4>
-                                        <p>Frango grelhado, arroz, salada</p>
-                                        <span class="meal-kcal">580 kcal</span>
-                                    </div>
-                                </div>
-                                <div class="meal-item">
-                                    <div class="meal-icon">🍌</div>
-                                    <div class="meal-info">
-                                        <h4>Lanche</h4>
-                                        <p>Iogurte, frutas, castanhas</p>
-                                        <span class="meal-kcal">280 kcal</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="diet-summary">
-                                <div class="summary-item">
-                                    <span class="summary-label">Total</span>
-                                    <span class="summary-value">2.150 kcal</span>
-                                </div>
-                                <div class="summary-item">
-                                    <span class="summary-label">Proteína</span>
-                                    <span class="summary-value">150g</span>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+                <div class="floating-card card-analysis">
+                    <span class="fc-icon">📷</span>
+                    <div class="fc-content">
+                        <p class="fc-title">Análise Visual</p>
+                        <p class="fc-text">Treino baseado no seu corpo</p>
+                    </div>
+                </div>
+                <div class="floating-card card-diet">
+                    <span class="fc-icon">🍎</span>
+                    <div class="fc-content">
+                        <p class="fc-title">Dieta Flexível</p>
+                        <p class="fc-text">Substituições inteligentes</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Benefits Section -->
-    <section class="benefits">
+    <!-- Features Section -->
+    <section class="features" id="funcionalidades">
         <div class="container">
-            <h2 class="section-title">Por que escolher o DietYourself?</h2>
-            <p class="section-subtitle">A primeira dieta que entende sua rotina antes de montar seu prato</p>
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-icon">🤖</div>
-                    <h3>Dieta que Aprende com Você</h3>
-                    <p>Uma dieta que se ajusta automaticamente para continuar funcionando. Não precisa começar do zero quando sua rotina muda.</p>
+            <div class="section-header">
+                <span class="section-badge">Funcionalidades</span>
+                <h2 class="section-title">Tudo que você precisa em um só lugar</h2>
+                <p class="section-subtitle">Plataforma completa para transformar seu corpo com ciência e praticidade</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card feature-main">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">📷</span>
+                    </div>
+                    <h3>Análise Visual do Corpo</h3>
+                    <p>Envie suas fotos e receba um treino personalizado baseado no seu biotipo, pontos fortes e áreas que precisam de mais atenção.</p>
+                    <div class="feature-visual">
+                        <div class="analysis-demo">
+                            <div class="analysis-photo">
+                                <div class="photo-placeholder">📸</div>
+                            </div>
+                            <div class="analysis-arrow">→</div>
+                            <div class="analysis-result">
+                                <div class="result-item">
+                                    <span class="result-icon">✓</span>
+                                    <span>Ombros largos</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-icon">↑</span>
+                                    <span>Pernas: prioridade</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">💬</div>
-                    <h3>Dúvidas na Hora da Refeição? Pergunte</h3>
-                    <p>Nada de esperar dias por resposta. Chat disponível 24/7 para quando você realmente precisa.</p>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🍽️</span>
+                    </div>
+                    <h3>Dieta Personalizada</h3>
+                    <p>Plano alimentar completo com todas as refeições, calorias e macros calculados para o seu objetivo.</p>
+                    <ul class="feature-list">
+                        <li>Café, almoço, lanches e jantar</li>
+                        <li>Substituições para cada alimento</li>
+                        <li>Lista de compras automática</li>
+                    </ul>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">📱</div>
-                    <h3>Acesso em Qualquer Lugar</h3>
-                    <p>Visualize sua dieta no celular, tablet ou computador. Tudo sincronizado e sempre atualizado.</p>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🏋️</span>
+                    </div>
+                    <h3>Treino Sob Medida</h3>
+                    <p>Divisão semanal otimizada com exercícios explicados de forma simples, sem jargões técnicos.</p>
+                    <ul class="feature-list">
+                        <li>Explicação clara de cada exercício</li>
+                        <li>Timer integrado de descanso</li>
+                        <li>Registre cada treino concluído</li>
+                    </ul>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🔄</div>
-                    <h3>Seu Corpo Muda. Sua Dieta Também</h3>
-                    <p>Atualizações automáticas conforme você evolui. Sem precisar recalcular tudo manualmente.</p>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">📊</span>
+                    </div>
+                    <h3>Dashboard de Progresso</h3>
+                    <p>Acompanhe sua evolução com calendário semanal, streak de dias e métricas que motivam.</p>
+                    <ul class="feature-list">
+                        <li>Calendário visual de treinos</li>
+                        <li>Streak para manter consistência</li>
+                        <li>Comparação de fotos antes/depois</li>
+                    </ul>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🍎</div>
-                    <h3>Nunca Fique Preso a um Alimento</h3>
-                    <p>Substituições inteligentes que mantêm os macros e o resultado. Você escolhe o que come, sem quebrar a dieta.</p>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">👥</span>
+                    </div>
+                    <h3>Projetos em Grupo</h3>
+                    <p>Participe de desafios com amigos. Ganhe pontos, suba no ranking e mantenha a motivação em alta.</p>
+                    <ul class="feature-list">
+                        <li>Crie ou entre em grupos</li>
+                        <li>Sistema de pontuação e ranking</li>
+                        <li>Desafios e conquistas</li>
+                    </ul>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">📊</div>
-                    <h3>Veja Seu Progresso Real</h3>
-                    <p>Registre seu peso, aderência e veja gráficos de evolução. Motivação visual para continuar quando a vontade faltar.</p>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">📱</span>
+                    </div>
+                    <h3>Compartilhe nas Redes</h3>
+                    <p>Ao finalizar um treino, gere uma imagem pronta para stories e compartilhe sua conquista.</p>
+                    <ul class="feature-list">
+                        <li>Card no formato stories</li>
+                        <li>Duração, streak e treino feito</li>
+                        <li>Design profissional automático</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -134,35 +256,121 @@
     <!-- How It Works Section -->
     <section class="how-it-works" id="como-funciona">
         <div class="container">
-            <h2 class="section-title">Como Funciona</h2>
-            <p class="section-subtitle">Mais simples do que parece. Mais eficaz do que você imagina.</p>
-            <div class="steps">
-                <div class="step">
+            <div class="section-header">
+                <span class="section-badge">Jornada</span>
+                <h2 class="section-title">Como funciona</h2>
+                <p class="section-subtitle">Do cadastro ao resultado em 4 passos simples</p>
+            </div>
+
+            <div class="journey">
+                <div class="journey-line"></div>
+                
+                <div class="journey-step">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                        <h3>Preencha o Questionário</h3>
-                        <p>Leva menos de 5 minutos. Sem perguntas confusas. Apenas o essencial sobre seus objetivos, preferências e rotina.</p>
+                        <div class="step-icon">💬</div>
+                        <h3>Responda o questionário</h3>
+                        <p>Uma conversa simples sobre seus objetivos, rotina, preferências alimentares e restrições. Leva menos de 5 minutos.</p>
                     </div>
                 </div>
-                <div class="step">
+
+                <div class="journey-step">
                     <div class="step-number">2</div>
                     <div class="step-content">
-                        <h3>Receba Sua Dieta Personalizada</h3>
-                        <p>Nossa IA analisa suas respostas e cria uma dieta completa, balanceada e adaptada especialmente para você.</p>
+                        <div class="step-icon">📷</div>
+                        <h3>Envie suas fotos</h3>
+                        <p>Fotos de frente e costas para análise visual. Identificamos seu biotipo e criamos um treino que respeita seu corpo.</p>
                     </div>
                 </div>
-                <div class="step">
+
+                <div class="journey-step">
                     <div class="step-number">3</div>
                     <div class="step-content">
-                        <h3>Comece a Seguir</h3>
-                        <p>Acesse sua dieta diariamente, registre seu progresso e use o chat para tirar dúvidas sobre nutrição.</p>
+                        <div class="step-icon">🎯</div>
+                        <h3>Receba seu plano</h3>
+                        <p>Em segundos, dieta completa e treino semanal personalizados. Tudo explicado de forma clara, sem termos técnicos confusos.</p>
                     </div>
                 </div>
-                <div class="step">
+
+                <div class="journey-step">
                     <div class="step-number">4</div>
                     <div class="step-content">
-                        <h3>Acompanhe e Evolua</h3>
-                        <p>Veja seu progresso, ajuste objetivos quando necessário e receba atualizações automáticas da sua dieta.</p>
+                        <div class="step-icon">🚀</div>
+                        <h3>Transforme seu corpo</h3>
+                        <p>Siga o plano, registre seus treinos, veja seu progresso no dashboard e compartilhe suas conquistas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Resultados</span>
+                <h2 class="section-title">Histórias de transformação</h2>
+                <p class="section-subtitle">Pessoas reais que mudaram de vida com o Giba App</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">
+                        Perdi 12kg em 4 meses. A dieta tem substituições que me salvam quando não encontro algo no mercado. O treino é explicado de um jeito que até eu entendi!
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <span>R</span>
+                        </div>
+                        <div class="author-info">
+                            <strong>Renata, 32 anos</strong>
+                            <span>Objetivo: Emagrecimento</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-result">
+                        <span class="result-badge">-12kg</span>
+                        <span class="result-time">em 4 meses</span>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">
+                        A análise das fotos identificou que minhas pernas eram o ponto fraco. O treino focou nisso e em 3 meses já vejo diferença absurda.
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <span>M</span>
+                        </div>
+                        <div class="author-info">
+                            <strong>Marcos, 28 anos</strong>
+                            <span>Objetivo: Hipertrofia</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-result">
+                        <span class="result-badge">+8kg</span>
+                        <span class="result-time">massa magra</span>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">
+                        Nunca consegui seguir dieta por mais de 2 semanas. Com as substituições e o app no celular, já são 6 meses mantendo meu peso ideal.
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <span>C</span>
+                        </div>
+                        <div class="author-info">
+                            <strong>Carla, 35 anos</strong>
+                            <span>Objetivo: Manutenção</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-result">
+                        <span class="result-badge">6 meses</span>
+                        <span class="result-time">peso estável</span>
                     </div>
                 </div>
             </div>
@@ -172,195 +380,230 @@
     <!-- Pricing Section -->
     <section class="pricing" id="planos">
         <div class="container">
-            <h2 class="section-title">Escolha Seu Plano</h2>
-            <p class="section-subtitle">Acesso completo a dietas personalizadas e chat de suporte nutricional</p>
-            
-            <div class="pricing-anchor">
-                <h3>Quanto custa não ter um plano alimentar que funciona?</h3>
-                <div class="anchor-items">
-                    <div class="anchor-item">❌ Tentativas frustradas</div>
-                    <div class="anchor-item">❌ Tempo perdido</div>
-                    <div class="anchor-item">❌ Efeito sanfona</div>
-                </div>
-                <p class="anchor-value">DietYourself custa menos que <strong>R$ 3 por dia</strong></p>
+            <div class="section-header">
+                <span class="section-badge">Planos</span>
+                <h2 class="section-title">Invista na sua transformação</h2>
+                <p class="section-subtitle">Menos que um lanche por dia para mudar sua vida</p>
             </div>
-            
+
+            <div class="pricing-comparison">
+                <div class="comparison-item bad">
+                    <span class="comparison-icon">❌</span>
+                    <span>Dieta genérica da internet: R$0 + frustração</span>
+                </div>
+                <div class="comparison-item bad">
+                    <span class="comparison-icon">❌</span>
+                    <span>Personal + Nutricionista: R$500-1000/mês</span>
+                </div>
+                <div class="comparison-item good">
+                    <span class="comparison-icon">✓</span>
+                    <span>Giba App: A partir de R$2,23/dia</span>
+                </div>
+            </div>
+
             <div class="pricing-grid">
                 <div class="pricing-card">
                     <div class="pricing-header">
-                        <h3>Plano Mensal</h3>
-                        <div class="price">
-                            <span class="currency">R$</span>
-                            <span class="amount">97</span>
-                            <span class="period">/mês</span>
+                        <h3>Mensal</h3>
+                        <div class="pricing-price">
+                            <span class="price-currency">R$</span>
+                            <span class="price-value">97</span>
+                            <span class="price-period">/mês</span>
                         </div>
                     </div>
                     <ul class="pricing-features">
-                        <li>✓ Dieta personalizada criada por IA</li>
-                        <li>✓ Chat de suporte nutricional 24/7</li>
-                        <li>✓ Acesso ao banco de alimentos completo</li>
-                        <li>✓ Opções de substituição de alimentos</li>
-                        <li>✓ Acompanhamento de progresso</li>
-                        <li>✓ Atualizações automáticas da dieta</li>
-                        <li>✓ Acesso em todos os dispositivos</li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Dieta personalizada completa</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Treino com análise visual</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Dashboard de progresso</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Projetos em grupo</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Suporte via chat</span>
+                        </li>
                     </ul>
-                    <a href="#cadastro" class="btn btn-primary btn-block">Quero minha dieta personalizada</a>
+                    <a href="#cadastro" class="btn btn-secondary btn-block">Começar agora</a>
                 </div>
 
                 <div class="pricing-card featured">
-                    <div class="badge">Mais Popular</div>
+                    <div class="pricing-badge">Mais escolhido</div>
                     <div class="pricing-header">
-                        <h3>Plano Trimestral</h3>
-                        <div class="price">
-                            <span class="currency">R$</span>
-                            <span class="amount">87</span>
-                            <span class="period">/mês</span>
+                        <h3>Trimestral</h3>
+                        <div class="pricing-price">
+                            <span class="price-currency">R$</span>
+                            <span class="price-value">77</span>
+                            <span class="price-period">/mês</span>
                         </div>
-                        <p class="billing-note">Cobrado trimestralmente (R$ 261)</p>
-                        <p class="savings">Economize R$ 30 por trimestre</p>
+                        <p class="pricing-billing">Cobrado R$231 a cada 3 meses</p>
+                        <p class="pricing-save">Economize R$60</p>
                     </div>
                     <ul class="pricing-features">
-                        <li>✓ Tudo do Plano Mensal</li>
-                        <li>✓ Economia de 10%</li>
-                        <li>✓ Prioridade no suporte</li>
-                        <li>✓ Relatórios mensais de progresso</li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Tudo do plano mensal</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Economia de 20%</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Suporte prioritário</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Relatórios de evolução</span>
+                        </li>
                     </ul>
-                    <a href="#cadastro" class="btn btn-primary btn-block">Quero minha dieta personalizada</a>
+                    <a href="#cadastro" class="btn btn-primary btn-block btn-glow">Começar agora</a>
                 </div>
 
                 <div class="pricing-card">
                     <div class="pricing-header">
-                        <h3>Plano Anual</h3>
-                        <div class="price">
-                            <span class="currency">R$</span>
-                            <span class="amount">67</span>
-                            <span class="period">/mês</span>
+                        <h3>Anual</h3>
+                        <div class="pricing-price">
+                            <span class="price-currency">R$</span>
+                            <span class="price-value">67</span>
+                            <span class="price-period">/mês</span>
                         </div>
-                        <p class="billing-note">Cobrado anualmente (R$ 804)</p>
-                        <p class="savings">Economize R$ 360 por ano</p>
+                        <p class="pricing-billing">Cobrado R$804 por ano</p>
+                        <p class="pricing-save">Economize R$360</p>
                     </div>
                     <ul class="pricing-features">
-                        <li>✓ Tudo do Plano Mensal</li>
-                        <li>✓ Economia de 31%</li>
-                        <li>✓ Suporte prioritário</li>
-                        <li>✓ Relatórios detalhados</li>
-                        <li>✓ Acesso a funcionalidades premium</li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Tudo do plano mensal</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Economia de 31%</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Acesso vitalício a atualizações</span>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Bônus: e-book de receitas</span>
+                        </li>
                     </ul>
-                    <a href="#cadastro" class="btn btn-primary btn-block">Quero minha dieta personalizada</a>
+                    <a href="#cadastro" class="btn btn-secondary btn-block">Começar agora</a>
                 </div>
             </div>
 
             <div class="pricing-guarantee">
-                <p>🛡️ <strong>Garantia de 7 dias:</strong> Não ficou satisfeito? Devolvemos 100% do seu dinheiro, sem perguntas.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="testimonials">
-        <div class="container">
-            <h2 class="section-title">O que nossos usuários dizem</h2>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
-                    <p class="testimonial-text">
-                        "Em 12 semanas perdi 8kg sem cortar tudo que gosto. Foi a primeira dieta que consegui seguir de verdade."
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">M</div>
-                        <div class="author-info">
-                            <strong>Maria Silva, 34 anos</strong>
-                            <span>Objetivo: emagrecimento • Resultado: -8kg em 12 semanas</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
-                    <p class="testimonial-text">
-                        "Ganhei 6kg de massa magra em 4 meses. A dieta se ajustava conforme eu evoluía. Não precisei recalcular nada."
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">J</div>
-                        <div class="author-info">
-                            <strong>João Santos, 28 anos</strong>
-                            <span>Objetivo: ganho de massa • Resultado: +6kg massa magra em 4 meses</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
-                    <p class="testimonial-text">
-                        "Mantive meu peso por 6 meses seguidos. Quando minha rotina mudou, a dieta se adaptou sozinha. Incrível!"
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">A</div>
-                        <div class="author-info">
-                            <strong>Ana Costa, 31 anos</strong>
-                            <span>Objetivo: manutenção • Resultado: peso estável há 6 meses</span>
-                        </div>
-                    </div>
+                <div class="guarantee-icon">🛡️</div>
+                <div class="guarantee-content">
+                    <h4>Garantia de 7 dias</h4>
+                    <p>Teste o Giba App por 7 dias. Se não gostar, devolvemos 100% do valor. Sem burocracia, sem perguntas.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq">
+    <section class="faq" id="faq">
         <div class="container">
-            <h2 class="section-title">Perguntas Frequentes</h2>
-            <div class="faq-list">
+            <div class="section-header">
+                <span class="section-badge">Dúvidas</span>
+                <h2 class="section-title">Perguntas frequentes</h2>
+            </div>
+
+            <div class="faq-grid">
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>Como a dieta é criada?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
+                    <button class="faq-question">
+                        <span>Como a dieta é criada?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
                     <div class="faq-answer">
-                        <p>Nossa inteligência artificial analisa suas respostas do questionário (objetivos, preferências, restrições, rotina) e cria uma dieta personalizada baseada em dados nutricionais científicos e suas necessidades específicas.</p>
+                        <p>Suas respostas no questionário (objetivos, preferências, restrições, rotina) são analisadas para criar um plano alimentar personalizado com todas as refeições, calorias e macronutrientes calculados especificamente para você.</p>
                     </div>
                 </div>
+
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>Posso substituir alimentos?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
+                    <button class="faq-question">
+                        <span>Como funciona a análise das fotos?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
                     <div class="faq-answer">
-                        <p>Sim! Para cada alimento da sua dieta, oferecemos opções de substituição equivalentes nutricionalmente, mantendo o equilíbrio da sua dieta.</p>
+                        <p>Você envia fotos de frente e costas. Analisamos seu biotipo, identificamos pontos fortes e áreas que precisam de mais atenção, e criamos um treino que respeita suas características individuais. Suas fotos são privadas e usadas apenas para a análise.</p>
                     </div>
                 </div>
+
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>O chat funciona 24 horas?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
+                    <button class="faq-question">
+                        <span>Posso trocar alimentos da dieta?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
                     <div class="faq-answer">
-                        <p>Sim! Nosso assistente virtual de nutrição está disponível 24 horas por dia, 7 dias por semana. Você pode tirar dúvidas sobre alimentos, receitas, nutrição e muito mais a qualquer momento.</p>
+                        <p>Sim! Cada alimento tem opções de substituição equivalentes nutricionalmente. Se não gosta de brócolis, pode trocar por outro vegetal sem comprometer os resultados.</p>
                     </div>
                 </div>
+
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>Posso cancelar quando quiser?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
+                    <button class="faq-question">
+                        <span>Preciso de academia para o treino?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
                     <div class="faq-answer">
-                        <p>Sim! Você pode cancelar sua assinatura a qualquer momento, sem taxas ou multas. Você continuará tendo acesso até o final do período pago.</p>
+                        <p>O treino é criado baseado na sua disponibilidade. No questionário você indica se treina em academia, em casa ou ao ar livre, e o plano é adaptado para o ambiente que você tem disponível.</p>
                     </div>
                 </div>
+
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>A dieta é atualizada automaticamente?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
+                    <button class="faq-question">
+                        <span>O app funciona no celular?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
                     <div class="faq-answer">
-                        <p>Sim! Conforme você registra seu progresso (peso, aderência), nossa IA ajusta automaticamente sua dieta para continuar alinhada com seus objetivos.</p>
+                        <p>Sim! A plataforma é 100% responsiva e otimizada para mobile. Você pode acessar sua dieta, treino e dashboard de qualquer lugar, direto do navegador do seu celular.</p>
                     </div>
                 </div>
+
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>Funciona no celular?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
+                    <button class="faq-question">
+                        <span>Posso cancelar quando quiser?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
                     <div class="faq-answer">
-                        <p>Sim! Nossa plataforma é totalmente responsiva e funciona perfeitamente em smartphones, tablets e computadores. Tudo sincronizado em tempo real.</p>
+                        <p>Sim, você pode cancelar a qualquer momento direto na sua área de perfil. Sem taxas de cancelamento, sem burocracia. Você continua com acesso até o fim do período pago.</p>
                     </div>
                 </div>
             </div>
@@ -368,35 +611,43 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta">
+    <section class="final-cta" id="cadastro">
         <div class="container">
+            <div class="cta-bg">
+                <div class="cta-glow cta-glow-1"></div>
+                <div class="cta-glow cta-glow-2"></div>
+            </div>
             <div class="cta-content">
-                <h2>Pronto para transformar sua alimentação?</h2>
-                <p>Junte-se a milhares de pessoas que já estão alcançando seus objetivos com o DietYourself</p>
-                <a href="#cadastro" class="btn btn-primary btn-large">Criar minha dieta personalizada agora</a>
-                <p class="cta-note">Teste por 7 dias • Sem risco • Cancele quando quiser</p>
+                <h2>Pronto para transformar seu corpo?</h2>
+                <p>Comece agora com 7 dias grátis. Sem compromisso, sem cartão de crédito na entrada.</p>
+                <a href="#" class="btn btn-primary btn-xl btn-glow">
+                    <span>Criar meu plano personalizado</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </a>
+                <p class="cta-note">+3.200 pessoas começaram este mês</p>
             </div>
         </div>
     </section>
 
-    <!-- Sticky CTA Mobile -->
-    <div class="sticky-cta" id="sticky-cta">
-        <a href="#cadastro" class="btn btn-primary btn-sticky">Criar minha dieta</a>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
+            <div class="footer-main">
                 <div class="footer-brand">
-                    <h3>DietYourself</h3>
-                    <p>Sua jornada para uma vida mais saudável começa aqui.</p>
+                    <a href="#" class="footer-logo">
+                        <span class="logo-icon">💪</span>
+                        <span class="logo-text">Giba</span>
+                    </a>
+                    <p>Transforme seu corpo com ciência e praticidade. Dieta e treino personalizados para você.</p>
                 </div>
                 <div class="footer-links">
                     <div class="footer-column">
                         <h4>Produto</h4>
                         <ul>
-                            <li><a href="#como-funciona">Como Funciona</a></li>
+                            <li><a href="#funcionalidades">Funcionalidades</a></li>
+                            <li><a href="#como-funciona">Como funciona</a></li>
                             <li><a href="#planos">Planos</a></li>
                             <li><a href="#faq">FAQ</a></li>
                         </ul>
@@ -411,22 +662,29 @@
                         </ul>
                     </div>
                     <div class="footer-column">
-                        <h4>Redes Sociais</h4>
+                        <h4>Redes</h4>
                         <ul>
                             <li><a href="#">Instagram</a></li>
-                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#">TikTok</a></li>
                             <li><a href="#">YouTube</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 DietYourself. Todos os direitos reservados.</p>
+                <p>© 2026 Giba App. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Sticky CTA Mobile -->
+    <div class="sticky-cta" id="sticky-cta">
+        <a href="#cadastro" class="btn btn-primary btn-sticky">
+            <span>Começar agora</span>
+            <span class="sticky-badge">7 dias grátis</span>
+        </a>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
-

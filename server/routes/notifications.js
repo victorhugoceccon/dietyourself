@@ -33,8 +33,25 @@ router.get('/unread-count', authenticate, async (req, res) => {
 
     res.json({ count })
   } catch (error) {
-    console.error('Erro ao contar notificações:', error)
-    res.status(500).json({ error: 'Erro ao contar notificações' })
+    console.error('=== ERRO AO CONTAR NOTIFICAÇÕES ===')
+    console.error('Tipo:', error.constructor.name)
+    console.error('Código:', error.code)
+    console.error('Mensagem:', error.message)
+    console.error('Meta:', error.meta)
+    console.error('Stack:', error.stack)
+    console.error('=== FIM DO ERRO ===')
+    
+    // Se a tabela não existir, retornar 0 (silenciosamente)
+    if (error.code === 'P2021' || error.code === '42P01') {
+      console.warn('Tabela notifications não existe. Retornando 0.')
+      return res.json({ count: 0 })
+    }
+    
+    res.status(500).json({ 
+      error: 'Erro ao contar notificações',
+      message: error.message,
+      code: error.code
+    })
   }
 })
 

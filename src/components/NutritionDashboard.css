@@ -9,6 +9,14 @@
 
 .dashboard-header {
   margin-bottom: var(--space-2xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.dashboard-header > div {
+  flex: 1;
 }
 
 .dashboard-header h2 {
@@ -25,6 +33,43 @@
   font-size: var(--font-size-sm);
   margin: 0;
   font-weight: var(--font-weight-regular);
+}
+
+.photo-meal-add-btn {
+  padding: 10px 16px !important;
+  background: #4A6B4D !important;
+  border: 1px solid #4A6B4D !important;
+  border-radius: 8px !important;
+  color: white !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--font-weight-medium) !important;
+  cursor: pointer !important;
+  transition: all var(--transition-base) !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10 !important;
+  margin: 0 !important;
+  box-shadow: 0 2px 8px rgba(74, 107, 77, 0.3) !important;
+}
+
+.nutrition-dashboard .photo-meal-add-btn,
+.dashboard-header .photo-meal-add-btn {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.photo-meal-add-btn:hover {
+  background: #3a5a3d;
+  border-color: #3a5a3d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 107, 77, 0.3);
 }
 
 /* Row horizontal com 4 cards */
@@ -219,6 +264,21 @@
 }
 
 @media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .dashboard-header > div {
+    width: 100%;
+  }
+
+  .photo-meal-add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
   .nutrition-cards-row {
     grid-template-columns: 1fr;
     gap: var(--space-md);

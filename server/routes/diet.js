@@ -3,6 +3,7 @@ import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
 import { requireActiveSubscription } from '../middleware/subscription.js'
 import { calcularNutricao } from '../utils/nutrition.js'
+import { normalizeQuestionnaireData } from '../utils/questionnaireNormalizer.js'
 // Sistema de ajuste automático removido - usando output direto do agente
 
 const router = express.Router()
@@ -127,52 +128,36 @@ router.post('/generate', authenticate, async (req, res) => {
       console.warn('⚠️  Não foi possível calcular necessidades nutricionais')
     }
 
+    // Normalizar dados do questionário antes de usar
+    const normalized = normalizeQuestionnaireData(questionnaireData)
+    
+    if (!normalized) {
+      return res.status(400).json({ error: 'Erro ao normalizar dados do questionário' })
+    }
+
+    console.log('✅ Dados do questionário normalizados')
+    console.log('   - Treina atualmente:', normalized.derived.treinaAtualmente)
+    console.log('   - Tem restrição clínica:', normalized.derived.temRestricaoClinica)
+
     // Converter quantidadeRefeicoes para número
     let numRefeicoes = 5 // padrão
-    if (questionnaireData.quantidadeRefeicoes) {
-      const match = questionnaireData.quantidadeRefeicoes.match(/(\d+)/)
+    const quantidadeRefeicoes = normalized.clean.quantidadeRefeicoes || normalized.quantidadeRefeicoes
+    if (quantidadeRefeicoes) {
+      const match = quantidadeRefeicoes.toString().match(/(\d+)/)
       if (match) {
         numRefeicoes = parseInt(match[1])
-      } else if (questionnaireData.quantidadeRefeicoes.includes('Mais de 5')) {
+      } else if (quantidadeRefeicoes.toString().includes('Mais de 5')) {
         numRefeicoes = 6
       }
     }
 
-    // Preparar contexto do questionário para N8N (novo formato com 7 blocos)
+    // Preparar contexto do questionário para N8N usando dados normalizados
     const questionnaireContext = {
-      // Bloco 1: Dados Básicos
-      idade: questionnaireData.idade,
-      sexo: questionnaireData.sexo,
-      altura: questionnaireData.altura,
-      pesoAtual: questionnaireData.pesoAtual,
-      objetivo: questionnaireData.objetivo,
+      // Usar estrutura clean (campos novos e preenchidos)
+      ...normalized.clean,
       
-      // Bloco 2: Rotina e Atividade
-      frequenciaAtividade: questionnaireData.frequenciaAtividade,
-      tipoAtividade: questionnaireData.tipoAtividade,
-      horarioTreino: questionnaireData.horarioTreino,
-      rotinaDiaria: questionnaireData.rotinaDiaria,
-      
-      // Bloco 3: Estrutura da Dieta
-      quantidadeRefeicoes: questionnaireData.quantidadeRefeicoes,
-      preferenciaRefeicoes: questionnaireData.preferenciaRefeicoes,
-      
-      // Bloco 4: Complexidade e Adesão
-      confortoPesar: questionnaireData.confortoPesar,
-      tempoPreparacao: questionnaireData.tempoPreparacao,
-      preferenciaVariacao: questionnaireData.preferenciaVariacao,
-      
-      // Bloco 5: Alimentos do Dia a Dia
-      alimentosDoDiaADia: alimentosDoDiaADia,
-      
-      // Bloco 6: Restrições
-      restricaoAlimentar: questionnaireData.restricaoAlimentar,
-      outraRestricao: questionnaireData.outraRestricao || '',
-      alimentosEvita: questionnaireData.alimentosEvita || '',
-      
-      // Bloco 7: Flexibilidade Real
-      opcoesSubstituicao: questionnaireData.opcoesSubstituicao,
-      refeicoesLivres: questionnaireData.refeicoesLivres,
+      // Incluir campos derivados (booleanos explícitos)
+      derived: normalized.derived,
       
       // Compatibilidade com formato antigo (para referência)
       refeicoesDia: numRefeicoes

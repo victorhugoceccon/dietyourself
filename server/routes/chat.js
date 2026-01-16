@@ -1,6 +1,7 @@
 import express from 'express'
 import { authenticate } from '../middleware/auth.js'
 import prisma from '../config/database.js'
+import { normalizeQuestionnaireData } from '../utils/questionnaireNormalizer.js'
 
 const router = express.Router()
 
@@ -56,21 +57,37 @@ router.post('/message', authenticate, async (req, res) => {
       })
 
       if (questionnaireData) {
-        userContext.questionnaire = {
-          idade: questionnaireData.idade,
-          sexo: questionnaireData.sexo,
-          altura: questionnaireData.altura,
-          pesoAtual: questionnaireData.pesoAtual,
-          objetivo: questionnaireData.objetivo,
-          nivelAtividade: questionnaireData.nivelAtividade,
-          refeicoesDia: questionnaireData.refeicoesDia,
-          restricoes: questionnaireData.restricoes ? JSON.parse(questionnaireData.restricoes) : [],
-          alimentosNaoGosta: questionnaireData.alimentosNaoGosta,
-          preferenciaAlimentacao: questionnaireData.preferenciaAlimentacao,
-          costumaCozinhar: questionnaireData.costumaCozinhar,
-          observacoes: questionnaireData.observacoes
+        // Normalizar dados do questionário
+        const normalized = normalizeQuestionnaireData(questionnaireData)
+        
+        if (normalized) {
+          // Usar estrutura clean com campos derivados
+          userContext.questionnaire = {
+            // Dados básicos
+            idade: normalized.clean.idade,
+            sexo: normalized.clean.sexo,
+            altura: normalized.clean.altura,
+            pesoAtual: normalized.clean.pesoAtual,
+            objetivo: normalized.clean.objetivo,
+            // Rotina e atividade
+            rotinaDiaria: normalized.clean.rotinaDiaria,
+            frequenciaAtividade: normalized.clean.frequenciaAtividade,
+            tipoAtividade: normalized.clean.tipoAtividade || null,
+            horarioTreino: normalized.clean.horarioTreino,
+            // Alimentação
+            quantidadeRefeicoes: normalized.clean.quantidadeRefeicoes,
+            preferenciaRefeicoes: normalized.clean.preferenciaRefeicoes,
+            alimentosGosta: normalized.clean.alimentosGosta || null,
+            alimentosEvita: normalized.clean.alimentosEvita || null,
+            restricaoAlimentar: normalized.clean.restricaoAlimentar,
+            outraRestricao: normalized.clean.outraRestricao || null,
+            // Campos derivados (booleanos explícitos)
+            derived: normalized.derived
+          }
+          console.log(`   ✅ Dados do questionário normalizados e encontrados`)
+        } else {
+          console.warn(`   ⚠️  Erro ao normalizar dados do questionário`)
         }
-        console.log(`   ✅ Dados do questionário encontrados`)
       }
 
       // Buscar dados da dieta

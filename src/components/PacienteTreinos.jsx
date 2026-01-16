@@ -36,6 +36,14 @@ function PacienteTreinos({ refreshTrigger }) {
   const [treinosSemanaData, setTreinosSemanaData] = useState(null) // Dados dos treinos da semana para o calendário
   const [expandedDivisoes, setExpandedDivisoes] = useState(new Set()) // Divisões expandidas (collapse)
   
+  // Estados para upload de fotos e geração de treino por IA
+  const [fotoFrente, setFotoFrente] = useState(null)
+  const [fotoCostas, setFotoCostas] = useState(null)
+  const [fotoFrentePreview, setFotoFrentePreview] = useState(null)
+  const [fotoCostasPreview, setFotoCostasPreview] = useState(null)
+  const [generatingWorkout, setGeneratingWorkout] = useState(false)
+  const [workoutError, setWorkoutError] = useState('')
+  
   // Estados do formulário de feedback
   const [feedbackForm, setFeedbackForm] = useState({
     observacao: '',
@@ -130,7 +138,26 @@ function PacienteTreinos({ refreshTrigger }) {
 
       const data = await response.json()
       const lista = Array.isArray(data.prescricoes) ? data.prescricoes : []
-      const ativos = lista.filter((p) => p.ativo !== false)
+      const ativos = lista
+        .filter((p) => p.ativo !== false)
+        .map((p) => {
+          let analysisData = null
+          // Priorizar analysisJson (novo campo). Se não existir, tentar parsear observacoes como JSON.
+          if (p.analysisJson) {
+            try {
+              analysisData = typeof p.analysisJson === 'string' ? JSON.parse(p.analysisJson) : p.analysisJson
+            } catch (err) {
+              console.warn('⚠️ Não foi possível parsear analysisJson', err)
+            }
+          } else if (p.observacoes && typeof p.observacoes === 'string' && p.observacoes.trim().startsWith('{')) {
+            try {
+              analysisData = JSON.parse(p.observacoes)
+            } catch (err) {
+              // observacoes pode ser texto livre, ignorar erros
+            }
+          }
+          return { ...p, analysisData }
+        })
       setPrescricoes(ativos)
     } catch (err) {
       console.error('Erro ao carregar treinos do paciente:', err)
@@ -896,6 +923,116 @@ function PacienteTreinos({ refreshTrigger }) {
     return isNaN(number) ? 60 : number
   }
 
+  // Função para lidar com upload de foto
+  const handlePhotoUpload = (e, type) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecione uma imagem válida')
+      return
+    }
+
+    // Validar tamanho (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('A imagem deve ter no máximo 5MB')
+      return
+    }
+
+    // Criar preview
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      if (type === 'frente') {
+        setFotoFrente(file)
+        setFotoFrentePreview(reader.result)
+      } else {
+        setFotoCostas(file)
+        setFotoCostasPreview(reader.result)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  // Função para remover foto
+  const handleRemovePhoto = (type) => {
+    if (type === 'frente') {
+      setFotoFrente(null)
+      setFotoFrentePreview(null)
+    } else {
+      setFotoCostas(null)
+      setFotoCostasPreview(null)
+    }
+  }
+
+  // Função para gerar treino por IA
+  const handleGenerateWorkout = async () => {
+    if (!fotoFrente || !fotoCostas) {
+      setWorkoutError('Por favor, faça upload das duas fotos (frente e costas)')
+      return
+    }
+
+    setGeneratingWorkout(true)
+    setWorkoutError('')
+
+    try {
+      const token = localStorage.getItem('token')
+      
+      // Criar FormData para enviar as fotos
+      const formData = new FormData()
+      formData.append('fotoFrente', fotoFrente)
+      formData.append('fotoCostas', fotoCostas)
+
+      console.log('📤 Enviando requisição para gerar treino...')
+      console.log('   URL:', `${API_URL}/workout/generate`)
+      console.log('   Fotos:', { 
+        frente: fotoFrente ? `${fotoFrente.name} (${(fotoFrente.size / 1024).toFixed(2)} KB)` : 'não enviada',
+        costas: fotoCostas ? `${fotoCostas.name} (${(fotoCostas.size / 1024).toFixed(2)} KB)` : 'não enviada'
+      })
+
+      const response = await fetch(`${API_URL}/workout/generate`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      })
+
+      let data
+      try {
+        const responseText = await response.text()
+        if (!responseText) {
+          throw new Error('Resposta vazia do servidor')
+        }
+        data = JSON.parse(responseText)
+      } catch (parseError) {
+        console.error('❌ Erro ao parsear resposta:', parseError)
+        throw new Error(`Erro ao processar resposta do servidor: ${parseError.message}`)
+      }
+
+      if (!response.ok) {
+        console.error('❌ Erro do servidor:', response.status, data)
+        const errorMessage = data.error || 'Erro ao gerar treino'
+        const errorDetails = data.details ? `: ${data.details}` : ''
+        throw new Error(`${errorMessage}${errorDetails}`)
+      }
+
+      // Sucesso - recarregar treinos
+      await loadTreinos()
+      setFotoFrente(null)
+      setFotoCostas(null)
+      setFotoFrentePreview(null)
+      setFotoCostasPreview(null)
+      
+      alert('Treino gerado com sucesso! 🎉')
+    } catch (error) {
+      console.error('Erro ao gerar treino:', error)
+      setWorkoutError(error.message || 'Erro ao gerar treino. Tente novamente.')
+    } finally {
+      setGeneratingWorkout(false)
+    }
+  }
+
   if (loading) {
     return (
       <section className="treinos-section">
@@ -908,8 +1045,8 @@ function PacienteTreinos({ refreshTrigger }) {
     )
   }
 
-  if (!prescricoes.length && !loading && personalId && !brandingLoading) {
-    // Mostrar aviso quando não há treinos mas há personal vinculado
+  if (!prescricoes.length && !loading && !brandingLoading) {
+    // Mostrar seção de geração de treino quando não há treinos
     const personalName = personalInfo?.name || personalInfo?.email || 'seu personal trainer'
     const teamName = branding?.brandName || (branding?.patientSettings && typeof branding.patientSettings === 'object' ? branding.patientSettings.teamName : null) || null
     
@@ -917,9 +1054,120 @@ function PacienteTreinos({ refreshTrigger }) {
       <section className="treinos-section">
         <div className="section-header">
           <h2>Seus Treinos</h2>
-          <span className="badge badge-personal">Personal</span>
+          {personalId && <span className="badge badge-personal">Personal</span>}
         </div>
         
+        {/* Seção de geração de treino por IA */}
+        <div className="generate-workout-section" style={{
+          background: branding?.accentColor ? `${branding.accentColor}15` : 'var(--bg-secondary)',
+          borderColor: branding?.accentColor || 'var(--border-color)',
+          borderLeftColor: branding?.accentColor || 'var(--accent-color)',
+          marginBottom: 'var(--space-lg)'
+        }}>
+          <div className="generate-workout-header">
+            <h3>Gerar Treino por IA</h3>
+            <p>Faça upload de duas fotos do seu corpo (frente e costas) para gerar um treino personalizado</p>
+          </div>
+
+          <div className="photo-upload-container">
+            {/* Upload Foto Frente */}
+            <div className="photo-upload-item">
+              <label className="photo-upload-label">
+                <span>Foto de Frente</span>
+                {!fotoFrentePreview && (
+                  <div className="photo-upload-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span>Clique para selecionar</span>
+                  </div>
+                )}
+                {fotoFrentePreview && (
+                  <div className="photo-preview">
+                    <img src={fotoFrentePreview} alt="Foto frente" />
+                    <button 
+                      type="button" 
+                      className="photo-remove-btn"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleRemovePhoto('frente')
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handlePhotoUpload(e, 'frente')}
+                  style={{ display: 'none' }}
+                />
+              </label>
+            </div>
+
+            {/* Upload Foto Costas */}
+            <div className="photo-upload-item">
+              <label className="photo-upload-label">
+                <span>Foto de Costas</span>
+                {!fotoCostasPreview && (
+                  <div className="photo-upload-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span>Clique para selecionar</span>
+                  </div>
+                )}
+                {fotoCostasPreview && (
+                  <div className="photo-preview">
+                    <img src={fotoCostasPreview} alt="Foto costas" />
+                    <button 
+                      type="button" 
+                      className="photo-remove-btn"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleRemovePhoto('costas')
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handlePhotoUpload(e, 'costas')}
+                  style={{ display: 'none' }}
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* Botão Gerar Treino */}
+          {fotoFrente && fotoCostas && (
+            <div className="generate-workout-actions">
+              <button
+                className="btn-primary"
+                onClick={handleGenerateWorkout}
+                disabled={generatingWorkout}
+              >
+                {generatingWorkout ? 'Gerando treino...' : 'Gerar Treino por IA'}
+              </button>
+            </div>
+          )}
+
+          {/* Mensagem de erro */}
+          {workoutError && (
+            <div className="workout-error-message">
+              {workoutError}
+            </div>
+          )}
+        </div>
+
         <div className="no-treinos-message" style={{
           background: branding?.accentColor ? `${branding.accentColor}15` : 'var(--bg-secondary)',
           borderColor: branding?.accentColor || 'var(--border-color)',
@@ -954,15 +1202,6 @@ function PacienteTreinos({ refreshTrigger }) {
             <p className="no-treinos-message-text">
               ainda não criou seu treino personalizado, mas em breve você terá acesso!
             </p>
-            
-            <div className="no-treinos-hint">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-              <span>Seu treino será criado especialmente para você e aparecerá aqui assim que estiver pronto.</span>
-            </div>
           </div>
         </div>
       </section>
@@ -1032,7 +1271,7 @@ function PacienteTreinos({ refreshTrigger }) {
       <html>
         <head>
           <meta charset="UTF-8">
-          <title>Meu Treino - LifeFit</title>
+          <title>Meu Treino - GIBA APP</title>
           <style>
             @media print {
               @page { 
@@ -1276,12 +1515,262 @@ function PacienteTreinos({ refreshTrigger }) {
           ` : ''}
           
           <div class="footer">
-            <p>💚 LifeFit Training - Sistema de Treinamento Personalizado</p>
+            <p>💚 GIBA APP Training - Sistema de Treinamento Personalizado</p>
             <p>Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
           </div>
         </body>
       </html>
     `
+  }
+
+  const analysisSource = (rotinaAtiva && rotinaAtiva.analysisData) || (prescricoes[0] && prescricoes[0].analysisData) || null
+  const rawWorkoutData = analysisSource?.workout || analysisSource?.treino || analysisSource || null
+
+  const renderList = (title, items) => {
+    if (!items || items.length === 0) return null
+    return (
+      <div className="analysis-block">
+        <h4>{title}</h4>
+        <ul>
+          {items.map((item, idx) => (
+            <li key={`${title}-${idx}`}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const renderKeyValueList = (title, obj, formatter = (k, v) => `${k}: ${v}`) => {
+    if (!obj || Object.keys(obj).length === 0) return null
+    return (
+      <div className="analysis-block">
+        <h4>{title}</h4>
+        <ul>
+          {Object.entries(obj).map(([k, v]) => (
+            <li key={`${title}-${k}`}>{formatter(k, v)}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const renderVolumeAudit = (audit = []) => {
+    if (!audit || audit.length === 0) return null
+    return (
+      <div className="analysis-block">
+        <h4>Auditoria de Volume Semanal</h4>
+        <ul>
+          {audit.map((item, idx) => (
+            <li key={`audit-${idx}`}>
+              <strong>{item.muscleGroup}:</strong> {item.weeklySets || item.totalSeries} séries
+              {item.targetRangeSets && Array.isArray(item.targetRangeSets) && (
+                <> (alvo {item.targetRangeSets[0]}–{item.targetRangeSets[1]}: {item.withinRange === false ? 'ajustar' : 'ok'})</>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const renderNotes = (title, notes) => {
+    if (!notes || notes.length === 0) return null
+    return (
+      <div className="analysis-block">
+        <h4>{title}</h4>
+        <ul>
+          {notes.map((n, idx) => (
+            <li key={`${title}-${idx}`}>{n}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const renderWorkoutsDetail = (workouts = []) => {
+    if (!workouts || workouts.length === 0) return null
+    return (
+      <div className="analysis-block">
+        <h4>Treinos detalhados (split)</h4>
+        {workouts.map((w, idx) => (
+          <div key={`w-${idx}`} className="analysis-workout">
+            <div className="analysis-workout-header">
+              <span className="analysis-chip secondary">{w.dayLabel || `Dia ${idx + 1}`}</span>
+              <div className="analysis-workout-title">
+                <strong>{w.dayName || 'Treino'}</strong>
+                {w.focus && w.focus.length > 0 && (
+                  <p className="analysis-note">Foco: {w.focus.join(', ')}</p>
+                )}
+              </div>
+            </div>
+            <div className="analysis-workout-exercises">
+              {(w.exercises || []).map((ex, exIdx) => (
+                <div key={`ex-${idx}-${exIdx}`} className="analysis-exercise">
+                  <div className="analysis-exercise-title">
+                    <strong>{ex.name}</strong>
+                    {ex.muscleGroup && <span className="analysis-chip secondary">{ex.muscleGroup}</span>}
+                  </div>
+                  <p className="analysis-note">
+                    {ex.series}x {ex.repetitions || ex.repeticoes || ''}{' '}
+                    {ex.restSeconds || ex.rest ? `| Descanso: ${ex.restSeconds || ex.rest}s` : ''}{' '}
+                    {ex.rir !== undefined ? `| RIR: ${ex.rir}` : ''}
+                  </p>
+                  {ex.technicalNotes && <p className="analysis-note">Técnica: {ex.technicalNotes}</p>}
+                  {ex.observations && !ex.technicalNotes && <p className="analysis-note">Notas: {ex.observations}</p>}
+                  {ex.alternatives && ex.alternatives.length > 0 && (
+                    <p className="analysis-note">Alternativas: {ex.alternatives.join(', ')}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  const renderAnalysisSection = (analysis) => {
+    if (!analysis) return null
+    const visual = analysis.visual_assessment || {}
+    const indicators = analysis.body_composition_indicators || {}
+    const strengths = analysis.strengths || []
+    const weaknesses = analysis.weaknesses_or_priorities || []
+    const patterns = analysis.suggested_movement_patterns || []
+    const focus = analysis.training_focus_recommendations || []
+    const observations = analysis.important_observations || []
+    const confidence = analysis.confidence_level || {}
+    const finalChecks = analysis.final_checks || analysis.finalChecks || {}
+
+    const meta = analysis.meta || {}
+    const userInfo = analysis.user || {}
+    const inputsSummary = analysis.inputsSummary || {}
+    const strategy = analysis.strategy || {}
+    const weeklyAudit = analysis.weeklyVolumeAudit || []
+    const progression = analysis.progression || {}
+    const limitationsAndSubstitutions = analysis.limitationsAndSubstitutions || {}
+    const notesForUser = analysis.notesForUser || []
+
+    return (
+      <div className="analysis-card">
+        <div className="analysis-header">
+          <div>
+            <p className="analysis-kicker">Análise do treino</p>
+            <h3>Plano gerado para você</h3>
+            <p className="analysis-subtitle">Resumo do agente de treino (IA)</p>
+          </div>
+          {meta.generatedAt && (
+            <span className="analysis-chip">
+              Atualizado em {new Date(meta.generatedAt).toLocaleDateString('pt-BR')}
+            </span>
+          )}
+        </div>
+
+        <div className="analysis-grid">
+          {renderList('Visual (Frente)', visual.front_view)}
+          {renderList('Visual (Costas)', visual.back_view)}
+          {renderList('Distribuição de gordura', indicators.fat_distribution)}
+          {renderList('Distribuição de massa muscular', indicators.muscle_mass_distribution)}
+          {renderList('Pontos fortes', strengths)}
+          {renderList('Prioridades', weaknesses)}
+          {renderList('Padrões de movimento sugeridos', patterns)}
+          {renderList('Focos de treino recomendados', focus)}
+          {renderList('Observações importantes', observations)}
+
+          {renderList('Notas visuais', inputsSummary.visualNotes)}
+          {inputsSummary.postureSummary && (
+            <div className="analysis-block">
+              <h4>Postura</h4>
+              <p className="analysis-note">{inputsSummary.postureSummary}</p>
+            </div>
+          )}
+          {renderList('Prioridades musculares', inputsSummary.priorityMuscleGroups)}
+          {renderList('Músculos bem desenvolvidos', inputsSummary.musclesGoodDevelopment)}
+          {renderList('Músculos fracos', inputsSummary.musclesWeakPoints)}
+          {renderList('Restrições', inputsSummary.restrictions || analysis.inputsSummary?.restrictions)}
+          {inputsSummary.splitSuggested && (
+            <div className="analysis-block">
+              <h4>Split sugerido</h4>
+              <p className="analysis-note">{inputsSummary.splitSuggested}</p>
+            </div>
+          )}
+
+          {(userInfo.objective || userInfo.frequenciaAtividade) && (
+            <div className="analysis-block">
+              <h4>Objetivo e frequência</h4>
+              <ul>
+                {userInfo.objective && <li>Objetivo: {userInfo.objective}</li>}
+                {userInfo.frequenciaAtividade && <li>Frequência: {userInfo.frequenciaAtividade}</li>}
+              </ul>
+            </div>
+          )}
+
+          {(strategy.split || strategy.trainingDaysPerWeek || strategy.coreTrainingDays || strategy.priorityRule) && (
+            <div className="analysis-block">
+              <h4>Estratégia</h4>
+              <ul>
+                {strategy.split && <li>Split: {strategy.split}</li>}
+                {strategy.trainingDaysPerWeek && <li>Dias/semana: {strategy.trainingDaysPerWeek}</li>}
+                {strategy.coreTrainingDays && <li>Core (dias): {strategy.coreTrainingDays}</li>}
+                {strategy.priorityRule && <li>Regra de prioridade: {strategy.priorityRule}</li>}
+              </ul>
+            </div>
+          )}
+
+          {renderKeyValueList('Distribuição de volume (séries/semana)', strategy.volumeDistributionLogic)}
+          {renderNotes('Notas estratégicas', strategy.generalNotes)}
+          {renderVolumeAudit(weeklyAudit)}
+          {renderWorkoutsDetail(treinoData.workouts || treinoData.divisoes || workoutData.workouts || workoutData.divisoes)}
+
+          {/* Progressão */}
+          {(progression.principle || progression.weeklyIncreasePercentage || progression.notes || progression.principios || progression.cronograma) && (
+            <div className="analysis-block">
+              <h4>Progressão</h4>
+              {progression.principle && <p className="analysis-note">Princípio: {progression.principle}</p>}
+              {progression.principios && renderList('Princípios', progression.principios)}
+              {progression.cronograma && renderList('Cronograma', progression.cronograma)}
+              {progression.weeklyIncreasePercentage && (
+                <p className="analysis-note">Sugestão de aumento semanal: {progression.weeklyIncreasePercentage}%</p>
+              )}
+              {progression.notes && <p className="analysis-note">{progression.notes}</p>}
+            </div>
+          )}
+
+          {/* Limitações e substituições */}
+          {(limitationsAndSubstitutions.limitations || limitationsAndSubstitutions.substitutions) && (
+            <div className="analysis-block">
+              <h4>Limitações e substituições</h4>
+              {renderList('Limitações', limitationsAndSubstitutions.limitations)}
+              {limitationsAndSubstitutions.substitutions && limitationsAndSubstitutions.substitutions.length > 0 && (
+                <ul>
+                  {limitationsAndSubstitutions.substitutions.map((sub, idx) => (
+                    <li key={`sub-${idx}`}>
+                      <strong>{sub.exerciseName || sub.exercicio}:</strong>{' '}
+                      {sub.alternatives?.join(', ') || sub.alternativa || ''}
+                      {sub.observations && <span> — {sub.observations}</span>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {/* Final checks */}
+          {finalChecks && Object.keys(finalChecks).length > 0 && (
+            <div className="analysis-block">
+              <h4>Checks finais</h4>
+              <ul>
+                {Object.entries(finalChecks).map(([key, val]) => (
+                  <li key={key}>{`${key}: ${val === true ? 'OK' : val === false ? 'Não' : val}`}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Notas para o usuário */}
+          {renderNotes('Notas para você', notesForUser)}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -1308,6 +1797,9 @@ function PacienteTreinos({ refreshTrigger }) {
         </div>
 
       {error && <div className="alert alert-error">{error}</div>}
+
+      {/* Análise visual das fotos */}
+      {renderAnalysisSection(analysisSource)}
 
       {/* Calendário Semanal de Treinos */}
       {rotinaAtiva && treinosSemanaData && (
@@ -1640,7 +2132,7 @@ function PacienteTreinos({ refreshTrigger }) {
       )}
       </div>
 
-      {/* Modal de Feedback - Design LifeFit Ultra com cores neon */}
+      {/* Modal de Feedback - Design GIBA APP */}
       {showFeedbackModal && treinoParaFinalizar && (
         <div 
           className="modal-overlay" 

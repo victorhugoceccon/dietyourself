@@ -17,6 +17,7 @@ import { getRoleRedirect } from './utils/roleRedirect'
 import Landing from './pages/Landing'
 import BillingSuccess from './pages/BillingSuccess'
 import BillingCancel from './pages/BillingCancel'
+import ConviteProjeto from './components/ConviteProjeto'
 import './App.css'
 
 // Componente de rota protegida
@@ -54,9 +55,11 @@ function App() {
       <Router>
         <div className="App">
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/billing/success" element={<BillingSuccess />} />
           <Route path="/billing/cancel" element={<BillingCancel />} />
+          <Route path="/convite/:codigo" element={<ConviteProjeto />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route 
@@ -107,9 +110,8 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          <Route path="/" element={<RoleRedirect />} />
           <Route path="/dashboard" element={<RoleRedirect />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         </div>
       </Router>

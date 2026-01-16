@@ -1,0 +1,714 @@
+/* Página principal */
+.giba-perfil-page {
+  min-height: 100vh;
+  background: linear-gradient(165deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+  color: #e8e8e8;
+  padding-bottom: 100px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Loading */
+.giba-perfil-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  gap: 20px;
+  color: #8b95a5;
+}
+
+.giba-perfil-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #2a3142;
+  border-top-color: #4ade80;
+  border-radius: 50%;
+  animation: gibaPerfilSpinner 1s linear infinite;
+}
+
+@keyframes gibaPerfilSpinner {
+  to { transform: rotate(360deg); }
+}
+
+/* =====================
+   HERO
+   ===================== */
+
+.giba-perfil-hero {
+  padding: 40px 24px 32px;
+  text-align: center;
+  background: linear-gradient(180deg, #1e2534 0%, transparent 100%);
+}
+
+.giba-perfil-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f1419;
+}
+
+.giba-perfil-hero-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.giba-perfil-hero-subtitle {
+  font-size: 14px;
+  color: #8b95a5;
+  margin: 0;
+}
+
+/* =====================
+   SECTIONS
+   ===================== */
+
+.giba-perfil-section {
+  padding: 20px;
+}
+
+.giba-perfil-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.giba-perfil-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.giba-perfil-section-title--danger {
+  color: #ef4444;
+}
+
+.giba-perfil-badge-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =====================
+   USER CARD
+   ===================== */
+
+.giba-perfil-user-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #1e2534;
+  border-radius: 18px;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.giba-perfil-avatar-wrapper {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 3px solid #4ade80;
+}
+
+.giba-perfil-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.giba-perfil-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2a3142 0%, #1e2534 100%);
+  color: #4ade80;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.giba-perfil-avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 24px;
+}
+
+.giba-perfil-avatar-wrapper:hover .giba-perfil-avatar-overlay {
+  opacity: 1;
+}
+
+.giba-perfil-avatar-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.giba-perfil-avatar-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: #4ade80;
+  border-radius: 50%;
+  animation: gibaPerfilSpinner 0.8s linear infinite;
+}
+
+.giba-perfil-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.giba-perfil-user-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.giba-perfil-user-email {
+  font-size: 13px;
+  color: #8b95a5;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.giba-perfil-edit-btn {
+  padding: 10px 20px;
+  background: rgba(74, 222, 128, 0.15);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 10px;
+  color: #4ade80;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.giba-perfil-edit-btn:hover {
+  background: rgba(74, 222, 128, 0.25);
+  border-color: #4ade80;
+}
+
+/* =====================
+   STATS GRID
+   ===================== */
+
+.giba-perfil-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.giba-perfil-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1e2534;
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.giba-perfil-stat-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.giba-perfil-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.giba-perfil-stat-label {
+  font-size: 11px;
+  color: #8b95a5;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.giba-perfil-stat-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.giba-perfil-empty-stats {
+  text-align: center;
+  padding: 32px;
+  background: #1e2534;
+  border-radius: 14px;
+  border: 2px dashed rgba(255,255,255,0.1);
+}
+
+.giba-perfil-empty-stats p {
+  margin: 0;
+  color: #8b95a5;
+  font-size: 14px;
+}
+
+/* =====================
+   QUESTIONNAIRE SUMMARY
+   ===================== */
+
+.giba-perfil-questionnaire-summary {
+  background: #1e2534;
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.giba-perfil-questionnaire-summary p {
+  margin: 0 0 16px;
+  color: #c9d1d9;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.giba-perfil-questionnaire-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px;
+  background: #1e2534;
+  border-radius: 14px;
+  border: 2px dashed rgba(255,255,255,0.1);
+}
+
+.giba-perfil-questionnaire-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.giba-perfil-questionnaire-empty p {
+  margin: 0;
+  color: #8b95a5;
+  font-size: 14px;
+}
+
+/* =====================
+   ACTION BUTTONS
+   ===================== */
+
+.giba-perfil-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.giba-perfil-action-btn--primary {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  color: #0f1419;
+}
+
+.giba-perfil-action-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74, 222, 128, 0.3);
+}
+
+/* =====================
+   ACTIONS LIST
+   ===================== */
+
+.giba-perfil-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.giba-perfil-action-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #1e2534;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.giba-perfil-action-item:hover {
+  border-color: #4ade80;
+  background: #252d3d;
+}
+
+.giba-perfil-action-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.giba-perfil-action-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.giba-perfil-action-text strong {
+  font-size: 15px;
+  color: #fff;
+}
+
+.giba-perfil-action-text span {
+  font-size: 12px;
+  color: #8b95a5;
+}
+
+.giba-perfil-action-arrow {
+  font-size: 18px;
+  color: #4ade80;
+}
+
+/* =====================
+   DANGER ZONE
+   ===================== */
+
+.giba-perfil-section--danger {
+  background: rgba(239, 68, 68, 0.05);
+  border-radius: 16px;
+  margin: 10px 20px;
+  padding: 20px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.giba-perfil-danger-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.giba-perfil-danger-content > p {
+  margin: 0;
+  font-size: 14px;
+  color: #c9d1d9;
+  line-height: 1.5;
+}
+
+.giba-perfil-danger-list {
+  margin: 0;
+  padding-left: 20px;
+  color: #c9d1d9;
+  font-size: 13px;
+}
+
+.giba-perfil-danger-list li {
+  margin: 6px 0;
+}
+
+.giba-perfil-danger-warning {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-left: 3px solid #ef4444;
+}
+
+.giba-perfil-danger-btn {
+  align-self: flex-start;
+  padding: 12px 24px;
+  background: #ef4444;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.giba-perfil-danger-btn:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+}
+
+.giba-perfil-danger-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =====================
+   LOGOUT
+   ===================== */
+
+.giba-perfil-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  color: #8b95a5;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.giba-perfil-logout-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+/* =====================
+   MODAL BUTTONS
+   ===================== */
+
+.giba-perfil-modal-btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.giba-perfil-modal-btn--secondary {
+  background: rgba(255,255,255,0.1);
+  color: #c9d1d9;
+}
+
+.giba-perfil-modal-btn--secondary:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.giba-perfil-modal-btn--primary {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  color: #0f1419;
+}
+
+.giba-perfil-modal-btn--primary:hover {
+  transform: translateY(-2px);
+}
+
+.giba-perfil-modal-btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =====================
+   EDIT FORM
+   ===================== */
+
+.giba-perfil-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.giba-perfil-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.giba-perfil-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4ade80;
+}
+
+.giba-perfil-form-group input {
+  padding: 14px 16px;
+  background: #151a26;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.giba-perfil-form-group input:focus {
+  outline: none;
+  border-color: #4ade80;
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+}
+
+.giba-perfil-form-group input.disabled {
+  background: #0f1419;
+  color: #6b7684;
+  cursor: not-allowed;
+}
+
+.giba-perfil-form-hint {
+  font-size: 11px;
+  color: #6b7684;
+}
+
+/* =====================
+   QUESTIONNAIRE MODAL
+   ===================== */
+
+.giba-perfil-questionnaire-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 4px 0;
+}
+
+.giba-perfil-q-block {
+  background: rgba(0,0,0,0.2);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.giba-perfil-q-block-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #4ade80;
+  margin: 0 0 14px;
+}
+
+.giba-perfil-q-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.giba-perfil-q-item {
+  background: #151a26;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.giba-perfil-q-item--full {
+  grid-column: 1 / -1;
+}
+
+.giba-perfil-q-label {
+  font-size: 11px;
+  color: #8b95a5;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.giba-perfil-q-value {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Alimentos no modal */
+.giba-perfil-q-alimentos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.giba-perfil-q-alimento-cat {
+  background: #151a26;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.giba-perfil-q-cat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4ade80;
+}
+
+.giba-perfil-q-cat-value {
+  font-size: 13px;
+  color: #c9d1d9;
+  line-height: 1.5;
+}
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+
+@media (max-width: 400px) {
+  .giba-perfil-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .giba-perfil-q-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .giba-perfil-user-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .giba-perfil-user-info {
+    text-align: center;
+  }
+  
+  .giba-perfil-edit-btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 480px) {
+  .giba-perfil-hero-title {
+    font-size: 32px;
+  }
+  
+  .giba-perfil-section {
+    padding: 24px;
+  }
+}

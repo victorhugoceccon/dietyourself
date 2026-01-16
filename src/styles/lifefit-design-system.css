@@ -1,5 +1,5 @@
 /* ============================================
-   LifeFit Design System
+   GIBA APP Design System
    Wellness moderno com toque fitness
    ============================================ */
 
@@ -7,26 +7,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* ===== CORES PRINCIPAIS - LifeFit (ULTRA) ===== */
+  /* ===== CORES PRINCIPAIS - GIBA APP ===== */
   
-  /* Acentos “Ultra” (inspirado no Monster Ultra branco) */
-  --lifefit-green-soft: #B9FF2C;        /* Neon lime (primary) */
-  --lifefit-green-olive: #36D7FF;       /* Cyan neon (secondary) */
-  --lifefit-green-light: rgba(185, 255, 44, 0.18);
-  --lifefit-green-lighter: rgba(54, 215, 255, 0.10);
-  --lifefit-green-dark: #8EEA00;        /* Hover do neon */
+  /* Cores principais da marca GIBA */
+  --lifefit-green-soft: #ffde59;        /* Amarelo GIBA (primary) */
+  --lifefit-green-olive: #989897;       /* Cinza médio GIBA (secondary) */
+  --lifefit-green-light: rgba(255, 222, 89, 0.18);
+  --lifefit-green-lighter: rgba(152, 152, 151, 0.10);
+  --lifefit-green-dark: #e6c84f;        /* Hover do amarelo */
   
-  /* Neutros - Metal branco / organização */
+  /* Neutros - GIBA APP */
   --lifefit-white: #FFFFFF;
   --lifefit-gray-light: #F2F4F8;
-  --lifefit-gray-medium: #E3E8F0;
-  --lifefit-gray-dark: #667085;
+  --lifefit-gray-medium: #989897;
+  --lifefit-gray-dark: #454545;
   --lifefit-gray-graphite: #0B0F14;
   
-  /* Azul acinzentado (mantido como “cyan tech”) */
-  --lifefit-blue-gray: #36D7FF;
-  --lifefit-blue-gray-light: rgba(54, 215, 255, 0.14);
-  --lifefit-blue-gray-dark: #00B7E6;
+  /* Cores secundárias GIBA */
+  --lifefit-blue-gray: #989897;
+  --lifefit-blue-gray-light: rgba(152, 152, 151, 0.14);
+  --lifefit-blue-gray-dark: #454545;
   
   /* Estados e Feedback */
   --lifefit-success: #18E6A0;
@@ -89,9 +89,9 @@
   --transition-slow: 0.5s ease;
   
   /* ===== GRADIENTES ===== */
-  --gradient-primary: linear-gradient(135deg, var(--lifefit-green-soft) 0%, var(--lifefit-green-olive) 100%);
-  --gradient-subtle: linear-gradient(135deg, #FFFFFF 0%, #EEF2F7 40%, #FFFFFF 100%);
-  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(242, 244, 248, 1) 100%);
+  --gradient-primary: linear-gradient(135deg, #ffde59 0%, #989897 100%);
+  --gradient-subtle: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 40%, #FFFFFF 100%);
+  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 248, 248, 1) 100%);
 }
 
 /* ===== DARK MODE ===== */

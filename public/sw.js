@@ -151,7 +151,12 @@ self.addEventListener('fetch', (event) => {
 // Mensagens do cliente
 self.addEventListener('message', (event) => {
   if (event.data?.type === 'SKIP_WAITING') {
-    self.skipWaiting()
+    self.skipWaiting().then(() => {
+      // Notificar todos os clientes que o SW foi atualizado
+      return self.clients.claim()
+    }).catch(err => {
+      console.error('[SW] Erro ao pular espera:', err)
+    })
   }
 })
 

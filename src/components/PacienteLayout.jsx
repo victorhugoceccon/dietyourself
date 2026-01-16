@@ -8,6 +8,7 @@ import Questionnaire from './Questionnaire'
 import ConversationalQuestionnaire from './ConversationalQuestionnaire'
 import NotificationCenter from './NotificationCenter'
 import SubscriptionStatus from './SubscriptionStatus'
+import PWAInstallTutorial from './PWAInstallTutorial'
 // ThemeToggle removido - apenas light mode
 import { hasAnyRole } from '../utils/roleUtils'
 import { API_URL } from '../config/api'
@@ -323,6 +324,7 @@ function PacienteLayout() {
   return (
     <BrandingProvider professionalUserId={professionalUserId}>
       <div className="paciente-layout">
+        <PWAInstallTutorial />
         <header className="paciente-header">
         <div className="header-content">
           <div className="header-left">

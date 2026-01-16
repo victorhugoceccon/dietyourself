@@ -15,6 +15,8 @@
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   padding: var(--space-xl) var(--space-2xl);
+  padding-top: calc(var(--space-xl) + env(safe-area-inset-top, 0px));
+  padding-top: max(calc(var(--space-xl) + env(safe-area-inset-top, 0px)), 60px);
   margin: 0;
   margin-bottom: 0 !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -690,6 +692,8 @@ h1.logo {
 @media (max-width: 768px) {
   .paciente-header {
     padding: var(--space-sm) var(--space-md);
+    padding-top: calc(var(--space-sm) + env(safe-area-inset-top, 0px));
+    padding-top: max(calc(var(--space-sm) + env(safe-area-inset-top, 0px)), 50px);
   }
 
   .header-content {

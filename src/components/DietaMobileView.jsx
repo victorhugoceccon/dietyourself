@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Bread, CheckCircle, DownloadSimple, Drop, Fire, ForkKnife, Lightbulb, Target } from '@phosphor-icons/react'
+import { Barbell, Bread, CheckCircle, DownloadSimple, Drop, Fire, ForkKnife, Lightbulb, Target } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './DietaMobileView.css'
 
@@ -452,9 +452,15 @@ function DietaMobileView() {
                           {/* Macros do alimento se disponível */}
                           {item.macros && (
                             <div className="giba-dieta-food-macros">
-                              <span title="Proteína">💪 {item.macros.proteina || 0}g</span>
-                              <span title="Carboidratos"><Bread size={14} weight="fill" /> {item.macros.carboidrato || 0}g</span>
-                              <span title="Gorduras"><Drop size={14} weight="fill" /> {item.macros.gordura || 0}g</span>
+                              <span title="Proteína">
+                                <Barbell size={14} weight="fill" /> {Math.round(item.macros.proteina_g || item.macros.proteina || 0)}g
+                              </span>
+                              <span title="Carboidratos">
+                                <Bread size={14} weight="fill" /> {Math.round(item.macros.carbo_g || item.macros.carboidrato || 0)}g
+                              </span>
+                              <span title="Gorduras">
+                                <Drop size={14} weight="fill" /> {Math.round(item.macros.gordura_g || item.macros.gordura || 0)}g
+                              </span>
                             </div>
                           )}
 
@@ -562,7 +568,7 @@ function DietaMobileView() {
                       </div>
                       {item.macros && (
                         <div className="giba-pdf-food-macros">
-                          P: {item.macros.proteina || 0}g | C: {item.macros.carboidrato || 0}g | G: {item.macros.gordura || 0}g
+                          P: {Math.round(item.macros.proteina_g || item.macros.proteina || 0)}g | C: {Math.round(item.macros.carbo_g || item.macros.carboidrato || 0)}g | G: {Math.round(item.macros.gordura_g || item.macros.gordura || 0)}g
                         </div>
                       )}
                       {item.substituicoes && item.substituicoes.length > 0 && (

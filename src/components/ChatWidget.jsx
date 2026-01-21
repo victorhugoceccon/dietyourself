@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { ChatCenteredDots, X, Robot, PaperPlaneRight } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './ChatWidget.css'
 
@@ -183,16 +184,7 @@ function ChatWidget() {
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Abrir chat"
       >
-        {isOpen ? (
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        ) : (
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M8 9H16M8 13H12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
-        )}
+        {isOpen ? <X size={24} weight="bold" /> : <ChatCenteredDots size={24} weight="fill" />}
         {!isOpen && messages.length > 1 && (
           <span className="chat-notification-badge"></span>
         )}
@@ -204,9 +196,7 @@ function ChatWidget() {
           <div className="chat-widget-header">
             <div className="chat-widget-header-info">
               <div className="chat-bot-avatar">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.11 3.89 23 5 23H19C20.11 23 21 22.11 21 21V9H21ZM19 21H5V3H13V9H19V21Z" fill="currentColor"/>
-                </svg>
+                <Robot size={22} weight="fill" />
               </div>
               <div>
                 <h3>Assistente Virtual</h3>
@@ -218,9 +208,7 @@ function ChatWidget() {
               onClick={() => setIsOpen(false)}
               aria-label="Fechar chat"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <X size={18} weight="bold" />
             </button>
           </div>
 
@@ -271,9 +259,7 @@ function ChatWidget() {
               disabled={!inputMessage.trim() || loading}
               className="chat-send-button"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <PaperPlaneRight size={18} weight="bold" />
             </button>
           </form>
         </div>

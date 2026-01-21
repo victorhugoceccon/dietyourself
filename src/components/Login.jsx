@@ -71,8 +71,15 @@ function Login() {
 
     } catch (err) {
       console.error('Erro no login:', err)
-      if (err.message === 'Failed to fetch' || err.name === 'TypeError' || err.message.includes('fetch')) {
-        setError('Erro de conexão. Verifique se o servidor está acessível.')
+      console.error('URL tentada:', `${AUTH_API_URL}/login`)
+      console.error('Erro completo:', {
+        message: err.message,
+        name: err.name,
+        stack: err.stack
+      })
+      
+      if (err.message === 'Failed to fetch' || err.name === 'TypeError' || err.message.includes('fetch') || err.message.includes('ERR_CONNECTION_RESET')) {
+        setError('Erro de conexão com o servidor. Verifique se o backend está rodando e acessível.')
       } else if (err.message) {
         setError(err.message)
       } else {

@@ -1,10 +1,12 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Barbell, CheckCircle, Lightbulb, LinkSimple, NotePencil, Plus, Trophy } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import ImageCropModal from './ImageCropModal'
 import './ProjetosMobileView.css'
 
 function ProjetosMobileView() {
+  const gibaLogoUrl = `${import.meta.env.BASE_URL}giba-team-app.png`
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [grupos, setGrupos] = useState([])
@@ -135,8 +137,11 @@ function ProjetosMobileView() {
       {/* Hero */}
       <div className="giba-proj-welcome">
         <div className="giba-proj-badge">
-          <span className="giba-proj-badge-icon">🏆</span>
-          <span className="giba-proj-badge-text">GIBA</span>
+          <img
+            src={gibaLogoUrl}
+            alt="GIBA"
+            className="giba-proj-badge-icon"
+          />
         </div>
         <h1 className="giba-proj-welcome-title">Desafios em equipe</h1>
         <p className="giba-proj-welcome-sub">
@@ -155,7 +160,9 @@ function ProjetosMobileView() {
 
         <div className="giba-proj-actions-grid">
           <button className="giba-proj-action-card" onClick={() => setShowCreate(true)}>
-            <span className="giba-proj-action-icon">➕</span>
+            <span className="giba-proj-action-icon">
+              <Plus size={18} weight="bold" />
+            </span>
             <div className="giba-proj-action-info">
               <h3>Criar projeto</h3>
               <p>Monte seu desafio e convide amigos</p>
@@ -163,7 +170,9 @@ function ProjetosMobileView() {
           </button>
 
           <button className="giba-proj-action-card" onClick={() => setShowJoin(true)}>
-            <span className="giba-proj-action-icon">🔗</span>
+            <span className="giba-proj-action-icon">
+              <LinkSimple size={18} weight="bold" />
+            </span>
             <div className="giba-proj-action-info">
               <h3>Entrar com código</h3>
               <p>Use um código de convite para participar</p>
@@ -214,17 +223,23 @@ function ProjetosMobileView() {
 
         <div className="giba-proj-points-grid">
           <div className="giba-proj-point-card">
-            <span className="giba-proj-point-icon">✅</span>
+            <span className="giba-proj-point-icon">
+              <CheckCircle size={18} weight="fill" />
+            </span>
             <span className="giba-proj-point-value">+10</span>
             <span className="giba-proj-point-label">Check-in completo</span>
           </div>
           <div className="giba-proj-point-card">
-            <span className="giba-proj-point-icon">📝</span>
+            <span className="giba-proj-point-icon">
+              <NotePencil size={18} weight="fill" />
+            </span>
             <span className="giba-proj-point-value">+5</span>
             <span className="giba-proj-point-label">Check-in parcial</span>
           </div>
           <div className="giba-proj-point-card">
-            <span className="giba-proj-point-icon">💪</span>
+            <span className="giba-proj-point-icon">
+              <Barbell size={18} weight="fill" />
+            </span>
             <span className="giba-proj-point-value">+20</span>
             <span className="giba-proj-point-label">Treino finalizado</span>
           </div>
@@ -244,8 +259,7 @@ function ProjetosMobileView() {
       {/* Hero */}
       <div className="giba-proj-hero">
         <div className="giba-proj-hero-badge">
-          <span>🏆</span>
-          <span>GIBA</span>
+          <img src={gibaLogoUrl} alt="GIBA" />
         </div>
         <h1 className="giba-proj-hero-title">Seus projetos</h1>
         <p className="giba-proj-hero-sub">
@@ -257,10 +271,10 @@ function ProjetosMobileView() {
       <section className="giba-proj-section">
         <div className="giba-proj-quick-actions">
           <button className="giba-proj-quick-btn" onClick={() => setShowCreate(true)}>
-            <span>➕</span> Criar projeto
+            <Plus size={16} weight="bold" /> Criar projeto
           </button>
           <button className="giba-proj-quick-btn secondary" onClick={() => setShowJoin(true)}>
-            <span>🔗</span> Entrar com código
+            <LinkSimple size={16} weight="bold" /> Entrar com código
           </button>
         </div>
       </section>
@@ -283,7 +297,7 @@ function ProjetosMobileView() {
                   <img src={g.bannerUrl} alt={g.nome} />
                 ) : (
                   <div className="giba-proj-card-placeholder">
-                    <span>🏆</span>
+                    <Trophy size={16} weight="fill" />
                   </div>
                 )}
                 <div className="giba-proj-card-overlay"></div>
@@ -399,7 +413,7 @@ function ProjetosMobileView() {
               </div>
 
               <div className="giba-proj-info-box">
-                <span>💡</span>
+                <Lightbulb size={16} weight="fill" />
                 <p>Após criar, você receberá um código de convite para compartilhar com amigos.</p>
               </div>
             </div>
@@ -447,7 +461,7 @@ function ProjetosMobileView() {
               </div>
 
               <div className="giba-proj-info-box">
-                <span>💡</span>
+                <Lightbulb size={16} weight="fill" />
                 <p>O código tem 6 caracteres e foi enviado pelo criador do projeto.</p>
               </div>
             </div>

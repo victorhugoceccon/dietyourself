@@ -1,15 +1,15 @@
 /* Botão flutuante do chat - Lado direito, sempre visível */
 .chat-widget-button {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: white;
-  border: none;
-  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4), 0 2px 8px rgba(0, 0, 0, 0.15);
+  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  color: #0f1419;
+  border: 1px solid rgba(255, 222, 89, 0.35);
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.35), 0 4px 10px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -19,8 +19,8 @@
 }
 
 .chat-widget-button:hover {
-  transform: scale(1.1) translateY(-2px);
-  box-shadow: 0 8px 30px rgba(76, 175, 80, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(245, 158, 11, 0.45), 0 6px 14px rgba(0, 0, 0, 0.3);
 }
 
 .chat-widget-button:active {
@@ -29,8 +29,8 @@
 
 /* Ícone melhorado do chat */
 .chat-widget-button svg {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   transition: transform 0.2s ease;
 }
 
@@ -69,14 +69,14 @@
 /* Container do widget - Posicionado acima do botão */
 .chat-widget-container {
   position: fixed;
-  bottom: 90px;
-  right: 2rem;
-  width: 400px;
-  max-height: 650px;
+  bottom: calc(168px + env(safe-area-inset-bottom, 0px));
+  right: 16px;
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(70vh, 640px);
   height: 600px;
-  background: var(--bg-primary, #ffffff);
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  background: #0f1419;
+  border-radius: 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   z-index: 999;
@@ -101,13 +101,14 @@
 
 /* Header do chat */
 .chat-widget-header {
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: white;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(249, 115, 22, 0.12) 100%);
+  color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 222, 89, 0.12);
 }
 
 .dark-mode .chat-widget-header {
@@ -121,21 +122,21 @@
 }
 
 .chat-bot-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(245, 158, 11, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 222, 89, 0.25);
 }
 
 .chat-bot-avatar svg {
-  width: 24px;
-  height: 24px;
-  color: white;
+  width: 22px;
+  height: 22px;
+  color: #ffde59;
 }
 
 .chat-widget-header h3 {
@@ -153,13 +154,13 @@
 }
 
 .chat-widget-close {
-  width: 36px;
-  height: 36px;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: white;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,11 +183,11 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 1.5rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background: var(--bg-secondary, #f5f7fa);
+  background: #0b0f14;
 }
 
 .dark-mode .chat-widget-messages {
@@ -227,10 +228,10 @@
 }
 
 .user-message .message-content {
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: white;
-  border-bottom-right-radius: 4px;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  color: #0f1419;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
 .dark-mode .user-message .message-content {
@@ -239,11 +240,11 @@
 }
 
 .bot-message .message-content {
-  background: var(--bg-primary, #ffffff);
-  color: var(--text-primary, #333);
-  border-bottom-left-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--border-color, #e8e8e8);
+  background: #111827;
+  color: #e2e8f0;
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dark-mode .bot-message .message-content {
@@ -347,9 +348,9 @@
 
 /* Input area */
 .chat-widget-input {
-  padding: 1.25rem;
-  background: var(--bg-primary, #ffffff);
-  border-top: 1px solid var(--border-color, #e0e0e0);
+  padding: 1rem 1.25rem;
+  background: #0f1419;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   gap: 0.75rem;
   flex-shrink: 0;
@@ -362,14 +363,14 @@
 
 .chat-widget-input input {
   flex: 1;
-  padding: 0.875rem 1.25rem;
-  border: 2px solid var(--border-color, #e0e0e0);
-  border-radius: 25px;
-  font-size: 0.9375rem;
+  padding: 0.75rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  font-size: 0.9rem;
   outline: none;
   transition: all 0.2s ease;
-  background: var(--bg-secondary, #f5f5f5);
-  color: var(--text-primary, #333);
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
   font-family: inherit;
 }
 
@@ -380,8 +381,8 @@
 }
 
 .chat-widget-input input:focus {
-  border-color: var(--accent-color, #4CAF50);
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  border-color: rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
 }
 
 .dark-mode .chat-widget-input input:focus {
@@ -400,11 +401,11 @@
 
 /* Botão de enviar */
 .chat-send-button {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  color: #0f1419;
   border: none;
   cursor: pointer;
   display: flex;
@@ -412,7 +413,7 @@
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
 }
 
 .dark-mode .chat-send-button {
@@ -421,8 +422,8 @@
 }
 
 .chat-send-button:hover:not(:disabled) {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.45);
 }
 
 .dark-mode .chat-send-button:hover:not(:disabled) {
@@ -473,19 +474,20 @@
 /* Responsive */
 @media (max-width: 768px) {
   .chat-widget-container {
-    width: calc(100vw - 2rem);
-    max-width: 400px;
-    height: calc(100vh - 100px);
-    max-height: calc(100vh - 100px);
-    right: 1rem;
-    bottom: 80px;
+    width: calc(100vw - 24px);
+    max-width: 420px;
+    height: calc(100vh - 160px);
+    max-height: calc(100vh - 160px);
+    right: 12px;
+    bottom: calc(150px + env(safe-area-inset-bottom, 0px));
   }
 
   .chat-widget-button {
-    bottom: 1rem;
-    right: 1rem;
-    width: 56px;
-    height: 56px;
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
   }
 
   .chat-widget-button svg {
@@ -502,20 +504,21 @@
 /* Mobile - Ajustar posição acima da navegação fixa */
 @media (max-width: 480px) {
   .chat-widget-button {
-    bottom: 80px; /* Acima da barra de navegação fixa (70px + 10px de margem) */
-    right: 1rem;
-    width: 56px;
-    height: 56px;
-    z-index: 999; /* Abaixo da navegação (z-index 1000) mas acima do conteúdo */
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    right: 10px;
+    width: 52px;
+    height: 52px;
+    z-index: 999;
+    border-radius: 16px;
   }
 
   .chat-widget-container {
-    width: calc(100vw - 2rem);
-    max-width: 400px;
-    height: calc(100vh - 180px);
-    max-height: calc(100vh - 180px);
-    right: 1rem;
-    bottom: 80px; /* Acima da barra de navegação */
+    width: calc(100vw - 16px);
+    max-width: 420px;
+    height: calc(100vh - 190px);
+    max-height: calc(100vh - 190px);
+    right: 8px;
+    bottom: calc(150px + env(safe-area-inset-bottom, 0px));
   }
 
   .chat-widget-button svg {

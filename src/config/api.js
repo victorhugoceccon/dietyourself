@@ -1,7 +1,33 @@
 // Em produção, usar caminho relativo para aproveitar o proxy do Nginx
 // Em desenvolvimento, usar VITE_API_URL ou localhost
-const API_BASE = import.meta.env.VITE_API_URL || 
-  (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api')
+// Tenta porta 8081 primeiro (backend atual), depois 5000 (fallback)
+const getApiBase = () => {
+  // Se VITE_API_URL estiver definido, usar ele
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
+  }
+  
+  // Em produção, usar caminho relativo (proxy do Nginx)
+  if (import.meta.env.PROD) {
+    return '/api'
+  }
+  
+  // Em desenvolvimento, tentar porta 8081 primeiro, depois 5000
+  // O Vite proxy vai redirecionar /api para o backend
+  return '/api'
+}
+
+const API_BASE = getApiBase()
+
+// #region agent log
+console.log('🔍 API Configuration:', {
+  VITE_API_URL: import.meta.env.VITE_API_URL,
+  PROD: import.meta.env.PROD,
+  MODE: import.meta.env.MODE,
+  API_BASE: API_BASE,
+  AUTH_API_URL: `${API_BASE}/auth`
+})
+// #endregion
 
 export const API_URL = API_BASE
 export const AUTH_API_URL = `${API_BASE}/auth`

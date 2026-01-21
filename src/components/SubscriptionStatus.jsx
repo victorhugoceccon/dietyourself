@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Lock, Clock, Warning } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './SubscriptionStatus.css'
 
@@ -43,7 +44,13 @@ function SubscriptionStatus({ showBanner = true }) {
     return (
       <div className={`subscription-banner ${subscription.daysRemaining <= 1 ? 'urgent' : 'warning'}`}>
         <div className="banner-content">
-          <span className="banner-icon">⏰</span>
+          <span className="banner-icon">
+            {subscription.daysRemaining <= 1 ? (
+              <Warning size={20} weight="fill" />
+            ) : (
+              <Clock size={20} weight="fill" />
+            )}
+          </span>
           <div className="banner-text">
             {subscription.daysRemaining === 0 ? (
               <strong>Seu período de teste expira hoje!</strong>
@@ -72,7 +79,9 @@ function SubscriptionStatus({ showBanner = true }) {
     return (
       <div className="subscription-banner expired">
         <div className="banner-content">
-          <span className="banner-icon">🔒</span>
+          <span className="banner-icon">
+            <Lock size={20} weight="fill" />
+          </span>
           <div className="banner-text">
             <strong>
               {subscription.status === 'EXPIRED' 

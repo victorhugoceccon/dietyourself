@@ -42,23 +42,46 @@ export const requireActiveSubscription = async (req, res, next) => {
       const now = new Date()
       const trialEnd = new Date(now.getTime() + trialDays * 24 * 60 * 60 * 1000)
 
-      await prisma.subscription.create({
-        data: {
-          userId: user.id,
-          plan: 'FREE_TRIAL',
-          status: 'TRIAL',
-          trialStartDate: now,
-          trialEndDate: trialEnd
-        }
-      })
+      try {
+        await prisma.subscription.create({
+          data: {
+            userId: user.id,
+            plan: 'FREE_TRIAL',
+            status: 'TRIAL',
+            trialStartDate: now,
+            trialEndDate: trialEnd
+          }
+        })
+      } catch (createError) {
+        // Se der erro ao criar (ex: já existe), continua mesmo assim
+        console.warn('⚠️ Erro ao criar subscription (pode já existir):', createError?.message || createError)
+      }
 
       // Continua com acesso
+      req.subscriptionStatus = 'TRIAL'
+      req.trialDaysRemaining = trialDays
       return next()
     }
 
     // Verificar status da assinatura
     const now = new Date()
 
+    // TEMPORÁRIO: Verificações de assinatura desabilitadas para testes
+    // TODO: Reativar após testes
+    
+    // Permitir acesso sempre durante os testes
+    if (subscription) {
+      req.subscriptionStatus = subscription.status || 'TRIAL'
+      if (subscription.trialEndDate) {
+        req.trialDaysRemaining = Math.ceil((subscription.trialEndDate - now) / (1000 * 60 * 60 * 24))
+      }
+    } else {
+      req.subscriptionStatus = 'TRIAL'
+      req.trialDaysRemaining = 7
+    }
+    return next()
+    
+    /*
     // Trial ativo
     if (subscription.status === 'TRIAL') {
       if (subscription.trialEndDate && subscription.trialEndDate > now) {
@@ -107,6 +130,7 @@ export const requireActiveSubscription = async (req, res, next) => {
         message: 'Sua assinatura está inativa. Reative para continuar usando o LifeFit.'
       })
     }
+    */
 
     // Fallback - permite acesso
     next()

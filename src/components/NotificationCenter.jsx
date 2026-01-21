@@ -1,5 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { API_URL } from '../config/api'
+import { 
+  ForkKnife, 
+  CheckCircle, 
+  Barbell, 
+  ChatCircle, 
+  Bell 
+} from '@phosphor-icons/react'
 import './NotificationCenter.css'
 
 /**
@@ -108,40 +115,18 @@ function NotificationCenter() {
   }
 
   const getNotificationIcon = (type) => {
+    const iconProps = { size: 16, weight: "regular" }
     switch (type) {
       case 'diet':
-        return (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-          </svg>
-        )
+        return <ForkKnife {...iconProps} />
       case 'checkin':
-        return (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
-        )
+        return <CheckCircle {...iconProps} />
       case 'workout':
-        return (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-          </svg>
-        )
+        return <Barbell {...iconProps} />
       case 'feedback':
-        return (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
-        )
+        return <ChatCircle {...iconProps} />
       default:
-        return (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-        )
+        return <Bell {...iconProps} />
     }
   }
 
@@ -168,10 +153,7 @@ function NotificationCenter() {
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Notificações"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
+        <Bell size={20} weight="regular" />
         {unreadCount > 0 && (
           <span className="notification-badge">
             {unreadCount > 99 ? '99+' : unreadCount}
@@ -201,10 +183,7 @@ function NotificationCenter() {
               </div>
             ) : notifications.length === 0 ? (
               <div className="notification-empty">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
+                <Bell size={32} weight="duotone" />
                 <p>Nenhuma notificação</p>
               </div>
             ) : (

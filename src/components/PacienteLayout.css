@@ -8,6 +8,9 @@
   min-height: 100dvh;
   background: #06080f;
   transition: background var(--transition-base);
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* ===== HEADER ===== */
@@ -15,8 +18,7 @@
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   padding: var(--space-xl) var(--space-2xl);
-  padding-top: 90px; /* Valor fixo alto para garantir espaço no iPhone */
-  padding-top: calc(20px + env(safe-area-inset-top, 44px)); /* Aplicar safe-area quando disponível */
+  padding-top: max(90px, calc(20px + env(safe-area-inset-top, 44px))); /* iPhone notch + status bar */
   margin: 0;
   margin-bottom: 0 !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -557,91 +559,159 @@ h1.logo {
   }
 }
 
-.paciente-nav {
-  background: var(--card-bg, #ffffff);
-  border-bottom: 1px solid var(--border-color-light);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 0 var(--space-2xl);
-  position: sticky;
-  top: 73px;
-  z-index: 99;
-  backdrop-filter: blur(20px);
-  display: block; /* Sempre visível por padrão */
+/* ===== MENU MOBILE - NOVO BRANDING (CLASSES EXCLUSIVAS) ===== */
+.paciente-bottom-nav {
+  display: none;
 }
 
-/* Mobile: esconder nav do header, garantir que nav separado esteja visível */
+@media (max-width: 768px) {
+  .paciente-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    width: 100%;
+    max-width: 100vw;
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+    margin: 0;
+    background: #0B0F14;
+    border-top: 1px solid rgba(255, 222, 89, 0.16);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .paciente-bottom-nav__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 520px;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+
+  .paciente-bottom-nav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    flex: 1;
+    min-width: 0;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: var(--font-family-base);
+    font-size: 10px;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border 0.2s ease;
+  }
+
+  .paciente-bottom-nav__item svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .paciente-bottom-nav__item.is-active {
+    color: var(--accent-color);
+    background: rgba(255, 222, 89, 0.12);
+    border-color: rgba(255, 222, 89, 0.3);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+  }
+
+  .paciente-bottom-nav__item.is-active svg {
+    transform: scale(1.08);
+    filter: drop-shadow(0 2px 6px rgba(255, 222, 89, 0.3));
+  }
+
+  .paciente-bottom-nav__item:hover:not(.is-active) {
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .paciente-bottom-nav__label {
+    display: block;
+    width: 100%;
+    text-align: center;
+    line-height: 1.2;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 2.4em;
+  }
+
+  .paciente-content-wrapper {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .paciente-bottom-nav__item {
+    padding: 8px 6px;
+    font-size: 9px;
+    letter-spacing: 0.01em;
+  }
+
+  .paciente-bottom-nav__item svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* ===== NAVEGAÇÃO MOBILE - DESIGN NOVO ===== */
+/* Menu de navegação mobile - apenas visível em telas pequenas */
+.paciente-nav {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .header-nav-items {
     display: none !important;
   }
   
   .paciente-nav {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+    display: flex !important;
   }
 }
 
-.nav-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  gap: var(--space-xs);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.nav-content::-webkit-scrollbar {
-  display: none;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-  padding: var(--space-lg) var(--space-xl);
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  position: relative;
-  white-space: nowrap;
-  font-family: var(--font-family-base);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.nav-text {
-  display: inline-block;
-}
-
-.nav-item:hover {
-  color: #ffde59;
-  background: var(--bg-tertiary);
-}
-
-.nav-item.active {
-  color: #ffde59;
-  border-bottom-color: #ffde59;
-  font-weight: var(--font-weight-semibold);
-  background: transparent;
-}
-
-.nav-item svg {
-  transition: transform var(--transition-base);
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
-.nav-item:hover svg {
-  transform: scale(1.05);
+/* Forçar estilo do menu em telas pequenas - aplicar em 480px */
+@media (max-width: 480px) {
+  nav.paciente-nav,
+  .paciente-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    z-index: 9999 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 0 !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    margin: 0 !important;
+    background: #0B0F14 !important;
+    border-top: 1px solid rgba(255, 222, 89, 0.08) !important;
+    border-bottom: none !important;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transform: none !important;
+  }
 }
 
 /* ===== WRAPPER PRINCIPAL ===== */
@@ -678,14 +748,7 @@ h1.logo {
   z-index: 1;
 }
 
-/* Espaçamento padrão entre seções das páginas */
-.paciente-main-content > * {
-  margin-bottom: var(--space-3xl);
-}
-
-.paciente-main-content > *:last-child {
-  margin-bottom: 0;
-}
+/* Espaçamento entre seções agora é controlado pelos próprios componentes */
 
 
 /* ===== RESPONSIVE ===== */
@@ -821,52 +884,7 @@ h1.logo {
   }
 
 
-  .paciente-nav {
-    padding: 0 var(--space-lg);
-    top: 73px;
-    background: var(--card-bg, #ffffff);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 98;
-    backdrop-filter: blur(20px);
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  .paciente-main-content {
-    margin-top: 50px; /* Espaço mínimo para o nav fixo no topo */
-  }
-
-  .nav-content {
-    gap: var(--space-xs);
-    padding-bottom: var(--space-sm);
-    justify-content: center;
-  }
-
-  .nav-item {
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--font-size-sm);
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-xs);
-  }
-
-  .nav-item svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .nav-text {
-    font-size: var(--font-size-xs);
-    text-align: center;
-  }
+  /* Menu mobile removido - será definido apenas no media query de 480px */
 
   .paciente-content-wrapper {
     gap: 0;
@@ -995,83 +1013,14 @@ h1.logo {
     opacity: 1 !important;
   }
 
-  .paciente-nav {
-    padding: 0;
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    border-bottom: none;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-    z-index: 1000 !important;
-    background: rgba(255, 255, 255, 0.98) !important;
-    backdrop-filter: blur(20px);
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 100% !important;
-  }
-
-  .nav-content {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    justify-content: space-around;
-    align-items: center;
-    padding: var(--space-xs) 0;
-    gap: 0;
-    width: 100%;
-    min-height: 60px; /* Altura mínima para garantir visibilidade */
-  }
-
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-xs);
-    padding: var(--space-xs) var(--space-sm);
-    flex: 1;
-    min-width: 0;
-    border-bottom: none;
-    border-top: 2px solid transparent;
-    background: transparent;
-  }
-
-  .nav-item.active {
-    border-top-color: #ffde59;
-    border-bottom: none;
-    color: #ffde59;
-  }
-
-  .nav-item svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
-
-  .nav-text {
-    display: block;
-    font-size: 9px;
-    font-weight: var(--font-weight-medium);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    text-align: center;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-  }
-
   .paciente-content-wrapper {
     gap: 0;
     padding: 0;
-    padding-bottom: 80px; /* Espaço para navegação fixa no bottom */
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; /* Espaço para navegação fixa no bottom + safe area */
     background: #06080f;
     margin-top: 0;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
   }
 
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { ArrowsClockwise, CheckCircle, Circle, Lightning, NotePencil, PencilSimple, X } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './DailyCheckInCompact.css'
 
@@ -96,13 +97,13 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
   const getAdherenceInfo = (adherence) => {
     switch (adherence) {
       case 'TOTAL':
-        return { emoji: '✅', label: 'Segui totalmente', color: '#4CAF50' }
+        return { icon: CheckCircle, label: 'Segui totalmente', color: '#4CAF50' }
       case 'PARCIAL':
-        return { emoji: '⚡', label: 'Segui parcialmente', color: '#FF9800' }
+        return { icon: Lightning, label: 'Segui parcialmente', color: '#FF9800' }
       case 'NAO_SEGUIU':
-        return { emoji: '🔄', label: 'Não segui', color: '#F44336' }
+        return { icon: ArrowsClockwise, label: 'Não segui', color: '#F44336' }
       default:
-        return { emoji: '○', label: 'Não registrado', color: '#999' }
+        return { icon: Circle, label: 'Não registrado', color: '#999' }
     }
   }
 
@@ -124,7 +125,9 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
             <div className="checkin-status-card">
               <div className="checkin-status-header">
                 <div className="checkin-status-icon" style={{ backgroundColor: `${adherenceInfo.color}15`, borderColor: adherenceInfo.color }}>
-                  <span className="checkin-status-emoji">{adherenceInfo.emoji}</span>
+                  <span className="checkin-status-emoji">
+                    <adherenceInfo.icon size={18} weight="fill" style={{ color: adherenceInfo.color }} />
+                  </span>
                 </div>
                 <div className="checkin-status-content">
                   <h3 className="checkin-status-title">Check-in de hoje</h3>
@@ -146,16 +149,15 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
                 className="checkin-edit-btn"
                 onClick={() => setShowForm(true)}
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
+                <PencilSimple size={16} weight="bold" />
                 <span>Atualizar</span>
               </button>
             </div>
           ) : (
             <div className="checkin-prompt-card">
-              <div className="checkin-prompt-icon">📝</div>
+              <div className="checkin-prompt-icon">
+                <NotePencil size={20} weight="fill" />
+              </div>
               <div className="checkin-prompt-content">
                 <h3 className="checkin-prompt-title">Registre seu check-in</h3>
                 <p className="checkin-prompt-description">Como foi sua adesão à dieta hoje?</p>
@@ -184,9 +186,7 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
                 }
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 6L6 18M6 6L18 18" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <X size={20} weight="bold" />
             </button>
           </div>
 
@@ -200,7 +200,9 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
                   className={`adherence-option ${adherence === 'TOTAL' ? 'selected' : ''}`}
                   style={adherence === 'TOTAL' ? { borderColor: '#4CAF50', backgroundColor: '#4CAF5015' } : {}}
                 >
-                  <span className="adherence-option-emoji">✅</span>
+                  <span className="adherence-option-emoji">
+                    <CheckCircle size={18} weight="fill" />
+                  </span>
                   <span className="adherence-option-label">Total</span>
                 </button>
                 <button
@@ -209,7 +211,9 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
                   className={`adherence-option ${adherence === 'PARCIAL' ? 'selected' : ''}`}
                   style={adherence === 'PARCIAL' ? { borderColor: '#FF9800', backgroundColor: '#FF980015' } : {}}
                 >
-                  <span className="adherence-option-emoji">⚡</span>
+                  <span className="adherence-option-emoji">
+                    <Lightning size={18} weight="fill" />
+                  </span>
                   <span className="adherence-option-label">Parcial</span>
                 </button>
                 <button
@@ -218,7 +222,9 @@ function DailyCheckInCompact({ refreshTrigger, onCheckInComplete }) {
                   className={`adherence-option ${adherence === 'NAO_SEGUIU' ? 'selected' : ''}`}
                   style={adherence === 'NAO_SEGUIU' ? { borderColor: '#F44336', backgroundColor: '#F4433615' } : {}}
                 >
-                  <span className="adherence-option-emoji">🔄</span>
+                  <span className="adherence-option-emoji">
+                    <ArrowsClockwise size={18} weight="fill" />
+                  </span>
                   <span className="adherence-option-label">Não segui</span>
                 </button>
               </div>

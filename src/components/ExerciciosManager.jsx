@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
 import { API_URL } from '../config/api'
+import { 
+  Barbell, 
+  Heart, 
+  Circle, 
+  ArrowUp, 
+  ArrowDown, 
+  FileText, 
+  MagnifyingGlass,
+  Play,
+  Pencil,
+  Trash,
+  X
+} from '@phosphor-icons/react'
 import './ExerciciosManager.css'
 
 const CATEGORIAS = [
@@ -18,64 +31,18 @@ const CATEGORIAS = [
 
 // Função para obter ícone baseado na categoria
 const getCategoryIcon = (categoria) => {
+  const iconProps = { size: 24, weight: "regular" }
   const icons = {
-    'Peito': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
-      </svg>
-    ),
-    'Costas': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
-        <path d="M12 2v20"/>
-      </svg>
-    ),
-    'Ombro': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
-      </svg>
-    ),
-    'Bíceps': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2v20M8 6l4-4 4 4M8 18l4 4 4-4"/>
-      </svg>
-    ),
-    'Tríceps': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2v20M6 6l6-4 6 4M6 18l6 4 6-4"/>
-      </svg>
-    ),
-    'Pernas': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2v20M8 8h8M8 12h8M8 16h8"/>
-      </svg>
-    ),
-    'Glúteos': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M8 12h8M12 8v8"/>
-      </svg>
-    ),
-    'Abdômen': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <rect x="3" y="3" width="18" height="18" rx="2"/>
-        <path d="M9 9h6M9 15h6"/>
-      </svg>
-    ),
-    'Cardio': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2v20M2 12h20M12 2l8 10-8 10-8-10 8-10z"/>
-      </svg>
-    ),
-    'Outros': (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
-      </svg>
-    )
+    'Peito': <Barbell {...iconProps} />,
+    'Costas': <Barbell {...iconProps} />,
+    'Ombro': <Circle {...iconProps} />,
+    'Bíceps': <ArrowUp {...iconProps} />,
+    'Tríceps': <ArrowDown {...iconProps} />,
+    'Pernas': <Barbell {...iconProps} />,
+    'Glúteos': <Circle {...iconProps} />,
+    'Abdômen': <Circle {...iconProps} />,
+    'Cardio': <Heart {...iconProps} weight="fill" />,
+    'Outros': <Barbell {...iconProps} />
   }
   return icons[categoria] || icons['Outros']
 }
@@ -334,6 +301,7 @@ function ExerciciosManager() {
 
       <div className="exercicios-filters">
         <div className="search-input-container">
+          <MagnifyingGlass size={20} weight="regular" className="search-icon" />
           <input
             type="text"
             placeholder="Buscar exercício..."
@@ -362,12 +330,7 @@ function ExerciciosManager() {
         {exercicios.length === 0 && !loading ? (
           <div className="empty-state">
             <div className="empty-state-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="12" y1="18" x2="12" y2="12"/>
-                <line x1="9" y1="15" x2="15" y2="15"/>
-              </svg>
+              <FileText size={80} weight="duotone" />
             </div>
             <h3>Nenhum exercício cadastrado ainda</h3>
             <p>Comece criando seu primeiro exercício para organizar seus treinos.</p>
@@ -381,10 +344,7 @@ function ExerciciosManager() {
         ) : filteredExercicios.length === 0 ? (
           <div className="empty-state">
             <div className="empty-state-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.35-4.35"/>
-              </svg>
+              <MagnifyingGlass size={60} weight="duotone" />
             </div>
             <h3>Nenhum exercício encontrado</h3>
             <p>Tente ajustar os filtros de busca ou criar um novo exercício.</p>
@@ -423,9 +383,7 @@ function ExerciciosManager() {
                       className="btn-view-video"
                       onClick={() => handleViewVideo(exercicio.videoUrl)}
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                      </svg>
+                      <Play size={16} weight="fill" />
                       Ver Vídeo
                     </button>
                   )}
@@ -433,12 +391,14 @@ function ExerciciosManager() {
                     className="btn-edit"
                     onClick={() => handleOpenModal(exercicio)}
                   >
+                    <Pencil size={16} weight="regular" />
                     Editar
                   </button>
                   <button
                     className="btn-delete"
                     onClick={() => handleDelete(exercicio.id)}
                   >
+                    <Trash size={16} weight="regular" />
                     Deletar
                   </button>
                 </div>
@@ -454,7 +414,9 @@ function ExerciciosManager() {
           <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="video-modal-header">
               <h3>Vídeo do Exercício</h3>
-              <button className="modal-close" onClick={() => setViewingVideo(null)}>×</button>
+              <button className="modal-close" onClick={() => setViewingVideo(null)}>
+                <X size={20} weight="bold" />
+              </button>
             </div>
             <div className="video-modal-body">
               <video
@@ -477,7 +439,7 @@ function ExerciciosManager() {
             onClick={() => setToast(null)}
             aria-label="Fechar notificação"
           >
-            ×
+            <X size={16} weight="bold" />
           </button>
         </div>
       )}
@@ -491,7 +453,9 @@ function ExerciciosManager() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{editingExercicio ? 'Editar Exercício' : 'Novo Exercício'}</h3>
-              <button className="modal-close" onClick={handleCloseModal}>×</button>
+              <button className="modal-close" onClick={handleCloseModal}>
+                <X size={20} weight="bold" />
+              </button>
             </div>
 
             <form onSubmit={handleSave}>

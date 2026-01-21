@@ -22,7 +22,7 @@
   width: 50px;
   height: 50px;
   border: 3px solid #2a3142;
-  border-top-color: #a78bfa;
+  border-top-color: #f59e0b;
   border-radius: 50%;
   animation: gibaProjSpinner 1s linear infinite;
 }
@@ -71,20 +71,23 @@
 .giba-proj-badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-  padding: 8px 20px;
-  border-radius: 30px;
+  padding: 8px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #f59e0b;
   margin-bottom: 24px;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 1px;
-  color: #0f1419;
-  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.3);
 }
 
 .giba-proj-badge-icon {
-  font-size: 18px;
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .giba-proj-badge-text {
@@ -121,14 +124,23 @@
 .giba-proj-hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  font-weight: 700;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 24px;
   font-size: 13px;
-  color: #0f1419;
+  font-weight: 500;
+  color: #f59e0b;
+  margin-bottom: 24px;
+}
+
+.giba-proj-hero-badge img {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .giba-proj-hero-title {
@@ -140,7 +152,7 @@
 
 .giba-proj-hero-sub {
   font-size: 14px;
-  color: #a78bfa;
+  color: #f59e0b;
   margin: 0;
   font-weight: 500;
 }
@@ -197,7 +209,7 @@
 }
 
 .giba-proj-action-card:hover {
-  border-color: #a78bfa;
+  border-color: #f59e0b;
   background: #252d3d;
 }
 
@@ -241,7 +253,7 @@
 .giba-proj-how-num {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+  background: linear-gradient(135deg, #f59e0b, #f97316);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -294,7 +306,7 @@
   display: block;
   font-size: 22px;
   font-weight: 800;
-  color: #a78bfa;
+  color: #f59e0b;
   margin-bottom: 4px;
 }
 
@@ -322,7 +334,7 @@
   font-size: 14px;
   font-weight: 700;
   color: #0f1419;
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -331,17 +343,17 @@
 
 .giba-proj-quick-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.4);
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
 }
 
 .giba-proj-quick-btn.secondary {
   background: transparent;
-  border: 2px solid #a78bfa;
-  color: #a78bfa;
+  border: 2px solid #f59e0b;
+  color: #f59e0b;
 }
 
 .giba-proj-quick-btn.secondary:hover {
-  background: rgba(167, 139, 250, 0.1);
+  background: rgba(245, 158, 11, 0.1);
 }
 
 /* =====================
@@ -364,7 +376,7 @@
 }
 
 .giba-proj-card:hover {
-  border-color: rgba(167, 139, 250, 0.3);
+  border-color: rgba(245, 158, 11, 0.3);
   transform: translateY(-2px);
 }
 
@@ -400,7 +412,7 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  background: rgba(167, 139, 250, 0.9);
+  background: rgba(245, 158, 11, 0.9);
   color: #0f1419;
   padding: 4px 10px;
   border-radius: 20px;
@@ -453,14 +465,14 @@
 .giba-proj-card-code-value {
   font-size: 14px;
   font-weight: 700;
-  color: #a78bfa;
+  color: #f59e0b;
   font-family: monospace;
 }
 
 .giba-proj-card-share {
   width: 32px;
   height: 32px;
-  background: rgba(167, 139, 250, 0.15);
+  background: rgba(245, 158, 11, 0.15);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -469,13 +481,13 @@
 }
 
 .giba-proj-card-share:hover {
-  background: rgba(167, 139, 250, 0.25);
+  background: rgba(245, 158, 11, 0.25);
 }
 
 .giba-proj-card-cta {
   font-size: 13px;
   font-weight: 600;
-  color: #a78bfa;
+  color: #f59e0b;
 }
 
 /* =====================
@@ -487,29 +499,30 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 10000;
   padding: 20px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px) + 88px);
 }
 
 .giba-proj-modal {
   background: #1e2534;
-  border-radius: 20px 20px 0 0;
+  border-radius: 20px;
   width: 100%;
   max-width: 500px;
-  max-height: 90vh;
+  max-height: calc(90vh - 88px - env(safe-area-inset-bottom, 0px));
   overflow-y: auto;
   animation: slideUpModal 0.3s ease;
 }
 
 @keyframes slideUpModal {
   from {
-    transform: translateY(100%);
+    transform: translateY(20px) scale(0.95);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
@@ -572,7 +585,7 @@
 .giba-proj-form-group input:focus,
 .giba-proj-form-group textarea:focus {
   outline: none;
-  border-color: #a78bfa;
+  border-color: #f59e0b;
 }
 
 .giba-proj-form-group textarea {
@@ -607,7 +620,7 @@
 }
 
 .giba-proj-upload-btn:hover {
-  border-color: #a78bfa;
+  border-color: #f59e0b;
 }
 
 .giba-proj-upload-btn input {
@@ -652,7 +665,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  background: rgba(167, 139, 250, 0.1);
+  background: rgba(245, 158, 11, 0.1);
   padding: 14px;
   border-radius: 10px;
 }
@@ -676,7 +689,7 @@
   font-size: 15px;
   font-weight: 700;
   color: #0f1419;
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -685,7 +698,7 @@
 
 .giba-proj-btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.4);
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
 }
 
 .giba-proj-btn-primary:disabled {
@@ -744,3 +757,4 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+

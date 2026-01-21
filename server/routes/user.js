@@ -156,12 +156,37 @@ router.patch('/profile', authenticate, async (req, res) => {
   }
 })
 
+// GET /api/user/generation-status - Obter status de geração e reset
+router.get('/generation-status', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const { getGenerationStatus } = await import('../utils/generationControl.js')
+    const status = await getGenerationStatus(userId)
+    res.json(status)
+  } catch (error) {
+    console.error('❌ Erro ao obter status de geração:', error)
+    res.status(500).json({ 
+      error: 'Erro ao obter status de geração',
+      details: error.message || 'Erro desconhecido'
+    })
+  }
+})
+
 // POST /api/user/reset - Resetar dieta e questionário do usuário
 router.post('/reset', authenticate, async (req, res) => {
   try {
     const userId = req.user.userId
 
     console.log('🔄 POST /api/user/reset - Resetando dieta e questionário para userId:', userId)
+
+    // Verificar se pode resetar
+    const { canReset: checkCanReset, recordReset } = await import('../utils/generationControl.js')
+    const resetCheck = await checkCanReset(userId)
+    if (!resetCheck.canReset) {
+      return res.status(403).json({
+        error: resetCheck.reason
+      })
+    }
 
     // Deletar dieta
     try {
@@ -209,8 +234,32 @@ router.post('/reset', authenticate, async (req, res) => {
       console.error('Erro ao deletar refeições consumidas:', error)
     }
 
+    // Deletar prescrições de treino (treinos gerados por IA ou prescritos por personal)
+    try {
+      await prisma.prescricaoTreino.deleteMany({
+        where: { pacienteId: userId }
+      })
+      console.log('✅ Prescrições de treino deletadas')
+    } catch (error) {
+      console.error('Erro ao deletar prescrições de treino:', error)
+    }
+
+    // Deletar treinos executados (já deve ser deletado em cascata, mas garantindo)
+    try {
+      await prisma.treinoExecutado.deleteMany({
+        where: { pacienteId: userId }
+      })
+      console.log('✅ Treinos executados deletados')
+    } catch (error) {
+      console.error('Erro ao deletar treinos executados:', error)
+    }
+
+    // Registrar o reset
+    await recordReset(userId)
+    console.log('✅ Reset registrado no controle')
+
     res.json({
-      message: 'Dieta e questionário resetados com sucesso'
+      message: 'Dieta, treino e questionário resetados com sucesso'
     })
   } catch (error) {
     console.error('❌ Erro ao resetar:', error)

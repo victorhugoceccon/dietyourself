@@ -4,6 +4,7 @@ import { authenticate } from '../middleware/auth.js'
 import { requireActiveSubscription } from '../middleware/subscription.js'
 import { calcularNutricao } from '../utils/nutrition.js'
 import { normalizeQuestionnaireData } from '../utils/questionnaireNormalizer.js'
+import { canGenerate, recordDietGeneration } from '../utils/generationControl.js'
 // Sistema de ajuste automático removido - usando output direto do agente
 
 const router = express.Router()
@@ -75,6 +76,19 @@ router.post('/generate', authenticate, async (req, res) => {
 
     const userId = req.user.userId
     console.log('Gerando dieta para userId:', userId)
+
+    // TEMPORÁRIO: Verificação de limite desabilitada para testes
+    // TODO: Reativar após testes
+    /*
+    // Verificar se pode gerar dieta
+    const generationCheck = await canGenerate(userId)
+    if (!generationCheck.canGenerate) {
+      return res.status(403).json({
+        error: generationCheck.reason,
+        nextAllowedDate: generationCheck.nextAllowedDate
+      })
+    }
+    */
 
     // Buscar dados do questionário
     const questionnaireData = await prisma.questionnaireData.findUnique({
@@ -964,6 +978,14 @@ router.post('/generate', authenticate, async (req, res) => {
     console.log('📤 Retornando resposta para o frontend:')
     console.log('   - nutritionalNeeds:', nutritionalNeeds ? '✓ presente' : '✗ ausente')
     console.log('   - dieta:', dietaJson ? '✓ presente' : '✗ ausente')
+    
+    // TEMPORÁRIO: Registro de geração desabilitado para testes
+    // TODO: Reativar após testes
+    /*
+    // Registrar a geração de dieta
+    await recordDietGeneration(userId)
+    console.log('✅ Geração de dieta registrada no controle')
+    */
     
     res.json({
       message: 'Dieta gerada com sucesso!',

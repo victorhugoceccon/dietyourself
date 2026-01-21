@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { API_URL } from '../config/api'
 import PhotoMealCapture from './PhotoMealCapture'
+import { ChartBar, Fire, Barbell, Bread, Camera, Drop } from '@phosphor-icons/react'
 import './NutritionDashboard.css'
 
 function NutritionDashboard({ refreshTrigger }) {
@@ -77,7 +78,9 @@ function NutritionDashboard({ refreshTrigger }) {
     return (
       <div className="nutrition-dashboard">
         <div className="no-data">
-          <div className="empty-icon">📊</div>
+          <div className="empty-icon">
+            <ChartBar size={48} weight="duotone" />
+          </div>
           <h3 className="empty-title">Nutrição</h3>
           <p>Gere sua dieta para ver suas necessidades nutricionais personalizadas</p>
         </div>
@@ -118,7 +121,7 @@ function NutritionDashboard({ refreshTrigger }) {
   const getMacroConfig = (type) => {
     const configs = {
       calories: {
-        icon: '🔥',
+        icon: <Fire size={24} weight="fill" />,
         label: 'Calorias diárias',
         color: '#4A6B4D',
         bgColor: '#4A6B4D15',
@@ -126,7 +129,7 @@ function NutritionDashboard({ refreshTrigger }) {
         unit: 'kcal'
       },
       protein: {
-        icon: '💪',
+        icon: <Barbell size={24} weight="fill" />,
         label: 'Proteína diária',
         color: '#5B7A9B',
         bgColor: '#5B7A9B15',
@@ -134,7 +137,7 @@ function NutritionDashboard({ refreshTrigger }) {
         unit: 'g'
       },
       carbs: {
-        icon: '🍞',
+        icon: <Bread size={24} weight="fill" />,
         label: 'Carboidratos diários',
         color: '#C99A5A',
         bgColor: '#C99A5A15',
@@ -142,7 +145,7 @@ function NutritionDashboard({ refreshTrigger }) {
         unit: 'g'
       },
       fat: {
-        icon: '🧈',
+        icon: <Drop size={24} weight="fill" />,
         label: 'Gorduras diárias',
         color: '#8B7A9B',
         bgColor: '#8B7A9B15',
@@ -194,7 +197,7 @@ function NutritionDashboard({ refreshTrigger }) {
             flexShrink: 0
           }}
         >
-          📸 Adicionar por Foto
+          <Camera size={18} weight="regular" /> Adicionar por Foto
         </button>
       </div>
 
@@ -209,7 +212,7 @@ function NutritionDashboard({ refreshTrigger }) {
         {/* Card de Calorias */}
         <div className="nutrition-card">
           <div className="card-icon-wrapper" style={{ backgroundColor: getMacroConfig('calories').bgColor, borderColor: getMacroConfig('calories').borderColor }}>
-            <span className="card-icon-emoji">{getMacroConfig('calories').icon}</span>
+            {getMacroConfig('calories').icon}
           </div>
           <div className="card-content">
             <div className="card-value">{formatValue(consumedKcal, 'kcal')}</div>
@@ -234,7 +237,7 @@ function NutritionDashboard({ refreshTrigger }) {
         {/* Card de Proteína */}
         <div className="nutrition-card">
           <div className="card-icon-wrapper" style={{ backgroundColor: getMacroConfig('protein').bgColor, borderColor: getMacroConfig('protein').borderColor }}>
-            <span className="card-icon-emoji">{getMacroConfig('protein').icon}</span>
+            {getMacroConfig('protein').icon}
           </div>
           <div className="card-content">
             <div className="card-value">{formatValue(consumedProtein, 'g')}</div>
@@ -259,7 +262,7 @@ function NutritionDashboard({ refreshTrigger }) {
         {/* Card de Carboidratos */}
         <div className="nutrition-card">
           <div className="card-icon-wrapper" style={{ backgroundColor: getMacroConfig('carbs').bgColor, borderColor: getMacroConfig('carbs').borderColor }}>
-            <span className="card-icon-emoji">{getMacroConfig('carbs').icon}</span>
+            {getMacroConfig('carbs').icon}
           </div>
           <div className="card-content">
             <div className="card-value">{formatValue(consumedCarbs, 'g')}</div>
@@ -284,7 +287,7 @@ function NutritionDashboard({ refreshTrigger }) {
         {/* Card de Gorduras */}
         <div className="nutrition-card">
           <div className="card-icon-wrapper" style={{ backgroundColor: getMacroConfig('fat').bgColor, borderColor: getMacroConfig('fat').borderColor }}>
-            <span className="card-icon-emoji">{getMacroConfig('fat').icon}</span>
+            {getMacroConfig('fat').icon}
           </div>
           <div className="card-content">
             <div className="card-value">{formatValue(consumedFat, 'g')}</div>

@@ -1,4 +1,21 @@
 import { useState, useEffect, useRef } from 'react'
+import {
+  ArrowsClockwise,
+  Barbell,
+  Camera,
+  CheckCircle,
+  CircleNotch,
+  Crosshair,
+  Drop,
+  Lightning,
+  MoonStars,
+  Smiley,
+  Target,
+  Trophy,
+  MapPin,
+  UploadSimple,
+  X
+} from '@phosphor-icons/react'
 import { API_URL, loadGoogleMapsScript } from '../config/api'
 import './DailyCheckIn.css'
 
@@ -10,6 +27,16 @@ function DailyCheckIn({ onCheckInComplete }) {
   const [saving, setSaving] = useState(false)
   const [todayCheckIn, setTodayCheckIn] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [isLocating, setIsLocating] = useState(false)
+
+  const [nivelEnergia, setNivelEnergia] = useState(null)
+  const [qualidadeSono, setQualidadeSono] = useState(null)
+  const [humorGeral, setHumorGeral] = useState(null)
+  const [aguaMetaLitros, setAguaMetaLitros] = useState('')
+  const [treinoPlanejado, setTreinoPlanejado] = useState(null)
+  const [focoDia, setFocoDia] = useState('')
+  const [dietMeals, setDietMeals] = useState([])
+  const [refeicoesConsumidas, setRefeicoesConsumidas] = useState([])
   
   // Localização
   const [locationName, setLocationName] = useState('')
@@ -29,7 +56,50 @@ function DailyCheckIn({ onCheckInComplete }) {
 
   useEffect(() => {
     loadTodayCheckIn()
+    loadDietMeals()
   }, [])
+
+  const loadDietMeals = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_URL}/diet`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setDietMeals(data.dieta?.refeicoes || [])
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dieta:', error)
+    }
+  }
+
+  const toggleMeal = (mealIndex) => {
+    setRefeicoesConsumidas(prev => (
+      prev.includes(mealIndex)
+        ? prev.filter(index => index !== mealIndex)
+        : [...prev, mealIndex]
+    ))
+  }
+
+  const getDailyScore = () => {
+    let score = 0
+    if (adherence === 'TOTAL') score += 45
+    if (adherence === 'PARCIAL') score += 25
+    if (adherence === 'NAO_SEGUIU') score += 10
+
+    if (nivelEnergia) score += nivelEnergia * 4
+    if (qualidadeSono) score += qualidadeSono * 4
+    if (humorGeral) score += humorGeral * 4
+    if (aguaMetaLitros) score += 8
+    if (treinoPlanejado !== null) score += 6
+    if (focoDia) score += 6
+    if (dietMeals.length > 0 && refeicoesConsumidas.length > 0) {
+      score += Math.min(10, Math.round((refeicoesConsumidas.length / dietMeals.length) * 10))
+    }
+
+    return Math.min(100, score)
+  }
 
   // Inicializar Google Maps Autocomplete e Mapa
   useEffect(() => {
@@ -159,6 +229,23 @@ function DailyCheckIn({ onCheckInComplete }) {
           setLocationLng(lng)
           setPhotoUrl(data.checkIn.photoUrl || null)
           setPhotoPreview(data.checkIn.photoUrl || null)
+          setNivelEnergia(data.checkIn.nivelEnergia ?? null)
+          setQualidadeSono(data.checkIn.qualidadeSono ?? null)
+          setHumorGeral(data.checkIn.humorGeral ?? null)
+          setAguaMetaLitros(data.checkIn.aguaMetaLitros ? data.checkIn.aguaMetaLitros.toString() : '')
+          setTreinoPlanejado(typeof data.checkIn.treinoPlanejado === 'boolean' ? data.checkIn.treinoPlanejado : null)
+          setFocoDia(data.checkIn.focoDia || '')
+
+          const refeicoesRaw = data.checkIn.refeicoesConsumidas
+          if (Array.isArray(refeicoesRaw)) {
+            setRefeicoesConsumidas(refeicoesRaw)
+          } else if (typeof refeicoesRaw === 'string') {
+            try {
+              setRefeicoesConsumidas(JSON.parse(refeicoesRaw))
+            } catch {
+              setRefeicoesConsumidas([])
+            }
+          }
           
           // Atualizar mapa se houver localização
           if (lat && lng) {
@@ -194,6 +281,13 @@ function DailyCheckIn({ onCheckInComplete }) {
           adherence,
           pesoAtual: pesoAtual ? parseFloat(pesoAtual) : null,
           observacao: observacao.trim() || null,
+          nivelEnergia,
+          qualidadeSono,
+          humorGeral,
+          aguaMetaLitros: aguaMetaLitros ? parseFloat(aguaMetaLitros) : null,
+          treinoPlanejado,
+          focoDia: focoDia || null,
+          refeicoesConsumidas: refeicoesConsumidas.length ? refeicoesConsumidas : null,
           locationName: locationName.trim() || null,
           locationLat: locationLat || null,
           locationLng: locationLng || null,
@@ -241,12 +335,7 @@ function DailyCheckIn({ onCheckInComplete }) {
       return
     }
 
-    // Mostrar loading
-    const loadingBtn = document.querySelector('.btn-location')
-    if (loadingBtn) {
-      loadingBtn.disabled = true
-      loadingBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" opacity="0.75"><animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" values="0 12 12;360 12 12"/></path></svg>'
-    }
+    setIsLocating(true)
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -274,21 +363,12 @@ function DailyCheckIn({ onCheckInComplete }) {
           }
         })
 
-        // Restaurar botão
-        if (loadingBtn) {
-          loadingBtn.disabled = false
-          loadingBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4M12 18v4M4 12H2M6.314 12.314l-2.828 2.828M17.686 12.314l2.828 2.828M2 12h2M20 12h2M6.314 11.686l-2.828-2.828M17.686 11.686l2.828-2.828"/><circle cx="12" cy="12" r="3"/></svg>'
-        }
+        setIsLocating(false)
       },
       (error) => {
         console.error('Erro ao obter localização:', error)
         alert('Erro ao obter localização. Verifique as permissões do navegador.')
-        
-        // Restaurar botão
-        if (loadingBtn) {
-          loadingBtn.disabled = false
-          loadingBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4M12 18v4M4 12H2M6.314 12.314l-2.828 2.828M17.686 12.314l2.828 2.828M2 12h2M20 12h2M6.314 11.686l-2.828-2.828M17.686 11.686l2.828-2.828"/><circle cx="12" cy="12" r="3"/></svg>'
-        }
+        setIsLocating(false)
       }
     )
   }
@@ -340,15 +420,32 @@ function DailyCheckIn({ onCheckInComplete }) {
 
       {showSuccess && (
         <div className="checkin-success-message">
-          <span className="success-icon">✓</span>
+          <span className="success-icon">
+            <CheckCircle size={18} weight="fill" />
+          </span>
           <span>Check-in registrado com sucesso!</span>
         </div>
       )}
 
+      <div className="checkin-score-card">
+        <div className="checkin-score-header">
+          <span className="checkin-score-badge">
+            <Trophy size={16} weight="fill" /> Pontuação do dia
+          </span>
+          <strong>{getDailyScore()}/100</strong>
+        </div>
+        <div className="checkin-score-bar">
+          <span style={{ width: `${getDailyScore()}%` }} />
+        </div>
+        <p className="checkin-score-hint">
+          {getDailyScore() >= 80 ? 'Dia de alta performance' : getDailyScore() >= 60 ? 'Dia consistente' : 'Dia de progresso'}
+        </p>
+      </div>
+
       <form onSubmit={handleSubmit} className="checkin-form">
         <div className="checkin-section">
           <label className="checkin-section-label">
-            Como foi a adesão à dieta hoje? *
+            Como você pretende seguir a dieta hoje? *
           </label>
           <div className="adherence-options">
             <button
@@ -356,7 +453,9 @@ function DailyCheckIn({ onCheckInComplete }) {
               onClick={() => setAdherence('TOTAL')}
               className={`adherence-btn ${adherence === 'TOTAL' ? 'selected' : ''}`}
             >
-              <span className="adherence-emoji">✅</span>
+              <span className="adherence-emoji">
+                <CheckCircle size={18} weight="fill" />
+              </span>
               <span className="adherence-label">Segui totalmente</span>
             </button>
             <button
@@ -364,7 +463,9 @@ function DailyCheckIn({ onCheckInComplete }) {
               onClick={() => setAdherence('PARCIAL')}
               className={`adherence-btn ${adherence === 'PARCIAL' ? 'selected' : ''}`}
             >
-              <span className="adherence-emoji">⚡</span>
+              <span className="adherence-emoji">
+                <Lightning size={18} weight="fill" />
+              </span>
               <span className="adherence-label">Segui parcialmente</span>
             </button>
             <button
@@ -372,11 +473,155 @@ function DailyCheckIn({ onCheckInComplete }) {
               onClick={() => setAdherence('NAO_SEGUIU')}
               className={`adherence-btn ${adherence === 'NAO_SEGUIU' ? 'selected' : ''}`}
             >
-              <span className="adherence-emoji">🔄</span>
+              <span className="adherence-emoji">
+                <ArrowsClockwise size={18} weight="fill" />
+              </span>
               <span className="adherence-label">Não segui</span>
             </button>
           </div>
         </div>
+
+        <div className="checkin-section">
+          <label className="checkin-section-label">
+            Como você se sentiu hoje?
+          </label>
+          <div className="checkin-metric-grid">
+            <div className="checkin-metric-card">
+              <div className="checkin-metric-header">
+                <Lightning size={18} weight="fill" />
+                <span>Energia</span>
+              </div>
+              <div className="checkin-metric-scale">
+                {[1, 2, 3, 4, 5].map(value => (
+                  <button
+                    key={`energia-${value}`}
+                    type="button"
+                    className={`checkin-scale-btn ${nivelEnergia === value ? 'active' : ''}`}
+                    onClick={() => setNivelEnergia(value)}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="checkin-metric-card">
+              <div className="checkin-metric-header">
+                <MoonStars size={18} weight="fill" />
+                <span>Sono</span>
+              </div>
+              <div className="checkin-metric-scale">
+                {[1, 2, 3, 4, 5].map(value => (
+                  <button
+                    key={`sono-${value}`}
+                    type="button"
+                    className={`checkin-scale-btn ${qualidadeSono === value ? 'active' : ''}`}
+                    onClick={() => setQualidadeSono(value)}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="checkin-metric-card">
+              <div className="checkin-metric-header">
+                <Smiley size={18} weight="fill" />
+                <span>Humor</span>
+              </div>
+              <div className="checkin-metric-scale">
+                {[1, 2, 3, 4, 5].map(value => (
+                  <button
+                    key={`humor-${value}`}
+                    type="button"
+                    className={`checkin-scale-btn ${humorGeral === value ? 'active' : ''}`}
+                    onClick={() => setHumorGeral(value)}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="checkin-section">
+          <label className="checkin-section-label">Plano do dia</label>
+          <div className="checkin-metric-grid two-columns">
+            <div className="checkin-metric-card">
+              <div className="checkin-metric-header">
+                <Drop size={18} weight="fill" />
+                <span>Meta de água (L)</span>
+              </div>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="10"
+                value={aguaMetaLitros}
+                onChange={(e) => setAguaMetaLitros(e.target.value)}
+                placeholder="Ex: 2.0"
+                className="checkin-input"
+              />
+            </div>
+            <div className="checkin-metric-card">
+              <div className="checkin-metric-header">
+                <Barbell size={18} weight="fill" />
+                <span>Treino hoje?</span>
+              </div>
+              <div className="checkin-toggle">
+                <button
+                  type="button"
+                  className={`checkin-toggle-btn ${treinoPlanejado === true ? 'active' : ''}`}
+                  onClick={() => setTreinoPlanejado(true)}
+                >
+                  Sim
+                </button>
+                <button
+                  type="button"
+                  className={`checkin-toggle-btn ${treinoPlanejado === false ? 'active' : ''}`}
+                  onClick={() => setTreinoPlanejado(false)}
+                >
+                  Não
+                </button>
+              </div>
+            </div>
+            <div className="checkin-metric-card">
+              <div className="checkin-metric-header">
+                <Target size={18} weight="fill" />
+                <span>Foco do dia</span>
+              </div>
+              <div className="checkin-focus-chips">
+                {['Disciplina', 'Hidratação', 'Energia', 'Leveza', 'Constância'].map((foco) => (
+                  <button
+                    key={foco}
+                    type="button"
+                    className={`checkin-focus-chip ${focoDia === foco ? 'selected' : ''}`}
+                    onClick={() => setFocoDia(foco)}
+                  >
+                    {foco}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {dietMeals.length > 0 && (
+          <div className="checkin-section">
+            <label className="checkin-section-label">Refeições do dia</label>
+            <div className="checkin-meal-chips">
+              {dietMeals.map((refeicao, index) => (
+                <button
+                  key={`${refeicao.nome || 'refeicao'}-${index}`}
+                  type="button"
+                  className={`checkin-meal-chip ${refeicoesConsumidas.includes(index) ? 'selected' : ''}`}
+                  onClick={() => toggleMeal(index)}
+                >
+                  {refeicao.nome || `Refeição ${index + 1}`}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="checkin-section">
           <label htmlFor="peso-atual" className="checkin-section-label">
@@ -430,11 +675,13 @@ function DailyCheckIn({ onCheckInComplete }) {
               onClick={getCurrentLocation}
               className="btn-location"
               title="Usar localização atual"
+              disabled={isLocating}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2v4M12 18v4M4 12H2M6.314 12.314l-2.828 2.828M17.686 12.314l2.828 2.828M2 12h2M20 12h2M6.314 11.686l-2.828-2.828M17.686 11.686l2.828-2.828"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
+              {isLocating ? (
+                <CircleNotch size={20} weight="bold" className="spin" />
+              ) : (
+                <Crosshair size={20} weight="bold" />
+              )}
             </button>
           </div>
           
@@ -443,10 +690,7 @@ function DailyCheckIn({ onCheckInComplete }) {
             <div ref={mapRef} className="google-map"></div>
             {(!locationLat || !locationLng) && (
               <div className="map-placeholder">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
-                </svg>
+                <MapPin size={48} weight="regular" />
                 <p>Use o botão de localização ou digite um endereço para ver no mapa</p>
               </div>
             )}
@@ -467,17 +711,13 @@ function DailyCheckIn({ onCheckInComplete }) {
                   className="btn-remove-photo"
                   title="Remover foto"
                 >
-                  ×
+                  <X size={16} weight="bold" />
                 </button>
               </div>
             ) : (
               <div className="photo-upload-buttons">
                 <label htmlFor="photo-upload" className="btn-upload-photo">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="17 8 12 3 7 8"/>
-                    <line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
+                  <UploadSimple size={20} weight="bold" />
                   Carregar Foto
                 </label>
                 <input
@@ -489,10 +729,7 @@ function DailyCheckIn({ onCheckInComplete }) {
                   style={{ display: 'none' }}
                 />
                 <label htmlFor="photo-camera" className="btn-upload-photo">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                    <circle cx="12" cy="13" r="4"/>
-                  </svg>
+                  <Camera size={20} weight="bold" />
                   Tirar Foto
                 </label>
                 <input

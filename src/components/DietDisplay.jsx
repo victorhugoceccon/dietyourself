@@ -4,6 +4,7 @@ import Badge from './ui/Badge'
 import Chip from './ui/Chip'
 // import FoodSwapModal from './FoodSwapModal' // Desativado temporariamente
 import { API_URL } from '../config/api'
+import { Fire, Barbell, Bread, Drop } from '@phosphor-icons/react'
 import './DietDisplay.css'
 
 function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritionalNeeds }) {
@@ -262,7 +263,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
             {/* Card de Calorias */}
             <div className="nutrition-card">
               <div className="card-icon-wrapper" style={{ backgroundColor: '#4A6B4D15', borderColor: '#4A6B4D40' }}>
-                <span className="card-icon-emoji">🔥</span>
+                <Fire size={24} weight="fill" />
               </div>
               <div className="card-content">
                 <div className="card-value">{Math.round(nutritionalNeeds.calorias || 0)}</div>
@@ -287,7 +288,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
             {/* Card de Proteína */}
             <div className="nutrition-card">
               <div className="card-icon-wrapper" style={{ backgroundColor: '#5B7A9B15', borderColor: '#5B7A9B40' }}>
-                <span className="card-icon-emoji">💪</span>
+                <Barbell size={24} weight="fill" />
               </div>
               <div className="card-content">
                 <div className="card-value">{Math.round(nutritionalNeeds.macros?.proteina || 0)}</div>
@@ -312,7 +313,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
             {/* Card de Carboidratos */}
             <div className="nutrition-card">
               <div className="card-icon-wrapper" style={{ backgroundColor: '#C99A5A15', borderColor: '#C99A5A40' }}>
-                <span className="card-icon-emoji">🍞</span>
+                <Bread size={24} weight="fill" />
               </div>
               <div className="card-content">
                 <div className="card-value">{Math.round(nutritionalNeeds.macros?.carboidrato || 0)}</div>
@@ -337,7 +338,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
             {/* Card de Gorduras */}
             <div className="nutrition-card">
               <div className="card-icon-wrapper" style={{ backgroundColor: '#8B7A9B15', borderColor: '#8B7A9B40' }}>
-                <span className="card-icon-emoji">🧈</span>
+                <Drop size={24} weight="fill" />
               </div>
               <div className="card-content">
                 <div className="card-value">{Math.round(nutritionalNeeds.macros?.gordura || 0)}</div>

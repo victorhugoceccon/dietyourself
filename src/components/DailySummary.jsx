@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { ArrowRight, Barbell, ForkKnife, Lightning } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './DailySummary.css'
 
@@ -95,7 +96,9 @@ function DailySummary({ refreshTrigger }) {
 
       <div className="summary-cards">
         <div className="summary-card meals-card">
-          <div className="card-icon">🍽️</div>
+          <div className="card-icon">
+            <ForkKnife size={18} weight="fill" />
+          </div>
           <div className="card-content">
             <div className="card-value">{consumedMeals}/{totalMeals}</div>
             <div className="card-label">Refeições registradas</div>
@@ -117,7 +120,9 @@ function DailySummary({ refreshTrigger }) {
         {summary?.totals && (
           <>
             <div className="summary-card calories-card">
-              <div className="card-icon">⚡</div>
+              <div className="card-icon">
+                <Lightning size={18} weight="fill" />
+              </div>
               <div className="card-content">
                 <div className="card-value">{Math.round(summary.totals.consumedKcal || 0)}</div>
                 <div className="card-label">kcal Consumidas</div>
@@ -125,7 +130,9 @@ function DailySummary({ refreshTrigger }) {
             </div>
 
             <div className="summary-card protein-card">
-              <div className="card-icon">💪</div>
+              <div className="card-icon">
+                <Barbell size={18} weight="fill" />
+              </div>
               <div className="card-content">
                 <div className="card-value">{Math.round(summary.totals.consumedProtein || 0)}g</div>
                 <div className="card-label">Proteína</div>
@@ -138,7 +145,9 @@ function DailySummary({ refreshTrigger }) {
       {nextMeal && (
         <div className="next-meal-card">
           <div className="next-meal-header">
-            <span className="next-meal-icon">⏭️</span>
+            <span className="next-meal-icon">
+              <ArrowRight size={16} weight="bold" />
+            </span>
             <span className="next-meal-label">Próxima refeição</span>
           </div>
           <div className="next-meal-content">

@@ -23,25 +23,23 @@
 }
 
 .checkin-modal {
-  background: var(--bg-primary, #ffffff);
+  background: #0f141b;
   border-radius: 24px;
   width: 100%;
   max-width: 500px;
   max-height: calc(100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   /* O scroll deve estar no modal, não no overlay */
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden; /* Mudado de overflow-y: auto para hidden - o scroll será no form */
   /* Prevenir que o scroll "vaze" para a página de fundo */
   overscroll-behavior: contain;
 }
 
 .dark-mode .checkin-modal {
-  background: var(--bg-secondary, #242424);
+  background: #0f141b;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
 }
 
@@ -58,7 +56,7 @@
 
 .checkin-modal-header {
   padding: 2rem 2rem 1.5rem 2rem;
-  border-bottom: 1px solid var(--border-color, #e8e8e8);
+  border-bottom: 1px solid rgba(255, 222, 89, 0.12);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -67,39 +65,39 @@
 }
 
 .dark-mode .checkin-modal-header {
-  border-color: var(--border-color, #333);
+  border-color: rgba(255, 222, 89, 0.12);
 }
 
 .checkin-modal-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--text-primary, #1a1a1a);
+  color: #ffde59;
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.3px;
 }
 
 .dark-mode .checkin-modal-title {
-  color: var(--text-primary, #e0e0e0);
+  color: #ffde59;
 }
 
 .checkin-modal-date {
   font-size: 0.9375rem;
-  color: var(--text-secondary, #666);
+  color: #cbd5e1;
   margin: 0;
   text-transform: capitalize;
 }
 
 .dark-mode .checkin-modal-date {
-  color: var(--text-secondary, #b0b0b0);
+  color: #cbd5e1;
 }
 
 .checkin-modal-close {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: none;
-  background: var(--bg-secondary, #f5f5f5);
-  color: var(--text-secondary, #666);
+  border: 1px solid rgba(255, 222, 89, 0.25);
+  background: rgba(255, 222, 89, 0.12);
+  color: #ffde59;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -114,8 +112,8 @@
 }
 
 .checkin-modal-close:hover {
-  background: var(--bg-tertiary, #e8e8e8);
-  color: var(--text-primary, #333);
+  background: rgba(255, 222, 89, 0.2);
+  color: #ffde59;
   transform: scale(1.1);
 }
 
@@ -126,11 +124,16 @@
 
 .checkin-modal-form {
   padding: 2rem;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); /* Espaço extra no final para os botões */
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  -webkit-overflow-scrolling: touch;
+  /* Garantir que o scroll funcione corretamente */
+  min-height: 0; /* Importante para flex funcionar com overflow */
 }
 
 .checkin-modal-section {
@@ -142,7 +145,7 @@
 .checkin-modal-label {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary, #1a1a1a);
+  color: #f8fafc;
 }
 
 .dark-mode .checkin-modal-label {
@@ -163,9 +166,9 @@
 
 .adherence-btn {
   padding: 1rem 0.75rem;
-  border: 2px solid var(--border-color, #e0e0e0);
+  border: 2px solid rgba(255, 222, 89, 0.16);
   border-radius: 12px;
-  background: var(--bg-secondary, #f9f9f9);
+  background: #121a24;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -181,15 +184,15 @@
 }
 
 .adherence-btn:hover {
-  border-color: var(--accent-color, #4CAF50);
+  border-color: #f59e0b;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
 }
 
 .adherence-btn.selected {
-  border-color: var(--accent-color, #4CAF50);
-  background: rgba(76, 175, 80, 0.1);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  border-color: #ffde59;
+  background: rgba(245, 158, 11, 0.12);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
 .dark-mode .adherence-btn.selected {
@@ -204,7 +207,7 @@
 .adherence-label {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--text-primary, #1a1a1a);
+  color: #f8fafc;
   text-align: center;
 }
 
@@ -215,12 +218,12 @@
 .checkin-modal-input,
 .checkin-modal-textarea {
   padding: 0.875rem 1.25rem;
-  border: 2px solid var(--border-color, #e0e0e0);
+  border: 2px solid rgba(255, 222, 89, 0.16);
   border-radius: 12px;
   font-size: 1rem;
   font-family: inherit;
-  background: var(--bg-primary, #ffffff);
-  color: var(--text-primary, #333);
+  background: #111a24;
+  color: #f8fafc;
   outline: none;
   transition: all 0.2s ease;
   width: 100%;
@@ -236,8 +239,8 @@
 
 .checkin-modal-input:focus,
 .checkin-modal-textarea:focus {
-  border-color: var(--accent-color, #4CAF50);
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
 }
 
 .dark-mode .checkin-modal-input:focus,
@@ -257,33 +260,202 @@
   margin-top: -0.5rem;
 }
 
+/* Score e métricas */
+.checkin-quick-score {
+  background: rgba(255, 222, 89, 0.08);
+  border: 1px solid rgba(255, 222, 89, 0.18);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.checkin-quick-score__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #f8fafc;
+}
+
+.checkin-quick-score__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffde59;
+}
+
+.checkin-quick-score__bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.checkin-quick-score__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(135deg, #ffde59 0%, #f59e0b 100%);
+}
+
+.checkin-quick-score__hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+.checkin-metric-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.checkin-metric-grid.two-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.checkin-metric-card {
+  background: #111a24;
+  border: 1px solid rgba(255, 222, 89, 0.12);
+  border-radius: 14px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkin-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.checkin-toggle-btn {
+  flex: 1;
+  border: 1px solid rgba(255, 222, 89, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+  color: #f8fafc;
+  border-radius: 10px;
+  padding: 0.45rem 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkin-toggle-btn.active {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #ffde59;
+}
+
+.checkin-focus-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.checkin-focus-chip {
+  border: 1px solid rgba(255, 222, 89, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+  color: #f8fafc;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkin-focus-chip.selected {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #ffde59;
+}
+
+.checkin-metric-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffde59;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.checkin-metric-scale {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.checkin-scale-btn {
+  border: 1px solid rgba(255, 222, 89, 0.18);
+  border-radius: 10px;
+  padding: 0.4rem 0;
+  background: rgba(255, 255, 255, 0.02);
+  color: #f8fafc;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkin-scale-btn.active {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #ffde59;
+}
+
+.checkin-scale-btn:hover {
+  border-color: #f59e0b;
+}
+
+.checkin-meal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.checkin-meal-chip {
+  border: 1px solid rgba(255, 222, 89, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+  color: #f8fafc;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkin-meal-chip.selected {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #ffde59;
+}
+
 .checkin-modal-footer {
-  padding-top: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
   flex-shrink: 0;
+  /* Garantir que o footer fique sempre visível no final do scroll */
+  margin-top: auto;
 }
 
 .checkin-modal-submit-btn {
   width: 100%;
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #4CAF50 0%, #66bb6a 100%);
-  color: white;
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  color: #0f1419;
   border: none;
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-}
-
-.dark-mode .checkin-modal-submit-btn {
-  background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
-  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.4);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
 }
 
 .checkin-modal-submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 8px 22px rgba(245, 158, 11, 0.45);
 }
 
 .checkin-modal-submit-btn:disabled {
@@ -304,12 +476,20 @@
     border-radius: 24px 24px 0 0;
   }
 
-  .checkin-modal-header,
-  .checkin-modal-form {
+  .checkin-modal-header {
     padding: 1.5rem;
   }
 
+  .checkin-modal-form {
+    padding: 1.5rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px) + 80px); /* Espaço extra para menu inferior + safe area */
+  }
+
   .adherence-options {
+    grid-template-columns: 1fr;
+  }
+
+  .checkin-metric-grid.two-columns {
     grid-template-columns: 1fr;
   }
 }

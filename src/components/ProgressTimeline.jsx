@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { ArrowsClockwise, ChartLineUp, CheckCircle, Circle, Lightning } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './ProgressTimeline.css'
 
@@ -44,16 +45,16 @@ function ProgressTimeline({ refreshTrigger }) {
     }
   }
 
-  const getAdherenceEmoji = (adherence) => {
+  const getAdherenceIcon = (adherence) => {
     switch (adherence) {
       case 'TOTAL':
-        return '✅'
+        return CheckCircle
       case 'PARCIAL':
-        return '⚡'
+        return Lightning
       case 'NAO_SEGUIU':
-        return '🔄'
+        return ArrowsClockwise
       default:
-        return '○'
+        return Circle
     }
   }
 
@@ -92,7 +93,9 @@ function ProgressTimeline({ refreshTrigger }) {
 
       {checkIns.length === 0 ? (
         <div className="timeline-empty">
-          <div className="empty-icon">📈</div>
+          <div className="empty-icon">
+            <ChartLineUp size={24} weight="bold" />
+          </div>
           <h3 className="empty-title">Seu progresso começa aqui</h3>
           <p className="timeline-empty-hint">Registrar hoje já é um avanço. O LifeFit acompanha sua jornada desde o início, sem julgamento.</p>
         </div>
@@ -101,7 +104,12 @@ function ProgressTimeline({ refreshTrigger }) {
           {checkIns.map((checkIn, index) => (
             <div key={checkIn.id} className="timeline-item">
               <div className="timeline-dot" style={{ backgroundColor: getAdherenceColor(checkIn.adherence) }}>
-                <span className="timeline-emoji">{getAdherenceEmoji(checkIn.adherence)}</span>
+                <span className="timeline-emoji">
+                  {(() => {
+                    const Icon = getAdherenceIcon(checkIn.adherence)
+                    return <Icon size={14} weight="fill" />
+                  })()}
+                </span>
               </div>
               {index < checkIns.length - 1 && (
                 <div 

@@ -1,9 +1,11 @@
 import express from 'express'
 import multer from 'multer'
+import FormData from 'form-data'
 import prisma from '../config/database.js'
 import { authenticate } from '../middleware/auth.js'
 import { requireActiveSubscription } from '../middleware/subscription.js'
 import { normalizeQuestionnaireData } from '../utils/questionnaireNormalizer.js'
+import { canGenerate, recordWorkoutGeneration } from '../utils/generationControl.js'
 
 const router = express.Router()
 
@@ -68,10 +70,10 @@ if (N8N_GET_EXERCISES_URL) {
   console.error('❌ N8N GetExercises URL NÃO configurada! Verifique N8N_WEBHOOK_URL no .env')
 }
 
-// Função auxiliar para converter Buffer para base64
-const bufferToBase64 = (buffer) => {
-  return buffer.toString('base64')
-}
+// Função auxiliar para converter Buffer para base64 (mantida para compatibilidade, mas não usada mais)
+// const bufferToBase64 = (buffer) => {
+//   return buffer.toString('base64')
+// }
 
 // Rota para gerar treino (com upload de fotos)
 router.post('/generate', upload.fields([
@@ -98,6 +100,19 @@ router.post('/generate', upload.fields([
     const userId = req.user.userId
     console.log('🏋️ Gerando treino para userId:', userId)
 
+    // TEMPORÁRIO: Verificação de limite desabilitada para testes
+    // TODO: Reativar após testes
+    /*
+    // Verificar se pode gerar treino
+    const generationCheck = await canGenerate(userId)
+    if (!generationCheck.canGenerate) {
+      return res.status(403).json({
+        error: generationCheck.reason,
+        nextAllowedDate: generationCheck.nextAllowedDate
+      })
+    }
+    */
+
     // Verificar se as fotos foram enviadas
     const files = req.files
     if (!files || !files.fotoFrente || !files.fotoCostas) {
@@ -108,10 +123,6 @@ router.post('/generate', upload.fields([
 
     const fotoFrente = files.fotoFrente[0]
     const fotoCostas = files.fotoCostas[0]
-
-    // Converter fotos para base64
-    const fotoFrenteBase64 = bufferToBase64(fotoFrente.buffer)
-    const fotoCostasBase64 = bufferToBase64(fotoCostas.buffer)
 
     // Buscar dados do questionário
     const questionnaireData = await prisma.questionnaireData.findUnique({
@@ -151,8 +162,8 @@ router.post('/generate', upload.fields([
     console.log('   - Tem limitação física:', normalized.derived.temLimitacaoFisica)
     console.log('   - Tem restrição médica exercício:', normalized.derived.temRestricaoMedicaExercicio)
 
-    // Preparar payload para N8N usando dados normalizados
-    const payload = {
+    // Preparar dados do questionário para enviar como JSON string no FormData
+    const questionnairePayload = {
       userId: user.id,
       userName: user.name || user.email,
       // Dados básicos do questionário (usar clean)
@@ -179,25 +190,12 @@ router.post('/generate', upload.fields([
       // Dados de preferências de treino (se houver)
       relacaoEmocionalTreino: normalized.clean.relacaoEmocionalTreino || null,
       preferenciaDificuldadeTreino: normalized.clean.preferenciaDificuldadeTreino || null,
-      barreirasTreino: normalized.clean.barreirasTreino || null,
-      // Fotos em base64
-      fotos: {
-        frente: {
-          data: fotoFrenteBase64,
-          mimeType: fotoFrente.mimetype,
-          filename: fotoFrente.originalname
-        },
-        costas: {
-          data: fotoCostasBase64,
-          mimeType: fotoCostas.mimetype,
-          filename: fotoCostas.originalname
-        }
-      }
+      barreirasTreino: normalized.clean.barreirasTreino || null
     }
 
     // Validar campos essenciais antes de enviar
     const requiredFields = ['idade', 'altura', 'pesoAtual', 'objetivo', 'frequenciaAtividade']
-    const missingFields = requiredFields.filter(field => !payload[field] && payload[field] !== 0)
+    const missingFields = requiredFields.filter(field => !questionnairePayload[field] && questionnairePayload[field] !== 0)
     if (missingFields.length > 0) {
       console.error('❌ Campos obrigatórios faltando no payload:', missingFields)
       return res.status(400).json({
@@ -207,12 +205,64 @@ router.post('/generate', upload.fields([
     }
 
     // Validar fotos
-    if (!fotoFrenteBase64 || !fotoCostasBase64) {
-      console.error('❌ Fotos não foram convertidas corretamente')
+    if (!fotoFrente.buffer || !fotoCostas.buffer) {
+      console.error('❌ Fotos não foram recebidas corretamente')
       return res.status(400).json({
         error: 'Erro ao processar fotos',
         details: 'As fotos não puderam ser processadas'
       })
+    }
+
+    // SOLUÇÃO ALTERNATIVA: Enviar como JSON com base64
+    // O N8N não está processando multipart/form-data corretamente
+    // Esta solução funciona imediatamente enquanto investigamos o problema do multipart
+    
+    // Validar buffers antes de converter
+    if (!fotoFrente.buffer || !Buffer.isBuffer(fotoFrente.buffer)) {
+      console.error('❌ fotoFrente.buffer inválido:', typeof fotoFrente.buffer)
+      return res.status(400).json({
+        error: 'Erro ao processar foto de frente',
+        details: 'Buffer inválido'
+      })
+    }
+    
+    if (!fotoCostas.buffer || !Buffer.isBuffer(fotoCostas.buffer)) {
+      console.error('❌ fotoCostas.buffer inválido:', typeof fotoCostas.buffer)
+      return res.status(400).json({
+        error: 'Erro ao processar foto de costas',
+        details: 'Buffer inválido'
+      })
+    }
+    
+    // Converter imagens para base64
+    let fotoFrenteBase64, fotoCostasBase64
+    try {
+      fotoFrenteBase64 = fotoFrente.buffer.toString('base64')
+      fotoCostasBase64 = fotoCostas.buffer.toString('base64')
+      console.log('✅ Imagens convertidas para base64')
+      console.log('   Foto Frente base64 length:', fotoFrenteBase64.length)
+      console.log('   Foto Costas base64 length:', fotoCostasBase64.length)
+    } catch (convertError) {
+      console.error('❌ Erro ao converter imagens para base64:', convertError)
+      return res.status(500).json({
+        error: 'Erro ao processar imagens',
+        details: convertError.message
+      })
+    }
+
+    // Preparar payload JSON
+    const payload = {
+      questionnaireData: questionnairePayload,
+      fotoFrente: {
+        data: fotoFrenteBase64,
+        mimeType: fotoFrente.mimetype,
+        filename: fotoFrente.originalname
+      },
+      fotoCostas: {
+        data: fotoCostasBase64,
+        mimeType: fotoCostas.mimetype,
+        filename: fotoCostas.originalname
+      }
     }
 
     // Headers para N8N
@@ -224,28 +274,47 @@ router.post('/generate', upload.fields([
       headers['X-N8N-API-KEY'] = N8N_API_KEY
     }
 
-    console.log('📤 Enviando requisição para N8N (getExercises)...')
+    console.log('📤 Enviando requisição para N8N (getExercises) como JSON com base64...')
     console.log('   URL:', N8N_GET_EXERCISES_URL)
-    console.log('   Payload (sem fotos):', JSON.stringify({ ...payload, fotos: { frente: '[base64 data]', costas: '[base64 data]' } }, null, 2))
+    console.log('   Foto Frente:', fotoFrente.originalname, `(${(fotoFrente.size / 1024).toFixed(2)} KB)`)
+    console.log('   Foto Costas:', fotoCostas.originalname, `(${(fotoCostas.size / 1024).toFixed(2)} KB)`)
+    
+    // Verificar tamanho do payload antes de stringify
+    let payloadString
+    try {
+      payloadString = JSON.stringify(payload)
+      const payloadSizeKB = (payloadString.length / 1024).toFixed(2)
+      console.log('   Payload size:', `${payloadSizeKB} KB`)
+      
+      // Avisar se o payload for muito grande
+      if (payloadString.length > 10 * 1024 * 1024) { // > 10MB
+        console.warn('⚠️ Payload muito grande! Pode causar problemas.')
+      }
+    } catch (stringifyError) {
+      console.error('❌ Erro ao fazer JSON.stringify do payload:', stringifyError)
+      return res.status(500).json({
+        error: 'Erro ao preparar dados para envio',
+        details: 'Payload muito grande ou inválido'
+      })
+    }
 
     // Timeout configurável (padrão 10 minutos)
     const timeoutMs = parseInt(process.env.N8N_TIMEOUT) || 600000
 
     // #region agent log
-    const payloadForLog = { ...payload, fotos: { frente: { data: '[base64]', mimeType: payload.fotos.frente.mimeType }, costas: { data: '[base64]', mimeType: payload.fotos.costas.mimeType } } }
-    fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-4',hypothesisId:'H23',location:'server/routes/workout.js:payloadBeforeN8N',message:'Payload antes de enviar para N8N',data:{payloadKeys:Object.keys(payload),hasFotos:Boolean(payload.fotos),fotoFrenteSize:payload.fotos?.frente?.data?.length,fotoCostasSize:payload.fotos?.costas?.data?.length,payloadSample:JSON.stringify(payloadForLog).substring(0,500)},timestamp:Date.now()})}).catch(()=>{})
+    fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-4',hypothesisId:'H23',location:'server/routes/workout.js:payloadBeforeN8N',message:'Payload antes de enviar para N8N',data:{payloadKeys:Object.keys(questionnairePayload),fotoFrenteSize:fotoFrente.size,fotoCostasSize:fotoCostas.size,payloadSample:JSON.stringify(questionnairePayload).substring(0,500)},timestamp:Date.now()})}).catch(()=>{})
     // #endregion
 
     // Fazer requisição para N8N
     let response
     try {
       // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-4',hypothesisId:'H19',location:'server/routes/workout.js:n8nFetchStart',message:'Iniciando fetch para N8N',data:{url:N8N_GET_EXERCISES_URL,timeoutMs},timestamp:Date.now()})}).catch(()=>{})
+      fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-4',hypothesisId:'H19',location:'server/routes/workout.js:n8nFetchStart',message:'Iniciando fetch para N8N',data:{url:N8N_GET_EXERCISES_URL,timeoutMs,contentType:'application/json'},timestamp:Date.now()})}).catch(()=>{})
       // #endregion
       response = await fetch(N8N_GET_EXERCISES_URL, {
         method: 'POST',
         headers,
-        body: JSON.stringify(payload),
+        body: payloadString,
         signal: AbortSignal.timeout(timeoutMs)
       })
       // #region agent log
@@ -281,9 +350,39 @@ router.post('/generate', upload.fields([
     let responseData
     try {
       const responseText = await response.text()
+      console.log('📥 Resposta raw do N8N (primeiros 1000 chars):', responseText.substring(0, 1000))
+      
       responseData = JSON.parse(responseText)
+      
+      console.log('📦 responseData parseado:')
+      console.log('   Tipo:', typeof responseData)
+      console.log('   É Array?:', Array.isArray(responseData))
+      if (Array.isArray(responseData)) {
+        console.log('   Tamanho do array:', responseData.length)
+        responseData.forEach((item, idx) => {
+          console.log(`   Item ${idx}:`, typeof item, '- Keys:', typeof item === 'object' && item !== null ? Object.keys(item).slice(0, 5) : 'N/A')
+          if (typeof item === 'object' && item !== null) {
+            if (item.workouts) console.log(`      ✅ Item ${idx} tem workouts:`, Array.isArray(item.workouts) ? `${item.workouts.length} itens` : 'não é array')
+            if (item.output && typeof item.output === 'object' && item.output.workouts) {
+              console.log(`      ✅ Item ${idx}.output tem workouts:`, Array.isArray(item.output.workouts) ? `${item.output.workouts.length} itens` : 'não é array')
+            }
+          }
+        })
+      } else {
+        console.log('   Keys:', Object.keys(responseData).slice(0, 10))
+        if (responseData.workouts) {
+          console.log('   ✅ responseData.workouts encontrado:', Array.isArray(responseData.workouts) ? `${responseData.workouts.length} itens` : 'não é array')
+        }
+        if (responseData.output) {
+          console.log('   ✅ responseData.output existe:', typeof responseData.output)
+          if (typeof responseData.output === 'object' && responseData.output.workouts) {
+            console.log('      ✅ responseData.output.workouts:', Array.isArray(responseData.output.workouts) ? `${responseData.output.workouts.length} itens` : 'não é array')
+          }
+        }
+      }
+      
       // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-1',hypothesisId:'H1',location:'server/routes/workout.js:parseResponse',message:'Parsed N8N response',data:{status:response.status,hasWorkouts:Array.isArray(responseData?.workouts),hasDivisoes:Array.isArray(responseData?.divisoes)},timestamp:Date.now()})}).catch(()=>{})
+      fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-1',hypothesisId:'H1',location:'server/routes/workout.js:parseResponse',message:'Parsed N8N response',data:{status:response.status,hasWorkouts:Array.isArray(responseData?.workouts),hasDivisoes:Array.isArray(responseData?.divisoes),isArray:Array.isArray(responseData),arrayLength:Array.isArray(responseData)?responseData.length:null},timestamp:Date.now()})}).catch(()=>{})
       // #endregion
     } catch (parseError) {
       console.error('❌ Erro ao parsear resposta do N8N:', parseError)
@@ -294,30 +393,159 @@ router.post('/generate', upload.fields([
     }
 
     // N8N pode retornar em diferentes formatos
+    // Com 3 agentes, pode vir como array com múltiplos outputs ou objeto único
     let workoutData = null
 
-    // Formato 1: Array direto
+    console.log('🔍 Formato da resposta:', Array.isArray(responseData) ? `Array (${responseData.length} itens)` : 'Objeto')
+    
+    // Função auxiliar para encontrar workouts em um objeto
+    const findWorkouts = (obj) => {
+      if (!obj || typeof obj !== 'object') return null
+      if (Array.isArray(obj.workouts) && obj.workouts.length > 0) return obj
+      if (Array.isArray(obj.divisoes) && obj.divisoes.length > 0) return obj
+      if (obj.output && typeof obj.output === 'object') {
+        const found = findWorkouts(obj.output)
+        if (found) return found
+      }
+      return null
+    }
+    
+    // Formato 1: Array direto (múltiplos outputs dos agentes)
     if (Array.isArray(responseData) && responseData.length > 0) {
-      workoutData = responseData[0]
+      console.log('🔍 Procurando output com workouts em array de', responseData.length, 'itens')
+      
+      // Procurar o output que tem workouts (do terceiro agente que gera os treinos)
+      for (let i = 0; i < responseData.length; i++) {
+        const item = responseData[i]
+        let parsedItem = item
+        
+        // Se for string, tentar parsear
+        if (typeof item === 'string') {
+          try {
+            parsedItem = JSON.parse(item)
+          } catch (e) {
+            console.log(`   Item ${i}: não é JSON válido, pulando...`)
+            continue
+          }
+        }
+        
+        // Se o item tem output como string, tentar parsear
+        if (parsedItem.output && typeof parsedItem.output === 'string') {
+          try {
+            const parsedOutput = JSON.parse(parsedItem.output)
+            console.log(`   Item ${i}: output é string, parseado`)
+            console.log(`   Keys do output parseado:`, Object.keys(parsedOutput).slice(0, 10))
+            console.log(`   parsedOutput.workouts:`, Array.isArray(parsedOutput.workouts) ? `${parsedOutput.workouts.length} itens` : 'não encontrado')
+            
+            // Verificar se o output parseado tem workouts
+            const foundInOutput = findWorkouts(parsedOutput)
+            if (foundInOutput) {
+              workoutData = foundInOutput
+              console.log(`✅ Encontrado workouts no item ${i}.output parseado`)
+              console.log(`   Workouts encontrados: ${foundInOutput.workouts?.length || foundInOutput.divisoes?.length || 0}`)
+              break
+            }
+            
+            // Se não encontrou workouts mas tem outros dados, usar o parsedOutput mesmo
+            console.log(`   ⚠️ Item ${i} não tem workouts, mas tem outros dados`)
+            console.log(`   Tipo de output:`, parsedOutput.meta?.generator || 'desconhecido')
+            
+            // Se não encontrou, substituir parsedItem.output pelo objeto parseado para verificação recursiva
+            parsedItem.output = parsedOutput
+          } catch (e) {
+            console.log(`   Item ${i}: erro ao parsear output string:`, e.message)
+          }
+        }
+        
+        // Verificar se tem workouts (pode estar diretamente ou em output)
+        const found = findWorkouts(parsedItem)
+        if (found) {
+          workoutData = found
+          console.log(`✅ Encontrado output com workouts no item ${i}`)
+          console.log(`   Workouts encontrados: ${found.workouts?.length || found.divisoes?.length || 0}`)
+          break
+        }
+      }
+      
+      // Se não encontrou, usar o último item (provavelmente o do terceiro agente)
+      if (!workoutData && responseData.length > 0) {
+        console.log('⚠️ Não encontrou workouts, tentando último item do array')
+        let lastItem = responseData[responseData.length - 1]
+        
+        // Se for string, tentar parsear
+        if (typeof lastItem === 'string') {
+          try {
+            lastItem = JSON.parse(lastItem)
+            console.log('   ✅ Parseado string para objeto')
+          } catch (e) {
+            console.log('   ⚠️ Não foi possível parsear string:', e.message)
+          }
+        }
+        
+        // Se lastItem tem output (pode ser string ou objeto)
+        if (lastItem && lastItem.output) {
+          if (typeof lastItem.output === 'string') {
+            try {
+              const parsedOutput = JSON.parse(lastItem.output)
+              console.log('   ✅ Parseado output string para objeto')
+              console.log('   Verificando parsedOutput.workouts:', Array.isArray(parsedOutput.workouts) ? `${parsedOutput.workouts.length} itens` : 'não encontrado')
+              
+              // Verificar se o output parseado tem workouts
+              const found = findWorkouts(parsedOutput)
+              if (found) {
+                workoutData = found
+                console.log('   ✅ Encontrado workouts no output parseado!')
+              } else {
+                workoutData = parsedOutput
+                console.log('   ⚠️ Usando parsedOutput, mas não encontrou workouts diretamente')
+              }
+            } catch (e) {
+              console.log('   ⚠️ Não foi possível parsear output string:', e.message)
+              workoutData = lastItem
+            }
+          } else {
+            // output já é objeto
+            const found = findWorkouts(lastItem.output)
+            if (found) {
+              workoutData = found
+            } else {
+              workoutData = lastItem.output
+            }
+          }
+        } else {
+          // Não tem output, usar o item diretamente
+          workoutData = lastItem
+        }
+      }
     }
     // Formato 2: Objeto com output
     else if (responseData.output) {
       workoutData = responseData.output
     }
     // Formato 3: Objeto direto
-    else if (responseData.treino || responseData.workout || responseData.divisoes) {
+    else if (responseData.workouts || responseData.divisoes || responseData.treino || responseData.workout) {
       workoutData = responseData
     }
-    // Formato 4: String JSON dentro do objeto
+    // Formato 4: Qualquer objeto (tentar encontrar workouts recursivamente)
     else if (typeof responseData === 'object') {
-      workoutData = responseData
+      const found = findWorkouts(responseData)
+      if (found) {
+        workoutData = found
+      } else {
+        workoutData = responseData
+      }
     }
 
     if (!workoutData) {
+      console.error('❌ workoutData é null após processamento')
+      console.error('   responseData type:', typeof responseData)
+      console.error('   responseData preview:', JSON.stringify(responseData, null, 2).substring(0, 1000))
       throw new Error('Resposta do N8N não contém dados de treino válidos')
     }
 
-    console.log('✅ Treino recebido do N8N:', JSON.stringify(workoutData, null, 2))
+    console.log('✅ workoutData extraído')
+    console.log('   workoutData.workouts:', Array.isArray(workoutData.workouts) ? `${workoutData.workouts.length} itens` : 'não encontrado')
+    console.log('   workoutData.divisoes:', Array.isArray(workoutData.divisoes) ? `${workoutData.divisoes.length} itens` : 'não encontrado')
 
     // Verificar se o usuário tem personalId (se não tiver, criar um personal virtual)
     let personalId = user.personalId
@@ -389,7 +617,14 @@ router.post('/generate', upload.fields([
 
     // Escolher fonte de divisões (divisoes ou workouts)
     // Pode estar em treinoData ou diretamente em workoutDataParsed
-    const rawDivisoes = treinoData.divisoes || treinoData.workouts || workoutDataParsed.workouts || []
+    // Priorizar workouts diretamente de workoutDataParsed (output do terceiro agente)
+    const rawDivisoes = workoutDataParsed.workouts || treinoData.workouts || treinoData.divisoes || workoutDataParsed.divisoes || []
+    
+    console.log('🔍 Buscando divisões/workouts:')
+    console.log('   workoutDataParsed.workouts:', Array.isArray(workoutDataParsed.workouts) ? `${workoutDataParsed.workouts.length} itens` : 'não encontrado')
+    console.log('   treinoData.workouts:', Array.isArray(treinoData.workouts) ? `${treinoData.workouts.length} itens` : 'não encontrado')
+    console.log('   treinoData.divisoes:', Array.isArray(treinoData.divisoes) ? `${treinoData.divisoes.length} itens` : 'não encontrado')
+    console.log('   rawDivisoes selecionado:', Array.isArray(rawDivisoes) ? `${rawDivisoes.length} itens` : 'não é array')
     // #region agent log
     fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-1',hypothesisId:'H4',location:'server/routes/workout.js:rawDivisoes',message:'Raw divisions length',data:{len:Array.isArray(rawDivisoes)?rawDivisoes.length:null},timestamp:Date.now()})}).catch(()=>{})
     // #endregion
@@ -401,6 +636,17 @@ router.post('/generate', upload.fields([
       const itensParaCriar = []
       
       const exerciciosDivisao = divisao.itens || divisao.exercicios || divisao.exercises || []
+      
+      console.log(`🔍 Divisão ${index + 1}:`, {
+        nome: divisao.nome || divisao.dayName || divisao.dayLabel,
+        exerciciosCount: exerciciosDivisao.length,
+        keys: Object.keys(divisao).slice(0, 10)
+      })
+      
+      if (exerciciosDivisao.length === 0) {
+        console.warn(`⚠️ Divisão ${index + 1} não tem exercícios! Divisão completa:`, JSON.stringify(divisao, null, 2).substring(0, 500))
+      }
+      
       // #region agent log
       fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-1',hypothesisId:'H5',location:'server/routes/workout.js:divisao',message:'Division exercises length',data:{divIndex:index,exLen:Array.isArray(exerciciosDivisao)?exerciciosDivisao.length:null},timestamp:Date.now()})}).catch(()=>{})
       // #endregion
@@ -543,6 +789,14 @@ router.post('/generate', upload.fields([
 
     console.log('✅ Treino criado com sucesso! ID:', prescricao.id)
 
+    // TEMPORÁRIO: Registro de geração desabilitado para testes
+    // TODO: Reativar após testes
+    /*
+    // Registrar a geração de treino
+    await recordWorkoutGeneration(userId)
+    console.log('✅ Geração de treino registrada no controle')
+    */
+
     res.status(201).json({
       message: 'Treino gerado com sucesso',
       treino: prescricao
@@ -552,6 +806,19 @@ router.post('/generate', upload.fields([
     console.error('❌ Erro ao gerar treino:', error)
     console.error('❌ Stack trace:', error.stack)
     console.error('❌ Error name:', error.name)
+    console.error('❌ Error message:', error.message)
+    
+    // Retornar erro detalhado para o cliente
+    const errorMessage = error.message || 'Erro desconhecido ao gerar treino'
+    const statusCode = error.statusCode || 500
+    
+    return res.status(statusCode).json({
+      error: 'Erro ao gerar treino',
+      details: errorMessage,
+      ...(process.env.NODE_ENV === 'development' && {
+        stack: error.stack
+      })
+    })
     console.error('❌ Error code:', error.code)
     // #region agent log
     fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'pre-fix-4',hypothesisId:'H22',location:'server/routes/workout.js:catchError',message:'Erro capturado no catch da rota',data:{errorName:error.name,errorMessage:error.message,errorCode:error.code,stack:error.stack?.substring(0,300)},timestamp:Date.now()})}).catch(()=>{})

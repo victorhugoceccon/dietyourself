@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Barbell, ChartBar, Fire, Scales, Target, TrendDown } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './QuickStats.css'
 
@@ -63,13 +64,13 @@ function QuickStats({ refreshTrigger }) {
   const getObjectiveIcon = () => {
     switch (objective) {
       case 'Emagrecer':
-        return '📉'
+        return TrendDown
       case 'Ganhar massa muscular':
-        return '💪'
+        return Barbell
       case 'Manter peso':
-        return '⚖️'
+        return Scales
       default:
-        return '🎯'
+        return Target
     }
   }
 
@@ -77,7 +78,7 @@ function QuickStats({ refreshTrigger }) {
     <div className="quick-stats">
       <div className="stats-grid">
         <div className="stat-card streak-card">
-          <div className="stat-icon">🔥</div>
+          <div className="stat-icon"><Fire size={18} weight="fill" /></div>
           <div className="stat-content">
             <div className="stat-value">{currentStreak}</div>
             <div className="stat-label">Dias de constância</div>
@@ -88,7 +89,7 @@ function QuickStats({ refreshTrigger }) {
         </div>
 
         <div className="stat-card adherence-card">
-          <div className="stat-icon">📊</div>
+          <div className="stat-icon"><ChartBar size={18} weight="fill" /></div>
           <div className="stat-content">
             <div className="stat-value">{Math.round(weeklyAdherence)}%</div>
             <div className="stat-label">Aderência Semanal</div>
@@ -97,7 +98,10 @@ function QuickStats({ refreshTrigger }) {
         </div>
 
         <div className="stat-card objective-card">
-          <div className="stat-icon">{getObjectiveIcon()}</div>
+          <div className="stat-icon">{(() => {
+            const Icon = getObjectiveIcon()
+            return <Icon size={18} weight="fill" />
+          })()}</div>
           <div className="stat-content">
             <div className="stat-value-text">{objective}</div>
             <div className="stat-label">Seu objetivo</div>

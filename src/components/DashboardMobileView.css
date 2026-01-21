@@ -44,14 +44,23 @@
 .giba-dash-hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 16px;
-  font-weight: 700;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 24px;
   font-size: 13px;
-  color: #0f1419;
+  font-weight: 500;
+  color: #f59e0b;
+  margin-bottom: 24px;
+}
+
+.giba-dash-hero-badge img {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .giba-dash-hero-title {
@@ -276,18 +285,48 @@
   background: #1e2534;
   border-radius: 16px;
   padding: 18px;
-  border: 1px solid rgba(74, 222, 128, 0.2);
+  border: 1px solid rgba(255, 222, 89, 0.2);
 }
 
 .giba-dash-checkin-badge {
   display: inline-block;
-  background: rgba(74, 222, 128, 0.15);
-  color: #4ade80;
+  background: rgba(255, 222, 89, 0.12);
+  color: #ffde59;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
   margin-bottom: 14px;
+}
+
+.giba-dash-checkin-score {
+  margin-bottom: 14px;
+  background: rgba(255, 222, 89, 0.08);
+  border: 1px solid rgba(255, 222, 89, 0.16);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.giba-dash-checkin-score-header {
+  display: flex;
+  justify-content: space-between;
+  color: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.giba-dash-checkin-score-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.giba-dash-checkin-score-bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(135deg, #ffde59 0%, #f59e0b 100%);
 }
 
 .giba-dash-checkin-data {
@@ -331,7 +370,7 @@
   background: #1e2534;
   border-radius: 16px;
   padding: 18px;
-  border: 2px dashed rgba(255,255,255,0.1);
+  border: 2px dashed rgba(255, 222, 89, 0.18);
 }
 
 .giba-dash-checkin-pending-icon {
@@ -358,7 +397,7 @@
 
 .giba-dash-checkin-btn {
   padding: 10px 18px;
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  background: linear-gradient(135deg, #ffde59 0%, #f59e0b 100%);
   border: none;
   border-radius: 10px;
   color: #0f1419;
@@ -366,6 +405,35 @@
   font-weight: 700;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+.giba-dash-checkin-story {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #151a26;
+  border: 1px solid rgba(255, 222, 89, 0.12);
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.giba-dash-checkin-story-title {
+  display: block;
+  font-size: 12px;
+  color: #ffde59;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.giba-dash-checkin-story ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.giba-dash-checkin-story li {
+  margin-bottom: 6px;
 }
 
 /* =====================

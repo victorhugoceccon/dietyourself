@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config/api'
+import { 
+  Sparkle, 
+  ThumbsUp, 
+  Plant, 
+  Rocket, 
+  ForkKnife, 
+  CheckCircle,
+  ArrowRight
+} from '@phosphor-icons/react'
 import './EstadoDoDia.css'
 
 function EstadoDoDia({ refreshTrigger }) {
@@ -136,10 +145,26 @@ function EstadoDoDia({ refreshTrigger }) {
         <div className="status-header">
           <h2 className="status-title">Seu dia no LifeFit</h2>
           <div className="status-badge" style={{ backgroundColor: dayStatus?.color || 'var(--lifefit-blue-gray)' }}>
-            {dayStatus?.status === 'excelente' && '✨ Excelente'}
-            {dayStatus?.status === 'bom' && '👍 Bom'}
-            {dayStatus?.status === 'em-andamento' && '🌱 Em andamento'}
-            {dayStatus?.status === 'iniciando' && '🚀 Começando'}
+            {dayStatus?.status === 'excelente' && (
+              <>
+                <Sparkle size={16} weight="fill" /> Excelente
+              </>
+            )}
+            {dayStatus?.status === 'bom' && (
+              <>
+                <ThumbsUp size={16} weight="fill" /> Bom
+              </>
+            )}
+            {dayStatus?.status === 'em-andamento' && (
+              <>
+                <Plant size={16} weight="fill" /> Em andamento
+              </>
+            )}
+            {dayStatus?.status === 'iniciando' && (
+              <>
+                <Rocket size={16} weight="fill" /> Começando
+              </>
+            )}
           </div>
         </div>
         
@@ -152,9 +177,9 @@ function EstadoDoDia({ refreshTrigger }) {
       {nextAction && (
         <div className="next-action-card" onClick={nextAction.action || undefined}>
           <div className="action-icon">
-            {nextAction.type === 'meal' && '🍽️'}
-            {nextAction.type === 'start' && '✨'}
-            {nextAction.type === 'maintain' && '💚'}
+            {nextAction.type === 'meal' && <ForkKnife size={24} weight="fill" />}
+            {nextAction.type === 'start' && <Sparkle size={24} weight="fill" />}
+            {nextAction.type === 'maintain' && <CheckCircle size={24} weight="fill" />}
           </div>
           <div className="action-content">
             <h3 className="action-title">{nextAction.title}</h3>
@@ -162,9 +187,7 @@ function EstadoDoDia({ refreshTrigger }) {
           </div>
           {nextAction.action && (
             <div className="action-arrow">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12H19M19 12L12 5M19 12L12 19" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <ArrowRight size={20} weight="bold" />
             </div>
           )}
         </div>

@@ -1,3 +1,5 @@
+import { Question } from '@phosphor-icons/react'
+
 /**
  * EmptyState - Componente para estados vazios de listas e páginas.
  * 
@@ -13,12 +15,7 @@ function EmptyState({
   action,
   className = '' 
 }) {
-  const defaultIcon = (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 8v4M12 16h.01" />
-    </svg>
-  )
+  const defaultIcon = <Question size={48} weight="duotone" />
 
   return (
     <div className={`lifefit-empty-state ${className}`}>

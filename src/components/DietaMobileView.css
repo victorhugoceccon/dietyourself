@@ -44,20 +44,23 @@
 .giba-dieta-badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-  padding: 8px 20px;
-  border-radius: 30px;
+  padding: 8px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #f59e0b;
   margin-bottom: 24px;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 1px;
-  color: #0f1419;
-  box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
 }
 
 .giba-dieta-badge-icon {
-  font-size: 18px;
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .giba-dieta-badge-text {
@@ -92,6 +95,228 @@
 
 .giba-dieta-section-header {
   margin-bottom: 16px;
+}
+
+.giba-dieta-section-header--actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.giba-dieta-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.12);
+  color: #ffde59;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.giba-dieta-download-btn:hover {
+  background: rgba(245, 158, 11, 0.2);
+  transform: translateY(-1px);
+}
+
+/* =====================
+   PDF TEMPLATE (OFFSCREEN)
+   ===================== */
+
+.giba-pdf-template {
+  position: fixed;
+  top: 0;
+  left: -9999px;
+  width: 794px;
+  min-height: 1123px;
+  background: #0f1419;
+  color: #fff;
+  padding: 32px;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.giba-pdf-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.giba-pdf-logo {
+  width: 220px;
+  height: auto;
+  object-fit: contain;
+}
+
+.giba-pdf-title {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.giba-pdf-subtitle {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.giba-pdf-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.giba-pdf-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.12);
+  font-size: 12px;
+  color: #ffde59;
+}
+
+.giba-pdf-section h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.giba-pdf-workouts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.giba-pdf-workout {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.giba-pdf-workout-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #ffde59;
+}
+
+.giba-pdf-workout ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 12px;
+  color: #e2e8f0;
+}
+
+.giba-pdf-meal-kcal {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.giba-pdf-foods-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.giba-pdf-food-item {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.giba-pdf-food-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.giba-pdf-food-main {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.giba-pdf-food-main strong {
+  font-size: 13px;
+  color: #fff;
+  flex: 1;
+  min-width: 150px;
+}
+
+.giba-pdf-food-main span {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.giba-pdf-food-kcal {
+  color: #f59e0b !important;
+  font-weight: 600;
+}
+
+.giba-pdf-food-macros {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.giba-pdf-subs {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.giba-pdf-subs strong {
+  font-size: 11px;
+  color: #ffde59;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.giba-pdf-subs ul {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 0;
+}
+
+.giba-pdf-subs li {
+  font-size: 10px;
+  color: #94a3b8;
+  padding: 2px 0;
+  padding-left: 12px;
+  position: relative;
+}
+
+.giba-pdf-subs li::before {
+  content: '↻';
+  position: absolute;
+  left: 0;
+  color: #f59e0b;
+}
+
+.giba-pdf-obs {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  color: #e2e8f0;
+  line-height: 1.6;
+  margin-top: 8px;
 }
 
 .giba-dieta-step {
@@ -238,14 +463,23 @@
 .giba-dieta-hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  font-weight: 700;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 24px;
   font-size: 13px;
-  color: #0f1419;
+  font-weight: 500;
+  color: #f59e0b;
+  margin-bottom: 24px;
+}
+
+.giba-dieta-hero-badge img {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .giba-dieta-hero-title {

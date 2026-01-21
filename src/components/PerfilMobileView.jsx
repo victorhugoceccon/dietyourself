@@ -1,11 +1,13 @@
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Camera, ForkKnife, NotePencil, User, Warning } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import ImageCropModal from './ImageCropModal'
 import { Modal } from './ui'
 import './PerfilMobileView.css'
 
 function PerfilMobileView() {
+  const gibaLogoUrl = `${import.meta.env.BASE_URL}giba-team-app.png`
   const [user, setUser] = useState(null)
   const [questionnaireData, setQuestionnaireData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -15,6 +17,7 @@ function PerfilMobileView() {
   const [resetting, setResetting] = useState(false)
   const [hasDiet, setHasDiet] = useState(false)
   const [showQuestionnaireModal, setShowQuestionnaireModal] = useState(false)
+  const [generationStatus, setGenerationStatus] = useState(null)
   const photoInputRef = useRef(null)
   const [pendingPhotoSrc, setPendingPhotoSrc] = useState('')
   const [showPhotoCrop, setShowPhotoCrop] = useState(false)
@@ -67,6 +70,16 @@ function PerfilMobileView() {
       if (dietResponse.ok) {
         const dietData = await dietResponse.json()
         setHasDiet(!!dietData.dieta)
+      }
+
+      // Carregar status de geração
+      const statusResponse = await fetch(`${API_URL}/user/generation-status`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+
+      if (statusResponse.ok) {
+        const statusData = await statusResponse.json()
+        setGenerationStatus(statusData)
       }
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
@@ -209,8 +222,7 @@ function PerfilMobileView() {
       {/* Hero */}
       <div className="giba-perfil-hero">
         <div className="giba-perfil-hero-badge">
-          <span>👤</span>
-          <span>GIBA</span>
+          <img src={gibaLogoUrl} alt="GIBA" />
         </div>
         <h1 className="giba-perfil-hero-title">Meu Perfil</h1>
         <p className="giba-perfil-hero-subtitle">Gerencie suas informações e preferências</p>
@@ -228,7 +240,7 @@ function PerfilMobileView() {
               </div>
             )}
             <div className="giba-perfil-avatar-overlay">
-              <span>📷</span>
+              <Camera size={18} weight="bold" />
             </div>
             {savingPhoto && (
               <div className="giba-perfil-avatar-loading">
@@ -337,11 +349,52 @@ function PerfilMobileView() {
           </div>
         ) : (
           <div className="giba-perfil-questionnaire-empty">
-            <span className="giba-perfil-questionnaire-icon">📝</span>
+            <span className="giba-perfil-questionnaire-icon">
+              <NotePencil size={18} weight="fill" />
+            </span>
             <p>Preencha o questionário para que possamos personalizar sua experiência.</p>
           </div>
         )}
       </section>
+
+      {/* Status de Geração */}
+      {generationStatus && (
+        <section className="giba-perfil-section">
+          <div className="giba-perfil-section-header">
+            <h3 className="giba-perfil-section-title">Controle de Geração</h3>
+          </div>
+          <div className="giba-perfil-generation-status">
+            {generationStatus.daysUntilNextGeneration !== null && generationStatus.daysUntilNextGeneration > 0 ? (
+              <div className="giba-perfil-status-card giba-perfil-status-card--waiting">
+                <p className="giba-perfil-status-text">
+                  Você poderá gerar uma nova dieta/treino em <strong>{generationStatus.daysUntilNextGeneration} {generationStatus.daysUntilNextGeneration === 1 ? 'dia' : 'dias'}</strong>
+                </p>
+                {generationStatus.nextGenerationAllowed && (
+                  <p className="giba-perfil-status-date">
+                    Próxima geração permitida: {new Date(generationStatus.nextGenerationAllowed).toLocaleDateString('pt-BR')}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="giba-perfil-status-card giba-perfil-status-card--ready">
+                <p className="giba-perfil-status-text">
+                  Você pode gerar uma nova dieta/treino agora
+                </p>
+              </div>
+            )}
+            <div className="giba-perfil-status-card">
+              <p className="giba-perfil-status-text">
+                Resets disponíveis: <strong>{generationStatus.resetsAvailable}</strong>
+              </p>
+              {generationStatus.resetsAvailable === 0 && (
+                <p className="giba-perfil-status-hint">
+                  Você poderá resetar novamente após gerar uma nova dieta/treino
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Ações Rápidas */}
       <section className="giba-perfil-section">
@@ -351,7 +404,9 @@ function PerfilMobileView() {
 
         <div className="giba-perfil-actions-list">
           <button className="giba-perfil-action-item" onClick={() => navigate('/paciente/dieta')}>
-            <span className="giba-perfil-action-icon">🥗</span>
+            <span className="giba-perfil-action-icon">
+              <ForkKnife size={18} weight="fill" />
+            </span>
             <div className="giba-perfil-action-text">
               <strong>Ver minha dieta</strong>
               <span>Acesse seu plano alimentar</span>
@@ -393,15 +448,22 @@ function PerfilMobileView() {
             <li>Seus check-ins serão perdidos</li>
           </ul>
           <p className="giba-perfil-danger-warning">
-            ⚠️ Esta ação não pode ser desfeita!
+            <Warning size={16} weight="fill" /> Esta ação não pode ser desfeita!
           </p>
           <button
             className="giba-perfil-danger-btn"
             onClick={handleResetDietAndQuestionnaire}
-            disabled={resetting || (!hasDiet && !questionnaireData)}
+            disabled={resetting || (!hasDiet && !questionnaireData) || (generationStatus && !generationStatus.canReset)}
           >
             {resetting ? 'Resetando...' : 'Começar do zero'}
           </button>
+          {generationStatus && !generationStatus.canReset && (
+            <p className="giba-perfil-danger-hint" style={{ marginTop: '12px', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+              {generationStatus.resetsAvailable === 0 
+                ? 'Você já usou seu reset disponível. Você poderá resetar novamente após gerar uma nova dieta/treino.'
+                : 'Você precisa ter uma dieta ou treino gerado para poder resetar.'}
+            </p>
+          )}
         </div>
       </section>
 
@@ -550,7 +612,7 @@ function PerfilMobileView() {
             {/* Alimentos do Dia a Dia */}
             {questionnaireData.alimentosDoDiaADia && (
               <div className="giba-perfil-q-block">
-                <h4 className="giba-perfil-q-block-title">🥗 Alimentos do Dia a Dia</h4>
+                <h4 className="giba-perfil-q-block-title"><ForkKnife size={16} weight="fill" /> Alimentos do Dia a Dia</h4>
                 <div className="giba-perfil-q-alimentos">
                   {questionnaireData.alimentosDoDiaADia.carboidratos?.length > 0 && (
                     <div className="giba-perfil-q-alimento-cat">

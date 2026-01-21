@@ -242,17 +242,10 @@
   }
 
   /* ===== NAVEGAÇÃO ===== */
-  .nav-item {
-    color: var(--text-primary) !important;
-  }
-
-  .nav-item:hover {
-    background: var(--bg-tertiary) !important;
-    color: #90c22c !important;
-  }
-
-  .nav-item.active {
-    color: #90c22c !important;
+  /* NOTA: Estilos do menu mobile paciente foram movidos para PacienteLayout.css */
+  /* Removido para evitar conflitos - apenas aplicar em outros contextos se necessário */
+  .paciente-nav .nav-item {
+    /* Estilos do menu mobile paciente são controlados exclusivamente por PacienteLayout.css */
   }
 
   /* ===== COMPONENTES ESPECÍFICOS DO PERSONAL ===== */

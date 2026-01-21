@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { ArrowsClockwise, CheckCircle, Circle, Fire, Heart, Leaf, Lightning, Plant, Sparkle } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './WeeklyAdherence.css'
 
@@ -68,11 +69,11 @@ function WeeklyAdherence({ refreshTrigger }) {
 
   const getProgressMessage = (percentage) => {
     const messages = [
-      { threshold: 80, text: 'Você está mantendo o ritmo', emoji: '🌿', subtext: 'Boa semana até aqui' },
-      { threshold: 60, text: 'Você está construindo constância', emoji: '✨', subtext: 'Cada dia conta' },
-      { threshold: 40, text: 'Você está no caminho', emoji: '🌱', subtext: 'Não precisa ser perfeito, só consistente' },
-      { threshold: 20, text: 'Primeiro passo dado', emoji: '💚', subtext: 'Seu progresso começa aqui' },
-      { threshold: 0, text: 'Começando sua jornada', emoji: '🌱', subtext: 'Cada dia conta' }
+      { threshold: 80, text: 'Você está mantendo o ritmo', icon: Leaf, subtext: 'Boa semana até aqui' },
+      { threshold: 60, text: 'Você está construindo constância', icon: Sparkle, subtext: 'Cada dia conta' },
+      { threshold: 40, text: 'Você está no caminho', icon: Plant, subtext: 'Não precisa ser perfeito, só consistente' },
+      { threshold: 20, text: 'Primeiro passo dado', icon: Heart, subtext: 'Seu progresso começa aqui' },
+      { threshold: 0, text: 'Começando sua jornada', icon: Plant, subtext: 'Cada dia conta' }
     ]
 
     for (const msg of messages) {
@@ -89,7 +90,7 @@ function WeeklyAdherence({ refreshTrigger }) {
     if (stats.currentStreak >= 7) {
       return { 
         message: 'Sequência sólida!', 
-        emoji: '🔥', 
+        icon: Fire, 
         subtext: `${stats.currentStreak} dias seguidos`,
         description: 'Você está criando um hábito. Parabéns!'
       }
@@ -97,14 +98,14 @@ function WeeklyAdherence({ refreshTrigger }) {
     if (stats.currentStreak >= 3) {
       return { 
         message: 'Sequência iniciada', 
-        emoji: '💚', 
+        icon: Heart, 
         subtext: `${stats.currentStreak} dias seguidos`,
         description: 'Continue assim! Cada dia conta.'
       }
     }
     return { 
       message: 'Primeiro passo dado', 
-      emoji: '✨', 
+      icon: Sparkle, 
       subtext: `${stats.currentStreak} dia${stats.currentStreak > 1 ? 's' : ''} seguido${stats.currentStreak > 1 ? 's' : ''}`,
       description: 'Você está construindo constância.'
     }
@@ -131,28 +132,28 @@ function WeeklyAdherence({ refreshTrigger }) {
     switch (adherence) {
       case 'TOTAL':
         return { 
-          emoji: '✅', 
+          icon: CheckCircle, 
           label: 'Segui totalmente', 
           color: '#7A9B7D',
           description: 'Dia completo registrado'
         }
       case 'PARCIAL':
         return { 
-          emoji: '⚡', 
+          icon: Lightning, 
           label: 'Segui parcialmente', 
           color: '#9FAF7D',
           description: 'Registro parcial também conta'
         }
       case 'NAO_SEGUIU':
         return { 
-          emoji: '🔄', 
+          icon: ArrowsClockwise, 
           label: 'Não segui hoje', 
           color: '#B5C57D',
           description: 'Amanhã é uma nova chance'
         }
       default:
         return { 
-          emoji: '○', 
+          icon: Circle, 
           label: 'Sem registro', 
           color: '#E0E0E0',
           description: 'Ainda não registrado'
@@ -191,7 +192,9 @@ function WeeklyAdherence({ refreshTrigger }) {
               }}
             >
               <div className="adherence-circle-inner">
-                <span className="adherence-emoji-large">{progressMessage.emoji}</span>
+                <span className="adherence-emoji-large">
+                  <progressMessage.icon size={20} weight="fill" />
+                </span>
                 <span className="adherence-message-main">{progressMessage.text}</span>
                 <span className="adherence-message-sub">{progressMessage.subtext}</span>
                 <span className="adherence-percentage-subtle">{Math.round(adherencePercentage)}%</span>
@@ -203,7 +206,9 @@ function WeeklyAdherence({ refreshTrigger }) {
           {streakInfo && (
             <div className="streak-card">
               <div className="streak-icon-wrapper">
-                <span className="streak-emoji">{streakInfo.emoji}</span>
+                <span className="streak-emoji">
+                  <streakInfo.icon size={16} weight="fill" />
+                </span>
               </div>
               <div className="streak-content">
                 <h3 className="streak-title">{streakInfo.message}</h3>
@@ -217,7 +222,7 @@ function WeeklyAdherence({ refreshTrigger }) {
           <div className="adherence-indicators">
             <div className="indicator-item">
               <div className="indicator-icon" style={{ backgroundColor: '#7A9B7D15', borderColor: '#7A9B7D' }}>
-                <span className="indicator-emoji">✅</span>
+                <span className="indicator-emoji"><CheckCircle size={14} weight="fill" /></span>
               </div>
               <div className="indicator-content">
                 <span className="indicator-value">{stats.weekly.totalAdherence || 0}</span>
@@ -226,7 +231,7 @@ function WeeklyAdherence({ refreshTrigger }) {
             </div>
             <div className="indicator-item">
               <div className="indicator-icon" style={{ backgroundColor: '#9FAF7D15', borderColor: '#9FAF7D' }}>
-                <span className="indicator-emoji">⚡</span>
+                <span className="indicator-emoji"><Lightning size={14} weight="fill" /></span>
               </div>
               <div className="indicator-content">
                 <span className="indicator-value">{stats.weekly.parcialAdherence || 0}</span>
@@ -235,7 +240,7 @@ function WeeklyAdherence({ refreshTrigger }) {
             </div>
             <div className="indicator-item">
               <div className="indicator-icon" style={{ backgroundColor: '#B5C57D15', borderColor: '#B5C57D' }}>
-                <span className="indicator-emoji">🔄</span>
+                <span className="indicator-emoji"><ArrowsClockwise size={14} weight="fill" /></span>
               </div>
               <div className="indicator-content">
                 <span className="indicator-value">{stats.weekly.naoSeguiu || 0}</span>
@@ -284,7 +289,9 @@ function WeeklyAdherence({ refreshTrigger }) {
                             </span>
                           </div>
                           <div className="daily-adherence-badge" style={{ backgroundColor: `${adherenceInfo.color}15`, borderColor: adherenceInfo.color }}>
-                            <span className="daily-emoji">{adherenceInfo.emoji}</span>
+                            <span className="daily-emoji">
+                              <adherenceInfo.icon size={14} weight="fill" />
+                            </span>
                             <span className="daily-label">{adherenceInfo.label}</span>
                           </div>
                         </div>
@@ -310,7 +317,9 @@ function WeeklyAdherence({ refreshTrigger }) {
         </>
       ) : (
         <div className="adherence-empty">
-          <div className="empty-icon">🌱</div>
+          <div className="empty-icon">
+            <Plant size={24} weight="fill" />
+          </div>
           <h3 className="empty-title">Seu progresso começa aqui</h3>
           <p className="adherence-empty-text">Registrar hoje já é um avanço. O LifeFit acompanha sua jornada desde o início, sem julgamento.</p>
           <p className="adherence-empty-hint">Cada dia conta. Você está construindo constância.</p>

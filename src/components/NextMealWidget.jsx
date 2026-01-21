@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { BowlFood, Confetti } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './NextMealWidget.css'
 
@@ -119,15 +120,15 @@ function NextMealWidget({ refreshTrigger }) {
     return (
       <div className="next-meal-widget next-meal-widget--empty">
         <div className="next-meal-empty-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <path d="M16 10a4 4 0 0 1-8 0" />
-          </svg>
+          <BowlFood size={32} weight="regular" />
         </div>
         <p className="next-meal-empty-text">
           {allMealsConsumed 
-            ? 'Todas as refeições do dia foram consumidas! 🎉' 
+            ? (
+              <>
+                Todas as refeições do dia foram consumidas! <Confetti size={16} weight="fill" />
+              </>
+            )
             : 'Nenhuma dieta cadastrada'}
         </p>
       </div>

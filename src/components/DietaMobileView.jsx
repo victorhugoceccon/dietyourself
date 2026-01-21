@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Bread, CheckCircle, DownloadSimple, Drop, Fire, ForkKnife, Lightbulb, Target } from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './DietaMobileView.css'
 
 function DietaMobileView() {
+  const gibaLogoUrl = `${import.meta.env.BASE_URL}giba-team-app.png`
   const [loading, setLoading] = useState(true)
   const [dieta, setDieta] = useState(null)
   const [nutritionalNeeds, setNutritionalNeeds] = useState(null)
@@ -13,6 +15,7 @@ function DietaMobileView() {
   const [dietError, setDietError] = useState('')
   const [togglingMeal, setTogglingMeal] = useState(null)
   const isGeneratingRef = useRef(false)
+  const dietPdfRef = useRef(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -62,6 +65,35 @@ function DietaMobileView() {
       }
     } catch (error) {
       console.error('Erro ao carregar dieta:', error)
+    }
+  }
+
+  const downloadDietPdf = async () => {
+    if (!dietPdfRef.current) return
+
+    try {
+      const html2canvas = (await import('html2canvas')).default
+      const jsPDFModule = await import('jspdf')
+      const jsPDF = jsPDFModule.default || jsPDFModule.jsPDF
+
+      const canvas = await html2canvas(dietPdfRef.current, {
+        backgroundColor: '#0f1419',
+        scale: 2,
+        useCORS: true
+      })
+
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      })
+
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height)
+      pdf.save(`dieta-giba-${new Date().toISOString().split('T')[0]}.pdf`)
+    } catch (err) {
+      console.error('Erro ao gerar PDF da dieta:', err)
+      alert('Erro ao gerar PDF da dieta. Tente novamente.')
     }
   }
 
@@ -180,8 +212,11 @@ function DietaMobileView() {
       {/* Hero de boas-vindas */}
       <div className="giba-dieta-welcome">
         <div className="giba-dieta-badge">
-          <span className="giba-dieta-badge-icon">🥗</span>
-          <span className="giba-dieta-badge-text">GIBA</span>
+          <img
+            src={gibaLogoUrl}
+            alt="GIBA"
+            className="giba-dieta-badge-icon"
+          />
         </div>
         <h1 className="giba-dieta-welcome-title">Seu plano alimentar personalizado</h1>
         <p className="giba-dieta-welcome-sub">
@@ -222,7 +257,9 @@ function DietaMobileView() {
       {/* Cards informativos */}
       <section className="giba-dieta-info-section">
         <div className="giba-dieta-info-card">
-          <span className="giba-dieta-info-icon">🎯</span>
+          <span className="giba-dieta-info-icon">
+            <Target size={18} weight="bold" />
+          </span>
           <div>
             <h3>Feito para você</h3>
             <p>Calculamos as calorias e nutrientes ideais para o seu objetivo.</p>
@@ -236,7 +273,9 @@ function DietaMobileView() {
           </div>
         </div>
         <div className="giba-dieta-info-card">
-          <span className="giba-dieta-info-icon">✅</span>
+          <span className="giba-dieta-info-icon">
+            <CheckCircle size={18} weight="fill" />
+          </span>
           <div>
             <h3>Acompanhe suas refeições</h3>
             <p>Marque o que você consumiu e veja seu progresso do dia.</p>
@@ -252,8 +291,7 @@ function DietaMobileView() {
       {/* Hero */}
       <div className="giba-dieta-hero">
         <div className="giba-dieta-hero-badge">
-          <span>🥗</span>
-          <span>GIBA</span>
+          <img src={gibaLogoUrl} alt="GIBA" />
         </div>
         <h1 className="giba-dieta-hero-title">Seu plano alimentar</h1>
         <p className="giba-dieta-hero-sub">
@@ -296,7 +334,9 @@ function DietaMobileView() {
 
           <div className="giba-dieta-macros">
             <div className="giba-dieta-macro-card calories">
-              <span className="giba-dieta-macro-icon">🔥</span>
+              <span className="giba-dieta-macro-icon">
+                <Fire size={16} weight="fill" />
+              </span>
               <div className="giba-dieta-macro-info">
                 <span className="giba-dieta-macro-value">{Math.round(nutritionalNeeds.calorias || 0)}</span>
                 <span className="giba-dieta-macro-label">Calorias</span>
@@ -314,7 +354,9 @@ function DietaMobileView() {
             </div>
 
             <div className="giba-dieta-macro-card carbs">
-              <span className="giba-dieta-macro-icon">🍞</span>
+              <span className="giba-dieta-macro-icon">
+                <Bread size={16} weight="fill" />
+              </span>
               <div className="giba-dieta-macro-info">
                 <span className="giba-dieta-macro-value">{Math.round(nutritionalNeeds.macros?.carboidrato || 0)}g</span>
                 <span className="giba-dieta-macro-label">Carboidratos</span>
@@ -323,7 +365,9 @@ function DietaMobileView() {
             </div>
 
             <div className="giba-dieta-macro-card fats">
-              <span className="giba-dieta-macro-icon">🥑</span>
+              <span className="giba-dieta-macro-icon">
+                <Drop size={16} weight="fill" />
+              </span>
               <div className="giba-dieta-macro-info">
                 <span className="giba-dieta-macro-value">{Math.round(nutritionalNeeds.macros?.gordura || 0)}g</span>
                 <span className="giba-dieta-macro-label">Gorduras</span>
@@ -336,8 +380,11 @@ function DietaMobileView() {
 
       {/* Refeições */}
       <section className="giba-dieta-section">
-        <div className="giba-dieta-section-header">
+        <div className="giba-dieta-section-header giba-dieta-section-header--actions">
           <h2 className="giba-dieta-section-title">Suas refeições</h2>
+          <button className="giba-dieta-download-btn" onClick={downloadDietPdf}>
+            <DownloadSimple size={16} weight="bold" /> Baixar PDF
+          </button>
         </div>
         <p className="giba-dieta-section-desc">
           Toque em cada refeição para ver os detalhes. Marque como "consumida" após comer.
@@ -396,7 +443,7 @@ function DietaMobileView() {
                                   📏 Porção: {item.porcao}
                                 </span>
                                 <span className="giba-dieta-food-kcal">
-                                  🔥 {item.kcal} calorias
+                                  <Fire size={14} weight="fill" /> {item.kcal} calorias
                                 </span>
                               </div>
                             </div>
@@ -406,8 +453,8 @@ function DietaMobileView() {
                           {item.macros && (
                             <div className="giba-dieta-food-macros">
                               <span title="Proteína">💪 {item.macros.proteina || 0}g</span>
-                              <span title="Carboidratos">🍞 {item.macros.carboidrato || 0}g</span>
-                              <span title="Gorduras">🥑 {item.macros.gordura || 0}g</span>
+                              <span title="Carboidratos"><Bread size={14} weight="fill" /> {item.macros.carboidrato || 0}g</span>
+                              <span title="Gorduras"><Drop size={14} weight="fill" /> {item.macros.gordura || 0}g</span>
                             </div>
                           )}
 
@@ -447,7 +494,9 @@ function DietaMobileView() {
             <h2 className="giba-dieta-section-title">Dicas importantes</h2>
           </div>
           <div className="giba-dieta-obs">
-            <span className="giba-dieta-obs-icon">💡</span>
+            <span className="giba-dieta-obs-icon">
+              <Lightbulb size={16} weight="fill" />
+            </span>
             <p>{dieta.observacoesPlano}</p>
           </div>
         </section>
@@ -473,6 +522,76 @@ function DietaMobileView() {
           </div>
         </div>
       </section>
+
+      {/* PDF offscreen */}
+      <div ref={dietPdfRef} className="giba-pdf-template giba-dieta-pdf">
+        <div className="giba-pdf-header">
+          <img src={gibaLogoUrl} alt="GIBA" className="giba-pdf-logo" />
+          <div className="giba-pdf-title">Plano Alimentar</div>
+          <div className="giba-pdf-subtitle">
+            {new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+          </div>
+        </div>
+
+        <div className="giba-pdf-summary">
+          <div className="giba-pdf-chip">Calorias: {Math.round(nutritionalNeeds?.calorias || 0)} kcal</div>
+          <div className="giba-pdf-chip">Proteína: {Math.round(nutritionalNeeds?.macros?.proteina || 0)} g</div>
+          <div className="giba-pdf-chip">Carboidratos: {Math.round(nutritionalNeeds?.macros?.carboidrato || 0)} g</div>
+          <div className="giba-pdf-chip">Gorduras: {Math.round(nutritionalNeeds?.macros?.gordura || 0)} g</div>
+        </div>
+
+        <div className="giba-pdf-section">
+          <h3>Refeições</h3>
+          <div className="giba-pdf-workouts">
+            {dieta?.refeicoes?.map((refeicao, idx) => (
+              <div key={`pdf-ref-${idx}`} className="giba-pdf-workout">
+                <div className="giba-pdf-workout-header">
+                  <span>{refeicao.nome || `Refeição ${idx + 1}`}</span>
+                  <strong>{refeicao.horario || ''}</strong>
+                </div>
+                <div className="giba-pdf-meal-kcal">
+                  {refeicao.totalRefeicaoKcal || refeicao.calorias || 0} calorias
+                </div>
+                <ul className="giba-pdf-foods-list">
+                  {(refeicao.itens || refeicao.alimentos || []).map((item, itemIdx) => (
+                    <li key={`pdf-item-${idx}-${itemIdx}`} className="giba-pdf-food-item">
+                      <div className="giba-pdf-food-main">
+                        <strong>{item.alimento || item.nome}</strong>
+                        <span>{item.porcao || item.quantidade || ''}</span>
+                        {item.kcal && <span className="giba-pdf-food-kcal">{item.kcal} kcal</span>}
+                      </div>
+                      {item.macros && (
+                        <div className="giba-pdf-food-macros">
+                          P: {item.macros.proteina || 0}g | C: {item.macros.carboidrato || 0}g | G: {item.macros.gordura || 0}g
+                        </div>
+                      )}
+                      {item.substituicoes && item.substituicoes.length > 0 && (
+                        <div className="giba-pdf-subs">
+                          <strong>Substituições:</strong>
+                          <ul>
+                            {item.substituicoes.map((sub, subIdx) => (
+                              <li key={`pdf-sub-${idx}-${itemIdx}-${subIdx}`}>
+                                {sub.alimento} ({sub.porcaoEquivalente || sub.porcao})
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {dieta?.observacoesPlano && (
+          <div className="giba-pdf-section">
+            <h3>Dicas Importantes</h3>
+            <p className="giba-pdf-obs">{dieta.observacoesPlano}</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 

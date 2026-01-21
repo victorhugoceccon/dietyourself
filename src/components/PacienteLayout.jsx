@@ -7,6 +7,13 @@ import Questionnaire from './Questionnaire'
 import ConversationalQuestionnaire from './ConversationalQuestionnaire'
 import SubscriptionStatus from './SubscriptionStatus'
 import PWAInstallTutorial from './PWAInstallTutorial'
+import { 
+  House, 
+  ForkKnife, 
+  Barbell, 
+  Users, 
+  User 
+} from '@phosphor-icons/react'
 // ThemeToggle removido - apenas light mode
 import { hasAnyRole } from '../utils/roleUtils'
 import { API_URL } from '../config/api'
@@ -210,6 +217,107 @@ function PacienteLayout() {
     }
   }, [loading, checkingQuestionnaire, hasQuestionnaire, hasDiet, hasPersonal, location.pathname, navigate, user])
 
+  // #region agent log
+  useEffect(() => {
+    const checkNavStyles = () => {
+      const nav = document.querySelector('.paciente-bottom-nav');
+      const navContent = nav ? nav.querySelector('.paciente-bottom-nav__content') : null;
+      const navItems = nav ? nav.querySelectorAll('.paciente-bottom-nav__item') : [];
+      if (nav) {
+        const navStyles = window.getComputedStyle(nav);
+        const contentStyles = navContent ? window.getComputedStyle(navContent) : {};
+        const firstItemStyles = navItems.length > 0 ? window.getComputedStyle(navItems[0]) : {};
+        const rect = nav.getBoundingClientRect();
+        const rootStyles = window.getComputedStyle(document.documentElement);
+        const body = document.body;
+        const styleSheets = Array.from(document.styleSheets)
+          .map((sheet) => sheet.href || 'inline')
+          .filter((href) => href);
+        const matchedRules = [];
+        Array.from(document.styleSheets).forEach((sheet, sheetIndex) => {
+          let rules;
+          try {
+            rules = sheet.cssRules;
+          } catch (error) {
+            return;
+          }
+          if (!rules) return;
+          Array.from(rules).forEach((rule, ruleIndex) => {
+            if (!rule.selectorText || !rule.style) return;
+            const selector = rule.selectorText;
+            if (
+              selector.includes('.paciente-nav') ||
+              selector.includes('.nav-content') ||
+              selector.includes('.nav-item') ||
+              selector.includes('.nav-text')
+            ) {
+              matchedRules.push({
+                selector,
+                sheetIndex,
+                ruleIndex,
+                cssText: rule.style.cssText
+              });
+            }
+          });
+        });
+        const lastMatchedRules = matchedRules.slice(-40);
+
+        fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            location: 'PacienteLayout.jsx:useEffect',
+            message: 'Bottom nav computed styles - design check',
+            data: {
+              navBackground: navStyles.background,
+              navBackgroundColor: navStyles.backgroundColor,
+              navBorderTop: navStyles.borderTop,
+              navBoxShadow: navStyles.boxShadow,
+              navPosition: navStyles.position,
+              navBottom: navStyles.bottom,
+              navZIndex: navStyles.zIndex,
+              contentDisplay: contentStyles.display,
+              contentJustifyContent: contentStyles.justifyContent,
+              itemBackground: firstItemStyles.background,
+              itemBackgroundColor: firstItemStyles.backgroundColor,
+              itemColor: firstItemStyles.color,
+              itemBorderRadius: firstItemStyles.borderRadius,
+              itemPadding: firstItemStyles.padding,
+              itemFontSize: firstItemStyles.fontSize,
+              rectTop: rect.top,
+              rectBottom: rect.bottom,
+              windowHeight: window.innerHeight,
+              inlineStyles: nav.getAttribute('style'),
+              bodyClass: body?.className || '',
+              htmlClass: document.documentElement.className || '',
+              navClass: nav.className || '',
+              firstItemClass: navItems.length > 0 ? navItems[0].className : '',
+              cssVars: {
+                accentColor: rootStyles.getPropertyValue('--accent-color').trim(),
+                gradientPrimary: rootStyles.getPropertyValue('--gradient-primary').trim(),
+                bgPrimary: rootStyles.getPropertyValue('--bg-primary').trim(),
+                textPrimary: rootStyles.getPropertyValue('--text-primary').trim()
+              },
+              styleSheets,
+              matchedRules: lastMatchedRules
+            },
+            timestamp: Date.now(),
+            sessionId: 'debug-session',
+            runId: 'run4',
+            hypothesisId: 'A,B,C,D,E,F,G,H'
+          })
+        }).catch(() => {});
+      }
+    };
+    const timer = setTimeout(checkNavStyles, 500);
+    window.addEventListener('resize', checkNavStyles);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkNavStyles);
+    };
+  }, [user, loading, checkingQuestionnaire, hasQuestionnaire, hasDiet, hasPersonal, location.pathname, navigate]);
+  // #endregion
+
   if (loading || checkingQuestionnaire) {
     console.log('⏳ Ainda carregando... loading:', loading, 'checkingQuestionnaire:', checkingQuestionnaire)
     return (
@@ -233,16 +341,11 @@ function PacienteLayout() {
   const guestNavItems = (
     <>
       <button
-        className={`nav-item ${isActive('/paciente/projetos') ? 'active' : ''}`}
+        className={`paciente-bottom-nav__item ${isActive('/paciente/projetos') ? 'is-active' : ''}`}
         onClick={() => navigate('/paciente/projetos')}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-        <span className="nav-text">Projetos</span>
+        <Users size={20} weight="regular" />
+        <span className="paciente-bottom-nav__label">Projetos</span>
       </button>
     </>
   )
@@ -251,61 +354,41 @@ function PacienteLayout() {
   const fullNavItems = hasQuestionnaire ? (
     <>
       {hasDiet && (
-        <button
-          className={`nav-item ${isActive('/paciente/dashboard') ? 'active' : ''}`}
-          onClick={() => navigate('/paciente/dashboard')}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg>
-          <span className="nav-text">Dashboard</span>
-        </button>
+            <button
+              className={`paciente-bottom-nav__item ${isActive('/paciente/dashboard') ? 'is-active' : ''}`}
+              onClick={() => navigate('/paciente/dashboard')}
+            >
+              <House size={20} weight="regular" />
+              <span className="paciente-bottom-nav__label">Dashboard</span>
+            </button>
       )}
       <button
-        className={`nav-item ${isActive('/paciente/dieta') ? 'active' : ''}`}
+            className={`paciente-bottom-nav__item ${isActive('/paciente/dieta') ? 'is-active' : ''}`}
         onClick={() => navigate('/paciente/dieta')}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <path d="M16 10a4 4 0 0 1-8 0"></path>
-        </svg>
-        <span className="nav-text">Dieta</span>
+        <ForkKnife size={20} weight="regular" />
+            <span className="paciente-bottom-nav__label">Dieta</span>
       </button>
       <button
-        className={`nav-item ${isActive('/paciente/treino') ? 'active' : ''}`}
+            className={`paciente-bottom-nav__item ${isActive('/paciente/treino') ? 'is-active' : ''}`}
         onClick={() => navigate('/paciente/treino')}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-          <path d="M6 14h12"></path>
-        </svg>
-        <span className="nav-text">Treino</span>
+        <Barbell size={20} weight="regular" />
+            <span className="paciente-bottom-nav__label">Treino</span>
       </button>
       <button
-        className={`nav-item ${isActive('/paciente/projetos') ? 'active' : ''}`}
+            className={`paciente-bottom-nav__item ${isActive('/paciente/projetos') ? 'is-active' : ''}`}
         onClick={() => navigate('/paciente/projetos')}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-        <span className="nav-text">Projetos</span>
+        <Users size={20} weight="regular" />
+            <span className="paciente-bottom-nav__label">Projetos</span>
       </button>
       <button
-        className={`nav-item ${isActive('/paciente/perfil') ? 'active' : ''}`}
+            className={`paciente-bottom-nav__item ${isActive('/paciente/perfil') ? 'is-active' : ''}`}
         onClick={() => navigate('/paciente/perfil')}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-        <span className="nav-text">Perfil</span>
+        <User size={20} weight="regular" />
+            <span className="paciente-bottom-nav__label">Perfil</span>
       </button>
     </>
   ) : null
@@ -354,31 +437,6 @@ function PacienteLayout() {
         </div>
       ) : (
         <div className="paciente-content-wrapper">
-          {/* Navegação - Mobile apenas */}
-          {navItems ? (
-            <nav className="paciente-nav">
-              <div className="nav-content">
-                {navItems}
-              </div>
-            </nav>
-          ) : hasQuestionnaire ? (
-            // Fallback: se hasQuestionnaire mas navItems está vazio, mostrar menu básico
-            <nav className="paciente-nav">
-              <div className="nav-content">
-                <button
-                  className={`nav-item ${isActive('/paciente/perfil') ? 'active' : ''}`}
-                  onClick={() => navigate('/paciente/perfil')}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                  <span className="nav-text">Perfil</span>
-                </button>
-              </div>
-            </nav>
-          ) : null}
-
           {/* Conteúdo Principal */}
           <div className="paciente-main-content">
             <SubscriptionStatus />
@@ -398,6 +456,28 @@ function PacienteLayout() {
         />
       )}
       </div>
+      
+          {/* Navegação - Mobile apenas (FORA do paciente-layout para posicionamento fixo absoluto na viewport) */}
+      {!shouldShowQuestionnaire && (navItems ? (
+        <nav className="paciente-bottom-nav">
+          <div className="paciente-bottom-nav__content">
+            {navItems}
+          </div>
+        </nav>
+      ) : hasQuestionnaire ? (
+        // Fallback: se hasQuestionnaire mas navItems está vazio, mostrar menu básico
+        <nav className="paciente-bottom-nav">
+          <div className="paciente-bottom-nav__content">
+            <button
+              className={`paciente-bottom-nav__item ${isActive('/paciente/perfil') ? 'is-active' : ''}`}
+              onClick={() => navigate('/paciente/perfil')}
+            >
+              <User size={20} weight="regular" />
+              <span className="paciente-bottom-nav__label">Perfil</span>
+            </button>
+          </div>
+        </nav>
+      ) : null)}
     </BrandingProvider>
   )
 }

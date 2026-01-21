@@ -1,11 +1,34 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import {
+  ArrowRight,
+  Barbell,
+  Camera,
+  ChartBar,
+  Check,
+  Circle,
+  Drop,
+  Fire,
+  ForkKnife,
+  Lightbulb,
+  Lightning,
+  MoonStars,
+  NotePencil,
+  Rocket,
+  Scales,
+  Smiley,
+  Sun,
+  Target,
+  Trophy,
+  User
+} from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import ChefVirtual from './ChefVirtual'
 import PhotoMealCapture from './PhotoMealCapture'
 import './DashboardMobileView.css'
 
 function DashboardMobileView() {
+  const gibaLogoUrl = `${import.meta.env.BASE_URL}giba-team-app.png`
   const [loading, setLoading] = useState(true)
   const [hasDiet, setHasDiet] = useState(false)
   const [dieta, setDieta] = useState(null)
@@ -31,7 +54,7 @@ function DashboardMobileView() {
         fetch(`${API_URL}/diet`, { headers: { Authorization: `Bearer ${token}` } }),
         fetch(`${API_URL}/consumed-meals/stats`, { headers: { Authorization: `Bearer ${token}` } }),
         fetch(`${API_URL}/progress/weekly`, { headers: { Authorization: `Bearer ${token}` } }),
-        fetch(`${API_URL}/daily-checkin/today`, { headers: { Authorization: `Bearer ${token}` } })
+        fetch(`${API_URL}/checkin/today`, { headers: { Authorization: `Bearer ${token}` } })
       ])
 
       // Processar dieta
@@ -86,13 +109,96 @@ function DashboardMobileView() {
   const consumedProtein = consumedStats?.consumedProtein || 0
   const proteinProgress = targetProtein > 0 ? Math.round((consumedProtein / targetProtein) * 100) : 0
 
+  const getAdherenceLabel = (value) => {
+    if (value === 'TOTAL') return 'Adesão total'
+    if (value === 'PARCIAL') return 'Adesão parcial'
+    if (value === 'NAO_SEGUIU') return 'Não seguiu'
+    return 'Adesão não registrada'
+  }
+
+  const parseMealsCount = () => {
+    if (!checkInData?.refeicoesConsumidas) return 0
+    if (Array.isArray(checkInData.refeicoesConsumidas)) return checkInData.refeicoesConsumidas.length
+    if (typeof checkInData.refeicoesConsumidas === 'string') {
+      try {
+        const parsed = JSON.parse(checkInData.refeicoesConsumidas)
+        return Array.isArray(parsed) ? parsed.length : 0
+      } catch {
+        return 0
+      }
+    }
+    return 0
+  }
+
+  const getDailyScore = () => {
+    if (!checkInData) return 0
+    let score = 0
+    if (checkInData.adherence === 'TOTAL') score += 45
+    if (checkInData.adherence === 'PARCIAL') score += 25
+    if (checkInData.adherence === 'NAO_SEGUIU') score += 10
+
+    if (checkInData.nivelEnergia) score += checkInData.nivelEnergia * 4
+    if (checkInData.qualidadeSono) score += checkInData.qualidadeSono * 4
+    if (checkInData.humorGeral) score += checkInData.humorGeral * 4
+    if (checkInData.aguaMetaLitros) score += 8
+    if (checkInData.treinoPlanejado !== null && checkInData.treinoPlanejado !== undefined) score += 6
+    if (checkInData.focoDia) score += 6
+
+    const mealsCount = parseMealsCount()
+    const totalMealsToday = dieta?.refeicoes?.length || 0
+    if (mealsCount && totalMealsToday) {
+      score += Math.min(10, Math.round((mealsCount / totalMealsToday) * 10))
+    }
+
+    return Math.min(100, score)
+  }
+
+  const buildDailyStory = () => {
+    if (!checkInData) return []
+    const story = []
+    story.push(`Você marcou: ${getAdherenceLabel(checkInData.adherence).toLowerCase()}.`)
+
+    if (checkInData.nivelEnergia || checkInData.humorGeral) {
+      story.push(`Energia ${checkInData.nivelEnergia || '—'}/5 e humor ${checkInData.humorGeral || '—'}/5.`)
+    }
+
+    if (checkInData.qualidadeSono) {
+      story.push(`Seu sono foi ${checkInData.qualidadeSono}/5 — amanhã podemos elevar mais.`)
+    }
+
+    if (checkInData.aguaMetaLitros) {
+      story.push(`Meta de água definida em ${checkInData.aguaMetaLitros}L.`)
+    }
+
+    if (checkInData.treinoPlanejado !== null && checkInData.treinoPlanejado !== undefined) {
+      story.push(`Treino hoje: ${checkInData.treinoPlanejado ? 'sim' : 'não'} — vamos manter o foco.`)
+    }
+
+    if (checkInData.focoDia) {
+      story.push(`Foco do dia: ${checkInData.focoDia}.`)
+    }
+
+    if (parseMealsCount() > 0) {
+      story.push(`Refeições do dia registradas: ${parseMealsCount()}/${dieta?.refeicoes?.length || parseMealsCount()}.`)
+    }
+
+    if (story.length < 2) {
+      story.push('Cada check-in fortalece sua consistência e acelera seus resultados.')
+    }
+
+    return story.slice(0, 3)
+  }
+
+  const dailyScore = getDailyScore()
+  const dailyStory = buildDailyStory()
+
   // Status geral do dia
   const getOverallStatus = () => {
     const avg = (mealsProgress + kcalProgress) / 2
-    if (avg >= 80) return { emoji: '🔥', text: 'Excelente!', color: '#4ade80' }
-    if (avg >= 50) return { emoji: '💪', text: 'Bom progresso', color: '#f59e0b' }
-    if (avg > 0) return { emoji: '🚀', text: 'Começando bem', color: '#3b82f6' }
-    return { emoji: '☀️', text: 'Novo dia', color: '#8b95a5' }
+    if (avg >= 80) return { icon: Fire, text: 'Excelente!', color: '#4ade80' }
+    if (avg >= 50) return { icon: Barbell, text: 'Bom progresso', color: '#f59e0b' }
+    if (avg > 0) return { icon: Rocket, text: 'Começando bem', color: '#3b82f6' }
+    return { icon: Sun, text: 'Novo dia', color: '#8b95a5' }
   }
 
   const status = getOverallStatus()
@@ -131,12 +237,13 @@ function DashboardMobileView() {
       {/* Hero */}
       <div className="giba-dash-hero">
         <div className="giba-dash-hero-badge">
-          <span>📊</span>
-          <span>GIBA</span>
+          <img src={gibaLogoUrl} alt="GIBA" />
         </div>
         <h1 className="giba-dash-hero-title">Seu dia</h1>
         <div className="giba-dash-hero-status">
-          <span className="giba-dash-status-emoji">{status.emoji}</span>
+          <span className="giba-dash-status-emoji">
+            <status.icon size={18} weight="fill" style={{ color: status.color }} />
+          </span>
           <span className="giba-dash-status-text" style={{ color: status.color }}>{status.text}</span>
         </div>
       </div>
@@ -147,7 +254,9 @@ function DashboardMobileView() {
           {/* Card de Refeições */}
           <div className="giba-dash-progress-card">
             <div className="giba-dash-progress-header">
-              <span className="giba-dash-progress-icon">🍽️</span>
+              <span className="giba-dash-progress-icon">
+                <ForkKnife size={18} weight="fill" />
+              </span>
               <span className="giba-dash-progress-label">Refeições</span>
             </div>
             <div className="giba-dash-progress-value">
@@ -166,7 +275,9 @@ function DashboardMobileView() {
           {/* Card de Calorias */}
           <div className="giba-dash-progress-card" style={{ position: 'relative', overflow: 'visible' }}>
             <div className="giba-dash-progress-header" style={{ position: 'relative', overflow: 'visible' }}>
-              <span className="giba-dash-progress-icon">🔥</span>
+              <span className="giba-dash-progress-icon">
+                <Fire size={18} weight="fill" />
+              </span>
               <span className="giba-dash-progress-label">Calorias</span>
               <button
                 ref={photoButtonRef}
@@ -194,7 +305,7 @@ function DashboardMobileView() {
                   minHeight: '32px'
                 }}
               >
-                📸
+                <Camera size={16} weight="bold" />
               </button>
             </div>
             <div className="giba-dash-progress-value">
@@ -213,7 +324,9 @@ function DashboardMobileView() {
           {/* Card de Proteína */}
           <div className="giba-dash-progress-card">
             <div className="giba-dash-progress-header">
-              <span className="giba-dash-progress-icon">💪</span>
+              <span className="giba-dash-progress-icon">
+                <Barbell size={18} weight="fill" />
+              </span>
               <span className="giba-dash-progress-label">Proteína</span>
             </div>
             <div className="giba-dash-progress-value">
@@ -242,12 +355,16 @@ function DashboardMobileView() {
             className="giba-dash-next-meal"
             onClick={() => navigate('/paciente/dieta')}
           >
-            <div className="giba-dash-next-icon">🍴</div>
+            <div className="giba-dash-next-icon">
+              <ForkKnife size={18} weight="fill" />
+            </div>
             <div className="giba-dash-next-info">
               <h3 className="giba-dash-next-name">{nextMeal.meal.nome}</h3>
               <p className="giba-dash-next-kcal">{nextMeal.meal.totalRefeicaoKcal} calorias</p>
             </div>
-            <span className="giba-dash-next-arrow">→</span>
+            <span className="giba-dash-next-arrow">
+              <ArrowRight size={18} weight="bold" />
+            </span>
           </div>
           
           {/* Chef Virtual */}
@@ -265,20 +382,35 @@ function DashboardMobileView() {
         
         {checkInData ? (
           <div className="giba-dash-checkin-done">
-            <div className="giba-dash-checkin-badge">✓ Realizado</div>
+            <div className="giba-dash-checkin-badge">
+              <Check size={14} weight="bold" /> Realizado
+            </div>
+            <div className="giba-dash-checkin-score">
+              <div className="giba-dash-checkin-score-header">
+                <span>Pontuação do dia</span>
+                <strong>{dailyScore}/100</strong>
+              </div>
+              <div className="giba-dash-checkin-score-bar">
+                <span style={{ width: `${dailyScore}%` }} />
+              </div>
+            </div>
             <div className="giba-dash-checkin-data">
-              {checkInData.peso && (
+              {checkInData.pesoAtual && (
                 <div className="giba-dash-checkin-item">
-                  <span className="giba-dash-checkin-icon">⚖️</span>
+                  <span className="giba-dash-checkin-icon">
+                    <Scales size={18} weight="fill" />
+                  </span>
                   <div>
                     <span className="giba-dash-checkin-label">Peso</span>
-                    <span className="giba-dash-checkin-value">{checkInData.peso} kg</span>
+                    <span className="giba-dash-checkin-value">{checkInData.pesoAtual} kg</span>
                   </div>
                 </div>
               )}
               {checkInData.nivelEnergia && (
                 <div className="giba-dash-checkin-item">
-                  <span className="giba-dash-checkin-icon">⚡</span>
+                  <span className="giba-dash-checkin-icon">
+                    <Lightning size={18} weight="fill" />
+                  </span>
                   <div>
                     <span className="giba-dash-checkin-label">Energia</span>
                     <span className="giba-dash-checkin-value">{checkInData.nivelEnergia}/5</span>
@@ -287,7 +419,9 @@ function DashboardMobileView() {
               )}
               {checkInData.qualidadeSono && (
                 <div className="giba-dash-checkin-item">
-                  <span className="giba-dash-checkin-icon">😴</span>
+                  <span className="giba-dash-checkin-icon">
+                    <MoonStars size={18} weight="fill" />
+                  </span>
                   <div>
                     <span className="giba-dash-checkin-label">Sono</span>
                     <span className="giba-dash-checkin-value">{checkInData.qualidadeSono}/5</span>
@@ -296,18 +430,66 @@ function DashboardMobileView() {
               )}
               {checkInData.humorGeral && (
                 <div className="giba-dash-checkin-item">
-                  <span className="giba-dash-checkin-icon">😊</span>
+                  <span className="giba-dash-checkin-icon">
+                    <Smiley size={18} weight="fill" />
+                  </span>
                   <div>
                     <span className="giba-dash-checkin-label">Humor</span>
                     <span className="giba-dash-checkin-value">{checkInData.humorGeral}/5</span>
                   </div>
                 </div>
               )}
+              {checkInData.aguaMetaLitros && (
+                <div className="giba-dash-checkin-item">
+                  <span className="giba-dash-checkin-icon">
+                    <Drop size={18} weight="fill" />
+                  </span>
+                  <div>
+                    <span className="giba-dash-checkin-label">Meta água</span>
+                    <span className="giba-dash-checkin-value">{checkInData.aguaMetaLitros} L</span>
+                  </div>
+                </div>
+              )}
+              {checkInData.treinoPlanejado !== null && checkInData.treinoPlanejado !== undefined && (
+                <div className="giba-dash-checkin-item">
+                  <span className="giba-dash-checkin-icon">
+                    <Barbell size={18} weight="fill" />
+                  </span>
+                  <div>
+                    <span className="giba-dash-checkin-label">Treino</span>
+                    <span className="giba-dash-checkin-value">{checkInData.treinoPlanejado ? 'Sim' : 'Não'}</span>
+                  </div>
+                </div>
+              )}
+              {checkInData.focoDia && (
+                <div className="giba-dash-checkin-item">
+                  <span className="giba-dash-checkin-icon">
+                    <Target size={18} weight="fill" />
+                  </span>
+                  <div>
+                    <span className="giba-dash-checkin-label">Foco</span>
+                    <span className="giba-dash-checkin-value">{checkInData.focoDia}</span>
+                  </div>
+                </div>
+              )}
             </div>
+
+            {dailyStory.length > 0 && (
+              <div className="giba-dash-checkin-story">
+                <span className="giba-dash-checkin-story-title">História do seu dia</span>
+                <ul>
+                  {dailyStory.map((line, index) => (
+                    <li key={`story-${index}`}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         ) : (
           <div className="giba-dash-checkin-pending">
-            <span className="giba-dash-checkin-pending-icon">📝</span>
+            <span className="giba-dash-checkin-pending-icon">
+              <NotePencil size={18} weight="fill" />
+            </span>
             <div className="giba-dash-checkin-pending-info">
               <h3>Registre seu dia</h3>
               <p>Anote como você está se sentindo hoje</p>
@@ -337,7 +519,7 @@ function DashboardMobileView() {
               >
                 <span className="giba-dash-day-name">{getDayName(day.date)}</span>
                 <div className="giba-dash-day-status">
-                  {day.completed ? '✓' : day.isToday ? '•' : ''}
+                  {day.completed ? <Check size={12} weight="bold" /> : day.isToday ? <Circle size={8} weight="fill" /> : null}
                 </div>
               </div>
             ))
@@ -352,7 +534,7 @@ function DashboardMobileView() {
                 >
                   <span className="giba-dash-day-name">{day}</span>
                   <div className="giba-dash-day-status">
-                    {idx === today ? '•' : ''}
+                    {idx === today ? <Circle size={8} weight="fill" /> : null}
                   </div>
                 </div>
               )
@@ -366,7 +548,7 @@ function DashboardMobileView() {
               {weeklyData.filter(d => d.completed).length} dias completados
             </span>
             <span className="giba-dash-week-streak">
-              🔥 Continue assim!
+              <Fire size={14} weight="fill" /> Continue assim!
             </span>
           </div>
         )}
@@ -383,28 +565,36 @@ function DashboardMobileView() {
             className="giba-dash-shortcut"
             onClick={() => navigate('/paciente/dieta')}
           >
-            <span className="giba-dash-shortcut-icon">🥗</span>
+            <span className="giba-dash-shortcut-icon">
+              <ForkKnife size={18} weight="fill" />
+            </span>
             <span className="giba-dash-shortcut-text">Ver dieta</span>
           </button>
           <button 
             className="giba-dash-shortcut"
             onClick={() => navigate('/paciente/treino')}
           >
-            <span className="giba-dash-shortcut-icon">💪</span>
+            <span className="giba-dash-shortcut-icon">
+              <Barbell size={18} weight="fill" />
+            </span>
             <span className="giba-dash-shortcut-text">Ver treino</span>
           </button>
           <button 
             className="giba-dash-shortcut"
             onClick={() => navigate('/paciente/projetos')}
           >
-            <span className="giba-dash-shortcut-icon">🏆</span>
+            <span className="giba-dash-shortcut-icon">
+              <Trophy size={18} weight="fill" />
+            </span>
             <span className="giba-dash-shortcut-text">Projetos</span>
           </button>
           <button 
             className="giba-dash-shortcut"
             onClick={() => navigate('/paciente/perfil')}
           >
-            <span className="giba-dash-shortcut-icon">👤</span>
+            <span className="giba-dash-shortcut-icon">
+              <User size={18} weight="fill" />
+            </span>
             <span className="giba-dash-shortcut-text">Perfil</span>
           </button>
         </div>
@@ -413,7 +603,9 @@ function DashboardMobileView() {
       {/* Dica do dia */}
       <section className="giba-dash-section">
         <div className="giba-dash-tip">
-          <span className="giba-dash-tip-icon">💡</span>
+          <span className="giba-dash-tip-icon">
+            <Lightbulb size={18} weight="fill" />
+          </span>
           <div className="giba-dash-tip-content">
             <h4>Dica do dia</h4>
             <p>

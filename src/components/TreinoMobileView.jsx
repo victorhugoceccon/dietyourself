@@ -1,8 +1,26 @@
 import { useEffect, useState, useRef } from 'react'
+import {
+  ArrowsClockwise,
+  Barbell,
+  Camera,
+  ChartBar,
+  Check,
+  Confetti,
+  DownloadSimple,
+  Fire,
+  Smiley,
+  SmileySad,
+  Rocket,
+  Sparkle,
+  Timer,
+  Target,
+  Trophy
+} from '@phosphor-icons/react'
 import { API_URL } from '../config/api'
 import './TreinoMobileView.css'
 
 function TreinoMobileView() {
+  const gibaLogoUrl = `${import.meta.env.BASE_URL}giba-team-app.png`
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [prescricao, setPrescricao] = useState(null)
@@ -35,6 +53,7 @@ function TreinoMobileView() {
 
   const timerRef = useRef(null)
   const shareCardRef = useRef(null)
+  const workoutPdfRef = useRef(null)
 
   useEffect(() => {
     loadData()
@@ -356,9 +375,12 @@ function TreinoMobileView() {
     
     try {
       const html2canvas = (await import('html2canvas')).default
+      const rect = shareCardRef.current.getBoundingClientRect()
+      const targetWidth = 1080
+      const scale = rect.width ? targetWidth / rect.width : 3
       const canvas = await html2canvas(shareCardRef.current, {
         backgroundColor: '#0f1419',
-        scale: 2,
+        scale: Math.max(2, scale),
         useCORS: true
       })
       
@@ -369,6 +391,35 @@ function TreinoMobileView() {
     } catch (err) {
       console.error('Erro ao gerar imagem:', err)
       alert('Erro ao gerar imagem. Tente tirar um print da tela.')
+    }
+  }
+
+  const downloadWorkoutPdf = async () => {
+    if (!workoutPdfRef.current) return
+
+    try {
+      const html2canvas = (await import('html2canvas')).default
+      const jsPDFModule = await import('jspdf')
+      const jsPDF = jsPDFModule.default || jsPDFModule.jsPDF
+
+      const canvas = await html2canvas(workoutPdfRef.current, {
+        backgroundColor: '#0f1419',
+        scale: 2,
+        useCORS: true
+      })
+
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      })
+
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height)
+      pdf.save(`treino-giba-${new Date().toISOString().split('T')[0]}.pdf`)
+    } catch (err) {
+      console.error('Erro ao gerar PDF do treino:', err)
+      alert('Erro ao gerar PDF do treino. Tente novamente.')
     }
   }
 
@@ -395,7 +446,7 @@ function TreinoMobileView() {
     <div className="giba-modal-overlay">
       <div className="giba-modal giba-feedback-modal">
         <div className="giba-modal-header">
-          <h2>🎉 Treino concluído!</h2>
+          <h2><Confetti size={20} weight="fill" /> Treino concluído!</h2>
           <p>Como foi?</p>
         </div>
 
@@ -429,9 +480,9 @@ function TreinoMobileView() {
                 onChange={(e) => setFeedback({ ...feedback, satisfacao: parseInt(e.target.value) })}
               />
               <div className="giba-rating-labels">
-                <span>😕</span>
+                <SmileySad size={16} weight="fill" />
                 <span className="giba-rating-value">{feedback.satisfacao}</span>
-                <span>🤩</span>
+                <Smiley size={16} weight="fill" />
               </div>
             </div>
           </div>
@@ -443,7 +494,7 @@ function TreinoMobileView() {
                 className={`giba-toggle-btn ${feedback.completouTreino ? 'active' : ''}`}
                 onClick={() => setFeedback({ ...feedback, completouTreino: true })}
               >
-                ✓ Sim
+                <Check size={14} weight="bold" /> Sim
               </button>
               <button
                 className={`giba-toggle-btn ${!feedback.completouTreino ? 'active' : ''}`}
@@ -481,7 +532,7 @@ function TreinoMobileView() {
     <div className="giba-modal-overlay">
       <div className="giba-modal giba-share-modal">
         <div className="giba-modal-header">
-          <h2>🎉 Parabéns!</h2>
+          <h2><Confetti size={20} weight="fill" /> Parabéns!</h2>
           <p>Compartilhe seu treino nas redes sociais</p>
         </div>
 
@@ -494,13 +545,16 @@ function TreinoMobileView() {
             <div className="giba-share-content">
               {/* Logo */}
               <div className="giba-share-logo">
-                <span className="giba-share-logo-icon">🔥</span>
-                <span className="giba-share-logo-text">GIBA</span>
+                <img
+                  src={gibaLogoUrl}
+                  alt="GIBA"
+                  className="giba-share-logo-icon"
+                />
               </div>
 
               {/* Badge de conclusão */}
               <div className="giba-share-badge">
-                <span>✓ TREINO CONCLUÍDO</span>
+                <span><Check size={14} weight="bold" /> TREINO CONCLUÍDO</span>
               </div>
 
               {/* Nome do treino */}
@@ -534,7 +588,7 @@ function TreinoMobileView() {
               {/* Streak visual */}
               <div className="giba-share-streak">
                 <div className="giba-share-streak-title">
-                  <span>🔥 Sequência da semana</span>
+                  <span><Fire size={14} weight="fill" /> Sequência da semana</span>
                 </div>
                 <div className="giba-share-streak-days">
                   {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (
@@ -551,11 +605,11 @@ function TreinoMobileView() {
               {/* Mensagem motivacional */}
               <div className="giba-share-message">
                 {finishedTreinoData?.streak >= 5 ? (
-                  <p>💪 Semana de campeão! Continue assim!</p>
+                  <p><Barbell size={14} weight="fill" /> Semana de campeão! Continue assim!</p>
                 ) : finishedTreinoData?.streak >= 3 ? (
-                  <p>🔥 Você está on fire! Constância é a chave!</p>
+                  <p><Fire size={14} weight="fill" /> Você está on fire! Constância é a chave!</p>
                 ) : (
-                  <p>✨ Cada treino conta. Você está evoluindo!</p>
+                  <p><Sparkle size={14} weight="fill" /> Cada treino conta. Você está evoluindo!</p>
                 )}
               </div>
 
@@ -572,7 +626,7 @@ function TreinoMobileView() {
             Fechar
           </button>
           <button className="giba-btn-primary" onClick={downloadShareCard}>
-            📲 Salvar imagem
+            <DownloadSimple size={16} weight="bold" /> Salvar imagem
           </button>
         </div>
       </div>
@@ -585,7 +639,7 @@ function TreinoMobileView() {
       <div className="giba-section-header">
         <h2 className="giba-section-title">Sua semana</h2>
         {weekStreak > 0 && (
-          <span className="giba-streak-badge">🔥 {weekStreak}x</span>
+          <span className="giba-streak-badge"><Fire size={14} weight="fill" /> {weekStreak}x</span>
         )}
       </div>
       <p className="giba-section-desc">
@@ -600,7 +654,7 @@ function TreinoMobileView() {
           >
             <span className="giba-week-day-name">{day.day}</span>
             <div className="giba-week-day-status">
-              {day.completed ? '✓' : day.isToday ? '•' : ''}
+              {day.completed ? <Check size={12} weight="bold" /> : day.isToday ? <span className="giba-week-dot">•</span> : ''}
             </div>
           </div>
         ))}
@@ -610,7 +664,13 @@ function TreinoMobileView() {
         <div className="giba-week-summary">
           <span>{weekStreak} treino{weekStreak > 1 ? 's' : ''} esta semana</span>
           <span className="giba-week-motivational">
-            {weekStreak >= 5 ? '🏆 Semana épica!' : weekStreak >= 3 ? '💪 Continue assim!' : '🚀 Boa sequência!'}
+            {weekStreak >= 5 ? (
+              <><Trophy size={14} weight="fill" /> Semana épica!</>
+            ) : weekStreak >= 3 ? (
+              <><Barbell size={14} weight="fill" /> Continue assim!</>
+            ) : (
+              <><Rocket size={14} weight="fill" /> Boa sequência!</>
+            )}
           </span>
         </div>
       )}
@@ -622,8 +682,11 @@ function TreinoMobileView() {
     <div className="giba-page">
       <div className="giba-welcome-hero">
         <div className="giba-logo-badge">
-          <span className="giba-logo-icon">🔥</span>
-          <span className="giba-logo-text">GIBA</span>
+          <img
+            src={gibaLogoUrl}
+            alt="GIBA"
+            className="giba-logo-icon"
+          />
         </div>
         <h1 className="giba-welcome-title">Vamos criar seu treino personalizado</h1>
         <p className="giba-welcome-sub">
@@ -640,6 +703,47 @@ function TreinoMobileView() {
           Tire uma foto de frente e uma de costas. Isso ajuda a identificar seus pontos fortes e o que podemos melhorar juntos.
         </p>
 
+        {/* Orientação sobre roupas */}
+        <div className="giba-photo-guidance">
+          <div className="giba-guidance-header">
+            <span className="giba-guidance-icon"><Target size={18} weight="fill" /></span>
+            <h3 className="giba-guidance-title">Sobre as fotos da avaliação</h3>
+          </div>
+          <p className="giba-guidance-intro">
+            Sabemos que enviar fotos do corpo pode gerar desconforto — e está tudo bem sentir isso 💙
+          </p>
+          <p className="giba-guidance-text">
+            Mas, para que a análise seja realmente precisa e justa com você, precisamos enxergar o corpo de forma semelhante a uma avaliação física feita por um profissional.
+          </p>
+          <p className="giba-guidance-text">
+            Por isso, indicamos roupas que mostrem a silhueta corporal, sem necessidade de exposição excessiva:
+          </p>
+          <div className="giba-guidance-items">
+            <div className="giba-guidance-item">
+              <span className="giba-guidance-item-icon">👤</span>
+              <div className="giba-guidance-item-content">
+                <strong>Homens</strong>
+                <span>Shorts de academia ou sunga</span>
+              </div>
+            </div>
+            <div className="giba-guidance-item">
+              <span className="giba-guidance-item-icon">👩</span>
+              <div className="giba-guidance-item-content">
+                <strong>Mulheres</strong>
+                <span>Biquíni ou shorts de academia + top</span>
+              </div>
+            </div>
+          </div>
+          <div className="giba-guidance-privacy">
+            <span className="giba-guidance-privacy-icon">🔐</span>
+            <span>Suas imagens são tratadas com total privacidade e usadas apenas para a avaliação.</span>
+          </div>
+          <div className="giba-guidance-tip">
+            <span className="giba-guidance-tip-icon">💬</span>
+            <span>Se preferir, você pode tirar as fotos em um ambiente confortável e com boa iluminação. Não é necessário mostrar o rosto.</span>
+          </div>
+        </div>
+
         <div className="giba-upload-area">
           <label className={`giba-upload-card ${previewFrente ? 'has-photo' : ''} ${generatingWorkout ? 'scanning' : ''}`}>
             {generatingWorkout && previewFrente && (
@@ -652,7 +756,7 @@ function TreinoMobileView() {
               <img src={previewFrente} alt="Foto frontal" className="giba-upload-img" />
             ) : (
               <div className="giba-upload-empty">
-                <span className="giba-upload-icon">📸</span>
+                <span className="giba-upload-icon"><Camera size={20} weight="bold" /></span>
                 <span className="giba-upload-label">Foto de frente</span>
               </div>
             )}
@@ -670,7 +774,7 @@ function TreinoMobileView() {
               <img src={previewCostas} alt="Foto de costas" className="giba-upload-img" />
             ) : (
               <div className="giba-upload-empty">
-                <span className="giba-upload-icon">📸</span>
+                <span className="giba-upload-icon"><Camera size={20} weight="bold" /></span>
                 <span className="giba-upload-label">Foto de costas</span>
               </div>
             )}
@@ -700,21 +804,21 @@ function TreinoMobileView() {
 
       <section className="giba-info-section">
         <div className="giba-info-card">
-          <span className="giba-info-icon">🎯</span>
+          <span className="giba-info-icon"><Target size={16} weight="bold" /></span>
           <div>
             <h3>Treino sob medida</h3>
             <p>Baseado nas suas fotos, identificamos seus pontos fortes e áreas para desenvolver.</p>
           </div>
         </div>
         <div className="giba-info-card">
-          <span className="giba-info-icon">📊</span>
+          <span className="giba-info-icon"><ChartBar size={16} weight="bold" /></span>
           <div>
             <h3>Acompanhe sua evolução</h3>
             <p>Suas fotos ficam salvas para comparar com check-ins futuros.</p>
           </div>
         </div>
         <div className="giba-info-card">
-          <span className="giba-info-icon">💪</span>
+          <span className="giba-info-icon"><Barbell size={16} weight="fill" /></span>
           <div>
             <h3>Resultados reais</h3>
             <p>Treinos equilibrados que respeitam seu corpo e maximizam resultados.</p>
@@ -731,7 +835,7 @@ function TreinoMobileView() {
       {activeTreino && (
         <div className="giba-active-timer">
           <div className="giba-timer-content">
-            <span className="giba-timer-label">⏱️ Treino em andamento</span>
+            <span className="giba-timer-label"><Timer size={16} weight="bold" /> Treino em andamento</span>
             <span className="giba-timer-value">{formatTime(elapsedTime)}</span>
           </div>
           <div className="giba-timer-actions">
@@ -748,8 +852,11 @@ function TreinoMobileView() {
       {/* Hero */}
       <div className="giba-hero">
         <div className="giba-hero-badge">
-          <span className="giba-logo-icon">🔥</span>
-          <span>GIBA</span>
+          <img
+            src={gibaLogoUrl}
+            alt="GIBA"
+            className="giba-logo-icon"
+          />
         </div>
         <h1 className="giba-hero-title">
           {userInfo.objective || 'Seu plano de treino'}
@@ -840,8 +947,11 @@ function TreinoMobileView() {
       {/* Lista de treinos */}
       {workouts.length > 0 && (
         <section className="giba-section">
-          <div className="giba-section-header">
+          <div className="giba-section-header giba-section-header--actions">
             <h2 className="giba-section-title">Seus treinos da semana</h2>
+            <button className="giba-download-btn" onClick={downloadWorkoutPdf}>
+              <DownloadSimple size={16} weight="bold" /> Baixar PDF
+            </button>
           </div>
           <p className="giba-section-desc">
             {workouts.length} treinos diferentes. Toque em um treino para expandir e iniciar.
@@ -894,11 +1004,11 @@ function TreinoMobileView() {
                       {isActive && (
                         <div className="giba-workout-in-progress">
                           <div className="giba-workout-timer">
-                            <span className="giba-workout-timer-icon">⏱️</span>
+                            <span className="giba-workout-timer-icon"><Timer size={14} weight="bold" /></span>
                             <span className="giba-workout-timer-value">{formatTime(elapsedTime)}</span>
                           </div>
                           <button className="giba-finish-workout-btn" onClick={handleFinishWorkout}>
-                            ✓ Finalizar treino
+                            <Check size={14} weight="bold" /> Finalizar treino
                           </button>
                         </div>
                       )}
@@ -912,7 +1022,7 @@ function TreinoMobileView() {
 
                           <div className="giba-exercise-details">
                             <div className="giba-detail-row">
-                              <span className="giba-detail-icon">🔄</span>
+                              <span className="giba-detail-icon"><ArrowsClockwise size={14} weight="bold" /></span>
                               <div className="giba-detail-content">
                                 <span className="giba-detail-label">Séries e repetições</span>
                                 <span className="giba-detail-value">
@@ -923,7 +1033,7 @@ function TreinoMobileView() {
 
                             {(ex.restSeconds || ex.rest) && (
                               <div className="giba-detail-row">
-                                <span className="giba-detail-icon">⏱️</span>
+                                <span className="giba-detail-icon"><Timer size={14} weight="bold" /></span>
                                 <div className="giba-detail-content">
                                   <span className="giba-detail-label">Descanso entre séries</span>
                                   <span className="giba-detail-value">
@@ -935,7 +1045,7 @@ function TreinoMobileView() {
 
                             {ex.rir !== undefined && (
                               <div className="giba-detail-row">
-                                <span className="giba-detail-icon">💪</span>
+                                <span className="giba-detail-icon"><Barbell size={14} weight="fill" /></span>
                                 <div className="giba-detail-content">
                                   <span className="giba-detail-label">Intensidade</span>
                                   <span className="giba-detail-value">
@@ -950,7 +1060,7 @@ function TreinoMobileView() {
 
                             {ex.muscleGroup && (
                               <div className="giba-detail-row">
-                                <span className="giba-detail-icon">🎯</span>
+                                <span className="giba-detail-icon"><Target size={14} weight="bold" /></span>
                                 <div className="giba-detail-content">
                                   <span className="giba-detail-label">Músculo trabalhado</span>
                                   <span className="giba-detail-value">{ex.muscleGroup}</span>
@@ -1073,6 +1183,138 @@ function TreinoMobileView() {
         </button>
       </section>
 
+      {/* PDF offscreen */}
+      <div ref={workoutPdfRef} className="giba-pdf-template giba-workout-pdf">
+        <div className="giba-pdf-header">
+          <img src={gibaLogoUrl} alt="GIBA" className="giba-pdf-logo" />
+          <div className="giba-pdf-title">Plano de Treino</div>
+          <div className="giba-pdf-subtitle">
+            {new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+          </div>
+        </div>
+
+        <div className="giba-pdf-summary">
+          <div className="giba-pdf-chip">Objetivo: {userInfo?.objective || 'Personalizado'}</div>
+          <div className="giba-pdf-chip">Frequência: {userInfo?.frequenciaAtividade || `${workouts.length}x/semana`}</div>
+          <div className="giba-pdf-chip">Split: {analysis?.strategy?.split || analysis?.training_structure_hints?.split || 'Personalizado'}</div>
+        </div>
+
+        {/* Análise Visual */}
+        {(inputsSummary?.postureSummary || inputsSummary?.visualNotes?.length > 0) && (
+          <div className="giba-pdf-section">
+            <h3>O que observamos em você</h3>
+            {inputsSummary.postureSummary && (
+              <div className="giba-pdf-insight">
+                <strong>Sua postura:</strong>
+                <p>{inputsSummary.postureSummary}</p>
+              </div>
+            )}
+            {inputsSummary.visualNotes?.length > 0 && (
+              <div className="giba-pdf-notes">
+                <strong>Observações visuais:</strong>
+                <ul>
+                  {inputsSummary.visualNotes.map((note, idx) => (
+                    <li key={`pdf-note-${idx}`}>{note}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Pontos de Foco */}
+        {(inputsSummary?.priorityMuscleGroups?.length > 0 || inputsSummary?.musclesWeakPoints?.length > 0 || inputsSummary?.musclesGoodDevelopment?.length > 0) && (
+          <div className="giba-pdf-section">
+            <h3>Onde vamos focar</h3>
+            {inputsSummary.priorityMuscleGroups?.length > 0 && (
+              <div className="giba-pdf-focus-group">
+                <strong>Prioridades:</strong>
+                <div className="giba-pdf-tags">
+                  {inputsSummary.priorityMuscleGroups.map((m, idx) => (
+                    <span key={`pdf-priority-${idx}`} className="giba-pdf-tag">{m}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {inputsSummary.musclesWeakPoints?.length > 0 && (
+              <div className="giba-pdf-focus-group">
+                <strong>Para desenvolver:</strong>
+                <div className="giba-pdf-tags">
+                  {inputsSummary.musclesWeakPoints.map((m, idx) => (
+                    <span key={`pdf-weak-${idx}`} className="giba-pdf-tag">{m}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {inputsSummary.musclesGoodDevelopment?.length > 0 && (
+              <div className="giba-pdf-focus-group">
+                <strong>Seus pontos fortes:</strong>
+                <div className="giba-pdf-tags">
+                  {inputsSummary.musclesGoodDevelopment.map((m, idx) => (
+                    <span key={`pdf-strong-${idx}`} className="giba-pdf-tag">{m}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Treinos da semana */}
+        <div className="giba-pdf-section">
+          <h3>Treinos da semana</h3>
+          <div className="giba-pdf-workouts">
+            {workouts.map((w, idx) => (
+              <div key={`pdf-${idx}`} className="giba-pdf-workout">
+                <div className="giba-pdf-workout-header">
+                  <span>{w.dayLabel || String.fromCharCode(65 + idx)}</span>
+                  <strong>{w.dayName || `Treino ${idx + 1}`}</strong>
+                </div>
+                {w.focus && (
+                  <div className="giba-pdf-workout-focus">
+                    <strong>Foco:</strong> {w.focus.join(', ')}
+                  </div>
+                )}
+                <div className="giba-pdf-exercises">
+                  {(w.exercises || []).map((ex, exIdx) => (
+                    <div key={`pdf-ex-${idx}-${exIdx}`} className="giba-pdf-exercise">
+                      <div className="giba-pdf-exercise-header">
+                        <span className="giba-pdf-exercise-num">{exIdx + 1}</span>
+                        <strong>{ex.name || ex.nome}</strong>
+                      </div>
+                      <div className="giba-pdf-exercise-details">
+                        <div className="giba-pdf-exercise-detail">
+                          <strong>Séries e repetições:</strong> {ex.series || 3}x {ex.repetitions || ex.repeticoes || '10-12'}
+                        </div>
+                        {(ex.restSeconds || ex.rest) && (
+                          <div className="giba-pdf-exercise-detail">
+                            <strong>Descanso:</strong> {formatRest(ex.restSeconds || ex.rest)}
+                          </div>
+                        )}
+                        {ex.rir !== undefined && (
+                          <div className="giba-pdf-exercise-detail">
+                            <strong>Intensidade:</strong> Pare quando faltar {ex.rir} repetição{ex.rir !== 1 ? 'ões' : ''} para a falha
+                          </div>
+                        )}
+                        {ex.notes && (
+                          <div className="giba-pdf-exercise-notes">
+                            <strong>Observações:</strong> {ex.notes}
+                          </div>
+                        )}
+                        {ex.description && (
+                          <div className="giba-pdf-exercise-description">
+                            {ex.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Modals */}
       {showFeedbackModal && renderFeedbackModal()}
       {showShareCard && renderShareCard()}
@@ -1094,7 +1336,7 @@ function TreinoMobileView() {
     return (
       <div className="giba-page">
         <div className="giba-error">
-          <span className="giba-error-icon">😕</span>
+          <span className="giba-error-icon"><SmileySad size={18} weight="fill" /></span>
           <p>{error}</p>
           <button className="giba-btn-primary" onClick={loadData}>Tentar novamente</button>
         </div>

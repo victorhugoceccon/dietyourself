@@ -382,7 +382,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
                 <div className="meal-card-header-content">
                   {/* Título e Badge */}
                   <div className="meal-card-title-section">
-                    <h3 className="meal-card-name">{refeicao.nome}</h3>
+                    <h3 className="meal-card-name">{refeicao.nomeRefeicao || refeicao.nome || `Refeição ${mealIndex + 1}`}</h3>
                     <Badge variant="calories" size="medium" className="meal-card-badge">
                       {refeicao.totalRefeicaoKcal} kcal
                     </Badge>
@@ -393,7 +393,7 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
                     className={`meal-card-action ${isConsumed ? 'consumed' : ''}`}
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleMealToggle(mealIndex, refeicao.nome, e)
+                      handleMealToggle(mealIndex, refeicao.nomeRefeicao || refeicao.nome || `Refeição ${mealIndex + 1}`, e)
                     }}
                     disabled={togglingMeal === mealIndex}
                     type="button"
@@ -455,8 +455,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
                             <div className="meal-card-substitutions-list">
                               <div className="meal-card-substitutions-label">Alternativas:</div>
                               {item.substituicoes.map((sub, subIndex) => {
-                                // Nome da substituição - pode vir como 'descricao' (novo formato N8N) ou 'alimento' (formato antigo)
-                                const subNome = sub.descricao || sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
+                                // Nome da substituição - N8N pode enviar: 'item', 'descricao', 'alimento' ou 'nome'
+                                const subNome = sub.item || sub.descricao || sub.alimento || sub.nome || sub.food || 'Substituição'
                                 
                                 // Construir porção: priorizar campos já formatados, depois construir dinamicamente
                                 let subPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade || sub.quantidade_g || ''

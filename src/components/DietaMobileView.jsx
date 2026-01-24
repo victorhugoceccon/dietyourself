@@ -431,7 +431,7 @@ function DietaMobileView() {
                     {isConsumed ? '✓' : idx + 1}
                   </div>
                   <div className="giba-dieta-meal-info">
-                    <h3 className="giba-dieta-meal-name">{refeicao.nome}</h3>
+                    <h3 className="giba-dieta-meal-name">{refeicao.nomeRefeicao || refeicao.nome || `Refeição ${idx + 1}`}</h3>
                     <p className="giba-dieta-meal-kcal">
                       {refeicao.totalRefeicaoKcal} calorias nessa refeição
                     </p>
@@ -444,7 +444,7 @@ function DietaMobileView() {
                     {/* Botão de marcar como consumida */}
                     <button
                       className={`giba-dieta-consume-btn ${isConsumed ? 'consumed' : ''}`}
-                      onClick={(e) => handleMealToggle(idx, refeicao.nome, e)}
+                      onClick={(e) => handleMealToggle(idx, refeicao.nomeRefeicao || refeicao.nome || `Refeição ${idx + 1}`, e)}
                       disabled={togglingMeal === idx}
                     >
                       {togglingMeal === idx 
@@ -485,7 +485,7 @@ function DietaMobileView() {
                         
                         // Debug: log se não tiver nome
                         if (!item.alimento && !item.nome && !item.food) {
-                          console.warn('⚠️ Item sem nome:', { item, itemIdx, refeicaoNome: refeicao.nome })
+                          console.warn('⚠️ Item sem nome:', { item, itemIdx, refeicaoNome: refeicao.nomeRefeicao || refeicao.nome })
                         }
                         
                         return (
@@ -529,8 +529,8 @@ function DietaMobileView() {
                               </span>
                               <div className="giba-dieta-subs-list">
                                 {item.substituicoes.map((sub, subIdx) => {
-                                  // Nome da substituição - pode vir como 'descricao' (novo formato N8N) ou 'alimento' (formato antigo)
-                                  const subNome = sub.descricao || sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
+                                  // Nome da substituição - N8N pode enviar: 'item', 'descricao', 'alimento' ou 'nome'
+                                  const subNome = sub.item || sub.descricao || sub.alimento || sub.nome || sub.food || 'Substituição'
                                   
                                   // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
                                   let subPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade || ''
@@ -639,7 +639,7 @@ function DietaMobileView() {
             {dieta?.refeicoes?.map((refeicao, idx) => (
               <div key={`pdf-ref-${idx}`} className="giba-pdf-workout">
                 <div className="giba-pdf-workout-header">
-                  <span>{refeicao.nome || `Refeição ${idx + 1}`}</span>
+                  <span>{refeicao.nomeRefeicao || refeicao.nome || `Refeição ${idx + 1}`}</span>
                   <strong>{typeof refeicao.horario === 'string' ? refeicao.horario : ''}</strong>
                 </div>
                 <div className="giba-pdf-meal-kcal">
@@ -668,7 +668,7 @@ function DietaMobileView() {
                           <strong>Substituições:</strong>
                           <ul>
                             {item.substituicoes.map((sub, subIdx) => {
-                              const subPdfNome = sub.descricao || sub.alimento || sub.nome || 'Substituição'
+                              const subPdfNome = sub.item || sub.descricao || sub.alimento || sub.nome || 'Substituição'
                               const subPdfPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade_g || ''
                               const subPdfTipo = sub.tipo || sub.opcao || ''
                               return (

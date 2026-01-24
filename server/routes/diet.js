@@ -593,8 +593,8 @@ router.post('/generate', authenticate, async (req, res) => {
         macros,
         substituicoes: item.substituicoes?.map(sub => {
           // Pegar o nome/descrição da substituição
-          // Novo formato N8N usa 'descricao' com texto completo (ex: "70g Tapioca (goma) + 10g Pasta de Amendoim")
-          const subAlimento = sub.descricao || sub.alimento || sub.nome || sub.item || 'Substituição'
+          // N8N pode enviar: 'item', 'descricao', 'alimento' ou 'nome'
+          const subAlimento = sub.item || sub.descricao || sub.alimento || sub.nome || 'Substituição'
           
           // Construir porção da substituição (se não estiver na descrição)
           let subPorcao = sub.porcao || sub.quantidade_g || ''
@@ -1229,6 +1229,24 @@ router.get('/', authenticate, async (req, res) => {
         console.log('✅ observacoesPlano normalizado')
       }
       
+      // Normalizar substituições (para dietas antigas com formato diferente do N8N)
+      if (dietaNormalizada && dietaNormalizada.refeicoes && Array.isArray(dietaNormalizada.refeicoes)) {
+        console.log('🔄 Normalizando substituições ao carregar...')
+        dietaNormalizada.refeicoes = dietaNormalizada.refeicoes.map(refeicao => ({
+          ...refeicao,
+          itens: (refeicao.itens || []).map(item => ({
+            ...item,
+            substituicoes: (item.substituicoes || []).map(sub => ({
+              ...sub,
+              // Se não tem 'alimento' mas tem 'descricao', copiar
+              alimento: sub.alimento || sub.descricao || sub.nome || 'Substituição',
+              tipo: sub.tipo || sub.opcao || null
+            }))
+          }))
+        }))
+        console.log('✅ Substituições normalizadas')
+      }
+      
       return res.json({
         nutritionalNeeds: nutritionalNeeds,
         dieta: dietaNormalizada
@@ -1260,6 +1278,24 @@ router.get('/', authenticate, async (req, res) => {
         ...dietaNormalizada,
         observacoesPlano: parts.length > 0 ? parts.join('\n\n') : JSON.stringify(obsObj)
       }
+    }
+    
+    // Normalizar substituições (para dietas antigas com formato diferente do N8N)
+    if (dietaNormalizada && dietaNormalizada.refeicoes && Array.isArray(dietaNormalizada.refeicoes)) {
+      console.log('🔄 Normalizando substituições ao carregar (estrutura antiga)...')
+      dietaNormalizada.refeicoes = dietaNormalizada.refeicoes.map(refeicao => ({
+        ...refeicao,
+        itens: (refeicao.itens || []).map(item => ({
+          ...item,
+          substituicoes: (item.substituicoes || []).map(sub => ({
+            ...sub,
+            // Se não tem 'alimento', procurar em outros campos (item, descricao, nome)
+            alimento: sub.alimento || sub.item || sub.descricao || sub.nome || 'Substituição',
+            tipo: sub.tipo || sub.opcao || null
+          }))
+        }))
+      }))
+      console.log('✅ Substituições normalizadas')
     }
     
     res.json({ dieta: dietaNormalizada, nutritionalNeeds: null })

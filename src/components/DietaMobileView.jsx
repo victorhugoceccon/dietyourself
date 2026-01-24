@@ -472,13 +472,11 @@ function DietaMobileView() {
                         <div className="giba-dieta-food-card" key={itemIdx}>
                           <div className="giba-dieta-food-main">
                             <div className="giba-dieta-food-info">
-                              <h4 className="giba-dieta-food-name">{typeof alimentoNome === 'string' ? alimentoNome : String(alimentoNome)}</h4>
+                              <h4 className="giba-dieta-food-name">
+                                {typeof alimentoNome === 'string' ? alimentoNome : String(alimentoNome)}
+                                {porcao && <span className="giba-dieta-food-name-portion"> ({typeof porcao === 'string' ? porcao : String(porcao)})</span>}
+                              </h4>
                               <div className="giba-dieta-food-details">
-                                {porcao && (
-                                  <span className="giba-dieta-food-portion">
-                                    📏 Porção: {typeof porcao === 'string' ? porcao : String(porcao)}
-                                  </span>
-                                )}
                                 {kcal > 0 && (
                                   <span className="giba-dieta-food-kcal">
                                     <Fire size={14} weight="fill" /> {kcal} calorias

@@ -438,10 +438,10 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
                       <div key={itemIndex} className="meal-card-food-item">
                         <div className="meal-card-food-main">
                           <div className="meal-card-food-info">
-                            <h4 className="meal-card-food-name">{typeof alimentoNome === 'string' ? alimentoNome : String(alimentoNome)}</h4>
-                            {porcao && (
-                              <p className="meal-card-food-portion">{typeof porcao === 'string' ? porcao : String(porcao)}</p>
-                            )}
+                            <h4 className="meal-card-food-name">
+                              {typeof alimentoNome === 'string' ? alimentoNome : String(alimentoNome)}
+                              {porcao && <span className="meal-card-food-name-portion"> ({typeof porcao === 'string' ? porcao : String(porcao)})</span>}
+                            </h4>
                           </div>
                           {kcal > 0 && (
                             <Badge variant="secondary" size="small" className="meal-card-food-kcal">

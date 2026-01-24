@@ -529,7 +529,8 @@ function DietaMobileView() {
                               </span>
                               <div className="giba-dieta-subs-list">
                                 {item.substituicoes.map((sub, subIdx) => {
-                                  const subNome = sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
+                                  // Nome da substituição - pode vir como 'descricao' (novo formato N8N) ou 'alimento' (formato antigo)
+                                  const subNome = sub.descricao || sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
                                   
                                   // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
                                   let subPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade || ''
@@ -667,11 +668,13 @@ function DietaMobileView() {
                           <strong>Substituições:</strong>
                           <ul>
                             {item.substituicoes.map((sub, subIdx) => {
+                              const subPdfNome = sub.descricao || sub.alimento || sub.nome || 'Substituição'
                               const subPdfPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade_g || ''
+                              const subPdfTipo = sub.tipo || sub.opcao || ''
                               return (
                               <li key={`pdf-sub-${idx}-${itemIdx}-${subIdx}`}>
-                                {sub.alimento || sub.nome}
-                                {subPdfPorcao && ` (${subPdfPorcao})`}
+                                {subPdfTipo && `${subPdfTipo}: `}{subPdfNome}
+                                {subPdfPorcao && !subPdfNome.includes('g') && ` (${subPdfPorcao})`}
                               </li>
                               )
                             })}

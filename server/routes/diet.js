@@ -592,7 +592,11 @@ router.post('/generate', authenticate, async (req, res) => {
         kcal: item.kcal || 0,
         macros,
         substituicoes: item.substituicoes?.map(sub => {
-          // Construir porção da substituição
+          // Pegar o nome/descrição da substituição
+          // Novo formato N8N usa 'descricao' com texto completo (ex: "70g Tapioca (goma) + 10g Pasta de Amendoim")
+          const subAlimento = sub.descricao || sub.alimento || sub.nome || sub.item || 'Substituição'
+          
+          // Construir porção da substituição (se não estiver na descrição)
           let subPorcao = sub.porcao || sub.quantidade_g || ''
           if (!subPorcao && sub.peso_g && sub.unidade) {
             subPorcao = `${sub.peso_g}${sub.unidade}`
@@ -603,7 +607,7 @@ router.post('/generate', authenticate, async (req, res) => {
           subPorcao = normalizarPorcao(subPorcao)
           
           return {
-            alimento: sub.alimento || sub.nome || sub.item || 'Substituição',
+            alimento: subAlimento,
             porcao: subPorcao,
             porcaoEquivalente: subPorcao,
             kcal: sub.kcal || 0,

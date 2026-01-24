@@ -455,7 +455,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
                             <div className="meal-card-substitutions-list">
                               <div className="meal-card-substitutions-label">Alternativas:</div>
                               {item.substituicoes.map((sub, subIndex) => {
-                                const subNome = sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
+                                // Nome da substituição - pode vir como 'descricao' (novo formato N8N) ou 'alimento' (formato antigo)
+                                const subNome = sub.descricao || sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
                                 
                                 // Construir porção: priorizar campos já formatados, depois construir dinamicamente
                                 let subPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade || sub.quantidade_g || ''

@@ -79,7 +79,7 @@ function DailySummary({ refreshTrigger }) {
     const nextMeal = diet.refeicoes.find((_, index) => !consumedIndices.includes(index))
     
     return nextMeal ? {
-      name: nextMeal.nome,
+      name: nextMeal.nomeRefeicao || nextMeal.nome || 'Próxima refeição',
       index: diet.refeicoes.indexOf(nextMeal),
       kcal: nextMeal.totalRefeicaoKcal
     } : null

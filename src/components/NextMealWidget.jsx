@@ -140,7 +140,7 @@ function NextMealWidget({ refreshTrigger }) {
       {/* Meal Info */}
       <div className="next-meal-content">
         <div className="next-meal-header">
-          <h3 className="next-meal-title">{nextMeal.nome}</h3>
+          <h3 className="next-meal-title">{nextMeal.nomeRefeicao || nextMeal.nome || 'Próxima refeição'}</h3>
         </div>
 
         <div className="next-meal-kcal">
@@ -151,13 +151,17 @@ function NextMealWidget({ refreshTrigger }) {
         {/* Lista de itens (primeiros 3) */}
         {nextMeal.itens && nextMeal.itens.length > 0 && (
           <div className="next-meal-items">
-            {nextMeal.itens.slice(0, 3).map((item, idx) => (
+            {nextMeal.itens.slice(0, 3).map((item, idx) => {
+              const itemNome = item.alimento || item.nome || item.item || 'Alimento'
+              const itemPorcao = item.porcao || item.quantidade_g || item.quantidade || ''
+              return (
               <div key={idx} className="next-meal-item">
                 <span className="item-bullet">•</span>
-                <span className="item-name">{item.alimento}</span>
-                <span className="item-portion">{item.porcao}</span>
+                <span className="item-name">{itemNome}</span>
+                {itemPorcao && <span className="item-portion">({itemPorcao})</span>}
               </div>
-            ))}
+              )
+            })}
             {nextMeal.itens.length > 3 && (
               <div className="next-meal-more">
                 +{nextMeal.itens.length - 3} {nextMeal.itens.length - 3 === 1 ? 'item' : 'itens'}

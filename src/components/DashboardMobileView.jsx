@@ -359,7 +359,7 @@ function DashboardMobileView() {
               <ForkKnife size={18} weight="fill" />
             </div>
             <div className="giba-dash-next-info">
-              <h3 className="giba-dash-next-name">{nextMeal.meal.nome}</h3>
+              <h3 className="giba-dash-next-name">{nextMeal.meal.nomeRefeicao || nextMeal.meal.nome || 'Próxima refeição'}</h3>
               <p className="giba-dash-next-kcal">{nextMeal.meal.totalRefeicaoKcal} calorias</p>
             </div>
             <span className="giba-dash-next-arrow">

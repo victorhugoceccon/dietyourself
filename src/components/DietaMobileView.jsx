@@ -59,6 +59,11 @@ function DietaMobileView() {
       if (response.ok) {
         const data = await response.json()
         console.log('📥 Dieta carregada:', data)
+        
+        // Debug: mostrar primeiro item da primeira refeição
+        if (data.dieta?.refeicoes?.[0]?.itens?.[0]) {
+          console.log('🔍 PRIMEIRO ITEM CARREGADO:', data.dieta.refeicoes[0].itens[0])
+        }
         console.log('📥 Estrutura da dieta:', data.dieta ? {
           temRefeicoes: !!data.dieta.refeicoes,
           numRefeicoes: data.dieta.refeicoes?.length || 0,
@@ -461,6 +466,21 @@ function DietaMobileView() {
                           porcao = item.unidade ? `${item.peso_g}${item.unidade}` : `${item.peso_g}g`
                         }
                         
+                        // Debug: log do primeiro item da primeira refeição
+                        if (idx === 0 && itemIdx === 0) {
+                          console.log('🔍 DEBUG PORÇÃO - Primeiro item:', {
+                            alimentoNome,
+                            porcao,
+                            temPorcao: !!porcao,
+                            item_porcao: item.porcao,
+                            item_quantidade: item.quantidade,
+                            item_quantidade_g: item.quantidade_g,
+                            item_peso_g: item.peso_g,
+                            item_unidade: item.unidade,
+                            todasChaves: Object.keys(item)
+                          })
+                        }
+                        
                         const kcal = item.kcal || item.calorias || item.calories || 0
                         
                         // Debug: log se não tiver nome
@@ -625,11 +645,16 @@ function DietaMobileView() {
                   {refeicao.totalRefeicaoKcal || refeicao.calorias || 0} calorias
                 </div>
                 <ul className="giba-pdf-foods-list">
-                  {(refeicao.itens || refeicao.alimentos || []).map((item, itemIdx) => (
+                  {(refeicao.itens || refeicao.alimentos || []).map((item, itemIdx) => {
+                    const pdfPorcao = item.porcao || item.quantidade || item.quantidade_g || ''
+                    const pdfNome = item.alimento || item.nome || ''
+                    return (
                     <li key={`pdf-item-${idx}-${itemIdx}`} className="giba-pdf-food-item">
                       <div className="giba-pdf-food-main">
-                        <strong>{typeof (item.alimento || item.nome) === 'string' ? (item.alimento || item.nome) : String(item.alimento || item.nome || '')}</strong>
-                        <span>{typeof (item.porcao || item.quantidade || item.quantidade_g) === 'string' ? (item.porcao || item.quantidade || item.quantidade_g) : String(item.porcao || item.quantidade || item.quantidade_g || '')}</span>
+                        <strong>
+                          {typeof pdfNome === 'string' ? pdfNome : String(pdfNome)}
+                          {pdfPorcao && ` (${typeof pdfPorcao === 'string' ? pdfPorcao : String(pdfPorcao)})`}
+                        </strong>
                         {item.kcal && <span className="giba-pdf-food-kcal">{item.kcal} kcal</span>}
                       </div>
                       {item.macros && (
@@ -641,16 +666,21 @@ function DietaMobileView() {
                         <div className="giba-pdf-subs">
                           <strong>Substituições:</strong>
                           <ul>
-                            {item.substituicoes.map((sub, subIdx) => (
+                            {item.substituicoes.map((sub, subIdx) => {
+                              const subPdfPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade_g || ''
+                              return (
                               <li key={`pdf-sub-${idx}-${itemIdx}-${subIdx}`}>
-                                {sub.alimento} ({sub.porcaoEquivalente || sub.porcao})
+                                {sub.alimento || sub.nome}
+                                {subPdfPorcao && ` (${subPdfPorcao})`}
                               </li>
-                            ))}
+                              )
+                            })}
                           </ul>
                         </div>
                       )}
                     </li>
-                  ))}
+                    )
+                  })}
                 </ul>
               </div>
             ))}

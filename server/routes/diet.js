@@ -547,6 +547,17 @@ router.post('/generate', authenticate, async (req, res) => {
     let nutritionalNeeds = null
     let dietaJson = null
     
+    // Helper para normalizar porção (adicionar 'g' se for só número)
+    const normalizarPorcao = (porcao) => {
+      if (!porcao) return ''
+      const porcaoStr = porcao.toString().trim()
+      // Se é só número (sem letras), adicionar 'g'
+      if (porcaoStr && !isNaN(porcaoStr) && !porcaoStr.match(/[a-zA-Z]/)) {
+        return `${porcaoStr}g`
+      }
+      return porcaoStr
+    }
+    
     // Função para normalizar estrutura do N8N para o formato esperado pelo frontend
     const normalizarEstruturaAlimento = (item) => {
       // Converter nome/item → alimento (se necessário)
@@ -554,11 +565,16 @@ router.post('/generate', authenticate, async (req, res) => {
       
       // Converter peso_g + unidade → porcao formatada (ou usar quantidade_g já formatado)
       let porcao = item.porcao || item.quantidade_g || ''
+      
+      // Se não tem porcao mas tem peso_g, construir
       if (!porcao && item.peso_g && item.unidade) {
         porcao = `${item.peso_g}${item.unidade}`
       } else if (!porcao && item.peso_g) {
         porcao = `${item.peso_g}g`
       }
+      
+      // Normalizar (adicionar 'g' se for só número)
+      porcao = normalizarPorcao(porcao)
       
       // Garantir que macros esteja em um objeto (se não estiver)
       let macros = item.macros
@@ -575,18 +591,30 @@ router.post('/generate', authenticate, async (req, res) => {
         porcao,
         kcal: item.kcal || 0,
         macros,
-        substituicoes: item.substituicoes?.map(sub => ({
-          alimento: sub.alimento || sub.nome || sub.item || 'Substituição',
-          porcao: sub.porcao || sub.quantidade_g || (sub.peso_g && sub.unidade ? `${sub.peso_g}${sub.unidade}` : (sub.peso_g ? `${sub.peso_g}g` : '')),
-          porcaoEquivalente: sub.porcaoEquivalente || sub.quantidade_g || (sub.peso_g && sub.unidade ? `${sub.peso_g}${sub.unidade}` : (sub.peso_g ? `${sub.peso_g}g` : '')),
-          kcal: sub.kcal || 0,
-          tipo: sub.tipo || sub.opcao || null,
-          macros: sub.macros || (sub.proteina_g !== undefined ? {
-            proteina_g: sub.proteina_g || 0,
-            carbo_g: sub.carbo_g || 0,
-            gordura_g: sub.gordura_g || 0
-          } : null)
-        })) || []
+        substituicoes: item.substituicoes?.map(sub => {
+          // Construir porção da substituição
+          let subPorcao = sub.porcao || sub.quantidade_g || ''
+          if (!subPorcao && sub.peso_g && sub.unidade) {
+            subPorcao = `${sub.peso_g}${sub.unidade}`
+          } else if (!subPorcao && sub.peso_g) {
+            subPorcao = `${sub.peso_g}g`
+          }
+          // Normalizar (adicionar 'g' se for só número)
+          subPorcao = normalizarPorcao(subPorcao)
+          
+          return {
+            alimento: sub.alimento || sub.nome || sub.item || 'Substituição',
+            porcao: subPorcao,
+            porcaoEquivalente: subPorcao,
+            kcal: sub.kcal || 0,
+            tipo: sub.tipo || sub.opcao || null,
+            macros: sub.macros || (sub.proteina_g !== undefined ? {
+              proteina_g: sub.proteina_g || 0,
+              carbo_g: sub.carbo_g || 0,
+              gordura_g: sub.gordura_g || 0
+            } : null)
+          }
+        }) || []
       }
     }
     
@@ -996,7 +1024,29 @@ router.post('/generate', authenticate, async (req, res) => {
       console.log('🔄 Normalizando estrutura dos alimentos...')
       dietaJson.refeicoes = dietaJson.refeicoes.map((refeicao, refIdx) => {
         const itensNormalizados = refeicao.itens?.map((item, itemIdx) => {
+          // Debug: log do primeiro item ANTES da normalização
+          if (refIdx === 0 && itemIdx === 0) {
+            console.log('🔍 DEBUG BACKEND - Primeiro item ORIGINAL do N8N:', {
+              nome: item.nome,
+              alimento: item.alimento,
+              quantidade_g: item.quantidade_g,
+              porcao: item.porcao,
+              peso_g: item.peso_g,
+              unidade: item.unidade,
+              todasChaves: Object.keys(item)
+            })
+          }
+          
           const normalizado = normalizarEstruturaAlimento(item)
+          
+          // Debug: log do primeiro item DEPOIS da normalização
+          if (refIdx === 0 && itemIdx === 0) {
+            console.log('🔍 DEBUG BACKEND - Primeiro item NORMALIZADO:', {
+              alimento: normalizado.alimento,
+              porcao: normalizado.porcao,
+              kcal: normalizado.kcal
+            })
+          }
           
           // Debug: log substituições do primeiro item da primeira refeição
           if (refIdx === 0 && itemIdx === 0 && item.substituicoes && item.substituicoes.length > 0) {

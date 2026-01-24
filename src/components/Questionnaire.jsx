@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config/api'
+import { Bread, Fish, Drop, Plant, Sparkle } from '@phosphor-icons/react'
 import './Questionnaire.css'
 
 function Questionnaire({ onComplete }) {
@@ -9,67 +10,85 @@ function Questionnaire({ onComplete }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    console.log('📝 Componente Questionnaire montado!')
-  }, [])
-  
   const [formData, setFormData] = useState({
-    // Bloco 1: Dados Básicos
+    // Dados Básicos
+    nome: '',
     idade: '',
     sexo: '',
     altura: '',
     pesoAtual: '',
     objetivo: '',
+    sentimentosCorpo: '',
+    expectativaSucesso: '',
     
-    // Bloco 2: Rotina e Atividade
-    frequenciaAtividade: '',
-    tipoAtividade: '',
-    horarioTreino: '',
+    // Rotina e Sono
     rotinaDiaria: '',
+    sono: '',
     
-    // Bloco 3: Estrutura da Dieta
+    // Atividade Física
+    frequenciaAtividade: '',
+    barreirasTreino: '',
+    tipoAtividade: [],
+    rotinaAtividade: '',
+    relacaoEmocionalTreino: '',
+    preferenciaDificuldadeTreino: '',
+    horarioTreino: '',
+    
+    // Estrutura da Dieta
     quantidadeRefeicoes: '',
     preferenciaRefeicoes: '',
     
-    // Bloco 4: Complexidade e Adesão
-    confortoPesar: '',
+    // Alimentos do Dia a Dia
+    alimentosDoDiaADia: {
+      carboidratos: [],
+      proteinas: [],
+      gorduras: [],
+      verduras: [],
+      legumes: [],
+      frutas: []
+    },
+    
+    // Preferências Alimentares
+    alimentosGosta: '',
+    alimentosEvita: '',
     tempoPreparacao: '',
+    confortoPesar: '',
     preferenciaVariacao: '',
+    alimentacaoFimSemana: '',
     
-    // Bloco 5: Alimentos do Dia a Dia
-    carboidratos: [],
-    proteinas: [],
-    gorduras: [],
-    frutas: [],
-    
-    // Bloco 6: Restrições
+    // Restrições
     restricaoAlimentar: '',
     outraRestricao: '',
-    alimentosEvita: '',
     
-    // Bloco 7: Flexibilidade Real
+    // Flexibilidade
     opcoesSubstituicao: '',
-    refeicoesLivres: ''
+    refeicoesLivres: '',
+    
+    // Saúde
+    problemasSaude: '',
+    quaisProblemasSaude: '',
+    usoMedicacao: '',
+    quaisMedicamentos: '',
+    limitacoesFisicas: '',
+    detalhesLimitacao: '',
+    restricoesMedicasExercicio: '',
+    movimentosEvitar: '',
+    receiosSaude: ''
   })
 
-  const totalSteps = 7
+  const totalSteps = 8
 
   const handleChange = (field, value) => {
-    console.log(`📝 Alterando ${field} para:`, value)
-    setFormData(prev => {
-      const newData = {
-        ...prev,
-        [field]: value
-      }
-      console.log(`✅ Novo estado de ${field}:`, newData[field])
-      return newData
-    })
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }))
     setError('')
   }
 
   const handleCheckboxGroup = (category, item) => {
     setFormData(prev => {
-      const currentList = [...prev[category]]
+      const currentList = [...prev.alimentosDoDiaADia[category]]
       const index = currentList.indexOf(item)
       
       if (index > -1) {
@@ -78,8 +97,38 @@ function Questionnaire({ onComplete }) {
         currentList.push(item)
       }
       
-      return { ...prev, [category]: currentList }
+      return {
+        ...prev,
+        alimentosDoDiaADia: {
+          ...prev.alimentosDoDiaADia,
+          [category]: currentList
+        }
+      }
     })
+  }
+
+  const handleTipoAtividadeToggle = (tipo) => {
+    setFormData(prev => {
+      const currentList = [...prev.tipoAtividade]
+      const index = currentList.indexOf(tipo)
+      
+      if (index > -1) {
+        currentList.splice(index, 1)
+      } else {
+        currentList.push(tipo)
+      }
+      
+      // Se tiver apenas 1 ou nenhum selecionado, limpa a rotina
+      const newList = currentList
+      const rotinaAtividade = newList.length > 1 ? prev.rotinaAtividade : ''
+      
+      return {
+        ...prev,
+        tipoAtividade: newList,
+        rotinaAtividade
+      }
+    })
+    setError('')
   }
 
   const validateStep = (step) => {
@@ -89,60 +138,96 @@ function Questionnaire({ onComplete }) {
           setError('Por favor, preencha todos os campos obrigatórios')
           return false
         }
-        if (formData.idade < 1 || formData.idade > 150) {
+        const age = parseInt(formData.idade)
+        const height = parseFloat(formData.altura)
+        const weight = parseFloat(formData.pesoAtual)
+        if (isNaN(age) || age < 1 || age > 150) {
           setError('Idade deve estar entre 1 e 150 anos')
           return false
         }
-        if (formData.altura < 50 || formData.altura > 250) {
+        if (isNaN(height) || height < 50 || height > 250) {
           setError('Altura deve estar entre 50 e 250 cm')
           return false
         }
-        if (formData.pesoAtual < 20 || formData.pesoAtual > 300) {
+        if (isNaN(weight) || weight < 20 || weight > 300) {
           setError('Peso deve estar entre 20 e 300 kg')
           return false
         }
         return true
       
-      case 2: // Rotina e Atividade
-        if (!formData.frequenciaAtividade || !formData.tipoAtividade || !formData.horarioTreino || !formData.rotinaDiaria) {
+      case 2: // Rotina e Sono
+        if (!formData.rotinaDiaria || !formData.sono) {
           setError('Por favor, preencha todos os campos obrigatórios')
           return false
         }
         return true
       
-      case 3: // Estrutura da Dieta
+      case 3: // Atividade Física
+        if (!formData.frequenciaAtividade || !formData.horarioTreino) {
+          setError('Por favor, preencha todos os campos obrigatórios')
+          return false
+        }
+        if (formData.frequenciaAtividade !== 'Não pratico atualmente') {
+          if (!formData.tipoAtividade || formData.tipoAtividade.length === 0 || !formData.relacaoEmocionalTreino) {
+            setError('Por favor, preencha todos os campos obrigatórios')
+            return false
+          }
+          // Se mais de um tipo de atividade selecionado, rotina é obrigatória
+          if (formData.tipoAtividade.length > 1 && !formData.rotinaAtividade.trim()) {
+            setError('Por favor, descreva sua rotina semanal de exercícios')
+            return false
+          }
+        }
+        return true
+      
+      case 4: // Estrutura da Dieta
         if (!formData.quantidadeRefeicoes || !formData.preferenciaRefeicoes) {
           setError('Por favor, preencha todos os campos obrigatórios')
           return false
         }
         return true
       
-      case 4: // Complexidade e Adesão
-        if (!formData.confortoPesar || !formData.tempoPreparacao || !formData.preferenciaVariacao) {
+      case 5: // Alimentos do Dia a Dia
+        // Opcional
+        return true
+      
+      case 6: // Preferências e Preparação
+        if (!formData.tempoPreparacao || !formData.confortoPesar || !formData.preferenciaVariacao || !formData.alimentacaoFimSemana) {
           setError('Por favor, preencha todos os campos obrigatórios')
           return false
         }
         return true
       
-      case 5: // Alimentos do Dia a Dia
-        // Opcional - pode não ter nenhum selecionado
-        return true
-      
-      case 6: // Restrições
-        if (!formData.restricaoAlimentar) {
-          setError('Por favor, selecione se tem alguma restrição alimentar')
+      case 7: // Restrições e Flexibilidade
+        if (!formData.restricaoAlimentar || !formData.opcoesSubstituicao || !formData.refeicoesLivres) {
+          setError('Por favor, preencha todos os campos obrigatórios')
           return false
         }
-        // Se selecionou "Outra", verificar se preencheu o campo
         if (formData.restricaoAlimentar === 'Outra' && !formData.outraRestricao.trim()) {
           setError('Por favor, especifique qual é a restrição alimentar')
           return false
         }
         return true
       
-      case 7: // Flexibilidade Real
-        if (!formData.opcoesSubstituicao || !formData.refeicoesLivres) {
+      case 8: // Saúde
+        if (!formData.problemasSaude || !formData.usoMedicacao || !formData.limitacoesFisicas || !formData.restricoesMedicasExercicio) {
           setError('Por favor, preencha todos os campos obrigatórios')
+          return false
+        }
+        if (formData.problemasSaude === 'Sim' && !formData.quaisProblemasSaude.trim()) {
+          setError('Por favor, especifique quais são os problemas de saúde')
+          return false
+        }
+        if (formData.usoMedicacao === 'Sim' && !formData.quaisMedicamentos.trim()) {
+          setError('Por favor, especifique quais medicamentos você utiliza')
+          return false
+        }
+        if (formData.limitacoesFisicas === 'Sim' && !formData.detalhesLimitacao.trim()) {
+          setError('Por favor, descreva a limitação física')
+          return false
+        }
+        if (formData.restricoesMedicasExercicio === 'Sim' && !formData.movimentosEvitar.trim()) {
+          setError('Por favor, especifique quais movimentos evitar')
           return false
         }
         return true
@@ -156,6 +241,8 @@ function Questionnaire({ onComplete }) {
     if (validateStep(currentStep)) {
       if (currentStep < totalSteps) {
         setCurrentStep(prev => prev + 1)
+        setError('')
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       } else {
         handleSubmit()
       }
@@ -166,13 +253,8 @@ function Questionnaire({ onComplete }) {
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1)
       setError('')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    navigate('/login')
   }
 
   const handleSubmit = async () => {
@@ -183,44 +265,63 @@ function Questionnaire({ onComplete }) {
       const token = localStorage.getItem('token')
       
       const payload = {
-        // Bloco 1
+        // Dados básicos
         idade: parseInt(formData.idade),
-        sexo: formData.sexo,
+        sexo: formData.sexo === 'Prefiro não informar' ? null : formData.sexo,
         altura: parseFloat(formData.altura),
         pesoAtual: parseFloat(formData.pesoAtual),
         objetivo: formData.objetivo,
+        sentimentosCorpo: formData.sentimentosCorpo || '',
+        expectativaSucesso: formData.expectativaSucesso || '',
         
-        // Bloco 2
-        frequenciaAtividade: formData.frequenciaAtividade,
-        tipoAtividade: formData.tipoAtividade,
-        horarioTreino: formData.horarioTreino,
+        // Rotina e sono
         rotinaDiaria: formData.rotinaDiaria,
+        sono: formData.sono,
         
-        // Bloco 3
+        // Atividade física
+        frequenciaAtividade: formData.frequenciaAtividade,
+        barreirasTreino: formData.barreirasTreino || '',
+        tipoAtividade: Array.isArray(formData.tipoAtividade) 
+          ? formData.tipoAtividade.join(', ') 
+          : (formData.tipoAtividade || ''),
+        rotinaTreinoDetalhada: formData.rotinaAtividade || '',
+        relacaoEmocionalTreino: formData.relacaoEmocionalTreino || '',
+        preferenciaDificuldadeTreino: formData.preferenciaDificuldadeTreino || '',
+        horarioTreino: formData.horarioTreino,
+        
+        // Estrutura da dieta
         quantidadeRefeicoes: formData.quantidadeRefeicoes,
         preferenciaRefeicoes: formData.preferenciaRefeicoes,
         
-        // Bloco 4
-        confortoPesar: formData.confortoPesar,
+        // Alimentos do dia a dia
+        alimentosDoDiaADia: formData.alimentosDoDiaADia,
+        
+        // Preferências alimentares
+        alimentosGosta: formData.alimentosGosta || '',
+        alimentosEvita: formData.alimentosEvita || '',
         tempoPreparacao: formData.tempoPreparacao,
+        confortoPesar: formData.confortoPesar,
         preferenciaVariacao: formData.preferenciaVariacao,
+        alimentacaoFimSemana: formData.alimentacaoFimSemana,
         
-        // Bloco 5
-        alimentosDoDiaADia: {
-          carboidratos: formData.carboidratos,
-          proteinas: formData.proteinas,
-          gorduras: formData.gorduras,
-          frutas: formData.frutas
-        },
-        
-        // Bloco 6
+        // Restrições
         restricaoAlimentar: formData.restricaoAlimentar,
         outraRestricao: formData.restricaoAlimentar === 'Outra' ? formData.outraRestricao : '',
-        alimentosEvita: formData.alimentosEvita || '',
         
-        // Bloco 7
+        // Flexibilidade
         opcoesSubstituicao: formData.opcoesSubstituicao,
-        refeicoesLivres: formData.refeicoesLivres
+        refeicoesLivres: formData.refeicoesLivres,
+        
+        // Saúde
+        problemasSaude: formData.problemasSaude,
+        quaisProblemasSaude: formData.problemasSaude === 'Sim' ? formData.quaisProblemasSaude : '',
+        usoMedicacao: formData.usoMedicacao,
+        quaisMedicamentos: formData.usoMedicacao === 'Sim' ? formData.quaisMedicamentos : '',
+        limitacoesFisicas: formData.limitacoesFisicas,
+        detalhesLimitacao: formData.limitacoesFisicas === 'Sim' ? formData.detalhesLimitacao : '',
+        restricoesMedicasExercicio: formData.restricoesMedicasExercicio,
+        movimentosEvitar: formData.restricoesMedicasExercicio === 'Sim' ? formData.movimentosEvitar : '',
+        receiosSaude: formData.receiosSaude || ''
       }
 
       const response = await fetch(`${API_URL}/questionnaire`, {
@@ -232,7 +333,6 @@ function Questionnaire({ onComplete }) {
         body: JSON.stringify(payload)
       })
 
-      // Verificar se a resposta é JSON válido
       let data
       const contentType = response.headers.get('content-type')
       if (contentType && contentType.includes('application/json')) {
@@ -260,33 +360,73 @@ function Questionnaire({ onComplete }) {
         throw new Error(`${errorMsg}${detailsMsg}`)
       }
 
-      // Chamar callback de conclusão
       if (onComplete) {
         onComplete()
       } else {
-        // Redirecionar para a página principal
         const user = JSON.parse(localStorage.getItem('user') || '{}')
         if (user.role === 'PACIENTE') {
-          navigate('/paciente')
+          navigate('/paciente/dashboard')
         }
       }
 
     } catch (err) {
       console.error('Erro ao enviar questionário:', err)
-      console.error('Stack:', err.stack)
-      console.error('Payload enviado:', JSON.stringify(payload, null, 2))
-      
-      // Mensagem de erro mais detalhada
-      let errorMessage = 'Erro ao salvar questionário'
-      if (err.message) {
-        errorMessage = err.message
-      } else if (err instanceof TypeError && err.message.includes('JSON')) {
-        errorMessage = 'Erro de comunicação com o servidor. Verifique sua conexão.'
-      }
-      
-      setError(errorMessage)
+      setError(err.message || 'Erro ao salvar questionário')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const foodCategories = {
+    proteinas: {
+      title: 'Proteínas',
+      icon: Fish,
+      items: [
+        'Ovo', 'Peito de frango', 'Coxa/sobrecoxa de frango', 'Carne moída (patinho, acém)',
+        'Carne bovina em bife (patinho, coxão mole)', 'Peixe (tilápia, sardinha, merluza)',
+        'Atum em lata', 'Sardinha em lata', 'Presunto magro', 'Queijo branco (minas, ricota, cottage)',
+        'Leite', 'Iogurte natural', 'Feijão (preto, carioca, vermelho)', 'Lentilha',
+        'Grão-de-bico', 'Ervilha', 'Soja', 'Proteína de soja texturizada (PTS)'
+      ]
+    },
+    carboidratos: {
+      title: 'Carboidratos',
+      icon: Bread,
+      items: [
+        'Arroz branco', 'Arroz integral', 'Feijão', 'Macarrão', 'Pão francês', 'Pão de forma',
+        'Tapioca', 'Cuscuz (milho)', 'Batata inglesa', 'Batata-doce', 'Mandioca (aipim/macaxeira)',
+        'Inhame', 'Mandioquinha', 'Aveia', 'Milho', 'Farinha de milho', 'Farinha de mandioca'
+      ]
+    },
+    gorduras: {
+      title: 'Gorduras',
+      icon: Drop,
+      items: [
+        'Azeite de oliva', 'Óleo de soja', 'Óleo de girassol', 'Manteiga', 'Margarina',
+        'Maionese', 'Abacate', 'Amendoim', 'Castanha de caju', 'Castanha-do-pará',
+        'Amendoim (pasta ou in natura)', 'Sementes (linhaça, chia)'
+      ]
+    },
+    verduras: {
+      title: 'Verduras',
+      icon: Plant,
+      items: ['Alface', 'Rúcula', 'Agrião', 'Couve', 'Espinafre', 'Repolho']
+    },
+    legumes: {
+      title: 'Legumes',
+      icon: Plant,
+      items: [
+        'Tomate', 'Cebola', 'Alho', 'Cenoura', 'Beterraba', 'Abobrinha',
+        'Chuchu', 'Berinjela', 'Pepino', 'Pimentão'
+      ]
+    },
+    frutas: {
+      title: 'Frutas',
+      icon: Sparkle,
+      items: [
+        'Banana', 'Maçã', 'Laranja', 'Mamão', 'Manga', 'Melancia',
+        'Abacaxi', 'Pera', 'Morango', 'Melão', 'Kiwi', 'Uva'
+      ]
     }
   }
 
@@ -294,73 +434,59 @@ function Questionnaire({ onComplete }) {
     switch (currentStep) {
       case 1:
         return (
-          <div className="step-content">
-            <h2>Dados Básicos</h2>
-            <p className="step-description">
+          <div className="questionnaire-step-content">
+            <h2 className="questionnaire-step-title">Dados Básicos</h2>
+            <p className="questionnaire-step-description">
               Essas informações nos ajudam a calcular suas necessidades nutricionais
             </p>
 
-            <div className="form-grid">
-              <div className="form-group">
-                <label htmlFor="idade">Idade *</label>
-                <input
-                  type="number"
-                  id="idade"
-                  value={formData.idade}
-                  onChange={(e) => handleChange('idade', e.target.value)}
-                  min="1"
-                  max="150"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="altura">Altura (cm) *</label>
-                <input
-                  type="number"
-                  id="altura"
-                  value={formData.altura}
-                  onChange={(e) => handleChange('altura', e.target.value)}
-                  min="50"
-                  max="250"
-                  required
-                />
-              </div>
+            <div className="questionnaire-form-group">
+              <label htmlFor="idade">Idade *</label>
+              <input
+                type="number"
+                id="idade"
+                value={formData.idade}
+                onChange={(e) => handleChange('idade', e.target.value)}
+                min="1"
+                max="150"
+                placeholder="Ex: 28"
+                required
+              />
             </div>
 
-            <div className="form-group">
+            <div className="questionnaire-form-group">
               <label>Sexo *</label>
-              <div className="radio-group">
-                <label className="radio-label">
-                  <input
-                    type="radio"
-                    name="sexo"
-                    value="Feminino"
-                    checked={formData.sexo === 'Feminino'}
-                    onChange={(e) => {
-                      e.stopPropagation()
-                      handleChange('sexo', e.target.value)
-                    }}
-                  />
-                  <span>Feminino</span>
-                </label>
-                <label className="radio-label">
-                  <input
-                    type="radio"
-                    name="sexo"
-                    value="Masculino"
-                    checked={formData.sexo === 'Masculino'}
-                    onChange={(e) => {
-                      e.stopPropagation()
-                      handleChange('sexo', e.target.value)
-                    }}
-                  />
-                  <span>Masculino</span>
-                </label>
+              <div className="questionnaire-radio-group">
+                {['Feminino', 'Masculino', 'Prefiro não informar'].map(sexo => (
+                  <label key={sexo} className="questionnaire-radio-label">
+                    <input
+                      type="radio"
+                      name="sexo"
+                      value={sexo}
+                      checked={formData.sexo === sexo}
+                      onChange={(e) => handleChange('sexo', e.target.value)}
+                    />
+                    <span>{sexo}</span>
+                  </label>
+                ))}
               </div>
             </div>
 
-            <div className="form-group">
+            <div className="questionnaire-form-group">
+              <label htmlFor="altura">Altura (cm) *</label>
+              <input
+                type="number"
+                id="altura"
+                value={formData.altura}
+                onChange={(e) => handleChange('altura', e.target.value)}
+                min="50"
+                max="250"
+                placeholder="Ex: 170"
+                required
+              />
+            </div>
+
+            <div className="questionnaire-form-group">
               <label htmlFor="pesoAtual">Peso atual (kg) *</label>
               <input
                 type="number"
@@ -370,15 +496,16 @@ function Questionnaire({ onComplete }) {
                 min="20"
                 max="300"
                 step="0.1"
+                placeholder="Ex: 75.5"
                 required
               />
             </div>
 
-            <div className="form-group">
+            <div className="questionnaire-form-group">
               <label>Objetivo principal *</label>
-              <div className="radio-group">
+              <div className="questionnaire-radio-group">
                 {['Emagrecer', 'Manter o peso', 'Ganhar massa muscular', 'Ganhar peso de forma geral'].map(obj => (
-                  <label key={obj} className="radio-label">
+                  <label key={obj} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="objetivo"
@@ -391,27 +518,84 @@ function Questionnaire({ onComplete }) {
                 ))}
               </div>
             </div>
+
+            <div className="questionnaire-form-group">
+              <label htmlFor="sentimentosCorpo">Como você se sente em relação ao seu corpo hoje? (opcional)</label>
+              <textarea
+                id="sentimentosCorpo"
+                value={formData.sentimentosCorpo}
+                onChange={(e) => handleChange('sentimentosCorpo', e.target.value)}
+                placeholder="O que mais gostaria de mudar ou melhorar?"
+                rows="3"
+              />
+            </div>
+
+            <div className="questionnaire-form-group">
+              <label htmlFor="expectativaSucesso">Daqui a 30 dias, o que faria você olhar pra esse plano e pensar: "Esse plano valeu a pena"? (opcional)</label>
+              <textarea
+                id="expectativaSucesso"
+                value={formData.expectativaSucesso}
+                onChange={(e) => handleChange('expectativaSucesso', e.target.value)}
+                placeholder="Descreva suas expectativas..."
+                rows="3"
+              />
+            </div>
           </div>
         )
 
       case 2:
         return (
-          <div className="step-content">
-            <h2>Rotina e Atividade</h2>
-            <p className="step-description">
-              Essas informações definem a distribuição de refeições e carboidratos
+          <div className="questionnaire-step-content">
+            <h2 className="questionnaire-step-title">Rotina e Sono</h2>
+            <p className="questionnaire-step-description">
+              Conte-nos sobre seu dia a dia e qualidade do sono
             </p>
 
-            <div className="form-group">
-              <label>Você pratica atividade física regularmente? *</label>
-              <div className="radio-group">
-                {[
-                  'Não pratico',
-                  'Sim, 1–2x por semana',
-                  'Sim, 3–4x por semana',
-                  'Sim, 5x ou mais por semana'
-                ].map(freq => (
-                  <label key={freq} className="radio-label">
+            <div className="questionnaire-form-group">
+              <label htmlFor="rotinaDiaria">Me conta como é um dia típico pra você *</label>
+              <textarea
+                id="rotinaDiaria"
+                value={formData.rotinaDiaria}
+                onChange={(e) => handleChange('rotinaDiaria', e.target.value)}
+                placeholder="Trabalha mais sentado, em pé, se movimenta bastante? Seus horários são mais certinhos ou bem bagunçados?"
+                rows="4"
+                required
+              />
+            </div>
+
+            <div className="questionnaire-form-group">
+              <label>E seu sono, como anda hoje? *</label>
+              <div className="questionnaire-radio-group">
+                {['Durmo bem', 'Durmo mal e acordo cansado', 'Varia muito'].map(sono => (
+                  <label key={sono} className="questionnaire-radio-label">
+                    <input
+                      type="radio"
+                      name="sono"
+                      value={sono}
+                      checked={formData.sono === sono}
+                      onChange={(e) => handleChange('sono', e.target.value)}
+                    />
+                    <span>{sono}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        )
+
+      case 3:
+        return (
+          <div className="questionnaire-step-content">
+            <h2 className="questionnaire-step-title">Atividade Física</h2>
+            <p className="questionnaire-step-description">
+              Informações sobre sua relação com exercícios e treinos
+            </p>
+
+            <div className="questionnaire-form-group">
+              <label>Hoje, como está sua relação com atividade física? *</label>
+              <div className="questionnaire-radio-group">
+                {['Não pratico atualmente', '1–2x por semana', '3–4x por semana', '5x ou mais por semana'].map(freq => (
+                  <label key={freq} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="frequenciaAtividade"
@@ -425,34 +609,102 @@ function Questionnaire({ onComplete }) {
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Qual tipo de atividade você pratica com mais frequência? *</label>
-              <div className="radio-group">
-                {[
-                  'Musculação',
-                  'Cardio (caminhada, corrida, bike)',
-                  'Ambos',
-                  'Outro'
-                ].map(tipo => (
-                  <label key={tipo} className="radio-label">
-                    <input
-                      type="radio"
-                      name="tipoAtividade"
-                      value={tipo}
-                      checked={formData.tipoAtividade === tipo}
-                      onChange={(e) => handleChange('tipoAtividade', e.target.value)}
-                    />
-                    <span>{tipo}</span>
-                  </label>
-                ))}
+            {formData.frequenciaAtividade === 'Não pratico atualmente' && (
+              <div className="questionnaire-form-group">
+                <label>O que mais te impede de treinar hoje? (opcional)</label>
+                <div className="questionnaire-radio-group">
+                  {['Falta de tempo', 'Falta de motivação', 'Cansaço excessivo', 'Dor ou desconforto físico', 'Nunca gostei de treinar', 'Outro motivo'].map(barreira => (
+                    <label key={barreira} className="questionnaire-radio-label">
+                      <input
+                        type="radio"
+                        name="barreirasTreino"
+                        value={barreira}
+                        checked={formData.barreirasTreino === barreira}
+                        onChange={(e) => handleChange('barreirasTreino', e.target.value)}
+                      />
+                      <span>{barreira}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="form-group">
-              <label>Horário em que normalmente treina (se treina): *</label>
-              <div className="radio-group">
+            {formData.frequenciaAtividade !== 'Não pratico atualmente' && (
+              <>
+                <div className="questionnaire-form-group">
+                  <label>Qual tipo de atividade você pratica ou mais gosta? *</label>
+                  <div className="questionnaire-radio-group">
+                    {['Musculação', 'Caminhada', 'Corrida', 'Ciclismo', 'Crossfit', 'Lutas', 'Yoga / Pilates', 'Dança', 'Esportes coletivos', 'Musculação + cardio', 'Outro'].map(tipo => (
+                      <label key={tipo} className="questionnaire-checkbox-label">
+                        <input
+                          type="checkbox"
+                          name="tipoAtividade"
+                          value={tipo}
+                          checked={formData.tipoAtividade.includes(tipo)}
+                          onChange={() => handleTipoAtividadeToggle(tipo)}
+                        />
+                        <span>{tipo}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {formData.tipoAtividade.length > 1 && (
+                  <div className="questionnaire-form-group">
+                    <label htmlFor="rotinaAtividade">Descreva sua rotina semanal de exercícios *</label>
+                    <textarea
+                      id="rotinaAtividade"
+                      value={formData.rotinaAtividade}
+                      onChange={(e) => handleChange('rotinaAtividade', e.target.value)}
+                      placeholder="Ex: 3 dias de musculação e 2 dias de luta"
+                      rows="3"
+                      required
+                    />
+                  </div>
+                )}
+
+                <div className="questionnaire-form-group">
+                  <label>Qual dessas frases mais parece com você hoje? *</label>
+                  <div className="questionnaire-radio-group">
+                    {['Gosto de treinar e me sinto bem', 'Treino mais por obrigação', 'Treino, mas sempre acabo parando'].map(relacao => (
+                      <label key={relacao} className="questionnaire-radio-label">
+                        <input
+                          type="radio"
+                          name="relacaoEmocionalTreino"
+                          value={relacao}
+                          checked={formData.relacaoEmocionalTreino === relacao}
+                          onChange={(e) => handleChange('relacaoEmocionalTreino', e.target.value)}
+                        />
+                        <span>{relacao}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {formData.relacaoEmocionalTreino && (
+                  <div className="questionnaire-form-group">
+                    <label htmlFor="preferenciaDificuldadeTreino">
+                      {formData.relacaoEmocionalTreino === 'Gosto de treinar e me sinto bem'
+                        ? 'Tem algum exercício ou tipo de treino que você gosta mais ou sente que funciona melhor pra você? (opcional)'
+                        : 'O que mais te atrapalha em manter o treino? (opcional)'}
+                    </label>
+                    <textarea
+                      id="preferenciaDificuldadeTreino"
+                      value={formData.preferenciaDificuldadeTreino}
+                      onChange={(e) => handleChange('preferenciaDificuldadeTreino', e.target.value)}
+                      placeholder="Descreva..."
+                      rows="3"
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
+            <div className="questionnaire-form-group">
+              <label>Qual horário seria mais fácil pra você treinar, pensando na sua rotina real? *</label>
+              <div className="questionnaire-radio-group">
                 {['Manhã', 'Tarde', 'Noite', 'Varia muito'].map(horario => (
-                  <label key={horario} className="radio-label">
+                  <label key={horario} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="horarioTreino"
@@ -465,44 +717,22 @@ function Questionnaire({ onComplete }) {
                 ))}
               </div>
             </div>
-
-            <div className="form-group">
-              <label>Sua rotina diária é mais: *</label>
-              <div className="radio-group">
-                {[
-                  'Sedentária (trabalho sentado, pouco movimento)',
-                  'Moderada (anda bastante, se movimenta no dia)',
-                  'Ativa (trabalho físico ou muito movimento)'
-                ].map(rotina => (
-                  <label key={rotina} className="radio-label">
-                    <input
-                      type="radio"
-                      name="rotinaDiaria"
-                      value={rotina}
-                      checked={formData.rotinaDiaria === rotina}
-                      onChange={(e) => handleChange('rotinaDiaria', e.target.value)}
-                    />
-                    <span>{rotina}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
           </div>
         )
 
-      case 3:
+      case 4:
         return (
-          <div className="step-content">
-            <h2>Estrutura da Dieta</h2>
-            <p className="step-description">
-              Essas informações definem a quantidade de alimentos por refeição
+          <div className="questionnaire-step-content">
+            <h2 className="questionnaire-step-title">Estrutura da Dieta</h2>
+            <p className="questionnaire-step-description">
+              Defina quantas refeições você consegue fazer e seu estilo preferido
             </p>
 
-            <div className="form-group">
-              <label>Quantas refeições você consegue fazer por dia, na prática? *</label>
-              <div className="radio-group">
-                {['3 refeições', '4 refeições', '5 refeições', 'Mais de 5'].map(qtd => (
-                  <label key={qtd} className="radio-label">
+            <div className="questionnaire-form-group">
+              <label>Na prática, quantas refeições você consegue fazer por dia? *</label>
+              <div className="questionnaire-radio-group">
+                {['3', '4', '5', 'Mais de 5'].map(qtd => (
+                  <label key={qtd} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="quantidadeRefeicoes"
@@ -516,15 +746,11 @@ function Questionnaire({ onComplete }) {
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Você prefere refeições: *</label>
-              <div className="radio-group">
-                {[
-                  'Mais simples, com poucos alimentos',
-                  'Um equilíbrio entre simples e variadas',
-                  'Mais completas e variadas'
-                ].map(pref => (
-                  <label key={pref} className="radio-label">
+            <div className="questionnaire-form-group">
+              <label>Você prefere refeições mais simples ou mais completas e variadas? *</label>
+              <div className="questionnaire-radio-group">
+                {['Mais simples', 'Um equilíbrio', 'Mais completas e variadas'].map(pref => (
+                  <label key={pref} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="preferenciaRefeicoes"
@@ -540,41 +766,81 @@ function Questionnaire({ onComplete }) {
           </div>
         )
 
-      case 4:
+      case 5:
         return (
-          <div className="step-content">
-            <h2>Complexidade e Adesão</h2>
-            <p className="step-description">
-              Essas informações nos ajudam a personalizar sua dieta
+          <div className="questionnaire-step-content">
+            <h2 className="questionnaire-step-title">Alimentos do Dia a Dia</h2>
+            <p className="questionnaire-step-description">
+              Selecione os alimentos que você costuma consumir (opcional)
             </p>
 
-            <div className="form-group">
-              <label>Você se sente confortável em pesar alimentos? *</label>
-              <div className="radio-group">
-                {['Sim, sem problemas', 'Às vezes', 'Prefiro medidas caseiras'].map(conf => (
-                  <label key={conf} className="radio-label">
-                    <input
-                      type="radio"
-                      name="confortoPesar"
-                      value={conf}
-                      checked={formData.confortoPesar === conf}
-                      onChange={(e) => handleChange('confortoPesar', e.target.value)}
-                    />
-                    <span>{conf}</span>
-                  </label>
-                ))}
-              </div>
+            <div className="questionnaire-food-categories">
+              {Object.entries(foodCategories).map(([key, category]) => {
+                const Icon = category.icon
+                return (
+                  <div key={key} className="questionnaire-food-category">
+                    <div className="questionnaire-food-category-header">
+                      <Icon size={20} weight="fill" />
+                      <h3>{category.title}</h3>
+                    </div>
+                    <div className="questionnaire-food-items-grid">
+                      {category.items.map((item) => {
+                        const isSelected = formData.alimentosDoDiaADia[key].includes(item)
+                        return (
+                          <button
+                            key={item}
+                            type="button"
+                            className={`questionnaire-food-item ${isSelected ? 'selected' : ''}`}
+                            onClick={() => handleCheckboxGroup(key, item)}
+                          >
+                            <span className="questionnaire-food-item-label">{item}</span>
+                            {isSelected && <span className="questionnaire-food-item-check">✓</span>}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
 
-            <div className="form-group">
-              <label>Quanto tempo você costuma ter para preparar refeições? *</label>
-              <div className="radio-group">
-                {[
-                  'Muito pouco (até 10 min)',
-                  'Médio (10–30 min)',
-                  'Tenho tempo e gosto de cozinhar'
-                ].map(tempo => (
-                  <label key={tempo} className="radio-label">
+            <div className="questionnaire-form-group">
+              <label htmlFor="alimentosGosta">Quais alimentos você mais gosta de comer? (opcional)</label>
+              <textarea
+                id="alimentosGosta"
+                value={formData.alimentosGosta}
+                onChange={(e) => handleChange('alimentosGosta', e.target.value)}
+                placeholder="Vale tudo: arroz, feijão, pizza, doce, lanche…"
+                rows="2"
+              />
+            </div>
+
+            <div className="questionnaire-form-group">
+              <label htmlFor="alimentosEvita">E tem algum alimento que você não gosta ou costuma evitar? (opcional)</label>
+              <textarea
+                id="alimentosEvita"
+                value={formData.alimentosEvita}
+                onChange={(e) => handleChange('alimentosEvita', e.target.value)}
+                placeholder="Liste os alimentos que você evita..."
+                rows="2"
+              />
+            </div>
+          </div>
+        )
+
+      case 6:
+        return (
+          <div className="questionnaire-step-content">
+            <h2 className="questionnaire-step-title">Preferências e Preparação</h2>
+            <p className="questionnaire-step-description">
+              Como você prefere preparar e organizar suas refeições
+            </p>
+
+            <div className="questionnaire-form-group">
+              <label>Quanto tempo você costuma ter pra preparar suas refeições? *</label>
+              <div className="questionnaire-radio-group">
+                {['Até 10 minutos', '10–30 minutos', 'Tenho tempo e gosto de cozinhar'].map(tempo => (
+                  <label key={tempo} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="tempoPreparacao"
@@ -588,15 +854,29 @@ function Questionnaire({ onComplete }) {
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Você prefere repetir refeições ou variar ao longo da semana? *</label>
-              <div className="radio-group">
-                {[
-                  'Prefiro repetir',
-                  'Um pouco de repetição é ok',
-                  'Prefiro variedade'
-                ].map(var_pref => (
-                  <label key={var_pref} className="radio-label">
+            <div className="questionnaire-form-group">
+              <label>Você se sente confortável em pesar alimentos? *</label>
+              <div className="questionnaire-radio-group">
+                {['Sim', 'Às vezes', 'Prefiro medidas caseiras'].map(conf => (
+                  <label key={conf} className="questionnaire-radio-label">
+                    <input
+                      type="radio"
+                      name="confortoPesar"
+                      value={conf}
+                      checked={formData.confortoPesar === conf}
+                      onChange={(e) => handleChange('confortoPesar', e.target.value)}
+                    />
+                    <span>{conf}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="questionnaire-form-group">
+              <label>Você prefere repetir refeições ao longo da semana ou variar bastante? *</label>
+              <div className="questionnaire-radio-group">
+                {['Prefiro repetir', 'Um pouco de repetição é ok', 'Prefiro muita variedade'].map(var_pref => (
+                  <label key={var_pref} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="preferenciaVariacao"
@@ -609,115 +889,40 @@ function Questionnaire({ onComplete }) {
                 ))}
               </div>
             </div>
-          </div>
-        )
 
-      case 5:
-        return (
-          <div className="step-content">
-            <h2>Alimentos do Dia a Dia</h2>
-            <p className="step-description">
-              Marque os alimentos que você costuma consumir (opcional)
-            </p>
-
-            <div className="alimentos-section">
-              <div className="alimento-category">
-                <h3>Carboidratos</h3>
-                <div className="checkbox-group">
-                  {[
-                    'Arroz', 'Feijão', 'Batata', 'Macarrão', 'Pão francês', 
-                    'Aveia', 'Flocos de milho / sucrilhos sem açúcar', 
-                    'Farinha de arroz', 'Milho', 'Tapioca'
-                  ].map(item => (
-                    <label key={item} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={formData.carboidratos.includes(item)}
-                        onChange={() => handleCheckboxGroup('carboidratos', item)}
-                      />
-                      <span>{item}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="alimento-category">
-                <h3>Proteínas</h3>
-                <div className="checkbox-group">
-                  {[
-                    'Frango', 'Carne bovina', 'Ovos', 'Peixe', 
-                    'Queijo', 'Iogurte', 'Whey protein'
-                  ].map(item => (
-                    <label key={item} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={formData.proteinas.includes(item)}
-                        onChange={() => handleCheckboxGroup('proteinas', item)}
-                      />
-                      <span>{item}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="alimento-category">
-                <h3>Gorduras / Complementos</h3>
-                <div className="checkbox-group">
-                  {[
-                    'Azeite', 'Pasta de amendoim', 'Castanhas', 'Manteiga'
-                  ].map(item => (
-                    <label key={item} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={formData.gorduras.includes(item)}
-                        onChange={() => handleCheckboxGroup('gorduras', item)}
-                      />
-                      <span>{item}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="alimento-category">
-                <h3>Frutas</h3>
-                <div className="checkbox-group">
-                  {[
-                    'Banana', 'Maçã', 'Mamão', 'Melão', 'Morango', 
-                    'Uva', 'Manga', 'Abacaxi'
-                  ].map(item => (
-                    <label key={item} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={formData.frutas.includes(item)}
-                        onChange={() => handleCheckboxGroup('frutas', item)}
-                      />
-                      <span>{item}</span>
-                    </label>
-                  ))}
-                </div>
+            <div className="questionnaire-form-group">
+              <label>E no final de semana, como costuma ser sua alimentação? *</label>
+              <div className="questionnaire-radio-group">
+                {['Parecida com a semana', 'Um pouco mais solta', 'Sai totalmente do controle'].map(fimSemana => (
+                  <label key={fimSemana} className="questionnaire-radio-label">
+                    <input
+                      type="radio"
+                      name="alimentacaoFimSemana"
+                      value={fimSemana}
+                      checked={formData.alimentacaoFimSemana === fimSemana}
+                      onChange={(e) => handleChange('alimentacaoFimSemana', e.target.value)}
+                    />
+                    <span>{fimSemana}</span>
+                  </label>
+                ))}
               </div>
             </div>
           </div>
         )
 
-      case 6:
+      case 7:
         return (
-          <div className="step-content">
-            <h2>Restrições Alimentares</h2>
-            <p className="step-description">
-              Informe suas restrições para que possamos personalizar sua dieta
+          <div className="questionnaire-step-content">
+            <h2 className="questionnaire-step-title">Restrições e Flexibilidade</h2>
+            <p className="questionnaire-step-description">
+              Informe suas restrições e preferências de flexibilidade
             </p>
 
-            <div className="form-group">
+            <div className="questionnaire-form-group">
               <label>Você tem alguma restrição alimentar? *</label>
-              <div className="radio-group">
-                {[
-                  'Nenhuma',
-                  'Intolerância à lactose',
-                  'Glúten',
-                  'Outra'
-                ].map(restricao => (
-                  <label key={restricao} className="radio-label">
+              <div className="questionnaire-radio-group">
+                {['Nenhuma', 'Intolerância à lactose', 'Intolerância ao glúten', 'Outra'].map(restricao => (
+                  <label key={restricao} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="restricaoAlimentar"
@@ -732,49 +937,24 @@ function Questionnaire({ onComplete }) {
             </div>
 
             {formData.restricaoAlimentar === 'Outra' && (
-              <div className="form-group">
-                <label htmlFor="outraRestricao">Especifique a restrição *</label>
-                <input
-                  type="text"
+              <div className="questionnaire-form-group">
+                <label htmlFor="outraRestricao">Pode me contar qual é essa restrição? *</label>
+                <textarea
                   id="outraRestricao"
                   value={formData.outraRestricao}
                   onChange={(e) => handleChange('outraRestricao', e.target.value)}
-                  placeholder="Ex: intolerância a frutos do mar"
+                  placeholder="Descreva a restrição alimentar..."
+                  rows="3"
                   required
                 />
               </div>
             )}
 
-            <div className="form-group">
-              <label htmlFor="alimentosEvita">Existe algum alimento que você não gosta ou evita?</label>
-              <textarea
-                id="alimentosEvita"
-                value={formData.alimentosEvita}
-                onChange={(e) => handleChange('alimentosEvita', e.target.value)}
-                placeholder="Ex: cebola crua, pimentão, brócolis..."
-                rows="4"
-              />
-            </div>
-          </div>
-        )
-
-      case 7:
-        return (
-          <div className="step-content">
-            <h2>Flexibilidade da Dieta</h2>
-            <p className="step-description">
-              Defina o quanto de flexibilidade você deseja na sua dieta
-            </p>
-
-            <div className="form-group">
+            <div className="questionnaire-form-group">
               <label>Você gostaria de ter opções de substituição nas refeições? *</label>
-              <div className="radio-group">
-                {[
-                  'Sim, gosto de ter opções',
-                  'Algumas opções já são suficientes',
-                  'Prefiro algo mais fixo'
-                ].map(opcao => (
-                  <label key={opcao} className="radio-label">
+              <div className="questionnaire-radio-group">
+                {['Sim, gosto de opções', 'Algumas opções já são suficientes', 'Prefiro algo mais fixo'].map(opcao => (
+                  <label key={opcao} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="opcoesSubstituicao"
@@ -788,11 +968,11 @@ function Questionnaire({ onComplete }) {
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Você gostaria de ter refeições mais "livres" ao longo da semana? *</label>
-              <div className="radio-group">
-                {['Sim', 'Talvez', 'Não'].map(livre => (
-                  <label key={livre} className="radio-label">
+            <div className="questionnaire-form-group">
+              <label>Você gostaria de ter algumas refeições mais livres ao longo da semana? *</label>
+              <div className="questionnaire-radio-group">
+                {['Sim', 'Talvez', 'Prefiro seguir o plano à risca'].map(livre => (
+                  <label key={livre} className="questionnaire-radio-label">
                     <input
                       type="radio"
                       name="refeicoesLivres"
@@ -808,6 +988,155 @@ function Questionnaire({ onComplete }) {
           </div>
         )
 
+      case 8:
+        return (
+          <div className="questionnaire-step-content">
+            <h2 className="questionnaire-step-title">Saúde e Limitações</h2>
+            <p className="questionnaire-step-description">
+              Informações importantes sobre sua saúde para criar um plano seguro
+            </p>
+
+            <div className="questionnaire-form-group">
+              <label>Você tem algum problema de saúde diagnosticado por médico? *</label>
+              <div className="questionnaire-radio-group">
+                {['Não', 'Sim'].map(problema => (
+                  <label key={problema} className="questionnaire-radio-label">
+                    <input
+                      type="radio"
+                      name="problemasSaude"
+                      value={problema}
+                      checked={formData.problemasSaude === problema}
+                      onChange={(e) => handleChange('problemasSaude', e.target.value)}
+                    />
+                    <span>{problema}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {formData.problemasSaude === 'Sim' && (
+              <div className="questionnaire-form-group">
+                <label htmlFor="quaisProblemasSaude">Pode me contar quais são essas condições? *</label>
+                <textarea
+                  id="quaisProblemasSaude"
+                  value={formData.quaisProblemasSaude}
+                  onChange={(e) => handleChange('quaisProblemasSaude', e.target.value)}
+                  placeholder="Ex: diabetes, pressão alta, tireoide, lipedema, SOP, ansiedade…"
+                  rows="3"
+                  required
+                />
+              </div>
+            )}
+
+            <div className="questionnaire-form-group">
+              <label>Você faz uso de alguma medicação contínua atualmente? *</label>
+              <div className="questionnaire-radio-group">
+                {['Não', 'Sim'].map(medicacao => (
+                  <label key={medicacao} className="questionnaire-radio-label">
+                    <input
+                      type="radio"
+                      name="usoMedicacao"
+                      value={medicacao}
+                      checked={formData.usoMedicacao === medicacao}
+                      onChange={(e) => handleChange('usoMedicacao', e.target.value)}
+                    />
+                    <span>{medicacao}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {formData.usoMedicacao === 'Sim' && (
+              <div className="questionnaire-form-group">
+                <label htmlFor="quaisMedicamentos">Quais medicamentos você utiliza? *</label>
+                <textarea
+                  id="quaisMedicamentos"
+                  value={formData.quaisMedicamentos}
+                  onChange={(e) => handleChange('quaisMedicamentos', e.target.value)}
+                  placeholder="Ex: Ozempic, Mounjaro, Saxenda, insulina, anticoncepcional, antidepressivo…"
+                  rows="3"
+                  required
+                />
+              </div>
+            )}
+
+            <div className="questionnaire-form-group">
+              <label>Você tem alguma dor, limitação física ou lesão que eu precise considerar? *</label>
+              <div className="questionnaire-radio-group">
+                {['Não', 'Sim'].map(limitacao => (
+                  <label key={limitacao} className="questionnaire-radio-label">
+                    <input
+                      type="radio"
+                      name="limitacoesFisicas"
+                      value={limitacao}
+                      checked={formData.limitacoesFisicas === limitacao}
+                      onChange={(e) => handleChange('limitacoesFisicas', e.target.value)}
+                    />
+                    <span>{limitacao}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {formData.limitacoesFisicas === 'Sim' && (
+              <div className="questionnaire-form-group">
+                <label htmlFor="detalhesLimitacao">Me conta onde é essa dor ou limitação e o que costuma piorar ou melhorar. *</label>
+                <textarea
+                  id="detalhesLimitacao"
+                  value={formData.detalhesLimitacao}
+                  onChange={(e) => handleChange('detalhesLimitacao', e.target.value)}
+                  placeholder="Descreva a limitação física..."
+                  rows="3"
+                  required
+                />
+              </div>
+            )}
+
+            <div className="questionnaire-form-group">
+              <label>Algum médico já te orientou a evitar certos exercícios ou movimentos? *</label>
+              <div className="questionnaire-radio-group">
+                {['Não', 'Sim'].map(restricao => (
+                  <label key={restricao} className="questionnaire-radio-label">
+                    <input
+                      type="radio"
+                      name="restricoesMedicasExercicio"
+                      value={restricao}
+                      checked={formData.restricoesMedicasExercicio === restricao}
+                      onChange={(e) => handleChange('restricoesMedicasExercicio', e.target.value)}
+                    />
+                    <span>{restricao}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {formData.restricoesMedicasExercicio === 'Sim' && (
+              <div className="questionnaire-form-group">
+                <label htmlFor="movimentosEvitar">Quais movimentos ou atividades você foi orientado a evitar? *</label>
+                <textarea
+                  id="movimentosEvitar"
+                  value={formData.movimentosEvitar}
+                  onChange={(e) => handleChange('movimentosEvitar', e.target.value)}
+                  placeholder="Descreva os movimentos a evitar..."
+                  rows="3"
+                  required
+                />
+              </div>
+            )}
+
+            <div className="questionnaire-form-group">
+              <label htmlFor="receiosSaude">Existe algo relacionado à sua saúde que te preocupa quando pensa em dieta ou treino? (opcional)</label>
+              <textarea
+                id="receiosSaude"
+                value={formData.receiosSaude}
+                onChange={(e) => handleChange('receiosSaude', e.target.value)}
+                placeholder="Compartilhe seus receios..."
+                rows="3"
+              />
+            </div>
+          </div>
+        )
+
       default:
         return null
     }
@@ -816,45 +1145,37 @@ function Questionnaire({ onComplete }) {
   return (
     <div className="questionnaire-container">
       <div className="questionnaire-header">
-        <h1 className="questionnaire-title">LifeFit</h1>
-        <button 
-          onClick={handleLogout}
-          className="questionnaire-logout-btn"
-          disabled={loading}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          Sair
-        </button>
+        <h1 className="questionnaire-title">Questionário de Anamnese</h1>
+        <p className="questionnaire-subtitle">Vamos criar um plano personalizado para você</p>
       </div>
 
       <div className="questionnaire-card">
-        <div className="progress-bar">
-          <div 
-            className="progress-fill" 
-            style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-          />
-        </div>
-
-        <div className="step-indicator">
-          Etapa {currentStep} de {totalSteps}
+        <div className="questionnaire-progress">
+          <div className="questionnaire-progress-bar">
+            <div 
+              className="questionnaire-progress-fill" 
+              style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+            />
+          </div>
+          <div className="questionnaire-progress-text">
+            Etapa {currentStep} de {totalSteps}
+          </div>
         </div>
 
         {error && (
-          <div className="alert alert-error">
+          <div className="questionnaire-error">
             {error}
           </div>
         )}
 
         {renderStepContent()}
 
-        <div className="form-actions">
+        <div className="questionnaire-actions">
           {currentStep > 1 && (
             <button
               type="button"
               onClick={handleBack}
-              className="btn btn-secondary"
+              className="questionnaire-btn questionnaire-btn-secondary"
               disabled={loading}
             >
               Voltar
@@ -864,7 +1185,7 @@ function Questionnaire({ onComplete }) {
           <button
             type="button"
             onClick={handleNext}
-            className="btn btn-primary"
+            className="questionnaire-btn questionnaire-btn-primary"
             disabled={loading}
           >
             {loading ? 'Processando...' : currentStep === totalSteps ? 'Finalizar' : 'Próximo'}

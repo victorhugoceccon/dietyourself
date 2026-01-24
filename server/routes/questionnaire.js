@@ -49,7 +49,26 @@ const questionnaireSchema = z.object({
   preferenciaDificuldadeTreino: z.string().optional().default(''),
   rotinaTreinoDetalhada: z.string().optional().default(''), // Legado
   outraAtividade: z.string().optional().default(''),
-  horarioTreino: z.enum(['Manhã', 'Tarde', 'Noite', 'Varia muito']),
+  horarioTreino: z.enum(['Manhã', 'Tarde', 'Noite', 'Varia muito']).or(z.string().transform((val) => {
+    // Mapear valores incorretos para valores válidos
+    const lowerVal = val.toLowerCase()
+    if (lowerVal.includes('manhã') || lowerVal.includes('manha')) return 'Manhã'
+    if (lowerVal.includes('tarde')) return 'Tarde'
+    if (lowerVal.includes('noite')) return 'Noite'
+    if (lowerVal.includes('varia') || lowerVal.includes('motivação') || lowerVal.includes('motivacao')) return 'Varia muito'
+    // Se não conseguir mapear, retornar valor padrão
+    return 'Varia muito'
+  })),
+  refeicaoPreTreino: z.enum([
+    'Sim, sempre',
+    'Às vezes',
+    'Não'
+  ]).optional().nullable().default(null),
+  refeicaoPosTreino: z.enum([
+    'Sim, sempre',
+    'Às vezes',
+    'Não'
+  ]).optional().nullable().default(null),
   
   // Bloco 3: Estrutura da Dieta
   quantidadeRefeicoes: z.enum([
@@ -61,7 +80,17 @@ const questionnaireSchema = z.object({
     '3 refeições',
     '4 refeições',
     '5 refeições'
-  ]),
+  ]).or(z.string().transform((val) => {
+    // Mapear valores incorretos para valores válidos
+    const lowerVal = val.toLowerCase()
+    if (lowerVal.includes('3') || lowerVal === '3') return '3'
+    if (lowerVal.includes('4') || lowerVal === '4') return '4'
+    if (lowerVal.includes('5') || lowerVal === '5') return '5'
+    if (lowerVal.includes('mais de 5') || lowerVal.includes('mais de cinco')) return 'Mais de 5'
+    if (lowerVal.includes('varia')) return '3' // Padrão se variar
+    // Se não conseguir mapear, retornar valor padrão
+    return '3'
+  })),
   preferenciaRefeicoes: z.enum([
     'Mais simples',
     'Um equilíbrio',
@@ -69,7 +98,15 @@ const questionnaireSchema = z.object({
     // Valores legados para compatibilidade
     'Mais simples, com poucos alimentos',
     'Um equilíbrio entre simples e variadas'
-  ]),
+  ]).or(z.string().transform((val) => {
+    // Mapear valores incorretos para valores válidos
+    const lowerVal = val.toLowerCase()
+    if (lowerVal.includes('simples') || lowerVal === '3' || lowerVal === '1') return 'Mais simples'
+    if (lowerVal.includes('equilíbrio') || lowerVal.includes('equilibrio') || lowerVal === '2') return 'Um equilíbrio'
+    if (lowerVal.includes('completas') || lowerVal.includes('variadas') || lowerVal === '4' || lowerVal === '5') return 'Mais completas e variadas'
+    // Se não conseguir mapear, retornar valor padrão
+    return 'Um equilíbrio'
+  })),
   
   // Bloco 4: Alimentação
   alimentosGosta: z.string().optional().default(''),
@@ -108,12 +145,18 @@ const questionnaireSchema = z.object({
     carboidratos: z.array(z.string()).optional().default([]),
     proteinas: z.array(z.string()).optional().default([]),
     gorduras: z.array(z.string()).optional().default([]),
-    frutas: z.array(z.string()).optional().default([])
+    verduras: z.array(z.string()).optional().default([]),
+    legumes: z.array(z.string()).optional().default([]),
+    frutas: z.array(z.string()).optional().default([]),
+    fibras: z.array(z.string()).optional().default([]) // Mantido para compatibilidade
   }).optional().default({
     carboidratos: [],
     proteinas: [],
     gorduras: [],
-    frutas: []
+    verduras: [],
+    legumes: [],
+    frutas: [],
+    fibras: []
   }),
   
   // Bloco 6: Restrições

@@ -262,6 +262,7 @@ function PacienteLayout() {
         });
         const lastMatchedRules = matchedRules.slice(-40);
 
+        // Logging de debug (erros são silenciados se serviço não estiver disponível)
         fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -306,7 +307,7 @@ function PacienteLayout() {
             runId: 'run4',
             hypothesisId: 'A,B,C,D,E,F,G,H'
           })
-        }).catch(() => {});
+        }).catch(() => {}); // Silencia erros de conexão (serviço de logging opcional)
       }
     };
     const timer = setTimeout(checkNavStyles, 500);
@@ -419,9 +420,9 @@ function PacienteLayout() {
             paddingBottom: 0
           }}
         >
-          {console.log('🎯 Renderizando ConversationalQuestionnaire - hasQuestionnaire:', hasQuestionnaire)}
-          <ConversationalQuestionnaire onComplete={async () => {
-            console.log('✅ Questionário conversacional completado!')
+          {console.log('🎯 Renderizando Questionnaire - hasQuestionnaire:', hasQuestionnaire)}
+          <Questionnaire onComplete={async () => {
+            console.log('✅ Questionário completado!')
             const token = localStorage.getItem('token')
             if (token && user?.id) {
               // Recarregar dados do usuário para verificar se o questionário foi salvo

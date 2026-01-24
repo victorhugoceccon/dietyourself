@@ -1721,3 +1721,221 @@
     padding-top: var(--space-lg);
   }
 }
+
+/* ===== 15. ASCEND API INTEGRATION STYLES ===== */
+.exercicios-header-actions {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  .exercicios-header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .exercicios-header-actions .btn-primary,
+  .exercicios-header-actions .btn-secondary {
+    width: 100%;
+  }
+}
+
+.modal-large {
+  max-width: 900px;
+  max-height: 90vh;
+}
+
+.ascend-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-lg);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color-light);
+}
+
+.dark-mode .ascend-filters {
+  background: rgba(15, 20, 27, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.ascend-results {
+  margin-top: var(--space-lg);
+  padding: var(--space-lg);
+}
+
+.ascend-results h4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.ascend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+  max-height: 500px;
+  overflow-y: auto;
+  padding: var(--space-sm);
+}
+
+.ascend-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  transition: all 0.2s ease;
+}
+
+.ascend-card:hover {
+  border-color: rgba(54, 215, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.dark-mode .ascend-card {
+  background: var(--bg-tertiary) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-mode .ascend-card:hover {
+  border-color: rgba(54, 215, 255, 0.5) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.ascend-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+}
+
+.ascend-card h4 {
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.ascend-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.ascend-info span {
+  display: block;
+}
+
+.ascend-actions {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: auto;
+}
+
+.ascend-actions button {
+  flex: 1;
+}
+
+.ascend-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+}
+
+.ascend-video {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ascend-video-player {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: var(--radius-md);
+  background: #000;
+  display: block;
+  margin: 0 auto;
+}
+
+/* GIF animado */
+.ascend-video img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: var(--radius-md);
+  background: #000;
+  display: block;
+  margin: 0 auto;
+}
+
+.ascend-detail-image {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: var(--radius-md);
+}
+
+.ascend-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.detail-section {
+  background: rgba(255, 255, 255, 0.03);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color-light);
+}
+
+.dark-mode .detail-section {
+  background: rgba(15, 20, 27, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.detail-section h4 {
+  margin: 0 0 var(--space-sm) 0;
+  color: var(--accent-color, #36D7FF);
+  font-size: var(--font-size-lg);
+}
+
+.detail-section p {
+  margin: var(--space-xs) 0;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.detail-section ol,
+.detail-section ul {
+  margin: var(--space-sm) 0;
+  padding-left: var(--space-lg);
+  color: var(--text-primary);
+}
+
+.detail-section li {
+  margin: var(--space-xs) 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .ascend-filters {
+    grid-template-columns: 1fr;
+  }
+  
+  .ascend-grid {
+    grid-template-columns: 1fr;
+  }
+}

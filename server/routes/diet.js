@@ -547,6 +547,49 @@ router.post('/generate', authenticate, async (req, res) => {
     let nutritionalNeeds = null
     let dietaJson = null
     
+    // Função para normalizar estrutura do N8N para o formato esperado pelo frontend
+    const normalizarEstruturaAlimento = (item) => {
+      // Converter nome/item → alimento (se necessário)
+      const alimento = item.alimento || item.nome || item.item || 'Alimento não especificado'
+      
+      // Converter peso_g + unidade → porcao formatada
+      let porcao = item.porcao || ''
+      if (!porcao && item.peso_g && item.unidade) {
+        porcao = `${item.peso_g}${item.unidade}`
+      } else if (!porcao && item.peso_g) {
+        porcao = `${item.peso_g}g`
+      }
+      
+      // Garantir que macros esteja em um objeto (se não estiver)
+      let macros = item.macros
+      if (!macros && (item.proteina_g !== undefined || item.carbo_g !== undefined || item.gordura_g !== undefined)) {
+        macros = {
+          proteina_g: item.proteina_g || 0,
+          carbo_g: item.carbo_g || 0,
+          gordura_g: item.gordura_g || 0
+        }
+      }
+      
+      return {
+        alimento,
+        porcao,
+        kcal: item.kcal || 0,
+        macros,
+        substituicoes: item.substituicoes?.map(sub => ({
+          alimento: sub.alimento || sub.nome || sub.item || 'Substituição',
+          porcao: sub.porcao || (sub.peso_g && sub.unidade ? `${sub.peso_g}${sub.unidade}` : (sub.peso_g ? `${sub.peso_g}g` : '')),
+          porcaoEquivalente: sub.porcaoEquivalente || (sub.peso_g && sub.unidade ? `${sub.peso_g}${sub.unidade}` : (sub.peso_g ? `${sub.peso_g}g` : '')),
+          kcal: sub.kcal || 0,
+          tipo: sub.tipo || sub.opcao || null,
+          macros: sub.macros || (sub.proteina_g !== undefined ? {
+            proteina_g: sub.proteina_g || 0,
+            carbo_g: sub.carbo_g || 0,
+            gordura_g: sub.gordura_g || 0
+          } : null)
+        })) || []
+      }
+    }
+    
     // PRIMEIRO: Garantir que responseData.dieta seja um objeto
     if (responseData.dieta) {
       if (typeof responseData.dieta === 'string') {
@@ -948,6 +991,61 @@ router.post('/generate', authenticate, async (req, res) => {
     // Não há mais ajustes de valores, equilíbrio, frutas ou vegetais
     console.log('✅ Usando output direto do agente - sem ajustes automáticos')
 
+    // Normalizar estrutura dos alimentos (converter formato N8N para formato frontend)
+    if (dietaJson && dietaJson.refeicoes && Array.isArray(dietaJson.refeicoes)) {
+      console.log('🔄 Normalizando estrutura dos alimentos...')
+      dietaJson.refeicoes = dietaJson.refeicoes.map((refeicao, refIdx) => {
+        const itensNormalizados = refeicao.itens?.map((item, itemIdx) => {
+          const normalizado = normalizarEstruturaAlimento(item)
+          
+          // Debug: log substituições do primeiro item da primeira refeição
+          if (refIdx === 0 && itemIdx === 0 && item.substituicoes && item.substituicoes.length > 0) {
+            console.log('🔍 Debug substituições do primeiro item:')
+            console.log('   Original:', JSON.stringify(item.substituicoes[0], null, 2))
+            console.log('   Normalizado:', JSON.stringify(normalizado.substituicoes[0], null, 2))
+          }
+          
+          return normalizado
+        }) || []
+        
+        return {
+          ...refeicao,
+          itens: itensNormalizados
+        }
+      })
+      console.log('✅ Estrutura dos alimentos normalizada')
+    }
+    
+    // Normalizar observacoesPlano: pode ser array, objeto ou string
+    if (dietaJson && dietaJson.observacoesPlano) {
+      if (Array.isArray(dietaJson.observacoesPlano)) {
+        console.log('📝 observacoesPlano é array, convertendo para string...')
+        dietaJson.observacoesPlano = dietaJson.observacoesPlano.join('\n\n')
+        console.log('✅ observacoesPlano (array) convertido para string')
+      } else if (typeof dietaJson.observacoesPlano === 'object') {
+        console.log('📝 observacoesPlano é objeto, convertendo para string...')
+        // Se for objeto com campos específicos, formatar
+        const obsObj = dietaJson.observacoesPlano
+        const parts = []
+        
+        if (obsObj.refeicaoLivre) parts.push(`Refeição Livre: ${obsObj.refeicaoLivre}`)
+        if (obsObj.hidratacao) parts.push(`Hidratação: ${obsObj.hidratacao}`)
+        if (obsObj.saidaDaDieta) parts.push(`Saída da Dieta: ${obsObj.saidaDaDieta}`)
+        
+        // Se tiver outros campos, adicionar também
+        Object.keys(obsObj).forEach(key => {
+          if (!['refeicaoLivre', 'hidratacao', 'saidaDaDieta'].includes(key)) {
+            parts.push(`${key}: ${obsObj[key]}`)
+          }
+        })
+        
+        dietaJson.observacoesPlano = parts.length > 0 
+          ? parts.join('\n\n') 
+          : JSON.stringify(obsObj)
+        console.log('✅ observacoesPlano (objeto) convertido para string')
+      }
+    }
+
     console.log('💾 Salvando dieta e necessidades nutricionais no banco...')
 
     // Combinar nutritionalNeeds e dieta em um único objeto para salvar
@@ -1049,14 +1147,68 @@ router.get('/', authenticate, async (req, res) => {
         }
       }
       
+      // Normalizar observacoesPlano se for objeto (para dietas antigas ou mal formatadas)
+      let dietaNormalizada = dietaData.dieta
+      if (dietaNormalizada && dietaNormalizada.observacoesPlano && typeof dietaNormalizada.observacoesPlano === 'object') {
+        console.log('📝 Normalizando observacoesPlano ao carregar dieta...')
+        const obsObj = dietaNormalizada.observacoesPlano
+        const parts = []
+        
+        if (obsObj.refeicaoLivre) parts.push(`Refeição Livre: ${obsObj.refeicaoLivre}`)
+        if (obsObj.hidratacao) parts.push(`Hidratação: ${obsObj.hidratacao}`)
+        if (obsObj.saidaDaDieta) parts.push(`Saída da Dieta: ${obsObj.saidaDaDieta}`)
+        
+        // Se tiver outros campos, adicionar também
+        Object.keys(obsObj).forEach(key => {
+          if (!['refeicaoLivre', 'hidratacao', 'saidaDaDieta'].includes(key)) {
+            const value = obsObj[key]
+            if (typeof value === 'string') {
+              parts.push(`${key}: ${value}`)
+            }
+          }
+        })
+        
+        dietaNormalizada = {
+          ...dietaNormalizada,
+          observacoesPlano: parts.length > 0 ? parts.join('\n\n') : JSON.stringify(obsObj)
+        }
+        console.log('✅ observacoesPlano normalizado')
+      }
+      
       return res.json({
         nutritionalNeeds: nutritionalNeeds,
-        dieta: dietaData.dieta
+        dieta: dietaNormalizada
       })
     }
 
     // Caso contrário, retornar estrutura antiga
-    res.json({ dieta: dietaData, nutritionalNeeds: null })
+    // Normalizar observacoesPlano se for objeto
+    let dietaNormalizada = dietaData
+    if (dietaNormalizada && dietaNormalizada.observacoesPlano && typeof dietaNormalizada.observacoesPlano === 'object') {
+      console.log('📝 Normalizando observacoesPlano (estrutura antiga)...')
+      const obsObj = dietaNormalizada.observacoesPlano
+      const parts = []
+      
+      if (obsObj.refeicaoLivre) parts.push(`Refeição Livre: ${obsObj.refeicaoLivre}`)
+      if (obsObj.hidratacao) parts.push(`Hidratação: ${obsObj.hidratacao}`)
+      if (obsObj.saidaDaDieta) parts.push(`Saída da Dieta: ${obsObj.saidaDaDieta}`)
+      
+      Object.keys(obsObj).forEach(key => {
+        if (!['refeicaoLivre', 'hidratacao', 'saidaDaDieta'].includes(key)) {
+          const value = obsObj[key]
+          if (typeof value === 'string') {
+            parts.push(`${key}: ${value}`)
+          }
+        }
+      })
+      
+      dietaNormalizada = {
+        ...dietaNormalizada,
+        observacoesPlano: parts.length > 0 ? parts.join('\n\n') : JSON.stringify(obsObj)
+      }
+    }
+    
+    res.json({ dieta: dietaNormalizada, nutritionalNeeds: null })
 
   } catch (error) {
     console.error('Erro ao buscar dieta:', error)

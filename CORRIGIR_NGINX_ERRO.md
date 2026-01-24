@@ -13,7 +13,7 @@ O erro indica que há um `location` na linha 58 que está fora do bloco `server 
 
 ```bash
 # Ver o arquivo completo
-sudo cat /etc/nginx/conf.d/dietyourself.conf
+    sudo cat /etc/nginx/conf.d/dietyourself.conf
 
 # OU ver as linhas ao redor da linha 58
 sudo sed -n '50,70p' /etc/nginx/conf.d/dietyourself.conf

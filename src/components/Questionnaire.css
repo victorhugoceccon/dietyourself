@@ -1,730 +1,788 @@
+/* ============================================
+   GIBA APP - Questionnaire
+   Design refinado com UX/UI profissional
+   ============================================ */
+
 .questionnaire-container {
-  min-height: 100vh;
-  background: var(--gradient-subtle);
+  width: 100%;
+  min-height: calc(100vh - 73px);
+  background: linear-gradient(165deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+  color: #e8e8e8;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: var(--space-xl);
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
 }
 
-.questionnaire-header {
+#questionnaire-wrapper {
   width: 100%;
-  max-width: 700px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+  background: linear-gradient(165deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+}
+
+/* ===== HEADER ===== */
+.questionnaire-header {
+  padding: 48px 24px 40px;
+  text-align: center;
+  background: linear-gradient(180deg, #1e2534 0%, transparent 100%);
+  width: 100%;
+  position: relative;
+}
+
+.questionnaire-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ffde59, transparent);
+  border-radius: 2px;
 }
 
 .questionnaire-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 8px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
-.questionnaire-logout-btn {
+.questionnaire-subtitle {
+  font-size: 15px;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* ===== CARD PRINCIPAL ===== */
+.questionnaire-card {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  background: transparent;
+}
+
+/* ===== PROGRESSO ===== */
+.questionnaire-progress {
+  margin-bottom: 32px;
+  padding: 0 4px;
+}
+
+.questionnaire-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.questionnaire-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffde59 0%, #e6c84f 50%, #ffde59 100%);
+  background-size: 200% 100%;
+  border-radius: 12px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(255, 222, 89, 0.4), 0 2px 4px rgba(255, 222, 89, 0.2);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.questionnaire-progress-text {
+  text-align: center;
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ===== ERRO ===== */
+.questionnaire-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  color: #666;
-  font-size: 0.95rem;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+}
+
+/* ===== CONTEÚDO DA ETAPA ===== */
+.questionnaire-step-content {
+  margin-bottom: 32px;
+}
+
+.questionnaire-step-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 10px;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+}
+
+.questionnaire-step-description {
+  font-size: 15px;
+  color: #9ca3af;
+  margin: 0 0 28px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* ===== FORMULÁRIO ===== */
+.questionnaire-form-group {
+  margin-bottom: 24px;
+}
+
+.questionnaire-form-group:last-child {
+  margin-bottom: 0;
+}
+
+.questionnaire-form-group label {
+  display: block;
+  font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  color: #e5e7eb;
+  margin-bottom: 10px;
+  letter-spacing: 0.1px;
 }
 
-.questionnaire-logout-btn:hover:not(:disabled) {
-  background: #f5f7fa;
-  border-color: #d0d0d0;
-  color: #333;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.questionnaire-logout-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.questionnaire-logout-btn svg {
-  width: 18px;
-  height: 18px;
-}
-
-.questionnaire-card {
-  background: var(--gradient-card);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  border: 1px solid rgba(11, 15, 20, 0.10);
+.questionnaire-form-group input[type="text"],
+.questionnaire-form-group input[type="number"],
+.questionnaire-form-group textarea {
   width: 100%;
-  max-width: 700px;
-  padding: var(--space-3xl);
+  padding: 14px 18px;
+  background: rgba(30, 37, 52, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 400;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.questionnaire-form-group input::placeholder,
+.questionnaire-form-group textarea::placeholder {
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.questionnaire-form-group input:focus,
+.questionnaire-form-group textarea:focus {
+  outline: none;
+  border-color: #ffde59;
+  background: rgba(30, 37, 52, 0.8);
+  box-shadow: 0 0 0 4px rgba(255, 222, 89, 0.12), 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.questionnaire-form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.6;
+}
+
+/* ===== RADIO BUTTONS ===== */
+.questionnaire-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.questionnaire-radio-label {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 18px !important;
+  padding: 16px 18px;
+  background: rgba(30, 37, 52, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  min-height: 56px;
+  line-height: 1.5;
 }
 
-.questionnaire-card::before {
+.questionnaire-radio-label::before {
   content: '';
   position: absolute;
   left: 0;
-  right: 0;
   top: 0;
-  height: 3px;
-  background: var(--gradient-primary);
-  opacity: 0.9;
-}
-
-.dark-mode .questionnaire-card {
-  background: var(--gradient-card) !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #e0e0e0;
-  border-radius: 10px;
-  margin-bottom: 2rem;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--gradient-primary);
+  bottom: 0;
+  width: 0;
+  background: linear-gradient(90deg, rgba(255, 222, 89, 0.1), transparent);
   transition: width 0.3s ease;
-  border-radius: 10px;
 }
 
-.step-indicator {
-  text-align: center;
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
-  font-weight: 500;
+.questionnaire-radio-label:hover {
+  background: rgba(30, 37, 52, 0.8);
+  border-color: rgba(255, 222, 89, 0.4);
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.step-content {
-  margin-bottom: 2rem;
+.questionnaire-radio-label:hover::before {
+  width: 4px;
 }
 
-.step-content h2 {
-  font-size: var(--font-size-3xl);
-  color: var(--text-primary);
-  margin: 0 0 var(--space-sm) 0;
-  text-align: center;
-  font-weight: var(--font-weight-bold);
-}
-
-@media (max-width: 768px) {
-  .step-content h2 {
-    font-size: var(--font-size-2xl);
-  }
-}
-
-.step-description {
-  text-align: center;
-  color: var(--text-secondary);
-  margin-bottom: var(--space-xl);
-  font-size: var(--font-size-base);
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: var(--space-sm);
-  color: var(--text-primary);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-lg);
-}
-
-@media (max-width: 768px) {
-  .form-group label {
-    font-size: var(--font-size-base);
-  }
-}
-
-.form-group input[type="number"],
-.form-group input[type="text"],
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: var(--space-md);
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  transition: all 0.3s ease;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-.form-group input[type="number"]:focus,
-.form-group input[type="text"]:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--lifefit-green-soft);
-  background: var(--bg-elevated);
-  box-shadow: 0 0 0 3px rgba(185, 255, 44, 0.12), 0 0 0 6px rgba(54, 215, 255, 0.08);
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.form-group input.mt-2 {
-  margin-top: 0.5rem;
-}
-
-.checkbox-group,
-.radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
+.questionnaire-radio-label input[type="radio"] {
+  margin: 0 !important;
   cursor: pointer;
-  padding: var(--space-md);
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-elevated);
-  transition: all 0.2s ease;
-}
-
-.checkbox-label:hover:not(.disabled) {
-  border-color: var(--lifefit-green-soft);
-  background: var(--bg-tertiary);
-  transform: translateX(2px);
-}
-
-.checkbox-label.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: var(--bg-secondary);
-}
-
-.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  outline: none;
   appearance: none;
   -webkit-appearance: none;
-  margin-right: 0;
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-  background: #FFFFFF;
-  border: 2px solid #6B7280;
-  border-radius: var(--radius-xs);
+  -moz-appearance: none;
+  vertical-align: unset !important;
+}
+
+/* Custom radio button circle */
+.questionnaire-radio-label input[type="radio"]::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(30, 37, 52, 0.8);
+  display: block;
   transition: all 0.2s ease;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.questionnaire-radio-label input[type="radio"]:checked::before {
+  border-color: #ffde59;
+  background: #ffde59;
+  box-shadow: 0 0 0 3px rgba(255, 222, 89, 0.2), 0 0 8px rgba(255, 222, 89, 0.4);
+}
+
+.questionnaire-radio-label input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0b141a;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.questionnaire-radio-label input[type="radio"]:checked + span {
+  font-weight: 600;
+  color: #fff;
+}
+
+.questionnaire-radio-label:has(input[type="radio"]:checked) {
+  background: rgba(255, 222, 89, 0.12);
+  border-color: #ffde59;
+  box-shadow: 0 0 0 3px rgba(255, 222, 89, 0.1), 0 4px 12px rgba(255, 222, 89, 0.15);
+}
+
+.questionnaire-radio-label:has(input[type="radio"]:checked)::before {
+  width: 4px;
+  background: #ffde59;
+}
+
+.questionnaire-radio-label span {
+  color: #e5e7eb;
+  font-size: 15px;
+  line-height: 1.5;
+  flex: 1;
   position: relative;
+  z-index: 1;
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== CHECKBOXES ===== */
+.questionnaire-checkbox-label {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 18px !important;
+  padding: 16px 18px;
+  background: rgba(30, 37, 52, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-height: 56px;
+  line-height: 1.5;
+}
+
+.questionnaire-checkbox-label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: linear-gradient(90deg, rgba(255, 222, 89, 0.1), transparent);
+  transition: width 0.3s ease;
+}
+
+.questionnaire-checkbox-label:hover {
+  background: rgba(30, 37, 52, 0.8);
+  border-color: rgba(255, 222, 89, 0.4);
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.questionnaire-checkbox-label:hover::before {
+  width: 4px;
+}
+
+.questionnaire-checkbox-label input[type="checkbox"] {
+  margin: 0 !important;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
   flex-shrink: 0;
-  align-self: center;
+  position: relative;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  vertical-align: unset !important;
 }
 
-.checkbox-label input[type="checkbox"]:hover {
-  border-color: var(--lifefit-green-soft);
-  background: rgba(185, 255, 44, 0.05);
+/* Custom checkbox square */
+.questionnaire-checkbox-label input[type="checkbox"]::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(30, 37, 52, 0.8);
+  display: block;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.checkbox-label input[type="checkbox"]:checked {
-  background: var(--gradient-primary);
-  border-color: var(--lifefit-green-soft);
+.questionnaire-checkbox-label input[type="checkbox"]:checked::before {
+  border-color: #ffde59;
+  background: #ffde59;
+  box-shadow: 0 0 0 3px rgba(255, 222, 89, 0.2), 0 0 8px rgba(255, 222, 89, 0.4);
 }
 
-.checkbox-label input[type="checkbox"]:checked::after {
+.questionnaire-checkbox-label input[type="checkbox"]:checked::after {
   content: '✓';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: var(--on-primary);
+  z-index: 2;
+  pointer-events: none;
+  color: #0b141a;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.checkbox-label span,
-.radio-label span {
-  color: var(--text-primary);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
+.questionnaire-checkbox-label input[type="checkbox"]:checked + span {
+  font-weight: 600;
+  color: #fff;
 }
 
-/* Radio buttons customizados */
-.radio-label {
+.questionnaire-checkbox-label:has(input[type="checkbox"]:checked) {
+  background: rgba(255, 222, 89, 0.12);
+  border-color: #ffde59;
+  box-shadow: 0 0 0 3px rgba(255, 222, 89, 0.1), 0 4px 12px rgba(255, 222, 89, 0.15);
+}
+
+.questionnaire-checkbox-label:has(input[type="checkbox"]:checked)::before {
+  width: 4px;
+  background: #ffde59;
+}
+
+.questionnaire-checkbox-label span {
+  color: #e5e7eb;
+  font-size: 15px;
+  line-height: 1.5;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== SELEÇÃO DE ALIMENTOS ===== */
+.questionnaire-food-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.questionnaire-food-category {
+  margin-bottom: 0;
+}
+
+.questionnaire-food-category-header {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  padding: var(--space-md);
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-elevated);
-  transition: all 0.2s ease;
-  gap: var(--space-md);
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255, 222, 89, 0.2);
   position: relative;
-  pointer-events: auto;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
-@media (max-width: 768px) {
-  .radio-label {
-    padding: 6px 8px !important;
-    gap: 8px !important;
-    border-width: 1px !important;
-  }
+.questionnaire-food-category-header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: #ffde59;
+  border-radius: 2px;
 }
 
-@media (max-width: 480px) {
-  .radio-label {
-    padding: 4px 6px !important;
-    gap: 6px !important;
-  }
-}
-
-.radio-label:hover:not(.disabled) {
-  border-color: var(--lifefit-green-soft);
-  background: var(--bg-tertiary);
-  transform: translateX(2px);
-}
-
-.radio-label input[type="radio"] {
-  appearance: none;
-  -webkit-appearance: none;
-  margin-right: var(--space-md);
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-  background: #FFFFFF;
-  border: 2px solid #6B7280;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  position: relative;
+.questionnaire-food-category-header svg {
+  color: #ffde59;
   flex-shrink: 0;
-  align-self: center;
-  pointer-events: auto;
+  filter: drop-shadow(0 0 4px rgba(255, 222, 89, 0.4));
+}
+
+.questionnaire-food-category-header h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.questionnaire-food-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.questionnaire-food-item {
+  position: relative;
+  padding: 12px 14px;
+  background: rgba(30, 37, 52, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: #e5e7eb;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow: hidden;
+}
+
+.questionnaire-food-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: linear-gradient(90deg, rgba(255, 222, 89, 0.15), transparent);
+  transition: width 0.3s ease;
+}
+
+.questionnaire-food-item:hover {
+  background: rgba(30, 37, 52, 0.8);
+  border-color: rgba(255, 222, 89, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.questionnaire-food-item:hover::before {
+  width: 4px;
+}
+
+.questionnaire-food-item.selected {
+  background: rgba(255, 222, 89, 0.18);
+  border-color: #ffde59;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 0 0 3px rgba(255, 222, 89, 0.1), 0 4px 12px rgba(255, 222, 89, 0.2);
+}
+
+.questionnaire-food-item.selected::before {
+  width: 4px;
+  background: #ffde59;
+}
+
+.questionnaire-food-item-label {
+  flex: 1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+  min-width: 0;
+  padding-right: 8px;
+  position: relative;
   z-index: 1;
-  -webkit-tap-highlight-color: transparent;
 }
 
-@media (max-width: 768px) {
-  .radio-label input[type="radio"] {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    min-height: 16px !important;
-    max-width: 16px !important;
-    max-height: 16px !important;
-    margin-right: 0 !important;
-    border-width: 1.5px !important;
-  }
+.questionnaire-food-item-check {
+  margin-left: 8px;
+  color: #ffde59;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1;
+  filter: drop-shadow(0 0 4px rgba(255, 222, 89, 0.6));
+  position: relative;
+  z-index: 1;
 }
 
-@media (max-width: 480px) {
-  .radio-label input[type="radio"] {
-    width: 14px !important;
-    height: 14px !important;
-    min-width: 14px !important;
-    min-height: 14px !important;
-    max-width: 14px !important;
-    max-height: 14px !important;
-  }
+/* ===== AÇÕES (BOTÕES) ===== */
+.questionnaire-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(15, 20, 25, 0.95) 20%);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-.radio-label input[type="radio"]:hover {
-  border-color: var(--lifefit-green-soft);
-  background: rgba(185, 255, 44, 0.05);
+.questionnaire-btn {
+  padding: 16px 28px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  font-family: inherit;
+  flex: 1;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.2px;
+  position: relative;
+  overflow: hidden;
 }
 
-.radio-label input[type="radio"]:checked {
-  background: var(--gradient-primary);
-  border-color: var(--lifefit-green-soft);
-}
-
-.radio-label input[type="radio"]:checked::after {
+.questionnaire-btn::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 8px;
-  height: 8px;
-  background: var(--on-primary);
+  width: 0;
+  height: 0;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
 }
 
-/* Garantir que radio buttons sejam clicáveis em todos os casos */
-.radio-group input[type="radio"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 2 !important;
+.questionnaire-btn:active::before {
+  width: 300px;
+  height: 300px;
 }
 
-.radio-label {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-}
-
-/* Garantir que o label não bloqueie o input */
-.radio-label input[type="radio"] {
-  position: relative;
-  z-index: 10;
-}
-
-/* Seção de alimentos */
-.alimentos-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xl);
-  margin-top: var(--space-lg);
-}
-
-.alimento-category {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
-.alimento-category h3 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
-  margin: 0;
-  padding-bottom: var(--space-xs);
-  border-bottom: 2px solid var(--border-color);
-}
-
-.alert {
-  padding: 1rem;
-  border-radius: 10px;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-}
-
-.alert-error {
-  background: #ffebee;
-  color: #c62828;
-  border: 1px solid #ef5350;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e0e0e0;
-}
-
-.btn {
-  padding: 0.875rem 2rem;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  flex: 1;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-}
-
-.btn-secondary {
-  background: #f5f7fa;
-  color: #666;
-  border: 2px solid #e0e0e0;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: #e8e8e8;
-  border-color: #d0d0d0;
-}
-
-.btn:disabled {
-  opacity: 0.6;
+.questionnaire-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none !important;
 }
 
-@media (max-width: 768px) {
-  .questionnaire-container {
-    padding: var(--space-md);
-  }
+.questionnaire-btn-primary {
+  background: linear-gradient(135deg, #ffde59 0%, #e6c84f 100%);
+  color: #0b141a;
+  box-shadow: 0 4px 16px rgba(255, 222, 89, 0.35), 0 2px 8px rgba(255, 222, 89, 0.2);
+  font-weight: 700;
+}
 
+.questionnaire-btn-primary:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(255, 222, 89, 0.45), 0 4px 12px rgba(255, 222, 89, 0.3);
+  filter: brightness(1.05);
+}
+
+.questionnaire-btn-primary:active:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 222, 89, 0.3);
+}
+
+.questionnaire-btn-secondary {
+  background: rgba(30, 37, 52, 0.8);
+  color: #e5e7eb;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+
+.questionnaire-btn-secondary:hover:not(:disabled) {
+  background: rgba(30, 37, 52, 1);
+  border-color: rgba(255, 222, 89, 0.5);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.questionnaire-btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
   .questionnaire-header {
-    margin-bottom: var(--space-lg);
+    padding: 40px 20px 32px;
   }
 
   .questionnaire-title {
-    font-size: var(--font-size-xl);
-  }
-
-  .questionnaire-logout-btn {
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--font-size-sm);
-  }
-
-  .questionnaire-logout-btn svg {
-    width: 16px;
-    height: 16px;
+    font-size: 28px;
   }
 
   .questionnaire-card {
-    padding: var(--space-xl) var(--space-lg);
+    padding: 24px 20px;
   }
 
-  .step-content h2 {
-    font-size: var(--font-size-2xl);
+  .questionnaire-step-title {
+    font-size: 22px;
   }
 
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
+  .questionnaire-step-description {
+    font-size: 14px;
+    margin-bottom: 24px;
   }
 
-  .form-group {
-    margin-bottom: var(--space-lg);
+  .questionnaire-form-group {
+    margin-bottom: 20px;
   }
 
-  .form-group input[type="number"],
-  .form-group input[type="text"],
-  .form-group select,
-  .form-group textarea {
-    font-size: 16px; /* Evita zoom no iOS */
-    padding: var(--space-md);
+  .questionnaire-form-group input,
+  .questionnaire-form-group textarea {
+    padding: 12px 16px;
+    font-size: 15px;
   }
 
-  .checkbox-group,
-  .radio-group {
-    gap: 6px !important;
-    margin-top: var(--space-xs) !important;
+  .questionnaire-radio-label {
+    padding: 14px 16px;
   }
 
-  .checkbox-label,
-  .radio-label {
-    padding: 6px 8px !important;
-    min-height: auto !important;
-    touch-action: manipulation;
-    align-items: center;
-    justify-content: center;
-    gap: 8px !important;
-    border: 1px solid var(--border-color-light) !important;
-    border-radius: var(--radius-sm);
-    width: auto !important;
-    max-width: 100% !important;
+  .questionnaire-checkbox-label {
+    padding: 14px 16px;
   }
 
-  .checkbox-label:hover:not(.disabled),
-  .radio-label:hover:not(.disabled) {
-    transform: none !important;
+  .questionnaire-food-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
   }
 
-  .checkbox-label input[type="checkbox"] {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    min-height: 16px !important;
-    max-width: 16px !important;
-    max-height: 16px !important;
-    margin-right: 0 !important;
-    align-self: center;
-    background: #FFFFFF !important;
-    border: 1.5px solid #6B7280 !important;
-    flex-shrink: 0;
+  .questionnaire-food-item {
+    padding: 10px 12px;
+    font-size: 12px;
+    min-height: 44px;
   }
 
-  .checkbox-label input[type="checkbox"]:checked {
-    background: linear-gradient(135deg, #b9ff2c 0%, #36d7ff 100%) !important;
-    border-color: #f5f5f5 !important;
-    border-width: 1.5px !important;
+  .questionnaire-actions {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 24px;
+    position: relative;
+    background: transparent;
+    backdrop-filter: none;
   }
 
-  .checkbox-label input[type="checkbox"]:checked::after {
-    font-size: 10px !important;
-    color: #000000 !important;
-  }
-
-  .checkbox-label input[type="checkbox"]:hover {
-    border-color: var(--lifefit-green-soft);
-    background: rgba(185, 255, 44, 0.05);
-  }
-
-  .radio-label input[type="radio"] {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    min-height: 16px !important;
-    max-width: 16px !important;
-    max-height: 16px !important;
-    margin-right: 0 !important;
-    align-self: center;
-    background: #FFFFFF !important;
-    border: 1.5px solid #e0e0e0 !important;
-    flex-shrink: 0;
-  }
-
-  .radio-label input[type="radio"]:checked {
-    background: linear-gradient(135deg, #b9ff2c 0%, #36d7ff 100%) !important;
-    border-color: #f5f5f5 !important;
-    border-width: 1.5px !important;
-  }
-
-  .radio-label input[type="radio"]:checked::after {
-    width: 5px !important;
-    height: 5px !important;
-    background: #000000 !important;
-  }
-
-  .radio-label input[type="radio"]:hover {
-    border-color: var(--lifefit-green-soft);
-    background: rgba(185, 255, 44, 0.05);
-  }
-
-  .checkbox-label span,
-  .radio-label span {
-    font-size: var(--font-size-sm);
-    line-height: 1.4;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .alimentos-section {
-    gap: var(--space-xl);
-  }
-
-  .alimento-category h3 {
-    font-size: var(--font-size-base);
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-    gap: var(--space-sm);
-  }
-
-  .btn {
+  .questionnaire-btn {
     width: 100%;
-    padding: var(--space-md);
+    min-height: 50px;
   }
 }
 
 @media (max-width: 480px) {
-  .questionnaire-container {
-    padding: var(--space-sm);
+  .questionnaire-header {
+    padding: 32px 16px 24px;
+  }
+
+  .questionnaire-title {
+    font-size: 24px;
   }
 
   .questionnaire-card {
-    padding: var(--space-lg) var(--space-md);
-    border-radius: var(--radius-md);
+    padding: 20px 16px;
   }
 
-  .step-content h2 {
-    font-size: var(--font-size-xl);
+  .questionnaire-step-title {
+    font-size: 20px;
   }
 
-  .form-group {
-    margin-bottom: var(--space-md);
+  .questionnaire-food-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 6px;
   }
 
-  .checkbox-group,
-  .radio-group {
-    gap: 4px !important;
+  .questionnaire-food-item {
+    font-size: 11px;
+    padding: 8px 10px;
+    min-height: 40px;
   }
 
-  .checkbox-label,
-  .radio-label {
-    padding: 4px 6px !important;
-    min-height: auto !important;
-    gap: 6px !important;
-    border-width: 1px !important;
-    width: auto !important;
-    max-width: 100% !important;
-    justify-content: center;
-  }
-
-  .checkbox-label input[type="checkbox"] {
-    width: 14px !important;
-    height: 14px !important;
-    min-width: 14px !important;
-    min-height: 14px !important;
-    max-width: 14px !important;
-    max-height: 14px !important;
-  }
-
-  .checkbox-label input[type="checkbox"]:checked {
-    background: linear-gradient(135deg, #b9ff2c 0%, #36d7ff 100%) !important;
-    border-color: #f5f5f5 !important;
-    border-width: 1.5px !important;
-  }
-
-  .checkbox-label input[type="checkbox"]:checked::after {
-    font-size: 9px !important;
-    color: #000000 !important;
-  }
-
-  .radio-label input[type="radio"] {
-    width: 14px !important;
-    height: 14px !important;
-    min-width: 14px !important;
-    min-height: 14px !important;
-    max-width: 14px !important;
-    max-height: 14px !important;
-    border-color: #e0e0e0 !important;
-  }
-
-  .radio-label input[type="radio"]:checked {
-    background: linear-gradient(135deg, #b9ff2c 0%, #36d7ff 100%) !important;
-    border-color: #f5f5f5 !important;
-    border-width: 1.5px !important;
-  }
-
-  .radio-label input[type="radio"]:checked::after {
-    width: 4px !important;
-    height: 4px !important;
-    background: #000000 !important;
-  }
-
-  .checkbox-label span,
-  .radio-label span {
-    font-size: 13px;
-    line-height: 1.3;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .alimentos-section {
-    gap: var(--space-lg);
+  .questionnaire-btn {
+    padding: 14px 24px;
+    font-size: 14px;
   }
 }
-

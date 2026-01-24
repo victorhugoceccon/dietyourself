@@ -58,6 +58,24 @@ function DietaMobileView() {
 
       if (response.ok) {
         const data = await response.json()
+        console.log('📥 Dieta carregada:', data)
+        console.log('📥 Estrutura da dieta:', data.dieta ? {
+          temRefeicoes: !!data.dieta.refeicoes,
+          numRefeicoes: data.dieta.refeicoes?.length || 0,
+          primeiraRefeicao: data.dieta.refeicoes?.[0] ? {
+            nome: data.dieta.refeicoes[0].nome,
+            temItens: !!data.dieta.refeicoes[0].itens,
+            numItens: data.dieta.refeicoes[0].itens?.length || 0,
+            primeiroItem: data.dieta.refeicoes[0].itens?.[0] ? {
+              alimento: data.dieta.refeicoes[0].itens[0].alimento,
+              nome: data.dieta.refeicoes[0].itens[0].nome,
+              food: data.dieta.refeicoes[0].itens[0].food,
+              porcao: data.dieta.refeicoes[0].itens[0].porcao,
+              kcal: data.dieta.refeicoes[0].itens[0].kcal,
+              todasChaves: Object.keys(data.dieta.refeicoes[0].itens[0])
+            } : null
+          } : null
+        } : 'sem dieta')
         setDieta(data.dieta || null)
         if (data.nutritionalNeeds) {
           setNutritionalNeeds(data.nutritionalNeeds)
@@ -293,7 +311,7 @@ function DietaMobileView() {
         <div className="giba-dieta-hero-badge">
           <img src={gibaLogoUrl} alt="GIBA" />
         </div>
-        <h1 className="giba-dieta-hero-title">Seu plano alimentar</h1>
+        <h1 className="giba-dieta-hero-title">{dieta.nome || 'Seu plano alimentar'}</h1>
         <p className="giba-dieta-hero-sub">
           Siga as refeições abaixo e marque conforme for consumindo
         </p>
@@ -433,18 +451,39 @@ function DietaMobileView() {
 
                     {/* Lista de alimentos */}
                     <div className="giba-dieta-foods">
-                      {refeicao.itens?.map((item, itemIdx) => (
+                      {refeicao.itens?.map((item, itemIdx) => {
+                        // Garantir que temos um nome de alimento válido
+                        const alimentoNome = item.alimento || item.nome || item.food || item.item || item.alimentoNome || 'Alimento não especificado'
+                        
+                        // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
+                        let porcao = item.porcao || item.quantidade || item.portion || ''
+                        if (!porcao && item.peso_g) {
+                          porcao = item.unidade ? `${item.peso_g}${item.unidade}` : `${item.peso_g}g`
+                        }
+                        
+                        const kcal = item.kcal || item.calorias || item.calories || 0
+                        
+                        // Debug: log se não tiver nome
+                        if (!item.alimento && !item.nome && !item.food) {
+                          console.warn('⚠️ Item sem nome:', { item, itemIdx, refeicaoNome: refeicao.nome })
+                        }
+                        
+                        return (
                         <div className="giba-dieta-food-card" key={itemIdx}>
                           <div className="giba-dieta-food-main">
                             <div className="giba-dieta-food-info">
-                              <h4 className="giba-dieta-food-name">{item.alimento}</h4>
+                              <h4 className="giba-dieta-food-name">{typeof alimentoNome === 'string' ? alimentoNome : String(alimentoNome)}</h4>
                               <div className="giba-dieta-food-details">
-                                <span className="giba-dieta-food-portion">
-                                  📏 Porção: {item.porcao}
-                                </span>
-                                <span className="giba-dieta-food-kcal">
-                                  <Fire size={14} weight="fill" /> {item.kcal} calorias
-                                </span>
+                                {porcao && (
+                                  <span className="giba-dieta-food-portion">
+                                    📏 Porção: {typeof porcao === 'string' ? porcao : String(porcao)}
+                                  </span>
+                                )}
+                                {kcal > 0 && (
+                                  <span className="giba-dieta-food-kcal">
+                                    <Fire size={14} weight="fill" /> {kcal} calorias
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -465,25 +504,52 @@ function DietaMobileView() {
                           )}
 
                           {/* Substituições */}
-                          {item.substituicoes?.length > 0 && (
+                          {item.substituicoes && Array.isArray(item.substituicoes) && item.substituicoes.length > 0 && (
                             <div className="giba-dieta-subs">
                               <span className="giba-dieta-subs-label">
                                 🔄 Não tem esse alimento? Você pode trocar por:
                               </span>
                               <div className="giba-dieta-subs-list">
-                                {item.substituicoes.map((sub, subIdx) => (
-                                  <div className="giba-dieta-sub-item" key={subIdx}>
-                                    <span className="giba-dieta-sub-name">{sub.alimento}</span>
-                                    <span className="giba-dieta-sub-portion">
-                                      ({sub.porcaoEquivalente || sub.porcao})
-                                    </span>
-                                  </div>
-                                ))}
+                                {item.substituicoes.map((sub, subIdx) => {
+                                  const subNome = sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
+                                  
+                                  // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
+                                  let subPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade || ''
+                                  if (!subPorcao && sub.peso_g) {
+                                    subPorcao = sub.unidade ? `${sub.peso_g}${sub.unidade}` : `${sub.peso_g}g`
+                                  }
+                                  
+                                  const subTipo = sub.tipo || sub.opcao || null
+                                  
+                                  // Debug: log primeira substituição do primeiro item
+                                  if (itemIdx === 0 && subIdx === 0) {
+                                    console.log('🔍 Frontend - primeira substituição:', {
+                                      sub,
+                                      subNome,
+                                      subPorcao,
+                                      subTipo,
+                                      todasChaves: Object.keys(sub)
+                                    })
+                                  }
+                                  
+                                  return (
+                                    <div className="giba-dieta-sub-item" key={subIdx}>
+                                      {subTipo && <span className="giba-dieta-sub-tipo">{subTipo}: </span>}
+                                      <span className="giba-dieta-sub-name">{typeof subNome === 'string' ? subNome : String(subNome)}</span>
+                                      {subPorcao && (
+                                        <span className="giba-dieta-sub-portion">
+                                          ({typeof subPorcao === 'string' ? subPorcao : String(subPorcao)})
+                                        </span>
+                                      )}
+                                    </div>
+                                  )
+                                })}
                               </div>
                             </div>
                           )}
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -503,7 +569,9 @@ function DietaMobileView() {
             <span className="giba-dieta-obs-icon">
               <Lightbulb size={16} weight="fill" />
             </span>
-            <p>{dieta.observacoesPlano}</p>
+            <p>{typeof dieta.observacoesPlano === 'string' 
+              ? dieta.observacoesPlano 
+              : JSON.stringify(dieta.observacoesPlano)}</p>
           </div>
         </section>
       )}
@@ -553,7 +621,7 @@ function DietaMobileView() {
               <div key={`pdf-ref-${idx}`} className="giba-pdf-workout">
                 <div className="giba-pdf-workout-header">
                   <span>{refeicao.nome || `Refeição ${idx + 1}`}</span>
-                  <strong>{refeicao.horario || ''}</strong>
+                  <strong>{typeof refeicao.horario === 'string' ? refeicao.horario : ''}</strong>
                 </div>
                 <div className="giba-pdf-meal-kcal">
                   {refeicao.totalRefeicaoKcal || refeicao.calorias || 0} calorias
@@ -562,8 +630,8 @@ function DietaMobileView() {
                   {(refeicao.itens || refeicao.alimentos || []).map((item, itemIdx) => (
                     <li key={`pdf-item-${idx}-${itemIdx}`} className="giba-pdf-food-item">
                       <div className="giba-pdf-food-main">
-                        <strong>{item.alimento || item.nome}</strong>
-                        <span>{item.porcao || item.quantidade || ''}</span>
+                        <strong>{typeof (item.alimento || item.nome) === 'string' ? (item.alimento || item.nome) : String(item.alimento || item.nome || '')}</strong>
+                        <span>{typeof (item.porcao || item.quantidade) === 'string' ? (item.porcao || item.quantidade) : String(item.porcao || item.quantidade || '')}</span>
                         {item.kcal && <span className="giba-pdf-food-kcal">{item.kcal} kcal</span>}
                       </div>
                       {item.macros && (
@@ -594,7 +662,9 @@ function DietaMobileView() {
         {dieta?.observacoesPlano && (
           <div className="giba-pdf-section">
             <h3>Dicas Importantes</h3>
-            <p className="giba-pdf-obs">{dieta.observacoesPlano}</p>
+            <p className="giba-pdf-obs">{typeof dieta.observacoesPlano === 'string' 
+              ? dieta.observacoesPlano 
+              : JSON.stringify(dieta.observacoesPlano)}</p>
           </div>
         )}
       </div>

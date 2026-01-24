@@ -504,7 +504,7 @@
 /* Mobile - Ajustar posição acima da navegação fixa */
 @media (max-width: 480px) {
   .chat-widget-button {
-    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
     right: 10px;
     width: 52px;
     height: 52px;

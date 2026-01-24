@@ -1,0 +1,81 @@
+{
+  "questionnaireData": {
+    "userId": "user-id-maria-teste",
+    "userName": "maria@teste.com",
+    "idade": 28,
+    "sexo": "Feminino",
+    "altura": 165,
+    "pesoAtual": 68.5,
+    "objetivo": "Emagrecer",
+    "frequenciaAtividade": "3–4x por semana",
+    "tipoAtividade": "Musculação, Lutas",
+    "horarioTreino": "Noite",
+    "rotinaDiaria": "Trabalho sentado, mas me movimento bastante durante o dia. Horários variam um pouco.",
+    "rotinaTreinoDetalhada": "3 dias de musculação e 2 dias de luta",
+    "relacaoEmocionalTreino": "Gosto de treinar e me sinto bem",
+    "preferenciaDificuldadeTreino": "Gosto mais de treinos de força e resistência",
+    "barreirasTreino": null,
+    "confortoPesar": "Sim",
+    "tempoPreparacao": "10–30 minutos",
+    "limitacoesFisicas": "Não",
+    "detalhesLimitacao": null,
+    "restricoesMedicasExercicio": "Não",
+    "movimentosEvitar": null,
+    "derived": {
+      "treinaAtualmente": true,
+      "temRestricaoClinica": false,
+      "temLimitacaoFisica": false,
+      "temRestricaoMedicaExercicio": false
+    },
+    "clean": {
+      "idade": 28,
+      "sexo": "Feminino",
+      "altura": 165,
+      "pesoAtual": 68.5,
+      "objetivo": "Emagrecer",
+      "rotinaDiaria": "Trabalho sentado, mas me movimento bastante durante o dia. Horários variam um pouco.",
+      "sono": "Durmo bem",
+      "frequenciaAtividade": "3–4x por semana",
+      "horarioTreino": "Noite",
+      "quantidadeRefeicoes": "4",
+      "preferenciaRefeicoes": "Um equilíbrio",
+      "tempoPreparacao": "10–30 minutos",
+      "confortoPesar": "Sim",
+      "preferenciaVariacao": "Um pouco de repetição é ok",
+      "restricaoAlimentar": "Nenhuma",
+      "opcoesSubstituicao": "Sim, gosto de opções",
+      "refeicoesLivres": "Sim",
+      "problemasSaude": "Não",
+      "usoMedicacao": "Não",
+      "limitacoesFisicas": "Não",
+      "restricoesMedicasExercicio": "Não",
+      "tipoAtividade": "Musculação, Lutas",
+      "relacaoEmocionalTreino": "Gosto de treinar e me sinto bem",
+      "preferenciaDificuldadeTreino": "Gosto mais de treinos de força e resistência",
+      "alimentacaoFimSemana": "Um pouco mais solta",
+      "alimentosDoDiaADia": {
+        "carboidratos": ["Arroz branco", "Batata-doce", "Aveia"],
+        "proteinas": ["Peito de frango", "Ovo", "Atum em lata"],
+        "gorduras": ["Azeite de oliva", "Abacate"],
+        "verduras": ["Alface", "Rúcula", "Espinafre"],
+        "legumes": ["Tomate", "Cenoura", "Abobrinha"],
+        "frutas": ["Banana", "Maçã", "Morango"]
+      }
+    },
+    "_legacy": {
+      "alimentosDoDiaADia": true,
+      "rotinaTreinoDetalhada": "fallback",
+      "outraAtividade": "fallback"
+    }
+  },
+  "fotoFrente": {
+    "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    "mimeType": "image/jpeg",
+    "filename": "frente.jpg"
+  },
+  "fotoCostas": {
+    "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    "mimeType": "image/jpeg",
+    "filename": "costas.jpg"
+  }
+}

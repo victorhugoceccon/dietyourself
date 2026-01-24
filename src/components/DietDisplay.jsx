@@ -422,36 +422,65 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
               {isExpanded && (
                 <div className="meal-card-content">
                   <div className="meal-card-items">
-                    {refeicao.itens && refeicao.itens.map((item, itemIndex) => (
+                      {refeicao.itens && refeicao.itens.map((item, itemIndex) => {
+                      // Garantir que temos um nome de alimento válido
+                      const alimentoNome = item.alimento || item.nome || item.item || item.food || 'Alimento não especificado'
+                      
+                      // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
+                      let porcao = item.porcao || item.quantidade || item.portion || ''
+                      if (!porcao && item.peso_g) {
+                        porcao = item.unidade ? `${item.peso_g}${item.unidade}` : `${item.peso_g}g`
+                      }
+                      
+                      const kcal = item.kcal || item.calorias || item.calories || 0
+                      
+                      return (
                       <div key={itemIndex} className="meal-card-food-item">
                         <div className="meal-card-food-main">
                           <div className="meal-card-food-info">
-                            <h4 className="meal-card-food-name">{item.alimento}</h4>
-                            <p className="meal-card-food-portion">{item.porcao}</p>
+                            <h4 className="meal-card-food-name">{typeof alimentoNome === 'string' ? alimentoNome : String(alimentoNome)}</h4>
+                            {porcao && (
+                              <p className="meal-card-food-portion">{typeof porcao === 'string' ? porcao : String(porcao)}</p>
+                            )}
                           </div>
-                          <Badge variant="secondary" size="small" className="meal-card-food-kcal">
-                            {item.kcal} kcal
-                          </Badge>
+                          {kcal > 0 && (
+                            <Badge variant="secondary" size="small" className="meal-card-food-kcal">
+                              {kcal} kcal
+                            </Badge>
+                          )}
                         </div>
                         
-                        {item.substituicoes && item.substituicoes.length > 0 && (
+                        {item.substituicoes && Array.isArray(item.substituicoes) && item.substituicoes.length > 0 && (
                           <div className="meal-card-substitutions">
                             <div className="meal-card-substitutions-list">
                               <div className="meal-card-substitutions-label">Alternativas:</div>
-                              {item.substituicoes.map((sub, subIndex) => (
-                                <div key={subIndex} className="meal-card-substitution-item">
-                                  <span className="meal-card-substitution-name">{sub.alimento}</span>
-                                  <span className="meal-card-substitution-details">
-                                    {sub.porcaoEquivalente || sub.porcao}
-                                    {sub.kcalAproximada && ` • ${sub.kcalAproximada} kcal`}
-                                  </span>
-                                </div>
-                              ))}
+                              {item.substituicoes.map((sub, subIndex) => {
+                                const subNome = sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
+                                
+                                // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
+                                let subPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade || ''
+                                if (!subPorcao && sub.peso_g) {
+                                  subPorcao = sub.unidade ? `${sub.peso_g}${sub.unidade}` : `${sub.peso_g}g`
+                                }
+                                
+                                const subTipo = sub.tipo || sub.opcao || null
+                                return (
+                                  <div key={subIndex} className="meal-card-substitution-item">
+                                    {subTipo && <span className="meal-card-substitution-tipo">{subTipo}: </span>}
+                                    <span className="meal-card-substitution-name">{typeof subNome === 'string' ? subNome : String(subNome)}</span>
+                                    <span className="meal-card-substitution-details">
+                                      {subPorcao && (typeof subPorcao === 'string' ? subPorcao : String(subPorcao))}
+                                      {sub.kcalAproximada && ` • ${sub.kcalAproximada} kcal`}
+                                    </span>
+                                  </div>
+                                )
+                              })}
                             </div>
                           </div>
                         )}
                       </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               )}
@@ -460,11 +489,18 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
         })}
       </div>
 
+      {/* Observações do Plano */}
       {dieta.observacoesPlano && (
-        <Card className="diet-notes">
-          <h4 className="notes-title">Observações do Plano</h4>
-          <p className="notes-content">{dieta.observacoesPlano}</p>
-        </Card>
+        <div className="diet-observations">
+          <div className="diet-observations-header">
+            <h3 className="diet-observations-title">📋 Observações do Plano</h3>
+          </div>
+          <div className="diet-observations-content">
+            <p>{typeof dieta.observacoesPlano === 'string' 
+              ? dieta.observacoesPlano 
+              : JSON.stringify(dieta.observacoesPlano)}</p>
+          </div>
+        </div>
       )}
 
       {/* Modal de troca de alimento - Desativado temporariamente */}

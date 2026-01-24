@@ -374,6 +374,15 @@
   font-size: 0.875rem;
 }
 
+.meal-card-substitution-tipo {
+  font-weight: 600;
+  color: #4ade80;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+
 .meal-card-substitution-name {
   font-weight: 500;
   color: #9fef00;
@@ -620,5 +629,50 @@
   
   .nutrition-card .card-value {
     font-size: 1.75rem;
+  }
+}
+
+/* Observações do Plano */
+.diet-observations {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  margin-top: 8px;
+}
+
+.diet-observations-header {
+  margin-bottom: 16px;
+}
+
+.diet-observations-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diet-observations-content {
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.diet-observations-content p {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .diet-observations {
+    padding: 16px;
+  }
+  
+  .diet-observations-title {
+    font-size: 1.1rem;
   }
 }

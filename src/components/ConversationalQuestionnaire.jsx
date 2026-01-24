@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config/api'
+import { Bread, Fish, Drop, Plant, Sparkle } from '@phosphor-icons/react'
 import './ConversationalQuestionnaire.css'
 
 function ConversationalQuestionnaire({ onComplete }) {
@@ -10,7 +11,16 @@ function ConversationalQuestionnaire({ onComplete }) {
   const [userInput, setUserInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [formData, setFormData] = useState({})
+  const [formData, setFormData] = useState({
+    alimentosDoDiaADia: {
+      carboidratos: [],
+      proteinas: [],
+      gorduras: [],
+      verduras: [],
+      legumes: [],
+      frutas: []
+    }
+  })
   const [isTyping, setIsTyping] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(73)
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false)
@@ -259,6 +269,126 @@ function ConversationalQuestionnaire({ onComplete }) {
         { value: 'Mais completas e variadas', label: 'Mais completas e variadas' }
       ],
       required: true
+    },
+    {
+      id: 'food_preferences',
+      type: 'food-preferences',
+      message: 'Quais alimentos você costuma consumir no seu dia a dia? Selecione todos que fazem parte da sua rotina:',
+      field: 'alimentosDoDiaADia',
+      categories: {
+        proteinas: {
+          title: 'Proteínas',
+          icon: Fish,
+          items: [
+            { value: 'Ovo', label: 'Ovo' },
+            { value: 'Peito de frango', label: 'Peito de frango' },
+            { value: 'Coxa/sobrecoxa de frango', label: 'Coxa/sobrecoxa de frango' },
+            { value: 'Carne moída (patinho, acém)', label: 'Carne moída (patinho, acém)' },
+            { value: 'Carne bovina em bife (patinho, coxão mole)', label: 'Carne bovina em bife (patinho, coxão mole)' },
+            { value: 'Peixe (tilápia, sardinha, merluza)', label: 'Peixe (tilápia, sardinha, merluza)' },
+            { value: 'Atum em lata', label: 'Atum em lata' },
+            { value: 'Sardinha em lata', label: 'Sardinha em lata' },
+            { value: 'Presunto magro', label: 'Presunto magro' },
+            { value: 'Queijo branco (minas, ricota, cottage)', label: 'Queijo branco (minas, ricota, cottage)' },
+            { value: 'Leite', label: 'Leite' },
+            { value: 'Iogurte natural', label: 'Iogurte natural' },
+            { value: 'Feijão (preto, carioca, vermelho)', label: 'Feijão (preto, carioca, vermelho)' },
+            { value: 'Lentilha', label: 'Lentilha' },
+            { value: 'Grão-de-bico', label: 'Grão-de-bico' },
+            { value: 'Ervilha', label: 'Ervilha' },
+            { value: 'Soja', label: 'Soja' },
+            { value: 'Proteína de soja texturizada (PTS)', label: 'Proteína de soja texturizada (PTS)' }
+          ]
+        },
+        carboidratos: {
+          title: 'Carboidratos',
+          icon: Bread,
+          items: [
+            { value: 'Arroz branco', label: 'Arroz branco' },
+            { value: 'Arroz integral', label: 'Arroz integral' },
+            { value: 'Feijão', label: 'Feijão' },
+            { value: 'Macarrão', label: 'Macarrão' },
+            { value: 'Pão francês', label: 'Pão francês' },
+            { value: 'Pão de forma', label: 'Pão de forma' },
+            { value: 'Tapioca', label: 'Tapioca' },
+            { value: 'Cuscuz (milho)', label: 'Cuscuz (milho)' },
+            { value: 'Batata inglesa', label: 'Batata inglesa' },
+            { value: 'Batata-doce', label: 'Batata-doce' },
+            { value: 'Mandioca (aipim/macaxeira)', label: 'Mandioca (aipim/macaxeira)' },
+            { value: 'Inhame', label: 'Inhame' },
+            { value: 'Mandioquinha', label: 'Mandioquinha' },
+            { value: 'Aveia', label: 'Aveia' },
+            { value: 'Milho', label: 'Milho' },
+            { value: 'Farinha de milho', label: 'Farinha de milho' },
+            { value: 'Farinha de mandioca', label: 'Farinha de mandioca' }
+          ]
+        },
+        gorduras: {
+          title: 'Gorduras',
+          icon: Drop,
+          items: [
+            { value: 'Azeite de oliva', label: 'Azeite de oliva' },
+            { value: 'Óleo de soja', label: 'Óleo de soja' },
+            { value: 'Óleo de girassol', label: 'Óleo de girassol' },
+            { value: 'Manteiga', label: 'Manteiga' },
+            { value: 'Margarina', label: 'Margarina' },
+            { value: 'Maionese', label: 'Maionese' },
+            { value: 'Abacate', label: 'Abacate' },
+            { value: 'Amendoim', label: 'Amendoim' },
+            { value: 'Castanha de caju', label: 'Castanha de caju' },
+            { value: 'Castanha-do-pará', label: 'Castanha-do-pará' },
+            { value: 'Amendoim (pasta ou in natura)', label: 'Amendoim (pasta ou in natura)' },
+            { value: 'Sementes (linhaça, chia)', label: 'Sementes (linhaça, chia)' }
+          ]
+        },
+        verduras: {
+          title: 'Verduras',
+          icon: Plant,
+          items: [
+            { value: 'Alface', label: 'Alface' },
+            { value: 'Rúcula', label: 'Rúcula' },
+            { value: 'Agrião', label: 'Agrião' },
+            { value: 'Couve', label: 'Couve' },
+            { value: 'Espinafre', label: 'Espinafre' },
+            { value: 'Repolho', label: 'Repolho' }
+          ]
+        },
+        legumes: {
+          title: 'Legumes',
+          icon: Plant,
+          items: [
+            { value: 'Tomate', label: 'Tomate' },
+            { value: 'Cebola', label: 'Cebola' },
+            { value: 'Alho', label: 'Alho' },
+            { value: 'Cenoura', label: 'Cenoura' },
+            { value: 'Beterraba', label: 'Beterraba' },
+            { value: 'Abobrinha', label: 'Abobrinha' },
+            { value: 'Chuchu', label: 'Chuchu' },
+            { value: 'Berinjela', label: 'Berinjela' },
+            { value: 'Pepino', label: 'Pepino' },
+            { value: 'Pimentão', label: 'Pimentão' }
+          ]
+        },
+        frutas: {
+          title: 'Frutas',
+          icon: Sparkle,
+          items: [
+            { value: 'Banana', label: 'Banana' },
+            { value: 'Maçã', label: 'Maçã' },
+            { value: 'Laranja', label: 'Laranja' },
+            { value: 'Mamão', label: 'Mamão' },
+            { value: 'Manga', label: 'Manga' },
+            { value: 'Melancia', label: 'Melancia' },
+            { value: 'Abacaxi', label: 'Abacaxi' },
+            { value: 'Pera', label: 'Pera' },
+            { value: 'Morango', label: 'Morango' },
+            { value: 'Melão', label: 'Melão' },
+            { value: 'Kiwi', label: 'Kiwi' },
+            { value: 'Uva', label: 'Uva' }
+          ]
+        }
+      },
+      required: false
     },
     {
       id: 'food_likes',
@@ -531,17 +661,17 @@ function ConversationalQuestionnaire({ onComplete }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const addMessage = (role, content, options = null) => {
-    setMessages(prev => [...prev, { role, content, timestamp: new Date(), options }])
+  const addMessage = (role, content, options = null, foodPreferences = null) => {
+    setMessages(prev => [...prev, { role, content, timestamp: new Date(), options, foodPreferences }])
   }
 
   const handleSend = async () => {
     const currentQuestion = questions[currentQuestionIndex]
     if (!currentQuestion) return
 
-    // Para perguntas do tipo choice, não verificar userInput (já foi processado pelo handleChoiceSelect)
-    if (currentQuestion.type === 'choice') {
-      return // Não processar, pois já foi processado pelo handleChoiceSelect
+    // Para perguntas do tipo choice ou food-preferences, não verificar userInput (já foram processadas)
+    if (currentQuestion.type === 'choice' || currentQuestion.type === 'food-preferences') {
+      return // Não processar, pois já foram processadas por suas respectivas funções
     }
 
     if (!userInput.trim() && currentQuestion.required) {
@@ -661,7 +791,8 @@ function ConversationalQuestionnaire({ onComplete }) {
           setIsTyping(false)
           setCurrentQuestionIndex(nextIndex)
           setTimeout(() => {
-            addMessage('assistant', nextQuestion.message, nextQuestion.options)
+            const foodPrefs = nextQuestion.type === 'food-preferences' ? nextQuestion.categories : null
+            addMessage('assistant', nextQuestion.message, nextQuestion.options, foodPrefs)
             
             // Após mostrar mensagem final, aguardar e submeter
             setTimeout(() => {
@@ -682,7 +813,8 @@ function ConversationalQuestionnaire({ onComplete }) {
         setIsTyping(false)
         setCurrentQuestionIndex(nextIndex)
         setTimeout(() => {
-          addMessage('assistant', nextQuestion.message, nextQuestion.options)
+          const foodPrefs = nextQuestion.type === 'food-preferences' ? nextQuestion.categories : null
+          addMessage('assistant', nextQuestion.message, nextQuestion.options, foodPrefs)
         }, 300)
       }, typingDelay)
     } else {
@@ -738,7 +870,8 @@ function ConversationalQuestionnaire({ onComplete }) {
           setIsTyping(false)
           setCurrentQuestionIndex(nextIndex)
           setTimeout(() => {
-            addMessage('assistant', nextQuestion.message, nextQuestion.options)
+            const foodPrefs = nextQuestion.type === 'food-preferences' ? nextQuestion.categories : null
+            addMessage('assistant', nextQuestion.message, nextQuestion.options, foodPrefs)
           }, 300)
         }, typingDelay)
       }
@@ -765,6 +898,43 @@ function ConversationalQuestionnaire({ onComplete }) {
 
     // Avançar para próxima pergunta
     advanceToNextQuestion(currentQuestion, value)
+  }
+
+  const handleFoodPreferenceToggle = (category, itemValue) => {
+    setFormData(prev => {
+      const currentCategory = prev.alimentosDoDiaADia?.[category] || []
+      const isSelected = currentCategory.includes(itemValue)
+      
+      const newCategory = isSelected
+        ? currentCategory.filter(v => v !== itemValue)
+        : [...currentCategory, itemValue]
+      
+      return {
+        ...prev,
+        alimentosDoDiaADia: {
+          ...prev.alimentosDoDiaADia,
+          [category]: newCategory
+        }
+      }
+    })
+  }
+
+  const handleFoodPreferencesContinue = () => {
+    const currentQuestion = questions[currentQuestionIndex]
+    if (!currentQuestion) return
+
+    // Adicionar mensagem do usuário mostrando seleções
+    const selectedCount = Object.values(formData.alimentosDoDiaADia || {}).reduce(
+      (sum, arr) => sum + (arr?.length || 0), 0
+    )
+    const message = selectedCount > 0 
+      ? `Selecionei ${selectedCount} alimento(s)`
+      : 'Não selecionei nenhum alimento'
+
+    addMessage('user', message)
+
+    // Avançar para próxima pergunta
+    advanceToNextQuestion(currentQuestion, formData.alimentosDoDiaADia)
   }
 
   const handleSubmit = async () => {
@@ -836,11 +1006,13 @@ function ConversationalQuestionnaire({ onComplete }) {
         rotinaTreinoDetalhada: formData.preferenciaDificuldadeTreino || '',
         outraAtividade: '',
         
-        // Alimentos do dia a dia (vazio por padrão)
-        alimentosDoDiaADia: {
+        // Alimentos do dia a dia
+        alimentosDoDiaADia: formData.alimentosDoDiaADia || {
           carboidratos: [],
           proteinas: [],
           gorduras: [],
+          verduras: [],
+          legumes: [],
           frutas: []
         }
       }
@@ -956,6 +1128,7 @@ function ConversationalQuestionnaire({ onComplete }) {
           convQuestionnaire.style.height = `calc(100vh - ${height}px)`
         }
         
+        // Logging de debug (erros são silenciados se serviço não estiver disponível)
         fetch('http://127.0.0.1:7242/ingest/e595e1f3-6537-49d9-9d78-60c318943485', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -972,7 +1145,7 @@ function ConversationalQuestionnaire({ onComplete }) {
             runId: 'post-fix',
             hypothesisId: 'A'
           })
-        }).catch(() => {})
+        }).catch(() => {}); // Silencia erros de conexão (serviço de logging opcional)
       }
     }
     
@@ -1060,30 +1233,80 @@ function ConversationalQuestionnaire({ onComplete }) {
         </div>
 
         <div className="chat-messages">
-          {messages.map((msg, index) => (
-            <div key={index} className={`message ${msg.role}`}>
-              {msg.role === 'assistant' && (
-                <div className="message-avatar">💚</div>
-              )}
-              <div className="message-content">
-                <div className="message-text">{msg.content}</div>
-                {msg.options && (
-                  <div className="message-options">
-                    {msg.options.map((option, optIndex) => (
-                      <button
-                        key={optIndex}
-                        className="option-button"
-                        onClick={() => handleChoiceSelect(option.value)}
-                        disabled={loading || isTyping}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
+          {messages.map((msg, index) => {
+            const isCurrentFoodPrefs = index === messages.length - 1 && 
+              currentQuestion && 
+              currentQuestion.type === 'food-preferences' && 
+              !msg.foodPreferences
+            
+            return (
+              <div key={index} className={`message ${msg.role}`}>
+                {msg.role === 'assistant' && (
+                  <div className="message-avatar">💚</div>
                 )}
+                <div className="message-content">
+                  <div className="message-text">{msg.content}</div>
+                  {msg.options && (
+                    <div className="message-options">
+                      {msg.options.map((option, optIndex) => (
+                        <button
+                          key={optIndex}
+                          className="option-button"
+                          onClick={() => handleChoiceSelect(option.value)}
+                          disabled={loading || isTyping}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {(msg.foodPreferences || (isCurrentFoodPrefs && currentQuestion.categories)) && (
+                    <div className="message-food-preferences">
+                      {Object.entries(msg.foodPreferences || currentQuestion.categories).map(([categoryKey, category]) => {
+                        const Icon = category.icon
+                        const selectedItems = formData.alimentosDoDiaADia?.[categoryKey] || []
+                        
+                        return (
+                          <div key={categoryKey} className="food-category-section">
+                            <div className="food-category-header">
+                              <Icon size={18} weight="fill" />
+                              <h3>{category.title}</h3>
+                            </div>
+                            <div className="food-items-grid">
+                              {category.items.map((item) => {
+                                const isSelected = selectedItems.includes(item.value)
+                                return (
+                                  <button
+                                    key={item.value}
+                                    type="button"
+                                    className={`food-item-button ${isSelected ? 'selected' : ''}`}
+                                    onClick={() => handleFoodPreferenceToggle(categoryKey, item.value)}
+                                    disabled={loading || isTyping}
+                                  >
+                                    <span className="food-item-label">{item.label}</span>
+                                    {isSelected && <span className="food-item-check">✓</span>}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })}
+                      <div className="food-preferences-footer">
+                        <button
+                          onClick={handleFoodPreferencesContinue}
+                          disabled={loading || isTyping}
+                          className="food-preferences-continue-button"
+                        >
+                          Continuar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
           
           {/* Indicador de "digitando..." */}
           {isTyping && (
@@ -1108,7 +1331,7 @@ function ConversationalQuestionnaire({ onComplete }) {
           </div>
         )}
 
-        {showInput && !isTyping && (
+        {showInput && !isTyping && currentQuestion.type !== 'choice' && currentQuestion.type !== 'food-preferences' && (
           <div className="chat-input-container">
             {currentQuestion.type === 'text' || currentQuestion.type === 'number' ? (
               <input
@@ -1132,6 +1355,7 @@ function ConversationalQuestionnaire({ onComplete }) {
             </button>
           </div>
         )}
+
 
         {loading && isComplete && (
           <div className="chat-loading">

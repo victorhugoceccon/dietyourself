@@ -426,8 +426,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
                       // Garantir que temos um nome de alimento válido
                       const alimentoNome = item.alimento || item.nome || item.item || item.food || 'Alimento não especificado'
                       
-                      // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
-                      let porcao = item.porcao || item.quantidade || item.portion || ''
+                      // Construir porção: priorizar campos já formatados, depois construir dinamicamente
+                      let porcao = item.porcao || item.quantidade || item.quantidade_g || item.portion || ''
                       if (!porcao && item.peso_g) {
                         porcao = item.unidade ? `${item.peso_g}${item.unidade}` : `${item.peso_g}g`
                       }
@@ -457,8 +457,8 @@ function DietDisplay({ onGenerateDiet, refreshTrigger, onMealToggle, nutritional
                               {item.substituicoes.map((sub, subIndex) => {
                                 const subNome = sub.alimento || sub.nome || sub.item || sub.food || 'Substituição'
                                 
-                                // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
-                                let subPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade || ''
+                                // Construir porção: priorizar campos já formatados, depois construir dinamicamente
+                                let subPorcao = sub.porcaoEquivalente || sub.porcao || sub.quantidade || sub.quantidade_g || ''
                                 if (!subPorcao && sub.peso_g) {
                                   subPorcao = sub.unidade ? `${sub.peso_g}${sub.unidade}` : `${sub.peso_g}g`
                                 }

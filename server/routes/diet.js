@@ -552,8 +552,8 @@ router.post('/generate', authenticate, async (req, res) => {
       // Converter nome/item → alimento (se necessário)
       const alimento = item.alimento || item.nome || item.item || 'Alimento não especificado'
       
-      // Converter peso_g + unidade → porcao formatada
-      let porcao = item.porcao || ''
+      // Converter peso_g + unidade → porcao formatada (ou usar quantidade_g já formatado)
+      let porcao = item.porcao || item.quantidade_g || ''
       if (!porcao && item.peso_g && item.unidade) {
         porcao = `${item.peso_g}${item.unidade}`
       } else if (!porcao && item.peso_g) {
@@ -577,8 +577,8 @@ router.post('/generate', authenticate, async (req, res) => {
         macros,
         substituicoes: item.substituicoes?.map(sub => ({
           alimento: sub.alimento || sub.nome || sub.item || 'Substituição',
-          porcao: sub.porcao || (sub.peso_g && sub.unidade ? `${sub.peso_g}${sub.unidade}` : (sub.peso_g ? `${sub.peso_g}g` : '')),
-          porcaoEquivalente: sub.porcaoEquivalente || (sub.peso_g && sub.unidade ? `${sub.peso_g}${sub.unidade}` : (sub.peso_g ? `${sub.peso_g}g` : '')),
+          porcao: sub.porcao || sub.quantidade_g || (sub.peso_g && sub.unidade ? `${sub.peso_g}${sub.unidade}` : (sub.peso_g ? `${sub.peso_g}g` : '')),
+          porcaoEquivalente: sub.porcaoEquivalente || sub.quantidade_g || (sub.peso_g && sub.unidade ? `${sub.peso_g}${sub.unidade}` : (sub.peso_g ? `${sub.peso_g}g` : '')),
           kcal: sub.kcal || 0,
           tipo: sub.tipo || sub.opcao || null,
           macros: sub.macros || (sub.proteina_g !== undefined ? {

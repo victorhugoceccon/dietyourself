@@ -455,8 +455,8 @@ function DietaMobileView() {
                         // Garantir que temos um nome de alimento válido
                         const alimentoNome = item.alimento || item.nome || item.food || item.item || item.alimentoNome || 'Alimento não especificado'
                         
-                        // Construir porção: porcao formatada > peso_g + unidade > peso_g + 'g' padrão
-                        let porcao = item.porcao || item.quantidade || item.portion || ''
+                        // Construir porção: priorizar campos já formatados, depois construir dinamicamente
+                        let porcao = item.porcao || item.quantidade || item.quantidade_g || item.portion || ''
                         if (!porcao && item.peso_g) {
                           porcao = item.unidade ? `${item.peso_g}${item.unidade}` : `${item.peso_g}g`
                         }
@@ -631,7 +631,7 @@ function DietaMobileView() {
                     <li key={`pdf-item-${idx}-${itemIdx}`} className="giba-pdf-food-item">
                       <div className="giba-pdf-food-main">
                         <strong>{typeof (item.alimento || item.nome) === 'string' ? (item.alimento || item.nome) : String(item.alimento || item.nome || '')}</strong>
-                        <span>{typeof (item.porcao || item.quantidade) === 'string' ? (item.porcao || item.quantidade) : String(item.porcao || item.quantidade || '')}</span>
+                        <span>{typeof (item.porcao || item.quantidade || item.quantidade_g) === 'string' ? (item.porcao || item.quantidade || item.quantidade_g) : String(item.porcao || item.quantidade || item.quantidade_g || '')}</span>
                         {item.kcal && <span className="giba-pdf-food-kcal">{item.kcal} kcal</span>}
                       </div>
                       {item.macros && (
